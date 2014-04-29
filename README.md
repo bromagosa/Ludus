@@ -4,7 +4,7 @@ Ludus is an HTML5 canvas game framework for Amber Smalltalk.
 
 This repository is a move to Amber Smalltalk version 0.12.4 from the [original Ludus as an Amber branch](https://github.com/bromagosa/amber/tree/ludus) (version 0.9.1). The name stands for *game* or *leisure* in Latin.
 
-Ludus has been ported to Amber 0.12.4 from 0.9.1 by [Philippe Back](https://github.com/philippeback).
+Ludus has been ported from Amber 0.12.4 to Amber 0.9.1 by [Philippe Back](https://github.com/philippeback) and [Hannes Hirzel](https://github.com/hhzl).
 
 
 ## Prerequisites
@@ -25,8 +25,10 @@ In order to install the dependencies, you need the [`bower`](http://bower.io/) c
 npm -g install bower
 ```
 
-You now can install the dependencies:
+You now can clone this repo. Finally, install the dependencies by just running:
+
 ```
+cd Ludus
 bower install
 ```
 
@@ -43,6 +45,5 @@ Point your browser to:
 Enjoy!
 
 ## See also
-Another Amber Smalltalk game framework by  Masashi Umezawa
+Another Amber Smalltalk game framework by Masashi Umezawa
 https://github.com/mumez/enchant-from-amber . It wraps the [enchantjs](http://enchantjs.com/) library with Amber Smalltalk code.
-
