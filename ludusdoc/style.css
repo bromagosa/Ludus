@@ -1,0 +1,66 @@
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	background: #3D3A2B;
+}
+a#github {
+	position: fixed;
+	top: 0px;
+	right: 0px;
+}
+#wrapper {
+	background: #F2EBD0;
+	width: 960px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 30px;
+}
+#header {
+	height: 170px;
+	text-align: center;
+}
+a.classLink {
+	border: 2px groove #DECD87;
+	border-bottom: none;
+	border-radius: 5px 5px 0 0;
+	-moz-border-radius: 8px 8px 0 0;
+	-moz-border-top-colors: #8a7f54 #DECD87;
+	-moz-border-left-colors: #8a7f54 #DECD87;
+	-moz-border-right-colors: #8a7f54 #DECD87;
+	margin-left: 15px;
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 18px;
+	line-height: 18px;
+	background: #F2EBD0;
+}
+div#links {
+	border-bottom: 2px ridge #DECD87;
+	-moz-border-bottom-colors: #8a7f54 #DECD87;
+	line-height: 0px;
+	padding: 0px;
+	z-index: 9;
+}
+.shadowed {
+	color: rgba(188,160,51, 0.8);
+	text-shadow: 1px 4px 6px #F2EBD0, 0 0 0 #000, 1px 4px 6px #F2EBD0;
+}
+::-moz-selection { background: #5af; color: #fff; text-shadow: none; }
+::selection { background: #5af; color: #fff; text-shadow: none; }
+
+a.shadowed {
+	text-decoration: none;
+}
+a.shadowed:hover {
+	box-shadow: 0px -2px 5px #DECD87; 
+	color: rgba(188,160,51, 1);
+	cursor: pointer;
+}
+iframe {
+	display: block;
+	width: 100%;
+	border: 0;
+	padding-top: 20px;
+	background: #F2EBD0;
+	z-index: 10;
+}

@@ -1,0 +1,237 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="./iframe.css">
+</head>
+<body>
+<h3 class="shadowed" id="addSound:">addSound:</h3>
+<span class="shadowed">
+Adds a new sound to the game. The argument should be a string with the URL to the sound file.
+<pre><code>
+self addSound: 'path/to/audioFile.ogg'.
+</code></pre>
+</span>
+<h3 class="shadowed" id="backgroundColor:">backgroundColor:</h3>
+<span class="shadowed">
+Defines the background color of the game canvas in HTML color format.
+<pre><code>
+self backgroundColor: '#45FF32'.
+</code></pre>
+</span>
+<h3 class="shadowed" id="clearCanvas">clearCanvas</h3>
+<span class="shadowed">
+Clears the whole canvas. All sprites and drawings will be erased, but not the background. This method is usually called from within <a href="#draw">#draw</a>, right before repainting all sprites and drawings in their new state.
+<pre><code>
+self clearCanvas.
+self drawSprite: aSprite.
+</code></pre>
+</span>
+<h3 class="shadowed" id="draw">draw</h3>
+<span class="shadowed">
+This method is called at every game cycle, here you should define the drawing of sprites and other graphic elements. Don't forget to clear the canvas before re-drawing sprites, if your game requires so.
+<pre><code>
+MyGame >> draw
+
+self
+    clearCanvas;
+    drawSprite: mySprite;
+    drawSprite: myOtherSprite;
+    drawSpriteCollection: manySprites.
+</code></pre>
+</span>
+<h3 class="shadowed" id="drawSprite:">drawSprite:</h3>
+<span class="shadowed">
+Paints the sprite given by the argument.    
+<pre><code>
+self drawSprite: badGuy.
+</code></pre>
+</span>
+<h3 class="shadowed" id="drawSpriteCollection:">drawSpriteCollection:</h3>
+<span class="shadowed">
+Paints all sprites contained in the collection given by the argument.
+<pre><code>
+self drawSpriteCollection: monsters.
+</code></pre>
+</span>
+<h3 class="shadowed" id="end">end</h3>
+<span class="shadowed">
+Ends the current game. Stops the game cycle. Can be called from <a href="#step">#step</a> to end the game when the given endgame conditions are satisfied.
+<pre><code>
+MyGame >> step
+    (...)
+    self mainCharacter isDead ifTrue: [ self end ]
+    (...)
+</code></pre>
+</span>
+<h3 class="shadowed" id="everyStepNumber:do:">everyStepNumber:do:</h3>
+<span class="shadowed">
+Every number of steps given by the first argument, it evaluates the block given by the second argument.
+<pre><code>
+self everyStepNumber: 500 do: [ self increaseDifficulty ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="fps:">fps:</h3>
+<span class="shadowed">
+Defines the frames per second at which the game is going to attempt to be rendered. Take in account that the ultimate FPS rating will be given by the particular configuration of the client's hardware and software. Can be called from <a href="#startGame">#startGame</a>.
+<pre><code>
+MyGame >> startGame
+    self fps: 30.
+</code></pre>
+</span>
+<h3 class="shadowed" id="gameLoop">gameLoop</h3>
+<span class="shadowed">
+Controls the game cycles. <b>Do not override this method</b>, use <a href="#draw">#draw</a> and <a href="#step">#step</a> instead.
+</span>
+<h3 class="shadowed" id="gameOver">gameOver</h3>
+<span class="shadowed">
+Answers true if the game is over, false otherwise.
+<pre><code>
+self gameOver ifTrue: [ self showScore ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="height">height</h3>
+<span class="shadowed">
+Returns the height of the game canvas in pixels.
+</span>
+<h3 class="shadowed" id="height:">height:</h3>
+<span class="shadowed">
+Defines the height of the game canvas in pixels. Can be called from <a href="#startGame">#startGame</a>.
+<pre><code>
+MyGame >> StartGame
+    self height: 600.
+</code></pre>
+</span>
+<h3 class="shadowed" id="keyDown:">keyDown:</h3>
+<span class="shadowed">
+Is triggered when a key is pressed. <b>Do not use this method</b>, use the event handler <a href="#whileKeyPressed:do:">#whileKeyPressed:do:</a> instead.
+</span>
+<h3 class="shadowed" id="keyUp:">keyUp:</h3>
+<span class="shadowed">
+Is triggered when a key is released. <b>Do not use this method</b>, use the event handler <a href="#whileKeyPressed:do:">#whileKeyPressed:do:</a> instead.
+</span>
+<h3 class="shadowed" id="keys">keys</h3>
+<span class="shadowed">
+Returns an array of key states. <b>Do not use this method</b>, use the event handler <a href="#whileKeyPressed:do:">#whileKeyPressed:do:</a> instead.
+</span>
+<h3 class="shadowed" id="mouseDown:">mouseDown:</h3>
+<span class="shadowed">
+Is triggered when a mouse button is pressed. <b>Do not use this method</b>, use the event handlers <a href="#whileMouseDownDo:">#whileMouseDownDo:</a>, <a href="#whileMouseUpDo:">#whileMouseUpDo:</a>, <a href="#onMouseClickDo:">#onMouseClickDo:</a>, <a href="#onMouseDownDo:">#onMouseDownDo:</a> and <a href="#onMouseUpDo:">#onMouseUpDo:</a>instead.
+</span>
+<h3 class="shadowed" id="mouseMove:">mouseMove:</h3>
+<span class="shadowed">
+Is triggered when the mouse pointer moves. <b>Do not use this method</b>, use the event handlers <a href="#whileMouseDownDo:">#whileMouseDownDo:</a>, <a href="#whileMouseUpDo:">#whileMouseUpDo:</a>, <a href="#onMouseClickDo:">#onMouseClickDo:</a>, <a href="#onMouseDownDo:">#onMouseDownDo:</a> and <a href="#onMouseUpDo:">#onMouseUpDo:</a>instead.
+</span>
+<h3 class="shadowed" id="mousePosition">mousePosition</h3>
+<span class="shadowed">
+Returns the current mouse position, relative to the game canvas origin, as a point.
+<pre><code>
+mySprite centre: self mousePosition.
+</code></pre>
+</span>
+<h3 class="shadowed" id="mouseUp:">mouseUp:</h3>
+<span class="shadowed">
+Is triggered when a mouse button is released. <b>Do not use this method</b>, use the event handlers <a href="#whileMouseDownDo:">#whileMouseDownDo:</a>, <a href="#whileMouseUpDo:">#whileMouseUpDo:</a>, <a href="#onMouseClickDo:">#onMouseClickDo:</a>, <a href="#onMouseDownDo:">#onMouseDownDo:</a> and <a href="#onMouseUpDo:">#onMouseUpDo:</a>instead.
+</span>
+<h3 class="shadowed" id="onMouseClickDo:">onMouseClickDo:</h3>
+<span class="shadowed">
+It evaluates the block given by the argument when the mouse is clicked. 
+<pre><code>
+MyGame >> step
+    self onMouseClickDo: [ spaceShip shoot ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="onMouseDownDo:">onMouseDownDo:</h3>
+<span class="shadowed">
+It evaluates the block given by the argument when a mouse button is pressed.
+<pre><code>
+MyGame >> step
+    self onMouseDownDo: [ selectionRectangle origin: self mousePosition ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="onMouseUpDo:">onMouseUpDo:</h3>
+<span class="shadowed">
+It evaluates the block given by the argument when a mouse button is released.
+<pre><code>
+MyGame >> step
+    self onMouseUpDo: [ selectionRectangle destination: self mousePosition ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="soundNamed:">soundNamed:</h3>
+<span class="shadowed">
+Retrieves the sound with the named as the argument indicates. The sound name is, by default, the name of the sound file it points to minus its extension.
+<pre><code>
+self addSound: 'path/to/audioFile.ogg'.
+(self soundNamed: 'audioFile') play.
+</code></pre>
+</span>
+<h3 class="shadowed" id="startGame">startGame</h3>
+<span class="shadowed">
+This method should be overriden to define the game's initial conditions, such as the frames per second, the game canvas size, background, sounds, etc.
+<pre><code>
+MyGame >> startGame
+
+    self 
+        fps: 20;
+        width: 800;
+        height: 600;
+        backgroundColor: 'black';
+        addSound: 'sounds/explosion.ogg';
+        addSound: 'sounds/die.ogg';
+        addSound: 'sounds/backgroundMusic.ogg'.
+
+    (self soundNamed: 'backgroundMusic') loop.
+</code></pre>
+</span>
+<h3 class="shadowed" id="step">step</h3>
+<span class="shadowed">
+This method should be overriden to define what has to be done at each game cycle, or step. This method should control posititions, collisions, mouse and keyboard events, etc. <b>This method should not deal with any graphic properties</b>, these should be dealt with by <a href="#draw">#draw</a>.
+<pre><code>
+MyGame >> step
+
+    self
+        handleCollisions;
+        handleKeyStrokes
+        updatePositions.
+
+    goodGuy isDead ifTrue: [ self end ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="stepCount">stepCount</h3>
+<span class="shadowed">
+Returns the number of cycles, or steps, that have been processed since the game started.
+</span>
+<h3 class="shadowed" id="whileKeyPressed:do:">whileKeyPressed:do:</h3>
+<span class="shadowed">
+While the key given by the first argument is pressed, it evaluates the block given by the second argument.
+<pre><code>
+MyGame >> step
+    self whileKeyPressed: Key upArrow do: [ superheroe moveCentreBy: (0 @ -1) ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="whileMouseDownDo:">whileMouseDownDo:</h3>
+<span class="shadowed">
+It evaluates the block given by the argument while a mouse button is pressed down. 
+<pre><code>
+MyGame >> step
+    self whileMouseDownDo: [ helicopter goUp ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="whileMouseUpDo:">whileMouseUpDo:</h3>
+<span class="shadowed">
+It evaluates the block given by the argument while a mouse button is not being pressed. 
+<pre><code>
+MyGame >> step
+    self whileMouseUpDo: [ helicopter fallDown ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="width">width</h3>
+<span class="shadowed">
+Returns the width of the game canvas in pixels.
+</span>
+<h3 class="shadowed" id="width:">width:</h3>
+<span class="shadowed">
+Defines the width of the game canvas in pixels.
+<pre><code>
+self width: 800;
+</code></pre>
+</span>
+</body></html>

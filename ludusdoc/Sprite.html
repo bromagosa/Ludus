@@ -1,0 +1,281 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="./iframe.css">
+</head>
+<body>
+<h3 class="shadowed" id="addFrameGroupNamed:origin:size:frameCount:">addFrameGroupNamed:origin:size:frameCount:</h3>
+<span class="shadowed">
+Adds a new frame group to the sprite, the name of which is given by the first argument. The second argument defines the origin point of the framegroup, the next one its size in pixels (width @ height), and the last argument defines how many frames does this frame group comprehend.
+<pre><code>
+self
+    addFrameGroupNamed: 'walking'
+    origin: 0 @ 100
+    size: 60 @ 50
+    frameCount: 12.
+</code></pre>
+</span>
+<h3 class="shadowed" id="animating">animating</h3>
+<span class="shadowed">
+Returns true if the sprite is being animated, false otherwise.
+<pre><code>
+self animating ifFalse: [ self startAnimation ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="atLastFrame">atLastFrame</h3>
+<span class="shadowed">
+Returns true if the current frame is the last one of the current frame group.
+<pre><code>
+self atLastFrame ifTrue: [ self nextFrameGroup ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="bottomCollidesWith:">bottomCollidesWith:</h3>
+<span class="shadowed">
+Returns true if the bottom side of the sprite is colliding with the sprite given by the argument.
+<pre><code>
+( ball bottomCollidesWith: paddle ) ifTrue: [ ball bounce ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="bottomCollidesWithAnyOf:">bottomCollidesWithAnyOf:</h3>
+<span class="shadowed">
+Returns true if the bottom side of the sprite is colliding with any of the sprites included in the collection given by the argument.
+<pre><code>
+( balloon bottomCollidesWithAnyOf: spikes ) ifTrue: [ balloon burst ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="bottomCollidesWithWhichOf:">bottomCollidesWithWhichOf:</h3>
+<span class="shadowed">
+If the bottom side of the sprite is colliding with a sprite included in the collection given by the argument, it returns the one with which it is colliding.
+<pre><code>
+( magicCoin bottomCollidesWithWhichOf: players ) scoreOnePoint.
+</code></pre>
+</span>
+<h3 class="shadowed" id="centre">centre</h3>
+<span class="shadowed">
+Returns the point at the centre of the sprite.
+</span>
+<h3 class="shadowed" id="centre:">centre:</h3>
+<span class="shadowed">
+Sets the centre of the sprite at the point given by the argument.
+<pre><code>
+self centre: 34 @ 236
+</code></pre>
+</span>
+<h3 class="shadowed" id="collidesWith:">collidesWith:</h3>
+<span class="shadowed">
+Returns true if the sprite is colliding with the sprite given by the argument.
+<pre><code>
+( self collidesWith: bullet ) ifTrue: [ self die ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="collidesWithAnyOf:">collidesWithAnyOf:</h3>
+<span class="shadowed">
+Returns true if the sprite is colliding with any of the sprites included in the collection given by the argument.
+<pre><code>
+( self collidesWithAnyOf: bullets ) ifTrue: [ self die ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="currentFrameGroup">currentFrameGroup</h3>
+<span class="shadowed">
+Returns the current frame group.
+</span>
+<h3 class="shadowed" id="currentFrameGroup:">currentFrameGroup:</h3>
+<span class="shadowed">
+Sets the current frame group to the one named as given by the argument.
+<pre><code>
+self currentFrameGroup: 'jumping'.
+</code></pre>
+</span>
+<h3 class="shadowed" id="direction">direction</h3>
+<span class="shadowed">
+Returns the direction of the sprite in the form of a unit vector represented by a point.
+<pre><code>
+( self direction = ( 1 @ 0 ) ) ifTrue: [ self direction: ( 0 @ 1 ) ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="direction:">direction:</h3>
+<span class="shadowed">
+Sets the direction of the sprite to the one given by the argument. If the argument is a point that does not define a unit vector, it will be automatically turned into one.
+<pre><code>
+self direction: 24 @ 0. "Results in the sprite's direction being ( 1 @ 0 ) "
+</code></pre>
+</span>
+<h3 class="shadowed" id="distanceFromCentreTo:">distanceFromCentreTo:</h3>
+<span class="shadowed">
+Returns the distance from the centre of the sprite to a point given by the argument.
+<pre><code>
+ball distanceFromCentreTo: hole centre.
+</code></pre>
+</span>
+<h3 class="shadowed" id="frameGroups">frameGroups</h3>
+<span class="shadowed">
+Returns all the frame groups of the sprite.
+</span>
+<h3 class="shadowed" id="frameRate:">frameRate:</h3>
+<span class="shadowed">
+Sets the frame rate of the sprite at the value given by the argument. The smaller the value is, the faster the sprite will cycle through the frames of its frame groups.
+<pre><code>
+self frameRate: 5.
+</code></pre>
+</span>
+<h3 class="shadowed" id="height">height</h3>
+<span class="shadowed">
+Returns the height of the sprite in pixels, given by the height of its current frame group.
+</span>
+<h3 class="shadowed" id="isInsideCanvas:">isInsideCanvas:</h3>
+<span class="shadowed">
+Returns true if the sprite is inside the canvas given by the argument.
+<pre><code>
+MyGame >> step
+    ( spaceship isInsideCanvas: self ) ifFalse: [ game end ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="leftCollidesWith:">leftCollidesWith:</h3>
+<span class="shadowed">
+Returns true if the left side of the sprite is colliding with the sprite given by the argument.
+<pre><code>
+( ball leftCollidesWith: paddle ) ifTrue: [ ball bounce ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="leftCollidesWithAnyOf:">leftCollidesWithAnyOf:</h3>
+<span class="shadowed">
+Returns true if the left side of the sprite is colliding with any of the sprites included in the collection given by the argument.
+<pre><code>
+( spaceship leftCollidesWithAnyOf: bullets ) ifTrue: [ spacechip beHit ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="leftCollidesWithWhichOf:">leftCollidesWithWhichOf:</h3>
+<span class="shadowed">
+If the left side of the sprite is colliding with a sprite included in the collection given by the argument, it returns the one with which it is colliding.
+<pre><code>
+( magicCoin leftCollidesWithWhichOf: players ) scoreOnePoint.
+</code></pre>
+</span>
+<h3 class="shadowed" id="moveCentreBy:">moveCentreBy:</h3>
+<span class="shadowed">
+Adds the distance given by the argument to the centre of the sprite.
+<pre><code>
+self moveCentreBy: 0 @ 5.
+</code></pre>
+</span>
+<h3 class="shadowed" id="nextFrame">nextFrame</h3>
+<span class="shadowed">
+Sets the current frame to the next one in the frame collection of the current frame group.
+</span>
+<h3 class="shadowed" id="nextFrameGroup">nextFrameGroup</h3>
+<span class="shadowed">
+Sets the current frame group to the next one in the collection of frame groups.
+</span>
+<h3 class="shadowed" id="position">position</h3>
+<span class="shadowed">
+Returns the position of the top left corner of the sprite.
+</span>
+<h3 class="shadowed" id="position:">position:</h3>
+<span class="shadowed">
+Sets the position of the top left corner of the sprite to the one defined by the point given by the argument.
+<pre><code>
+self position: 200 @ 500
+</code></pre>
+</span>
+<h3 class="shadowed" id="rightCollidesWith:">rightCollidesWith:</h3>
+<span class="shadowed">
+Returns true if the right side of the sprite is colliding with the sprite given by the argument.
+<pre><code>
+( ball rightCollidesWith: paddle ) ifTrue: [ ball bounce ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="rightCollidesWithAnyOf:">rightCollidesWithAnyOf:</h3>
+<span class="shadowed">
+Returns true if the right side of the sprite is colliding with any of the sprites included in the collection given by the argument.
+<pre><code>
+( spaceship rightCollidesWithAnyOf: bullets ) ifTrue: [ spacechip beHit ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="rightCollidesWithWhichOf:">rightCollidesWithWhichOf:</h3>
+<span class="shadowed">
+If the right side of the sprite is colliding with a sprite included in the collection given by the argument, it returns the one with which it is colliding.
+<pre><code>
+( magicCoin rightCollidesWithWhichOf: players ) scoreOnePoint.
+</code></pre>
+</span>
+<h3 class="shadowed" id="spriteSheet">spriteSheet</h3>
+<span class="shadowed">
+Returns the URL of the sprite's spriteSheet.
+</span>
+<h3 class="shadowed" id="spriteSheet:">spriteSheet:</h3>
+<span class="shadowed">
+Sets the URL of the sprite's spriteSheet to the one given by the argument.
+<pre><code>
+self spriteSheet: 'fighter.png'.
+</code></pre>
+</span>
+<h3 class="shadowed" id="startAnimation">startAnimation</h3>
+<span class="shadowed">
+Starts animating the sprite.
+<pre><code>
+self animating ifFalse: [ self startAnimation ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="stopAnimation">stopAnimation</h3>
+<span class="shadowed">
+Stops animating the sprite.
+<pre><code>
+self animating ifTrue: [ self stopAnimation ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="toggleAnimation">toggleAnimation</h3>
+<span class="shadowed">
+Toggles the sprite's animation.
+<pre><code>
+MyGame >> step
+    self whileKeyPressed: Key space do: [ snake toggleAnimation ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="topCollidesWith:">topCollidesWith:</h3>
+<span class="shadowed">
+Returns true if the top side of the sprite is colliding with the sprite given by the argument.
+<pre><code>
+( paddle topCollidesWith: ball ) ifTrue: [ ball bounce ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="topCollidesWithAnyOf:">topCollidesWithAnyOf:</h3>
+<span class="shadowed">
+Returns true if the top side of the sprite is colliding with any of the sprites included in the collection given by the argument.
+<pre><code>
+( player topCollidesWithAnyOf: magicCoins ) ifTrue: [ player scoreOnePoint ].
+</code></pre>
+</span>
+<h3 class="shadowed" id="topCollidesWithWhichOf:">topCollidesWithWhichOf:</h3>
+<span class="shadowed">
+If the top side of the sprite is colliding with a sprite included in the collection given by the argument, it returns the one with which it is colliding.
+<pre><code>
+( spike bottomCollidesWithWhichOf: players ) die.
+</code></pre>
+</span>
+<h3 class="shadowed" id="width">width</h3>
+<span class="shadowed">
+Returns the width of the sprite in pixels, given by the width of its current frame group.
+</span>
+<h3 class="shadowed" id="x">x</h3>
+<span class="shadowed">
+Returns the horizontal component of the sprite's top left corner position, in pixels.
+</span>
+<h3 class="shadowed" id="x:">x:</h3>
+<span class="shadowed">
+Sets the horizontal component of the sprite's top left corner position, in pixels.
+<pre><code>
+self x: 300.
+</code></pre>
+</span>
+<h3 class="shadowed" id="y">y</h3>
+<span class="shadowed">
+Returns the vertical component of the sprite's top left corner position, in pixels.
+</span>
+<h3 class="shadowed" id="y:">y:</h3>
+<span class="shadowed">
+Sets the vertical component of the sprite's top left corner position, in pixels.
+<pre><code>
+self y: 400.
+</code></pre>
+</span>
+</body>
+</html>

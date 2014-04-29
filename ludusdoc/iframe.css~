@@ -1,0 +1,33 @@
+.shadowed {
+	color: rgba(188,160,51, 0.8);
+	text-shadow: 1px 4px 6px #F2EBD0, 0 0 0 #000, 1px 4px 6px #F2EBD0;
+}
+::-moz-selection { background: #5af; color: #fff; text-shadow: none; }
+::selection { background: #5af; color: #fff; text-shadow: none; }
+
+span.shadowed a {
+	text-decoration: none;
+}
+span.shadowed a:hover {
+	background-color: white;
+}
+code {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 5px;
+	padding-left: 15px;
+	padding-bottom: 20px;
+	font-family: Consolas, Courier;
+	font-weight: bold;
+	font-size: 18px;
+	background-color: white;
+	display: block;
+	text-shadow: none;
+	color: #847024;
+}
+span.shadowed {
+	margin-left: 15px;
+	margin-right: 15px;
+	margin-bottom: 40px;
+	display: block;
+}

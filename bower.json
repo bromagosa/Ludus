@@ -1,0 +1,25 @@
+{
+    "name": "Ludus",
+    "description": "Amber Application - Game framework and examples.",
+    "version": "0.1.0",
+    "authors": [
+        { "name": "Bernat Romagosa", "email": "tibabenfortlapalanca@gmail.com" },
+	{ "name": "Philippe Back", "email": "phil@highoctane.be" },
+	{ "name": "Hannes Hirzel", "email": "hannes.hirzel@gmail.com" }
+	],
+    "homepage": "https://github.com/philippeback/Ludus",
+
+    "keywords": [
+        "Amber",
+        "Smalltalk",
+	"Example",
+	"Games"
+    ],
+    "license": [
+        "MIT"
+    ],
+    "private": false,
+    "dependencies": {
+        "amber": "~>= 0.12.4"
+    }
+}

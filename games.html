@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Amberapplication</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Philippe Back" />
+    <script type='text/javascript' src='bower_components/amber/support/requirejs/require.min.js'></script>
+    <script type='text/javascript' src='bower_components/amber/support/amber.js'></script>
+  </head>
+
+  <body>
+    <script type='text/javascript'>
+      require.config({ paths: {
+          'HOS': 'src' //mapping compiled .js files and smalltalk source files
+      }});
+      require([
+          'amber/devel',
+          'HOS/AmberApplication',
+          'HOS/Ludus',
+          'HOS/Ludus-Examples',
+          'HOS/AFI'
+      ], function (smalltalk) {
+          //used for all new packages in IDE
+          smalltalk.initialize({
+            'transport.defaultAmdNamespace': "HOS"
+          });
+      });
+    </script>
+    <button onclick="require('amber/helpers').globals.Browser._open()">legacy IDE</button>
+    <button onclick="require('amber/helpers').popupHelios()">Helios IDE</button>
+    <button onclick="require('amber/helpers').globals.SmallCave._start()">SmallCave</button>
+    <button onclick="require('amber/helpers').globals.Pong._start()">Pong</button>
+    <button onclick="require('amber/helpers').globals.SimplePacman._start()">Simple Pacman</button>
+    <button onclick="require('amber/helpers').globals.Sokoban._start()">Sokoban</button>
+    <button onclick="require('amber/helpers').globals.SokobanLevelCreator._open()">Sokoban editor</button>
+    
+    <div id="app">
+	<div id="main">
+	</div>
+	<div id="log">
+	</div>
+    </div>
+  </body>
+
+</html>
