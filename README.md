@@ -37,7 +37,13 @@ bower install
 And launch the amber server.
 
 ```
-amber serve
+amber serve 
+```
+
+for default port 4000 or with a specific port number 
+
+```
+amber serve --port 9000
 ```
 
 Point your browser to:
