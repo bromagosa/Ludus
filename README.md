@@ -55,3 +55,6 @@ Enjoy!
 ## See also
 Another Amber Smalltalk game framework by Masashi Umezawa
 https://github.com/mumez/enchant-from-amber . It wraps the [enchantjs](http://enchantjs.com/) library with Amber Smalltalk code.
+
+
+Submarine game in Amber  https://github.com/johnnyt/subwars
