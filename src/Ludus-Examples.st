@@ -151,13 +151,13 @@ startGame
 		createBall.
 
 	ball direction: (#(-1 1) at: (2 atRandom)) @ ((20 atRandom - 10)/10).
-	window alert: 'Left Player: a - up q - down / Right Player: up/down arrows'
+	window alert: 'Left Player: s - up x - down / Right Player: up/down arrows'
 !
 
 step
 	ai
-		ifFalse: [self whileKeyPressed: Key a do: [self goUp: paddle1];
-			whileKeyPressed: Key q do: [self goDown: paddle1]]
+		ifFalse: [self whileKeyPressed: Key s do: [self goUp: paddle1];
+			whileKeyPressed: Key x do: [self goDown: paddle1]]
 		ifTrue: [self processAI].
 	self whileKeyPressed: Key upArrow do: [self goUp: paddle2];
 		whileKeyPressed: Key downArrow do: [self goDown: paddle2];
