@@ -1,14 +1,25 @@
-Smalltalk current createPackage: 'Ludus-Documentation' properties: #{}!
+Smalltalk createPackage: 'Ludus-Documentation'!
 Widget subclass: #LudusDoc
 	instanceVariableNames: 'iframe'
-	category: 'Ludus-Documentation'!
+	package: 'Ludus-Documentation'!
 !LudusDoc commentStamp!
 Document the documentation?!
 
-!LudusDoc methodsFor: 'not yet classified'!
+!LudusDoc methodsFor: 'accessing'!
 
-renderOn: html
-	self renderDocumentationOn: html.
+pages
+	^ #('Game' 'Sprite' 'FrameGroup' 'Sound').
+! !
+
+!LudusDoc methodsFor: 'rendering'!
+
+display: aPage
+	iframe id: aPage;
+		src: 'ludusdoc/' , aPage , '.html'.
+
+	iframe asJQuery 
+		bind: 'load'
+		do: [ self resize ]
 !
 
 renderDocumentationOn: html
@@ -24,17 +35,8 @@ renderDocumentationOn: html
 	iframe := html iframe onChange: [ self resize ].
 !
 
-pages
-	^ #('Game' 'Sprite' 'FrameGroup' 'Sound').
-!
-
-display: aPage
-	iframe id: aPage;
-		src: 'ludusdoc/' , aPage , '.html'.
-
-	iframe asJQuery 
-		bind: 'load'
-		do: [ self resize ]
+renderOn: html
+	self renderDocumentationOn: html.
 !
 
 resize

@@ -2986,7 +2986,7 @@ self["@fps"]=(20);
 self["@stepSize"]=(10);
 self._width_((720));
 $1=self._height_((540));
-_st(self["@canvas"])._style_("border: 1px solid; background-image: url(\x22images/background.png\x22)");
+_st(self["@canvas"])._style_("background-image: url(\x22images/background.png\x22)");
 self._addSound_("sounds/slide.ogg");
 $ctx1.sendIdx["addSound:"]=1;
 self._addSound_("sounds/factory.ogg");
@@ -2996,7 +2996,7 @@ _st(self._soundNamed_("factory"))._loop();
 self._createLevel();
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.Sokoban)})},
 args: [],
-source: "startGame\x0a\x09fps := 20.\x09\x0a\x09stepSize := 10.\x0a\x0a\x09self width: 720; \x0a\x09\x09height: 540.\x0a\x0a\x09canvas style: 'border: 1px solid; background-image: url(\x22images/background.png\x22)'.\x0a\x0a\x09self addSound: 'sounds/slide.ogg'.\x0a\x09self addSound: 'sounds/factory.ogg'.\x0a\x09self addSound: 'sounds/applause.ogg'.\x0a\x0a\x09(self soundNamed: 'factory') loop.\x0a\x0a\x09self createLevel.",
+source: "startGame\x0a\x09fps := 20.\x09\x0a\x09stepSize := 10.\x0a\x0a\x09self width: 720; \x0a\x09\x09height: 540.\x0a\x0a\x09canvas style: 'background-image: url(\x22images/background.png\x22)'.\x0a\x0a\x09self addSound: 'sounds/slide.ogg'.\x0a\x09self addSound: 'sounds/factory.ogg'.\x0a\x09self addSound: 'sounds/applause.ogg'.\x0a\x0a\x09(self soundNamed: 'factory') loop.\x0a\x0a\x09self createLevel.",
 messageSends: ["width:", "height:", "style:", "addSound:", "loop", "soundNamed:", "createLevel"],
 referencedClasses: []
 }),

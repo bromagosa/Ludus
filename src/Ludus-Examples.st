@@ -537,7 +537,7 @@ startGame
 	self width: 720; 
 		height: 540.
 
-	canvas style: 'border: 1px solid; background-image: url("images/background.png")'.
+	canvas style: 'background-image: url("images/background.png")'.
 
 	self addSound: 'sounds/slide.ogg'.
 	self addSound: 'sounds/factory.ogg'.
