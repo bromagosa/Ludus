@@ -111,3 +111,16 @@ require = function (require) {
         return config;
     }
 }(require);
+
+
+
+
+
+
+define("amber_vm/_st", ["./globals", "./nil"], function (globals, nil) {
+    return function (o) {
+        if (o == null) { return nil; }
+        if (o.klass) { return o; }
+        return globals.JSObjectProxy._on_(o);
+    };
+});
