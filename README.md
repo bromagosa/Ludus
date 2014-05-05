@@ -2,6 +2,8 @@
 
 Ludus is an HTML5 canvas game framework for Amber Smalltalk.
 
+You can find documentation for all methods and a couple of example games at [the project page](http://bromagosa.github.io/Ludus/).
+
 This repository is a move to Amber Smalltalk version 0.12.4 from the [original Ludus as an Amber branch](https://github.com/bromagosa/amber/tree/ludus) (version 0.9.1). The name stands for *game* or *leisure* in Latin.
 
 Ludus has been ported from Amber 0.9.1 to Amber 0.12.4 by [Philippe Back](https://github.com/philippeback) and [Hannes Hirzel](https://github.com/hhzl).
