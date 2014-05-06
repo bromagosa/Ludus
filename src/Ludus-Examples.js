@@ -2,6 +2,302 @@ define("HOS/Ludus-Examples", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_s
 smalltalk.addPackage('Ludus-Examples');
 smalltalk.packages["Ludus-Examples"].transport = {"type":"amd","amdNamespace":"HOS"};
 
+smalltalk.addClass('MemoryCard', globals.Sprite, ['animalName'], 'Ludus-Examples');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "animalName",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@animalName"];
+return $1;
+},
+args: [],
+source: "animalName\x0a\x09^ animalName",
+messageSends: [],
+referencedClasses: []
+}),
+globals.MemoryCard);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "animalName:",
+protocol: 'accessing',
+fn: function (aString){
+var self=this;
+self["@animalName"]=aString;
+return self},
+args: ["aString"],
+source: "animalName: aString\x0a\x09animalName := aString",
+messageSends: [],
+referencedClasses: []
+}),
+globals.MemoryCard);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "hideAnimal",
+protocol: 'animation',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._startAnimation();
+return self}, function($ctx1) {$ctx1.fill(self,"hideAnimal",{},globals.MemoryCard)})},
+args: [],
+source: "hideAnimal\x0a\x09self \x0a\x09\x09startAnimation.",
+messageSends: ["startAnimation"],
+referencedClasses: []
+}),
+globals.MemoryCard);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "showAnimal",
+protocol: 'animation',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._restartAnimation();
+$1=self._stopAnimation();
+return self}, function($ctx1) {$ctx1.fill(self,"showAnimal",{},globals.MemoryCard)})},
+args: [],
+source: "showAnimal\x0a\x09self \x0a\x09\x09restartAnimation;\x0a\x09\x09stopAnimation.",
+messageSends: ["restartAnimation", "stopAnimation"],
+referencedClasses: []
+}),
+globals.MemoryCard);
+
+
+
+smalltalk.addClass('MemoryGame', globals.Game, ['cards', 'lastSelectedCard'], 'Ludus-Examples');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addCardForAnimal:inPosition:",
+protocol: 'sprites',
+fn: function (anAnimal,aPosition){
+var self=this;
+function $MemoryCard(){return globals.MemoryCard||(typeof MemoryCard=="undefined"?nil:MemoryCard)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$4,$5,$6,$7,$8,$2;
+$1=self._cards();
+$3=_st($MemoryCard())._new();
+_st($3)._animalName_(anAnimal);
+$4=$3;
+$5=_st("images/memory/".__comma(anAnimal)).__comma(".png");
+$ctx1.sendIdx[","]=1;
+_st($4)._spriteSheet_($5);
+$6=$3;
+$7=(0).__at((0));
+$ctx1.sendIdx["@"]=1;
+_st($6)._addFrameGroupNamed_origin_size_frameCount_("card",$7,(100).__at((100)),(2));
+_st($3)._centre_(aPosition);
+_st($3)._frameRate_((30));
+_st($3)._loop_(false);
+_st($3)._stopAnimation();
+$8=_st($3)._hideAnimal();
+$2=$8;
+_st($1)._add_($2);
+return self}, function($ctx1) {$ctx1.fill(self,"addCardForAnimal:inPosition:",{anAnimal:anAnimal,aPosition:aPosition},globals.MemoryGame)})},
+args: ["anAnimal", "aPosition"],
+source: "addCardForAnimal: anAnimal inPosition: aPosition\x0a\x0a\x09self cards add:\x0a\x09\x09(MemoryCard new\x0a\x09\x09\x09animalName: anAnimal;\x0a\x09\x09\x09spriteSheet: 'images/memory/' , anAnimal , '.png';\x0a\x09\x09\x09addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;\x0a\x09\x09\x09centre: aPosition;\x0a\x09\x09\x09frameRate: 30;\x0a\x09\x09\x09loop: false;\x0a\x09\x09\x09stopAnimation;\x0a\x09\x09\x09hideAnimal)",
+messageSends: ["add:", "cards", "animalName:", "new", "spriteSheet:", ",", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "frameRate:", "loop:", "stopAnimation", "hideAnimal"],
+referencedClasses: ["MemoryCard"]
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addCards",
+protocol: 'sprites',
+fn: function (){
+var self=this;
+var positions;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10;
+$1=(50).__at((50));
+$ctx1.sendIdx["@"]=1;
+$2=(150).__at((50));
+$ctx1.sendIdx["@"]=2;
+$3=(250).__at((50));
+$ctx1.sendIdx["@"]=3;
+$4=(350).__at((50));
+$ctx1.sendIdx["@"]=4;
+$5=(450).__at((50));
+$ctx1.sendIdx["@"]=5;
+$6=(50).__at((150));
+$ctx1.sendIdx["@"]=6;
+$7=(150).__at((150));
+$ctx1.sendIdx["@"]=7;
+$8=(250).__at((150));
+$ctx1.sendIdx["@"]=8;
+$9=(350).__at((150));
+$ctx1.sendIdx["@"]=9;
+positions=[$1,$2,$3,$4,$5,$6,$7,$8,$9,(450).__at((150))];
+["cat", "cow", "mouse", "pig", "sheep"]._do_((function(eachAnimal){
+return smalltalk.withContext(function($ctx2) {
+$10=_st("sounds/".__comma(eachAnimal)).__comma(".ogg");
+$ctx2.sendIdx[","]=1;
+self._addSound_($10);
+return (2)._timesRepeat_((function(){
+var position;
+return smalltalk.withContext(function($ctx3) {
+position=_st(positions)._atRandom();
+position;
+_st(positions)._remove_(position);
+return self._addCardForAnimal_inPosition_(eachAnimal,position);
+}, function($ctx3) {$ctx3.fillBlock({position:position},$ctx2,2)})}));
+}, function($ctx2) {$ctx2.fillBlock({eachAnimal:eachAnimal},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"addCards",{positions:positions},globals.MemoryGame)})},
+args: [],
+source: "addCards\x0a\x09\x0a\x09| positions |\x0a\x0a\x09positions := \x0a\x09\x09{50@50.  150@50.  250@50.  350@50.  450@50.\x0a\x09\x09 50@150. 150@150. 250@150. 350@150. 450@150}.\x0a\x09\x0a\x09#('cat' 'cow' 'mouse' 'pig' 'sheep') do: \x0a\x09\x09[ :eachAnimal |\x0a\x09\x09\x09self addSound: 'sounds/' , eachAnimal , '.ogg'.\x0a\x09\x09\x092 timesRepeat: [\x0a\x09\x09\x09\x09| position |\x0a\x09\x09\x09\x09position := positions atRandom.\x0a\x09\x09\x09\x09positions remove: position.\x0a\x09\x09\x09\x09self addCardForAnimal: eachAnimal inPosition: position.\x0a\x09\x09\x09]\x0a\x09\x09]",
+messageSends: ["@", "do:", "addSound:", ",", "timesRepeat:", "atRandom", "remove:", "addCardForAnimal:inPosition:"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "cards",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@cards"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@cards"]=[];
+$1=self["@cards"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"cards",{},globals.MemoryGame)})},
+args: [],
+source: "cards\x0a\x09^ cards ifNil: [ cards := #() ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "draw",
+protocol: 'drawing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._drawSpriteCollection_(self["@cards"]);
+return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.MemoryGame)})},
+args: [],
+source: "draw\x0a\x09self drawSpriteCollection: cards",
+messageSends: ["drawSpriteCollection:"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "handleCardClick",
+protocol: 'events',
+fn: function (){
+var self=this;
+var clickedCard;
+function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$2,$4,$5,$7,$6,$8,$receiver;
+clickedCard=_st(self["@cards"])._detect_ifNone_((function(which){
+return smalltalk.withContext(function($ctx2) {
+return _st(which)._touchingMousePointer_(self._mousePosition());
+}, function($ctx2) {$ctx2.fillBlock({which:which},$ctx1,1)})}),(function(){
+return nil;
+}));
+$1=clickedCard;
+if(($receiver = $1) == null || $receiver.isNil){
+$1;
+} else {
+$3=_st(clickedCard)._animalName();
+$ctx1.sendIdx["animalName"]=1;
+$2=self._soundNamed_($3);
+_st($2)._play();
+_st(clickedCard)._showAnimal();
+$4=self["@lastSelectedCard"];
+if(($receiver = $4) == null || $receiver.isNil){
+self["@lastSelectedCard"]=clickedCard;
+self["@lastSelectedCard"];
+} else {
+$5=_st(self["@lastSelectedCard"]).__eq(clickedCard);
+$ctx1.sendIdx["="]=1;
+if(smalltalk.assert($5)){
+_st(clickedCard)._hideAnimal();
+$ctx1.sendIdx["hideAnimal"]=1;
+} else {
+$7=_st(self["@lastSelectedCard"])._animalName();
+$ctx1.sendIdx["animalName"]=2;
+$6=_st($7).__eq(_st(clickedCard)._animalName());
+if(smalltalk.assert($6)){
+_st($Transcript())._show_("yay :)");
+$8=_st($Transcript())._cr();
+$8;
+} else {
+_st(self["@lastSelectedCard"])._hideAnimal();
+$ctx1.sendIdx["hideAnimal"]=2;
+_st(clickedCard)._hideAnimal();
+};
+};
+self["@lastSelectedCard"]=nil;
+self["@lastSelectedCard"];
+};
+};
+return self}, function($ctx1) {$ctx1.fill(self,"handleCardClick",{clickedCard:clickedCard},globals.MemoryGame)})},
+args: [],
+source: "handleCardClick\x0a\x0a\x09| clickedCard |\x0a\x09\x0a\x09clickedCard := cards detect: [ :which | which touchingMousePointer: self mousePosition ] ifNone: [ nil ].\x0a\x09\x0a\x09clickedCard ifNotNil: [\x0a\x09\x09(self soundNamed: clickedCard animalName) play.\x0a\x09\x09clickedCard showAnimal.\x0a\x09\x09lastSelectedCard \x0a\x09\x09\x09ifNil: [ lastSelectedCard := clickedCard ]\x0a\x09\x09\x09ifNotNil: [\x0a\x09\x09\x09\x09lastSelectedCard = clickedCard \x0a\x09\x09\x09\x09\x09ifTrue: [ clickedCard hideAnimal ]\x0a\x09\x09\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09\x09\x09lastSelectedCard animalName = clickedCard animalName \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [ Transcript show: 'yay :)'; cr ]\x0a\x09\x09\x09\x09\x09\x09\x09ifFalse: [ \x0a\x09\x09\x09\x09\x09\x09\x09\x09lastSelectedCard hideAnimal.\x0a\x09\x09\x09\x09\x09\x09\x09\x09clickedCard hideAnimal ]].\x0a\x09\x09\x09\x09lastSelectedCard := nil.\x0a\x09\x09\x09]\x0a\x09]",
+messageSends: ["detect:ifNone:", "touchingMousePointer:", "mousePosition", "ifNotNil:", "play", "soundNamed:", "animalName", "showAnimal", "ifNil:ifNotNil:", "ifTrue:ifFalse:", "=", "hideAnimal", "show:", "cr"],
+referencedClasses: ["Transcript"]
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "startGame",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._width_((500));
+$1=self._height_((200));
+self._addCards();
+return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.MemoryGame)})},
+args: [],
+source: "startGame\x0a\x09self \x0a\x09\x09width: 500;\x0a\x09\x09height: 200.\x0a\x09\x0a\x09self addCards",
+messageSends: ["width:", "height:", "addCards"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "step",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._onMouseClickDo_((function(){
+return smalltalk.withContext(function($ctx2) {
+return self._handleCardClick();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.MemoryGame)})},
+args: [],
+source: "step\x0a\x09self onMouseClickDo: [\x0a\x09\x09self handleCardClick\x0a\x09]",
+messageSends: ["onMouseClickDo:", "handleCardClick"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+
+
 smalltalk.addClass('Pong', globals.Game, ['ball', 'score', 'paddle1', 'paddle2', 'speed', 'ai'], 'Ludus-Examples');
 smalltalk.addMethod(
 smalltalk.method({
@@ -1052,7 +1348,7 @@ _st(window)._alert_("You lost!");
 };
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.SimplePacman)})},
 args: [],
-source: "step\x0a\x09self whileKeyPressed: Key leftArrow do: [self moveLeft];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [self moveRight];\x0a\x09\x09whileKeyPressed: Key upArrow do: [self moveUp];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self moveDown].\x0a\x09self onMouseClickDo: [window alert: self mousePosition x asString , ',' , self mousePosition y asString].\x0a\x09self moveGhost.\x0a\x09(pacman collidesWith: ghost) ifTrue: [self end. window alert: 'You lost!']",
+source: "step\x0a\x09self whileKeyPressed: Key leftArrow do: [self moveLeft];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [self moveRight];\x0a\x09\x09whileKeyPressed: Key upArrow do: [self moveUp];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self moveDown].\x0a\x09self onMouseClickDo: [ window alert: self mousePosition x asString , ',' , self mousePosition y asString ].\x0a\x09self moveGhost.\x0a\x09(pacman collidesWith: ghost) ifTrue: [ self end. window alert: 'You lost!' ]",
 messageSends: ["whileKeyPressed:do:", "leftArrow", "moveLeft", "rightArrow", "moveRight", "upArrow", "moveUp", "downArrow", "moveDown", "onMouseClickDo:", "alert:", ",", "asString", "x", "mousePosition", "y", "moveGhost", "ifTrue:", "collidesWith:", "end"],
 referencedClasses: ["Key"]
 }),
@@ -2981,7 +3277,7 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
+var $1,$2;
 self["@fps"]=(20);
 self["@stepSize"]=(10);
 self._width_((720));
@@ -2991,12 +3287,12 @@ self._addSound_("sounds/slide.ogg");
 $ctx1.sendIdx["addSound:"]=1;
 self._addSound_("sounds/factory.ogg");
 $ctx1.sendIdx["addSound:"]=2;
-self._addSound_("sounds/applause.ogg");
+$2=self._addSound_("sounds/applause.ogg");
 _st(self._soundNamed_("factory"))._loop();
 self._createLevel();
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.Sokoban)})},
 args: [],
-source: "startGame\x0a\x09fps := 20.\x09\x0a\x09stepSize := 10.\x0a\x0a\x09self width: 720; \x0a\x09\x09height: 540.\x0a\x0a\x09canvas style: 'border: 1px solid; background-image: url(\x22images/background.png\x22)'.\x0a\x0a\x09self addSound: 'sounds/slide.ogg'.\x0a\x09self addSound: 'sounds/factory.ogg'.\x0a\x09self addSound: 'sounds/applause.ogg'.\x0a\x0a\x09(self soundNamed: 'factory') loop.\x0a\x0a\x09self createLevel.",
+source: "startGame\x0a\x09fps := 20.\x09\x0a\x09stepSize := 10.\x0a\x0a\x09self\x0a\x09\x09width: 720; \x0a\x09\x09height: 540.\x0a\x0a\x09canvas style: 'border: 1px solid; background-image: url(\x22images/background.png\x22)'.\x0a\x0a\x09self\x0a\x09\x09addSound: 'sounds/slide.ogg';\x0a\x09\x09addSound: 'sounds/factory.ogg';\x0a\x09\x09addSound: 'sounds/applause.ogg'.\x0a\x0a\x09(self soundNamed: 'factory') loop.\x0a\x0a\x09self createLevel.",
 messageSends: ["width:", "height:", "style:", "addSound:", "loop", "soundNamed:", "createLevel"],
 referencedClasses: []
 }),

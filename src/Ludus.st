@@ -50,12 +50,16 @@ frameRate: anInteger
 
 nextFrame
 	self atLastFrame
-		ifTrue: [ currentFrameNumber := 0 ]
-		ifFalse: [ currentFrameNumber := currentFrameNumber + 1 ]
+		ifTrue: [ currentFrameNumber  := 0 ]
+		ifFalse: [ currentFrameNumber := self currentFrameNumber + 1 ]
 !
 
 offset
 	^ self width * self currentFrameNumber
+!
+
+toFirstFrame
+	currentFrameNumber := 0
 ! !
 
 !FrameGroup class methodsFor: 'instance creation'!
@@ -74,7 +78,17 @@ I am a game. You need to override a couple of my methods to make me usable:
 
 **#step**  Here you can define what has to be done at each game cycle, or step. This method should control posititions, collisions, mouse and keyboard events, etc. This method should not deal with any graphic properties, these should be dealt with by:
 
-**#draw** → This is the method that controls my view. Here you should define the drawing of sprites and other graphic elements. Don't forget to clear the canvas before re-drawing sprites, if your game requires so.!
+**#draw**  This is the method that controls my view. Here you should define the drawing of sprites and other graphic elements. Don't forget to clear the canvas before re-drawing sprites, if your game requires so.!
+
+!Game methodsFor: 'accessing'!
+
+canvas
+	^ canvas
+!
+
+fps: anInteger
+	fps := anInteger
+! !
 
 !Game methodsFor: 'attributes'!
 
@@ -109,10 +123,16 @@ windowScrollTop
 !Game methodsFor: 'audio'!
 
 addSound: aSoundUrl
-	| sound |
-	sound := (Sound src: aSoundUrl).
-	sounds add: sound.
-	sound appendToJQuery: 'body' asJQuery.
+	(self hasSound: aSoundUrl) ifFalse: [
+		| sound |
+		sound := (Sound src: aSoundUrl).
+		sounds add: sound.
+		sound appendToJQuery: 'body' asJQuery 
+	]
+!
+
+hasSound: aSoundUrl
+	^ sounds anySatisfy: [ :any | any src = aSoundUrl ]
 !
 
 soundNamed: aName
@@ -142,6 +162,23 @@ gameLoop
 
 gameOver
 	^ end ifNil: [ end := false ]
+!
+
+kill
+	self end.
+	sounds do: [ :each | each kill ].
+	canvas asJQuery remove
+!
+
+restart
+	self
+		kill;
+		initialize;
+		start.
+!
+
+start
+	self appendToJQuery: ('body' asJQuery).
 !
 
 step
@@ -188,21 +225,49 @@ drawSpriteCollection: aSpriteCollection
 	aSpriteCollection
 		do: [ :eachSprite | 
 			self drawSprite: eachSprite ]
+!
+
+drawSprites
+	self drawSpriteCollection: self sprites
 ! !
 
 !Game methodsFor: 'events'!
 
-forElement: anElement ofDataEntry: aDataEntryName getProperty: aPropertyName
-	"^ (anElement asJQuery data: aDataEntryName) at: aPropertyName"
-	<
-	var data;
-	data = $(anElement).data(aDataEntryName);
-	if (data !!= undefined) {
-		return data[aPropertyName];
-	} else {
-		return null;
-	}
-	>
+mousePosition
+	^ mousePosition ifNil: [ mousePosition := 0 @ 0 ]
+!
+
+onMouseClickDo: aBlock
+	(self eventData: 'click')
+		ifNil: [ canvas onClick: aBlock ]
+!
+
+onMouseDownDo: aBlock
+	(self eventData: 'mousedown')
+		ifNil: [ canvas asJQuery bind: 'mousedown' do: aBlock ]
+!
+
+onMouseUpDo: aBlock
+	(self eventData: 'mouseup')
+		ifNil: [ canvas asJQuery bind: 'mouseup' do: aBlock ]
+!
+
+whileKeyPressed: aKeyCode do: aBlock
+	((self keys at: aKeyCode ifAbsent: [ false ]) and: [ self keys at: aKeyCode ]) ifTrue: aBlock
+!
+
+whileMouseDownDo: aBlock
+	mouseDown ifTrue: aBlock
+!
+
+whileMouseUpDo: aBlock
+	mouseDown ifFalse: aBlock
+! !
+
+!Game methodsFor: 'events - private'!
+
+eventData: anEvent
+	<return $._data($('#MemoryGame')[0],'events')[anEvent]>
 !
 
 keyDown: evt
@@ -232,62 +297,25 @@ mouseMove: evt
 	mousePosition := (evt clientX - canvasRelative x) @ (evt clientY - canvasRelative y).
 !
 
-mousePosition
-	^ mousePosition ifNil: [ mousePosition := 0 @ 0 ]
-!
-
 mouseUp: evt
 	mouseDown := false.
-!
+! !
 
-onMouseClickDo: aBlock
-	(self 
-		forElement: '#canvas' 
-		ofDataEntry: 'events' 
-		getProperty: 'click')
-			ifNil: [ canvas onClick: aBlock ]
-!
+!Game methodsFor: 'events - testing'!
 
-onMouseDownDo: aBlock
-	(self 
-		forElement: '#canvas' 
-		ofDataEntry: 'events' 
-		getProperty: 'mousedown')
-			ifNil: [ canvas asJQuery bind: 'mousedown' do: aBlock ]
-!
-
-onMouseUpDo: aBlock
-	(self 
-		forElement: '#canvas' 
-		ofDataEntry: 'events' 
-		getProperty: 'mouseup')
-			ifNil: [ canvas asJQuery bind: 'mouseup' do: aBlock ]
-!
-
-whileKeyPressed: aKeyCode do: aBlock
-	((self keys at: aKeyCode ifAbsent: [ false ]) and: [ self keys at: aKeyCode ]) ifTrue: aBlock
-!
-
-whileMouseDownDo: aBlock
-	mouseDown ifTrue: aBlock
-!
-
-whileMouseUpDo: aBlock
-	mouseDown ifFalse: aBlock
+isMouseDown
+	^ mouseDown
 ! !
 
 !Game methodsFor: 'initialization'!
 
-fps: anInteger
-	fps := anInteger
-!
-
 initialize
 	super initialize.
-	fps := 30.
 	self initializeKeys.
-	sounds := #().
 	mouseDown := false.
+	fps := 30.
+	sprites := #().
+	sounds := #().
 	step := 1.
 !
 
@@ -308,7 +336,7 @@ renderOn: html
 	canvas 
 		at: 'width' put: 250;
 		at: 'height' put: 250;
-		id: 'canvas'.
+		id: self class name.
 	context := canvas element getContext: '2d'.
 
 	(window jQuery: document) keydown: [ :evt | self keyDown: evt ].
@@ -331,9 +359,8 @@ initialize
 
 start
 	|instance|
-	instance := self new.
-	instance appendToJQuery: ('body' asJQuery).
-	^instance
+	instance := self new start.
+	^ instance
 ! !
 
 Object subclass: #Key
@@ -423,6 +450,12 @@ src: anUrl
 	src := anUrl
 ! !
 
+!Sound methodsFor: 'control'!
+
+kill
+	(document getElementById: self id) remove
+! !
+
 !Sound methodsFor: 'rendering'!
 
 renderOn: html
@@ -465,7 +498,7 @@ src: anUrl
 ! !
 
 Object subclass: #Sprite
-	instanceVariableNames: 'position direction spriteSheet currentFrameGroup frameGroups animating'
+	instanceVariableNames: 'position direction spriteSheet currentFrameGroup frameGroups animating loop'
 	package: 'Ludus'!
 !Sprite commentStamp!
 I am a Sprite. I need to have a spritesheet, which is an image file that displays all possible frames I can paint organized in an ordered fashion.
@@ -477,11 +510,26 @@ Of course, I also have a position, defined by cartesian coordinates.!
 !Sprite methodsFor: 'animation'!
 
 animating
-	^ animating ifNil: [ animating := true ]
+	animating ifNil: [ animating := true ].
+	
+	^ (animating & (self loop | self atLastFrame not))
 !
 
 frameRate: anInteger
 	self frameGroups do: [ :each | each frameRate: anInteger ]
+!
+
+loop
+	^ loop ifNil: [ loop := true ]
+!
+
+loop: aBoolean
+	loop := aBoolean
+!
+
+restartAnimation
+	self currentFrameGroup toFirstFrame.
+	self startAnimation.
 !
 
 startAnimation
@@ -531,10 +579,6 @@ direction: aPoint
 	direction := (Math sin: angle) @ (Math cos: angle).
 !
 
-height
-	^ self currentFrameGroup height
-!
-
 newImage
 	^ document createElement: 'img'
 !
@@ -554,10 +598,6 @@ spriteSheet
 
 spriteSheet: anImageUrl
 	self spriteSheet src: anImageUrl
-!
-
-width
-	^ self currentFrameGroup width
 !
 
 x
@@ -602,13 +642,6 @@ collidesWith: aSprite
 
 collidesWithAnyOf: aSpriteCollection
 	^ (aSpriteCollection select: [ :each | self collidesWith: each ]) notEmpty
-!
-
-isInsideCanvas: aCanvas
-	^ (((self x >= 0) 
-		and: [ self y >= 0 ])
-			and: [ self width + self x <= aCanvas width ])
-				and: [ self height + self y <= aCanvas height ]
 !
 
 leftCollidesWith: aSprite
@@ -657,6 +690,12 @@ topCollidesWithWhichOf: aSpriteCollection
 	^ (aSpriteCollection detect: [ :each | self topCollidesWith: each ])
 ! !
 
+!Sprite methodsFor: 'events'!
+
+touchingMousePointer: mousePosition
+	^ self containsPoint: mousePosition
+! !
+
 !Sprite methodsFor: 'frames'!
 
 addFrameGroupNamed: aString origin: anOriginPoint size: aSizePoint frameCount: anInteger
@@ -697,19 +736,41 @@ nextFrameGroup
 		ifTrue: [ currentFrameGroup := self frameGroups first ]
 ! !
 
+!Sprite methodsFor: 'geometry'!
+
+containsPoint: aPoint
+	^ (((self x <= aPoint x)
+		and: [ self y <= aPoint y ])
+			and: [ self width + self x >= aPoint x ])
+				and: [ self height + self y >= aPoint y ]
+!
+
+distanceFromCentreTo: aPoint
+	^ Math 
+		sqrt: 
+			((Math pow: ((self centre x) - (aPoint  x)) to: 2)
+				+ (Math pow: ((self centre y) - (aPoint y)) to: 2))
+!
+
+height
+	^ self currentFrameGroup height
+!
+
+isInsideCanvas: aCanvas
+	^ (((self x >= 0) 
+		and: [ self y >= 0 ])
+			and: [ self width + self x <= aCanvas width ])
+				and: [ self height + self y <= aCanvas height ]
+!
+
+width
+	^ self currentFrameGroup width
+! !
+
 !Sprite methodsFor: 'movement'!
 
 moveCentreBy: anOffset
 	"aSprite moveCentreBy: 0@5"
 	self centre: self centre + anOffset
-! !
-
-!Sprite methodsFor: 'trigonometry'!
-
-distanceFromCentreTo: aPoint
-	^  Math 
-		sqrt: 
-			((Math pow: ((self centre x) - (aPoint  x)) to: 2)
-				+ (Math pow: ((self centre y) - (aPoint y)) to: 2))
 ! !
 

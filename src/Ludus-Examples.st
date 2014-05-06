@@ -1,4 +1,128 @@
 Smalltalk createPackage: 'Ludus-Examples'!
+Sprite subclass: #MemoryCard
+	instanceVariableNames: 'animalName'
+	package: 'Ludus-Examples'!
+
+!MemoryCard methodsFor: 'accessing'!
+
+animalName
+	^ animalName
+!
+
+animalName: aString
+	animalName := aString
+! !
+
+!MemoryCard methodsFor: 'animation'!
+
+hideAnimal
+	self 
+		startAnimation.
+!
+
+showAnimal
+	self 
+		restartAnimation;
+		stopAnimation.
+! !
+
+Game subclass: #MemoryGame
+	instanceVariableNames: 'cards lastSelectedCard'
+	package: 'Ludus-Examples'!
+
+!MemoryGame methodsFor: 'accessing'!
+
+cards
+	^ cards ifNil: [ cards := #() ]
+! !
+
+!MemoryGame methodsFor: 'control'!
+
+step
+	self onMouseClickDo: [
+		self handleCardClick
+	]
+! !
+
+!MemoryGame methodsFor: 'drawing'!
+
+draw
+	self drawSpriteCollection: cards
+! !
+
+!MemoryGame methodsFor: 'events'!
+
+handleCardClick
+
+	| clickedCard |
+	
+	clickedCard := cards detect: [ :which | which touchingMousePointer: self mousePosition ] ifNone: [ nil ].
+	
+	clickedCard ifNotNil: [
+		(self soundNamed: clickedCard animalName) play.
+		clickedCard showAnimal.
+		lastSelectedCard 
+			ifNil: [ lastSelectedCard := clickedCard ]
+			ifNotNil: [
+				lastSelectedCard = clickedCard 
+					ifTrue: [ clickedCard hideAnimal ]
+					ifFalse: [
+						lastSelectedCard animalName = clickedCard animalName 
+							ifTrue: [ Transcript show: 'yay :)'; cr ]
+							ifFalse: [ 
+								lastSelectedCard hideAnimal.
+								clickedCard hideAnimal ]].
+				lastSelectedCard := nil.
+			]
+	]
+! !
+
+!MemoryGame methodsFor: 'initialization'!
+
+startGame
+	self 
+		width: 500;
+		height: 200.
+	
+	self addCards
+! !
+
+!MemoryGame methodsFor: 'sprites'!
+
+addCardForAnimal: anAnimal inPosition: aPosition
+
+	self cards add:
+		(MemoryCard new
+			animalName: anAnimal;
+			spriteSheet: 'images/memory/' , anAnimal , '.png';
+			addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;
+			centre: aPosition;
+			frameRate: 30;
+			loop: false;
+			stopAnimation;
+			hideAnimal)
+!
+
+addCards
+	
+	| positions |
+
+	positions := 
+		{50@50.  150@50.  250@50.  350@50.  450@50.
+		 50@150. 150@150. 250@150. 350@150. 450@150}.
+	
+	#('cat' 'cow' 'mouse' 'pig' 'sheep') do: 
+		[ :eachAnimal |
+			self addSound: 'sounds/' , eachAnimal , '.ogg'.
+			2 timesRepeat: [
+				| position |
+				position := positions atRandom.
+				positions remove: position.
+				self addCardForAnimal: eachAnimal inPosition: position.
+			]
+		]
+! !
+
 Game subclass: #Pong
 	instanceVariableNames: 'ball score paddle1 paddle2 speed ai'
 	package: 'Ludus-Examples'!
@@ -311,9 +435,9 @@ step
 		whileKeyPressed: Key rightArrow do: [self moveRight];
 		whileKeyPressed: Key upArrow do: [self moveUp];
 		whileKeyPressed: Key downArrow do: [self moveDown].
-	self onMouseClickDo: [window alert: self mousePosition x asString , ',' , self mousePosition y asString].
+	self onMouseClickDo: [ window alert: self mousePosition x asString , ',' , self mousePosition y asString ].
 	self moveGhost.
-	(pacman collidesWith: ghost) ifTrue: [self end. window alert: 'You lost!!']
+	(pacman collidesWith: ghost) ifTrue: [ self end. window alert: 'You lost!!' ]
 ! !
 
 Game subclass: #SmallCave
@@ -534,14 +658,16 @@ startGame
 	fps := 20.	
 	stepSize := 10.
 
-	self width: 720; 
+	self
+		width: 720; 
 		height: 540.
 
 	canvas style: 'border: 1px solid; background-image: url("images/background.png")'.
 
-	self addSound: 'sounds/slide.ogg'.
-	self addSound: 'sounds/factory.ogg'.
-	self addSound: 'sounds/applause.ogg'.
+	self
+		addSound: 'sounds/slide.ogg';
+		addSound: 'sounds/factory.ogg';
+		addSound: 'sounds/applause.ogg'.
 
 	(self soundNamed: 'factory') loop.
 
