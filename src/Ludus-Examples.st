@@ -305,16 +305,17 @@ Sprite subclass: #Ship
 !Ship methodsFor: 'not yet classified'!
 
 decreaseSpeed
-	self speed: self speed - 0.05
+	self speed: self speed - 0.2
 !
 
 increaseSpeed
-	self speed: self speed + 0.05
+	self speed: self speed + 0.2
 !
 
 initialize
 	super initialize.
-	self spriteSheet: 'images/trail.png';
+	self 
+		spriteSheet: 'images/trail.png';
 		addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.
 !
 
@@ -559,7 +560,7 @@ obstaclePositions
 !
 
 scrollSpeed
-	^ scrollSpeed ifNil: [scrollSpeed := 5]
+	^ scrollSpeed ifNil: [scrollSpeed := 10]
 !
 
 ship
@@ -568,7 +569,7 @@ ship
 
 startGame
 	fps := 30.
-	gravity := 1.1.
+	gravity := 2.
 
 	self width: 720; 
 		height: 540;

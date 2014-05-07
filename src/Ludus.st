@@ -126,8 +126,10 @@ addSound: aSoundUrl
 	(self hasSound: aSoundUrl) ifFalse: [
 		| sound |
 		sound := (Sound src: aSoundUrl).
+		sound 
+			cssClass: self class name;
+			appendToJQuery: 'body' asJQuery.
 		sounds add: sound.
-		sound appendToJQuery: 'body' asJQuery 
 	]
 !
 
@@ -166,8 +168,7 @@ gameOver
 
 kill
 	self end.
-	sounds do: [ :each | each kill ].
-	canvas asJQuery remove
+	self class stop.
 !
 
 restart
@@ -267,7 +268,7 @@ whileMouseUpDo: aBlock
 !Game methodsFor: 'events - private'!
 
 eventData: anEvent
-	<return $._data($('#MemoryGame')[0],'events')[anEvent]>
+	<return $._data($('#' + self._class()._name())[0],'events')[anEvent]>
 !
 
 keyDown: evt
@@ -350,17 +351,24 @@ renderOn: html
 	self gameLoop.
 ! !
 
-!Game class methodsFor: 'initialization'!
-
-initialize
-	"uncomment if you want the game to start when loading the page"
-"	'self start"
-!
+!Game class methodsFor: 'control'!
 
 start
 	|instance|
 	instance := self new start.
 	^ instance
+!
+
+stop
+	('canvas#' , self name) asJQuery remove.
+	('audio.' , self name) asJQuery remove.
+! !
+
+!Game class methodsFor: 'initialization'!
+
+initialize
+	"uncomment if you want the game to start when loading the page"
+"	'self start"
 ! !
 
 Object subclass: #Key
@@ -427,13 +435,21 @@ upArrow
 ! !
 
 Widget subclass: #Sound
-	instanceVariableNames: 'src'
+	instanceVariableNames: 'src cssClass'
 	package: 'Ludus'!
 !Sound commentStamp!
 I am a sound. I have a source audio file.
 I can be played, paused, stopped or looped.!
 
 !Sound methodsFor: 'accessing'!
+
+cssClass
+	^ cssClass ifNil: [ cssClass := '' ]
+!
+
+cssClass: aString
+	cssClass := aString
+!
 
 id
 	"We take the file name, without extension"
@@ -462,6 +478,7 @@ renderOn: html
 	| sound |
 	sound := html audio
 		id: self id;
+		class: self cssClass;
 		src: self src.
 	sound at: 'preload' put: true.
 ! !
@@ -491,7 +508,7 @@ stop
 	(document getElementById: self id) src: self src.
 ! !
 
-!Sound class methodsFor: 'not yet classified'!
+!Sound class methodsFor: 'instance creation'!
 
 src: anUrl
 	^ self new src: anUrl

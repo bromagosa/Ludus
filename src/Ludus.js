@@ -260,19 +260,22 @@ fn: function (aSoundUrl){
 var self=this;
 function $Sound(){return globals.Sound||(typeof Sound=="undefined"?nil:Sound)}
 return smalltalk.withContext(function($ctx1) { 
-var $1;
+var $1,$2,$3;
 $1=self._hasSound_(aSoundUrl);
 if(! smalltalk.assert($1)){
 var sound;
 sound=_st($Sound())._src_(aSoundUrl);
 sound;
+$2=sound;
+_st($2)._cssClass_(_st(self._class())._name());
+$3=_st($2)._appendToJQuery_("body"._asJQuery());
+$3;
 _st(self["@sounds"])._add_(sound);
-_st(sound)._appendToJQuery_("body"._asJQuery());
 };
 return self}, function($ctx1) {$ctx1.fill(self,"addSound:",{aSoundUrl:aSoundUrl},globals.Game)})},
 args: ["aSoundUrl"],
-source: "addSound: aSoundUrl\x0a\x09(self hasSound: aSoundUrl) ifFalse: [\x0a\x09\x09| sound |\x0a\x09\x09sound := (Sound src: aSoundUrl).\x0a\x09\x09sounds add: sound.\x0a\x09\x09sound appendToJQuery: 'body' asJQuery \x0a\x09]",
-messageSends: ["ifFalse:", "hasSound:", "src:", "add:", "appendToJQuery:", "asJQuery"],
+source: "addSound: aSoundUrl\x0a\x09(self hasSound: aSoundUrl) ifFalse: [\x0a\x09\x09| sound |\x0a\x09\x09sound := (Sound src: aSoundUrl).\x0a\x09\x09sound \x0a\x09\x09\x09cssClass: self class name;\x0a\x09\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09sounds add: sound.\x0a\x09]",
+messageSends: ["ifFalse:", "hasSound:", "src:", "cssClass:", "name", "class", "appendToJQuery:", "asJQuery", "add:"],
 referencedClasses: ["Sound"]
 }),
 globals.Game);
@@ -467,10 +470,10 @@ protocol: 'events - private',
 fn: function (anEvent){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-return $._data($('#MemoryGame')[0],'events')[anEvent];
+return $._data($('#' + self._class()._name())[0],'events')[anEvent];
 return self}, function($ctx1) {$ctx1.fill(self,"eventData:",{anEvent:anEvent},globals.Game)})},
 args: ["anEvent"],
-source: "eventData: anEvent\x0a\x09<return $._data($('#MemoryGame')[0],'events')[anEvent]>",
+source: "eventData: anEvent\x0a\x09<return $._data($('#' + self._class()._name())[0],'events')[anEvent]>",
 messageSends: [],
 referencedClasses: []
 }),
@@ -734,15 +737,11 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 self._end();
-_st(self["@sounds"])._do_((function(each){
-return smalltalk.withContext(function($ctx2) {
-return _st(each)._kill();
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
-_st(_st(self["@canvas"])._asJQuery())._remove();
+_st(self._class())._stop();
 return self}, function($ctx1) {$ctx1.fill(self,"kill",{},globals.Game)})},
 args: [],
-source: "kill\x0a\x09self end.\x0a\x09sounds do: [ :each | each kill ].\x0a\x09canvas asJQuery remove",
-messageSends: ["end", "do:", "kill", "remove", "asJQuery"],
+source: "kill\x0a\x09self end.\x0a\x09self class stop.",
+messageSends: ["end", "stop", "class"],
 referencedClasses: []
 }),
 globals.Game);
@@ -1200,7 +1199,7 @@ globals.Game.klass);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "start",
-protocol: 'initialization',
+protocol: 'control',
 fn: function (){
 var self=this;
 var instance;
@@ -1213,6 +1212,31 @@ return $1;
 args: [],
 source: "start\x0a\x09|instance|\x0a\x09instance := self new start.\x0a\x09^ instance",
 messageSends: ["start", "new"],
+referencedClasses: []
+}),
+globals.Game.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stop",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $3,$2,$1;
+$3=self._name();
+$ctx1.sendIdx["name"]=1;
+$2="canvas#".__comma($3);
+$ctx1.sendIdx[","]=1;
+$1=_st($2)._asJQuery();
+$ctx1.sendIdx["asJQuery"]=1;
+_st($1)._remove();
+$ctx1.sendIdx["remove"]=1;
+_st(_st("audio.".__comma(self._name()))._asJQuery())._remove();
+return self}, function($ctx1) {$ctx1.fill(self,"stop",{},globals.Game.klass)})},
+args: [],
+source: "stop\x0a\x09('canvas#' , self name) asJQuery remove.\x0a\x09('audio.' , self name) asJQuery remove.",
+messageSends: ["remove", "asJQuery", ",", "name"],
 referencedClasses: []
 }),
 globals.Game.klass);
@@ -1393,8 +1417,47 @@ referencedClasses: []
 globals.Key.klass);
 
 
-smalltalk.addClass('Sound', globals.Widget, ['src'], 'Ludus');
+smalltalk.addClass('Sound', globals.Widget, ['src', 'cssClass'], 'Ludus');
 globals.Sound.comment="I am a sound. I have a source audio file.\x0aI can be played, paused, stopped or looped.";
+smalltalk.addMethod(
+smalltalk.method({
+selector: "cssClass",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@cssClass"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@cssClass"]="";
+$1=self["@cssClass"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"cssClass",{},globals.Sound)})},
+args: [],
+source: "cssClass\x0a\x09^ cssClass ifNil: [ cssClass := '' ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Sound);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "cssClass:",
+protocol: 'accessing',
+fn: function (aString){
+var self=this;
+self["@cssClass"]=aString;
+return self},
+args: ["aString"],
+source: "cssClass: aString\x0a\x09cssClass := aString",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Sound);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "id",
@@ -1496,13 +1559,14 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$2;
 $1=_st(html)._audio();
 _st($1)._id_(self._id());
+_st($1)._class_(self._cssClass());
 $2=_st($1)._src_(self._src());
 sound=$2;
 _st(sound)._at_put_("preload",true);
 return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html,sound:sound},globals.Sound)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09| sound |\x0a\x09sound := html audio\x0a\x09\x09id: self id;\x0a\x09\x09src: self src.\x0a\x09sound at: 'preload' put: true.",
-messageSends: ["id:", "audio", "id", "src:", "src", "at:put:"],
+source: "renderOn: html\x0a\x09| sound |\x0a\x09sound := html audio\x0a\x09\x09id: self id;\x0a\x09\x09class: self cssClass;\x0a\x09\x09src: self src.\x0a\x09sound at: 'preload' put: true.",
+messageSends: ["id:", "audio", "id", "class:", "cssClass", "src:", "src", "at:put:"],
 referencedClasses: []
 }),
 globals.Sound);
@@ -1576,7 +1640,7 @@ globals.Sound);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "src:",
-protocol: 'not yet classified',
+protocol: 'instance creation',
 fn: function (anUrl){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 

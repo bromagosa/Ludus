@@ -872,10 +872,10 @@ protocol: 'not yet classified',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._speed_(_st(self._speed()).__minus((0.05)));
+self._speed_(_st(self._speed()).__minus((0.2)));
 return self}, function($ctx1) {$ctx1.fill(self,"decreaseSpeed",{},globals.Ship)})},
 args: [],
-source: "decreaseSpeed\x0a\x09self speed: self speed - 0.05",
+source: "decreaseSpeed\x0a\x09self speed: self speed - 0.2",
 messageSends: ["speed:", "-", "speed"],
 referencedClasses: []
 }),
@@ -888,10 +888,10 @@ protocol: 'not yet classified',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._speed_(_st(self._speed()).__plus((0.05)));
+self._speed_(_st(self._speed()).__plus((0.2)));
 return self}, function($ctx1) {$ctx1.fill(self,"increaseSpeed",{},globals.Ship)})},
 args: [],
-source: "increaseSpeed\x0a\x09self speed: self speed + 0.05",
+source: "increaseSpeed\x0a\x09self speed: self speed + 0.2",
 messageSends: ["speed:", "+", "speed"],
 referencedClasses: []
 }),
@@ -913,7 +913,7 @@ $ctx1.sendIdx["@"]=1;
 $1=self._addFrameGroupNamed_origin_size_frameCount_("ship",$2,(10).__at((10)),(1));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.Ship)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self spriteSheet: 'images/trail.png';\x0a\x09\x09addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.",
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09spriteSheet: 'images/trail.png';\x0a\x09\x09addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.",
 messageSends: ["initialize", "spriteSheet:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
 referencedClasses: []
 }),
@@ -1866,7 +1866,7 @@ return smalltalk.withContext(function($ctx1) {
 var $2,$1,$receiver;
 $2=self["@scrollSpeed"];
 if(($receiver = $2) == null || $receiver.isNil){
-self["@scrollSpeed"]=(5);
+self["@scrollSpeed"]=(10);
 $1=self["@scrollSpeed"];
 } else {
 $1=$2;
@@ -1874,7 +1874,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"scrollSpeed",{},globals.SmallCave)})},
 args: [],
-source: "scrollSpeed\x0a\x09^ scrollSpeed ifNil: [scrollSpeed := 5]",
+source: "scrollSpeed\x0a\x09^ scrollSpeed ifNil: [scrollSpeed := 10]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),
@@ -1914,13 +1914,13 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 self["@fps"]=(30);
-self["@gravity"]=(1.1);
+self["@gravity"]=(2);
 self._width_((720));
 self._height_((540));
 $1=self._backgroundColor_("black");
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.SmallCave)})},
 args: [],
-source: "startGame\x0a\x09fps := 30.\x0a\x09gravity := 1.1.\x0a\x0a\x09self width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09backgroundColor: 'black'.",
+source: "startGame\x0a\x09fps := 30.\x0a\x09gravity := 2.\x0a\x0a\x09self width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09backgroundColor: 'black'.",
 messageSends: ["width:", "height:", "backgroundColor:"],
 referencedClasses: []
 }),
