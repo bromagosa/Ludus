@@ -44,15 +44,27 @@ Start with
 [Cat](http://www.freesound.org/people/tuberatanka/sounds/110011/)
 [Sheep](http://www.freesound.org/people/confusion_music/sounds/103442/)
 [Mouse](http://opengameart.org/content/mouse-imitation)
+[Frog](http://www.freesound.org/people/esformouse/sounds/46241/)
+[Dog](http://freesound.org/people/davidmenke/sounds/231762/)
+[Lion](http://freesound.org/people/ecfike/sounds/132874/)
+[Monkey](http://freesound.org/people/sandyrb/sounds/41382/)
 
 ####Image acknowledgements
 [Cow](http://openclipart.org/detail/167391/drawn-cow-by-frankes)
 [Pig](http://openclipart.org/detail/189959/pig-by-peterm-189959)
 [Cat](http://openclipart.org/detail/167390/drawn-cat-by-frankes)
 [Sheep](http://openclipart.org/detail/23819/sheep-icon-by-pitr-23819)
-[Mouse](http://openclipart.org/detail/12487/mouse-by-bsantos)!
+[Mouse](http://openclipart.org/detail/12487/mouse-by-bsantos)
+[Frog](http://openclipart.org/detail/167395/drawn-frog-by-frankes)
+[Dog](http://openclipart.org/detail/167392/drawn-dog-by-frankes)
+[Lion](http://openclipart.org/detail/167398/drawn-leo-by-frankes)
+[Monkey](http://openclipart.org/detail/167399/drawn-monkey-by-frankes)!
 
 !MemoryGame methodsFor: 'accessing'!
+
+animalNames
+	^ #('cat' 'cow' 'mouse' 'pig' 'sheep' 'monkey' 'dog' 'lion' 'frog')
+!
 
 cards
 	^ cards ifNil: [ cards := #() ]
@@ -104,10 +116,22 @@ handleCardClick
 startGame
 	self
 		fps: 10;
-		width: 500;
-		height: 200.
+		width: 100 * self columns;
+		height: 100 * self rows;
+		addCards
+! !
+
+!MemoryGame methodsFor: 'sprite positioning'!
+
+columns
+	| cardNumber |
+	cardNumber := self animalNames size * 2.
 	
-	self addCards
+	^ (cardNumber sqrt floor to: (cardNumber / 2)) detect: [ :i | ((cardNumber \\ i) = 0) ].
+!
+
+rows
+	^ (self animalNames size * 2) / self columns
 ! !
 
 !MemoryGame methodsFor: 'sprites'!
@@ -127,23 +151,22 @@ addCardForAnimal: anAnimal inPosition: aPosition
 !
 
 addCards
-	
 	| positions |
-
-	positions := 
-		{50@50.  150@50.  250@50.  350@50.  450@50.
-		 50@150. 150@150. 250@150. 350@150. 450@150}.
+	positions :=#().
 	
-	#('cat' 'cow' 'mouse' 'pig' 'sheep') do: 
-		[ :eachAnimal |
-			self addSound: 'sounds/' , eachAnimal , '.ogg'.
-			2 timesRepeat: [
-				| position |
-				position := positions atRandom.
-				positions remove: position.
-				self addCardForAnimal: eachAnimal inPosition: position.
-			]
+	0 to: self rows - 1 do: [ :r |
+		0 to: self columns - 1 do: [ :c |
+			positions add: ((100*c) + 50)@((100*r) + 50) ]].
+
+	self animalNames do: [ :eachAnimal |
+		self addSound: 'sounds/' , eachAnimal , '.ogg'.
+		2 timesRepeat: [
+			| position |
+			position := positions atRandom.
+			positions remove: position.
+			self addCardForAnimal: eachAnimal inPosition: position.
 		]
+	]
 ! !
 
 Game subclass: #Pong

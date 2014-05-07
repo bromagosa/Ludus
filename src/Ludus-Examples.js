@@ -88,7 +88,7 @@ globals.MemoryCard);
 
 
 smalltalk.addClass('MemoryGame', globals.Game, ['cards', 'lastSelectedCard'], 'Ludus-Examples');
-globals.MemoryGame.comment="Memory game with animals and sounds.\x0aStart with\x0a\x0a      MemoryGame start\x0a\x0a####Sound acknowledgements\x0a[Cow](http://www.freesound.org/people/confusion_music/sounds/103427/)\x0a[Pig](http://www.freesound.org/people/JarredGibb/sounds/233183/)\x0a[Cat](http://www.freesound.org/people/tuberatanka/sounds/110011/)\x0a[Sheep](http://www.freesound.org/people/confusion_music/sounds/103442/)\x0a[Mouse](http://opengameart.org/content/mouse-imitation)\x0a\x0a####Image acknowledgements\x0a[Cow](http://openclipart.org/detail/167391/drawn-cow-by-frankes)\x0a[Pig](http://openclipart.org/detail/189959/pig-by-peterm-189959)\x0a[Cat](http://openclipart.org/detail/167390/drawn-cat-by-frankes)\x0a[Sheep](http://openclipart.org/detail/23819/sheep-icon-by-pitr-23819)\x0a[Mouse](http://openclipart.org/detail/12487/mouse-by-bsantos)";
+globals.MemoryGame.comment="Memory game with animals and sounds.\x0aStart with\x0a\x0a      MemoryGame start\x0a\x0a####Sound acknowledgements\x0a[Cow](http://www.freesound.org/people/confusion_music/sounds/103427/)\x0a[Pig](http://www.freesound.org/people/JarredGibb/sounds/233183/)\x0a[Cat](http://www.freesound.org/people/tuberatanka/sounds/110011/)\x0a[Sheep](http://www.freesound.org/people/confusion_music/sounds/103442/)\x0a[Mouse](http://opengameart.org/content/mouse-imitation)\x0a[Frog](http://www.freesound.org/people/esformouse/sounds/46241/)\x0a[Dog](http://freesound.org/people/davidmenke/sounds/231762/)\x0a[Lion](http://freesound.org/people/ecfike/sounds/132874/)\x0a[Monkey](http://freesound.org/people/sandyrb/sounds/41382/)\x0a\x0a####Image acknowledgements\x0a[Cow](http://openclipart.org/detail/167391/drawn-cow-by-frankes)\x0a[Pig](http://openclipart.org/detail/189959/pig-by-peterm-189959)\x0a[Cat](http://openclipart.org/detail/167390/drawn-cat-by-frankes)\x0a[Sheep](http://openclipart.org/detail/23819/sheep-icon-by-pitr-23819)\x0a[Mouse](http://openclipart.org/detail/12487/mouse-by-bsantos)\x0a[Frog](http://openclipart.org/detail/167395/drawn-frog-by-frankes)\x0a[Dog](http://openclipart.org/detail/167392/drawn-dog-by-frankes)\x0a[Lion](http://openclipart.org/detail/167398/drawn-leo-by-frankes)\x0a[Monkey](http://openclipart.org/detail/167399/drawn-monkey-by-frankes)";
 smalltalk.addMethod(
 smalltalk.method({
 selector: "addCardForAnimal:inPosition:",
@@ -132,31 +132,29 @@ fn: function (){
 var self=this;
 var positions;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10;
-$1=(50).__at((50));
-$ctx1.sendIdx["@"]=1;
-$2=(150).__at((50));
-$ctx1.sendIdx["@"]=2;
-$3=(250).__at((50));
-$ctx1.sendIdx["@"]=3;
-$4=(350).__at((50));
-$ctx1.sendIdx["@"]=4;
-$5=(450).__at((50));
-$ctx1.sendIdx["@"]=5;
-$6=(50).__at((150));
-$ctx1.sendIdx["@"]=6;
-$7=(150).__at((150));
-$ctx1.sendIdx["@"]=7;
-$8=(250).__at((150));
-$ctx1.sendIdx["@"]=8;
-$9=(350).__at((150));
-$ctx1.sendIdx["@"]=9;
-positions=[$1,$2,$3,$4,$5,$6,$7,$8,$9,(450).__at((150))];
-["cat", "cow", "mouse", "pig", "sheep"]._do_((function(eachAnimal){
+var $1,$2,$5,$4,$3,$6;
+positions=[];
+$1=_st(self._rows()).__minus((1));
+$ctx1.sendIdx["-"]=1;
+(0)._to_do_($1,(function(r){
 return smalltalk.withContext(function($ctx2) {
-$10=_st("sounds/".__comma(eachAnimal)).__comma(".ogg");
+return (0)._to_do_(_st(self._columns()).__minus((1)),(function(c){
+return smalltalk.withContext(function($ctx3) {
+$2=positions;
+$5=(100).__star(c);
+$ctx3.sendIdx["*"]=1;
+$4=_st($5).__plus((50));
+$ctx3.sendIdx["+"]=1;
+$3=_st($4).__at(_st((100).__star(r)).__plus((50)));
+return _st($2)._add_($3);
+}, function($ctx3) {$ctx3.fillBlock({c:c},$ctx2,2)})}));
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,1)})}));
+$ctx1.sendIdx["to:do:"]=1;
+_st(self._animalNames())._do_((function(eachAnimal){
+return smalltalk.withContext(function($ctx2) {
+$6=_st("sounds/".__comma(eachAnimal)).__comma(".ogg");
 $ctx2.sendIdx[","]=1;
-self._addSound_($10);
+self._addSound_($6);
 return (2)._timesRepeat_((function(){
 var position;
 return smalltalk.withContext(function($ctx3) {
@@ -164,12 +162,29 @@ position=_st(positions)._atRandom();
 position;
 _st(positions)._remove_(position);
 return self._addCardForAnimal_inPosition_(eachAnimal,position);
-}, function($ctx3) {$ctx3.fillBlock({position:position},$ctx2,2)})}));
-}, function($ctx2) {$ctx2.fillBlock({eachAnimal:eachAnimal},$ctx1,1)})}));
+}, function($ctx3) {$ctx3.fillBlock({position:position},$ctx2,4)})}));
+}, function($ctx2) {$ctx2.fillBlock({eachAnimal:eachAnimal},$ctx1,3)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"addCards",{positions:positions},globals.MemoryGame)})},
 args: [],
-source: "addCards\x0a\x09\x0a\x09| positions |\x0a\x0a\x09positions := \x0a\x09\x09{50@50.  150@50.  250@50.  350@50.  450@50.\x0a\x09\x09 50@150. 150@150. 250@150. 350@150. 450@150}.\x0a\x09\x0a\x09#('cat' 'cow' 'mouse' 'pig' 'sheep') do: \x0a\x09\x09[ :eachAnimal |\x0a\x09\x09\x09self addSound: 'sounds/' , eachAnimal , '.ogg'.\x0a\x09\x09\x092 timesRepeat: [\x0a\x09\x09\x09\x09| position |\x0a\x09\x09\x09\x09position := positions atRandom.\x0a\x09\x09\x09\x09positions remove: position.\x0a\x09\x09\x09\x09self addCardForAnimal: eachAnimal inPosition: position.\x0a\x09\x09\x09]\x0a\x09\x09]",
-messageSends: ["@", "do:", "addSound:", ",", "timesRepeat:", "atRandom", "remove:", "addCardForAnimal:inPosition:"],
+source: "addCards\x0a\x09| positions |\x0a\x09positions :=#().\x0a\x09\x0a\x090 to: self rows - 1 do: [ :r |\x0a\x09\x090 to: self columns - 1 do: [ :c |\x0a\x09\x09\x09positions add: ((100*c) + 50)@((100*r) + 50) ]].\x0a\x0a\x09self animalNames do: [ :eachAnimal |\x0a\x09\x09self addSound: 'sounds/' , eachAnimal , '.ogg'.\x0a\x09\x092 timesRepeat: [\x0a\x09\x09\x09| position |\x0a\x09\x09\x09position := positions atRandom.\x0a\x09\x09\x09positions remove: position.\x0a\x09\x09\x09self addCardForAnimal: eachAnimal inPosition: position.\x0a\x09\x09]\x0a\x09]",
+messageSends: ["to:do:", "-", "rows", "columns", "add:", "@", "+", "*", "do:", "animalNames", "addSound:", ",", "timesRepeat:", "atRandom", "remove:", "addCardForAnimal:inPosition:"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "animalNames",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=["cat", "cow", "mouse", "pig", "sheep", "monkey", "dog", "lion", "frog"];
+return $1;
+},
+args: [],
+source: "animalNames\x0a\x09^ #('cat' 'cow' 'mouse' 'pig' 'sheep' 'monkey' 'dog' 'lion' 'frog')",
+messageSends: [],
 referencedClasses: []
 }),
 globals.MemoryGame);
@@ -194,6 +209,29 @@ return $1;
 args: [],
 source: "cards\x0a\x09^ cards ifNil: [ cards := #() ]",
 messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "columns",
+protocol: 'sprite positioning',
+fn: function (){
+var self=this;
+var cardNumber;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+cardNumber=_st(_st(self._animalNames())._size()).__star((2));
+$1=_st(_st(_st(_st(cardNumber)._sqrt())._floor())._to_(_st(cardNumber).__slash((2))))._detect_((function(i){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st(cardNumber).__backslash_backslash(i)).__eq((0));
+}, function($ctx2) {$ctx2.fillBlock({i:i},$ctx1,1)})}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"columns",{cardNumber:cardNumber},globals.MemoryGame)})},
+args: [],
+source: "columns\x0a\x09| cardNumber |\x0a\x09cardNumber := self animalNames size * 2.\x0a\x09\x0a\x09^ (cardNumber sqrt floor to: (cardNumber / 2)) detect: [ :i | ((cardNumber \x5c\x5c i) = 0) ].\x0a\x09",
+messageSends: ["*", "size", "animalNames", "detect:", "to:", "floor", "sqrt", "/", "=", "\x5c\x5c"],
 referencedClasses: []
 }),
 globals.MemoryGame);
@@ -277,20 +315,40 @@ globals.MemoryGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "rows",
+protocol: 'sprite positioning',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(_st(_st(self._animalNames())._size()).__star((2))).__slash(self._columns());
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"rows",{},globals.MemoryGame)})},
+args: [],
+source: "rows\x0a\x09^ (self animalNames size * 2) / self columns",
+messageSends: ["/", "*", "size", "animalNames", "columns"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "startGame",
 protocol: 'initialization',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
+var $1,$2;
 self._fps_((10));
-self._width_((500));
-$1=self._height_((200));
-self._addCards();
+$1=(100).__star(self._columns());
+$ctx1.sendIdx["*"]=1;
+self._width_($1);
+self._height_((100).__star(self._rows()));
+$2=self._addCards();
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.MemoryGame)})},
 args: [],
-source: "startGame\x0a\x09self\x0a\x09\x09fps: 10;\x0a\x09\x09width: 500;\x0a\x09\x09height: 200.\x0a\x09\x0a\x09self addCards",
-messageSends: ["fps:", "width:", "height:", "addCards"],
+source: "startGame\x0a\x09self\x0a\x09\x09fps: 10;\x0a\x09\x09width: 100 * self columns;\x0a\x09\x09height: 100 * self rows;\x0a\x09\x09addCards",
+messageSends: ["fps:", "width:", "*", "columns", "height:", "rows", "addCards"],
 referencedClasses: []
 }),
 globals.MemoryGame);
