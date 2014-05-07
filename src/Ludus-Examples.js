@@ -72,6 +72,7 @@ globals.MemoryCard);
 
 
 smalltalk.addClass('MemoryGame', globals.Game, ['cards', 'lastSelectedCard'], 'Ludus-Examples');
+globals.MemoryGame.comment="Memory game with animals and sounds.\x0aStart with\x0a\x0a      MemoryGame start";
 smalltalk.addMethod(
 smalltalk.method({
 selector: "addCardForAnimal:inPosition:",
