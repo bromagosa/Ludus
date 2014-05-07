@@ -64,7 +64,6 @@ iframe {
 }
 canvas {
 	margin: 0 auto;
-	width: 720px;
 	display: block;
 	border: 120px solid #F2EBD0;
 	border-top: 30px solid #F2EBD0;
