@@ -2338,7 +2338,7 @@ globals.Sprite);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "newImage",
-protocol: 'attributes',
+protocol: 'aspect',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -2457,12 +2457,13 @@ protocol: 'animation',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+self._stopAnimation();
 _st(self._currentFrameGroup())._toFirstFrame();
 self._startAnimation();
 return self}, function($ctx1) {$ctx1.fill(self,"restartAnimation",{},globals.Sprite)})},
 args: [],
-source: "restartAnimation\x0a\x09self currentFrameGroup toFirstFrame.\x0a\x09self startAnimation.",
-messageSends: ["toFirstFrame", "currentFrameGroup", "startAnimation"],
+source: "restartAnimation\x0a\x09self stopAnimation.\x0a\x09self currentFrameGroup toFirstFrame.\x0a\x09self startAnimation.",
+messageSends: ["stopAnimation", "toFirstFrame", "currentFrameGroup", "startAnimation"],
 referencedClasses: []
 }),
 globals.Sprite);

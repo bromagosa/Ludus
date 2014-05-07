@@ -545,6 +545,7 @@ loop: aBoolean
 !
 
 restartAnimation
+	self stopAnimation.
 	self currentFrameGroup toFirstFrame.
 	self startAnimation.
 !
@@ -559,6 +560,12 @@ stopAnimation
 
 toggleAnimation
 	animating := animating not
+! !
+
+!Sprite methodsFor: 'aspect'!
+
+newImage
+	^ document createElement: 'img'
 ! !
 
 !Sprite methodsFor: 'attributes'!
@@ -594,10 +601,6 @@ direction: aPoint
 		ifTrue: [ angle := Math atan: (aPoint x / aPoint y) ]
 		ifFalse: [ angle := (Math atan: (aPoint x / aPoint y)) + Number pi ].
 	direction := (Math sin: angle) @ (Math cos: angle).
-!
-
-newImage
-	^ document createElement: 'img'
 !
 
 position

@@ -37,16 +37,32 @@ globals.MemoryCard);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "flip",
+protocol: 'animation',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._nextFrame();
+return self}, function($ctx1) {$ctx1.fill(self,"flip",{},globals.MemoryCard)})},
+args: [],
+source: "flip\x0a\x09self nextFrame",
+messageSends: ["nextFrame"],
+referencedClasses: []
+}),
+globals.MemoryCard);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "hideAnimal",
 protocol: 'animation',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._startAnimation();
+self._restartAnimation();
 return self}, function($ctx1) {$ctx1.fill(self,"hideAnimal",{},globals.MemoryCard)})},
 args: [],
-source: "hideAnimal\x0a\x09self \x0a\x09\x09startAnimation.",
-messageSends: ["startAnimation"],
+source: "hideAnimal\x0a\x09self restartAnimation.",
+messageSends: ["restartAnimation"],
 referencedClasses: []
 }),
 globals.MemoryCard);
@@ -94,16 +110,16 @@ $7=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 _st($6)._addFrameGroupNamed_origin_size_frameCount_("card",$7,(100).__at((100)),(2));
 _st($3)._centre_(aPosition);
-_st($3)._frameRate_((30));
+_st($3)._frameRate_((60));
 _st($3)._loop_(false);
-_st($3)._stopAnimation();
-$8=_st($3)._hideAnimal();
+_st($3)._flip();
+$8=_st($3)._stopAnimation();
 $2=$8;
 _st($1)._add_($2);
 return self}, function($ctx1) {$ctx1.fill(self,"addCardForAnimal:inPosition:",{anAnimal:anAnimal,aPosition:aPosition},globals.MemoryGame)})},
 args: ["anAnimal", "aPosition"],
-source: "addCardForAnimal: anAnimal inPosition: aPosition\x0a\x0a\x09self cards add:\x0a\x09\x09(MemoryCard new\x0a\x09\x09\x09animalName: anAnimal;\x0a\x09\x09\x09spriteSheet: 'images/memory/' , anAnimal , '.png';\x0a\x09\x09\x09addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;\x0a\x09\x09\x09centre: aPosition;\x0a\x09\x09\x09frameRate: 30;\x0a\x09\x09\x09loop: false;\x0a\x09\x09\x09stopAnimation;\x0a\x09\x09\x09hideAnimal)",
-messageSends: ["add:", "cards", "animalName:", "new", "spriteSheet:", ",", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "frameRate:", "loop:", "stopAnimation", "hideAnimal"],
+source: "addCardForAnimal: anAnimal inPosition: aPosition\x0a\x0a\x09self cards add:\x0a\x09\x09(MemoryCard new\x0a\x09\x09\x09animalName: anAnimal;\x0a\x09\x09\x09spriteSheet: 'images/memory/' , anAnimal , '.png';\x0a\x09\x09\x09addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;\x0a\x09\x09\x09centre: aPosition;\x0a\x09\x09\x09frameRate: 60;\x0a\x09\x09\x09loop: false;\x0a\x09\x09\x09flip;\x0a\x09\x09\x09stopAnimation)",
+messageSends: ["add:", "cards", "animalName:", "new", "spriteSheet:", ",", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "frameRate:", "loop:", "flip", "stopAnimation"],
 referencedClasses: ["MemoryCard"]
 }),
 globals.MemoryGame);

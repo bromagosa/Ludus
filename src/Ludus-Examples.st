@@ -15,9 +15,12 @@ animalName: aString
 
 !MemoryCard methodsFor: 'animation'!
 
+flip
+	self nextFrame
+!
+
 hideAnimal
-	self 
-		startAnimation.
+	self restartAnimation.
 !
 
 showAnimal
@@ -102,10 +105,10 @@ addCardForAnimal: anAnimal inPosition: aPosition
 			spriteSheet: 'images/memory/' , anAnimal , '.png';
 			addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;
 			centre: aPosition;
-			frameRate: 30;
+			frameRate: 60;
 			loop: false;
-			stopAnimation;
-			hideAnimal)
+			flip;
+			stopAnimation)
 !
 
 addCards
