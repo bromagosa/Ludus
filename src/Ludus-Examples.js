@@ -2,7 +2,380 @@ define("HOS/Ludus-Examples", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_s
 smalltalk.addPackage('Ludus-Examples');
 smalltalk.packages["Ludus-Examples"].transport = {"type":"amd","amdNamespace":"HOS"};
 
+smalltalk.addClass('MemoryCard', globals.Sprite, ['animalName'], 'Ludus-Examples');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "animalName",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@animalName"];
+return $1;
+},
+args: [],
+source: "animalName\x0a\x09^ animalName",
+messageSends: [],
+referencedClasses: []
+}),
+globals.MemoryCard);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "animalName:",
+protocol: 'accessing',
+fn: function (aString){
+var self=this;
+self["@animalName"]=aString;
+return self},
+args: ["aString"],
+source: "animalName: aString\x0a\x09animalName := aString",
+messageSends: [],
+referencedClasses: []
+}),
+globals.MemoryCard);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "flip",
+protocol: 'animation',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._nextFrame();
+return self}, function($ctx1) {$ctx1.fill(self,"flip",{},globals.MemoryCard)})},
+args: [],
+source: "flip\x0a\x09self nextFrame",
+messageSends: ["nextFrame"],
+referencedClasses: []
+}),
+globals.MemoryCard);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "hideAnimal",
+protocol: 'animation',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._restartAnimation();
+return self}, function($ctx1) {$ctx1.fill(self,"hideAnimal",{},globals.MemoryCard)})},
+args: [],
+source: "hideAnimal\x0a\x09self restartAnimation.",
+messageSends: ["restartAnimation"],
+referencedClasses: []
+}),
+globals.MemoryCard);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "showAnimal",
+protocol: 'animation',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._restartAnimation();
+$1=self._stopAnimation();
+return self}, function($ctx1) {$ctx1.fill(self,"showAnimal",{},globals.MemoryCard)})},
+args: [],
+source: "showAnimal\x0a\x09self \x0a\x09\x09restartAnimation;\x0a\x09\x09stopAnimation.",
+messageSends: ["restartAnimation", "stopAnimation"],
+referencedClasses: []
+}),
+globals.MemoryCard);
+
+
+
+smalltalk.addClass('MemoryGame', globals.Game, ['cards', 'lastSelectedCard'], 'Ludus-Examples');
+globals.MemoryGame.comment="Memory game with animals and sounds.\x0aStart with\x0a\x0a      MemoryGame start\x0a\x0a####Sound acknowledgements\x0a[Cow](http://www.freesound.org/people/confusion_music/sounds/103427/)\x0a[Pig](http://www.freesound.org/people/JarredGibb/sounds/233183/)\x0a[Cat](http://www.freesound.org/people/tuberatanka/sounds/110011/)\x0a[Sheep](http://www.freesound.org/people/confusion_music/sounds/103442/)\x0a[Mouse](http://opengameart.org/content/mouse-imitation)\x0a[Frog](http://www.freesound.org/people/esformouse/sounds/46241/)\x0a[Dog](http://freesound.org/people/davidmenke/sounds/231762/)\x0a[Lion](http://freesound.org/people/ecfike/sounds/132874/)\x0a[Monkey](http://freesound.org/people/sandyrb/sounds/41382/)\x0a\x0a####Image acknowledgements\x0a[Cow](http://openclipart.org/detail/167391/drawn-cow-by-frankes)\x0a[Pig](http://openclipart.org/detail/189959/pig-by-peterm-189959)\x0a[Cat](http://openclipart.org/detail/167390/drawn-cat-by-frankes)\x0a[Sheep](http://openclipart.org/detail/23819/sheep-icon-by-pitr-23819)\x0a[Mouse](http://openclipart.org/detail/12487/mouse-by-bsantos)\x0a[Frog](http://openclipart.org/detail/167395/drawn-frog-by-frankes)\x0a[Dog](http://openclipart.org/detail/167392/drawn-dog-by-frankes)\x0a[Lion](http://openclipart.org/detail/167398/drawn-leo-by-frankes)\x0a[Monkey](http://openclipart.org/detail/167399/drawn-monkey-by-frankes)";
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addCardForAnimal:inPosition:",
+protocol: 'sprites',
+fn: function (anAnimal,aPosition){
+var self=this;
+function $MemoryCard(){return globals.MemoryCard||(typeof MemoryCard=="undefined"?nil:MemoryCard)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$4,$5,$6,$7,$8,$2;
+$1=self._cards();
+$3=_st($MemoryCard())._new();
+_st($3)._animalName_(anAnimal);
+$4=$3;
+$5=_st("images/memory/".__comma(anAnimal)).__comma(".png");
+$ctx1.sendIdx[","]=1;
+_st($4)._spriteSheet_($5);
+$6=$3;
+$7=(0).__at((0));
+$ctx1.sendIdx["@"]=1;
+_st($6)._addFrameGroupNamed_origin_size_frameCount_("card",$7,(100).__at((100)),(2));
+_st($3)._centre_(aPosition);
+_st($3)._frameRate_((25));
+_st($3)._loop_(false);
+_st($3)._flip();
+$8=_st($3)._stopAnimation();
+$2=$8;
+_st($1)._add_($2);
+return self}, function($ctx1) {$ctx1.fill(self,"addCardForAnimal:inPosition:",{anAnimal:anAnimal,aPosition:aPosition},globals.MemoryGame)})},
+args: ["anAnimal", "aPosition"],
+source: "addCardForAnimal: anAnimal inPosition: aPosition\x0a\x0a\x09self cards add:\x0a\x09\x09(MemoryCard new\x0a\x09\x09\x09animalName: anAnimal;\x0a\x09\x09\x09spriteSheet: 'images/memory/' , anAnimal , '.png';\x0a\x09\x09\x09addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;\x0a\x09\x09\x09centre: aPosition;\x0a\x09\x09\x09frameRate: 25;\x0a\x09\x09\x09loop: false;\x0a\x09\x09\x09flip;\x0a\x09\x09\x09stopAnimation)",
+messageSends: ["add:", "cards", "animalName:", "new", "spriteSheet:", ",", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "frameRate:", "loop:", "flip", "stopAnimation"],
+referencedClasses: ["MemoryCard"]
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addCards",
+protocol: 'sprites',
+fn: function (){
+var self=this;
+var positions;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$5,$4,$3,$6;
+positions=[];
+$1=_st(self._rows()).__minus((1));
+$ctx1.sendIdx["-"]=1;
+(0)._to_do_($1,(function(r){
+return smalltalk.withContext(function($ctx2) {
+return (0)._to_do_(_st(self._columns()).__minus((1)),(function(c){
+return smalltalk.withContext(function($ctx3) {
+$2=positions;
+$5=(100).__star(c);
+$ctx3.sendIdx["*"]=1;
+$4=_st($5).__plus((50));
+$ctx3.sendIdx["+"]=1;
+$3=_st($4).__at(_st((100).__star(r)).__plus((50)));
+return _st($2)._add_($3);
+}, function($ctx3) {$ctx3.fillBlock({c:c},$ctx2,2)})}));
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,1)})}));
+$ctx1.sendIdx["to:do:"]=1;
+_st(self._animalNames())._do_((function(eachAnimal){
+return smalltalk.withContext(function($ctx2) {
+$6=_st("sounds/".__comma(eachAnimal)).__comma(".ogg");
+$ctx2.sendIdx[","]=1;
+self._addSound_($6);
+return (2)._timesRepeat_((function(){
+var position;
+return smalltalk.withContext(function($ctx3) {
+position=_st(positions)._atRandom();
+position;
+_st(positions)._remove_(position);
+return self._addCardForAnimal_inPosition_(eachAnimal,position);
+}, function($ctx3) {$ctx3.fillBlock({position:position},$ctx2,4)})}));
+}, function($ctx2) {$ctx2.fillBlock({eachAnimal:eachAnimal},$ctx1,3)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"addCards",{positions:positions},globals.MemoryGame)})},
+args: [],
+source: "addCards\x0a\x09| positions |\x0a\x09positions :=#().\x0a\x09\x0a\x090 to: self rows - 1 do: [ :r |\x0a\x09\x090 to: self columns - 1 do: [ :c |\x0a\x09\x09\x09positions add: ((100*c) + 50)@((100*r) + 50) ]].\x0a\x0a\x09self animalNames do: [ :eachAnimal |\x0a\x09\x09self addSound: 'sounds/' , eachAnimal , '.ogg'.\x0a\x09\x092 timesRepeat: [\x0a\x09\x09\x09| position |\x0a\x09\x09\x09position := positions atRandom.\x0a\x09\x09\x09positions remove: position.\x0a\x09\x09\x09self addCardForAnimal: eachAnimal inPosition: position.\x0a\x09\x09]\x0a\x09]",
+messageSends: ["to:do:", "-", "rows", "columns", "add:", "@", "+", "*", "do:", "animalNames", "addSound:", ",", "timesRepeat:", "atRandom", "remove:", "addCardForAnimal:inPosition:"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "animalNames",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=["cat", "cow", "mouse", "pig", "sheep", "monkey", "dog", "lion", "frog"];
+return $1;
+},
+args: [],
+source: "animalNames\x0a\x09^ #('cat' 'cow' 'mouse' 'pig' 'sheep' 'monkey' 'dog' 'lion' 'frog')",
+messageSends: [],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "cards",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@cards"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@cards"]=[];
+$1=self["@cards"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"cards",{},globals.MemoryGame)})},
+args: [],
+source: "cards\x0a\x09^ cards ifNil: [ cards := #() ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "columns",
+protocol: 'sprite positioning',
+fn: function (){
+var self=this;
+var cardNumber;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+cardNumber=_st(_st(self._animalNames())._size()).__star((2));
+$1=_st(_st(_st(_st(cardNumber)._sqrt())._floor())._to_(_st(cardNumber).__slash((2))))._detect_((function(i){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st(cardNumber).__backslash_backslash(i)).__eq((0));
+}, function($ctx2) {$ctx2.fillBlock({i:i},$ctx1,1)})}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"columns",{cardNumber:cardNumber},globals.MemoryGame)})},
+args: [],
+source: "columns\x0a\x09| cardNumber |\x0a\x09cardNumber := self animalNames size * 2.\x0a\x09\x0a\x09^ (cardNumber sqrt floor to: (cardNumber / 2)) detect: [ :i | ((cardNumber \x5c\x5c i) = 0) ].\x0a\x09",
+messageSends: ["*", "size", "animalNames", "detect:", "to:", "floor", "sqrt", "/", "=", "\x5c\x5c"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "draw",
+protocol: 'drawing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._drawSpriteCollection_(self["@cards"]);
+return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.MemoryGame)})},
+args: [],
+source: "draw\x0a\x09self drawSpriteCollection: cards",
+messageSends: ["drawSpriteCollection:"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "handleCardClick",
+protocol: 'events',
+fn: function (){
+var self=this;
+var clickedCard;
+function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$2,$4,$5,$7,$6,$8,$receiver;
+clickedCard=_st(self["@cards"])._detect_ifNone_((function(which){
+return smalltalk.withContext(function($ctx2) {
+return _st(which)._touchingMousePointer_(self._mousePosition());
+}, function($ctx2) {$ctx2.fillBlock({which:which},$ctx1,1)})}),(function(){
+return nil;
+}));
+$1=clickedCard;
+if(($receiver = $1) == null || $receiver.isNil){
+$1;
+} else {
+$3=_st(clickedCard)._animalName();
+$ctx1.sendIdx["animalName"]=1;
+$2=self._soundNamed_($3);
+_st($2)._play();
+_st(clickedCard)._showAnimal();
+$4=self["@lastSelectedCard"];
+if(($receiver = $4) == null || $receiver.isNil){
+self["@lastSelectedCard"]=clickedCard;
+self["@lastSelectedCard"];
+} else {
+$5=_st(self["@lastSelectedCard"]).__eq(clickedCard);
+$ctx1.sendIdx["="]=1;
+if(smalltalk.assert($5)){
+_st(clickedCard)._hideAnimal();
+$ctx1.sendIdx["hideAnimal"]=1;
+} else {
+$7=_st(self["@lastSelectedCard"])._animalName();
+$ctx1.sendIdx["animalName"]=2;
+$6=_st($7).__eq(_st(clickedCard)._animalName());
+if(smalltalk.assert($6)){
+_st($Transcript())._show_("yay :)");
+$8=_st($Transcript())._cr();
+$8;
+} else {
+_st(self["@lastSelectedCard"])._hideAnimal();
+$ctx1.sendIdx["hideAnimal"]=2;
+_st(clickedCard)._hideAnimal();
+};
+};
+self["@lastSelectedCard"]=nil;
+self["@lastSelectedCard"];
+};
+};
+return self}, function($ctx1) {$ctx1.fill(self,"handleCardClick",{clickedCard:clickedCard},globals.MemoryGame)})},
+args: [],
+source: "handleCardClick\x0a\x0a\x09| clickedCard |\x0a\x09\x0a\x09clickedCard := cards detect: [ :which | which touchingMousePointer: self mousePosition ] ifNone: [ nil ].\x0a\x09\x0a\x09clickedCard ifNotNil: [\x0a\x09\x09(self soundNamed: clickedCard animalName) play.\x0a\x09\x09clickedCard showAnimal.\x0a\x09\x09lastSelectedCard \x0a\x09\x09\x09ifNil: [ lastSelectedCard := clickedCard ]\x0a\x09\x09\x09ifNotNil: [\x0a\x09\x09\x09\x09lastSelectedCard = clickedCard \x0a\x09\x09\x09\x09\x09ifTrue: [ clickedCard hideAnimal ]\x0a\x09\x09\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09\x09\x09lastSelectedCard animalName = clickedCard animalName \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [ Transcript show: 'yay :)'; cr ]\x0a\x09\x09\x09\x09\x09\x09\x09ifFalse: [ \x0a\x09\x09\x09\x09\x09\x09\x09\x09lastSelectedCard hideAnimal.\x0a\x09\x09\x09\x09\x09\x09\x09\x09clickedCard hideAnimal ]].\x0a\x09\x09\x09\x09lastSelectedCard := nil.\x0a\x09\x09\x09]\x0a\x09]",
+messageSends: ["detect:ifNone:", "touchingMousePointer:", "mousePosition", "ifNotNil:", "play", "soundNamed:", "animalName", "showAnimal", "ifNil:ifNotNil:", "ifTrue:ifFalse:", "=", "hideAnimal", "show:", "cr"],
+referencedClasses: ["Transcript"]
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "rows",
+protocol: 'sprite positioning',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(_st(_st(self._animalNames())._size()).__star((2))).__slash(self._columns());
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"rows",{},globals.MemoryGame)})},
+args: [],
+source: "rows\x0a\x09^ (self animalNames size * 2) / self columns",
+messageSends: ["/", "*", "size", "animalNames", "columns"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "startGame",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+self._fps_((10));
+$1=(100).__star(self._columns());
+$ctx1.sendIdx["*"]=1;
+self._width_($1);
+self._height_((100).__star(self._rows()));
+$2=self._addCards();
+return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.MemoryGame)})},
+args: [],
+source: "startGame\x0a\x09self\x0a\x09\x09fps: 10;\x0a\x09\x09width: 100 * self columns;\x0a\x09\x09height: 100 * self rows;\x0a\x09\x09addCards",
+messageSends: ["fps:", "width:", "*", "columns", "height:", "rows", "addCards"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "step",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._onMouseClickDo_((function(){
+return smalltalk.withContext(function($ctx2) {
+return self._handleCardClick();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.MemoryGame)})},
+args: [],
+source: "step\x0a\x09self onMouseClickDo: [\x0a\x09\x09self handleCardClick\x0a\x09]",
+messageSends: ["onMouseClickDo:", "handleCardClick"],
+referencedClasses: []
+}),
+globals.MemoryGame);
+
+
+
 smalltalk.addClass('Pong', globals.Game, ['ball', 'score', 'paddle1', 'paddle2', 'speed', 'ai'], 'Ludus-Examples');
+globals.Pong.comment="####Sound acknowledgements\x0a[Paddle click](http://www.freesound.org/people/CeebFrack/sounds/108793/)\x0a[Applause](http://www.freesound.org/people/soundmary/sounds/117592/)";
 smalltalk.addMethod(
 smalltalk.method({
 selector: "bounceAgainstPaddle1",
@@ -576,10 +949,10 @@ protocol: 'not yet classified',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._speed_(_st(self._speed()).__minus((0.05)));
+self._speed_(_st(self._speed()).__minus((0.2)));
 return self}, function($ctx1) {$ctx1.fill(self,"decreaseSpeed",{},globals.Ship)})},
 args: [],
-source: "decreaseSpeed\x0a\x09self speed: self speed - 0.05",
+source: "decreaseSpeed\x0a\x09self speed: self speed - 0.2",
 messageSends: ["speed:", "-", "speed"],
 referencedClasses: []
 }),
@@ -592,10 +965,10 @@ protocol: 'not yet classified',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._speed_(_st(self._speed()).__plus((0.05)));
+self._speed_(_st(self._speed()).__plus((0.2)));
 return self}, function($ctx1) {$ctx1.fill(self,"increaseSpeed",{},globals.Ship)})},
 args: [],
-source: "increaseSpeed\x0a\x09self speed: self speed + 0.05",
+source: "increaseSpeed\x0a\x09self speed: self speed + 0.2",
 messageSends: ["speed:", "+", "speed"],
 referencedClasses: []
 }),
@@ -617,7 +990,7 @@ $ctx1.sendIdx["@"]=1;
 $1=self._addFrameGroupNamed_origin_size_frameCount_("ship",$2,(10).__at((10)),(1));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.Ship)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self spriteSheet: 'images/trail.png';\x0a\x09\x09addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.",
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09spriteSheet: 'images/trail.png';\x0a\x09\x09addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.",
 messageSends: ["initialize", "spriteSheet:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
 referencedClasses: []
 }),
@@ -1052,7 +1425,7 @@ _st(window)._alert_("You lost!");
 };
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.SimplePacman)})},
 args: [],
-source: "step\x0a\x09self whileKeyPressed: Key leftArrow do: [self moveLeft];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [self moveRight];\x0a\x09\x09whileKeyPressed: Key upArrow do: [self moveUp];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self moveDown].\x0a\x09self onMouseClickDo: [window alert: self mousePosition x asString , ',' , self mousePosition y asString].\x0a\x09self moveGhost.\x0a\x09(pacman collidesWith: ghost) ifTrue: [self end. window alert: 'You lost!']",
+source: "step\x0a\x09self whileKeyPressed: Key leftArrow do: [self moveLeft];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [self moveRight];\x0a\x09\x09whileKeyPressed: Key upArrow do: [self moveUp];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self moveDown].\x0a\x09self onMouseClickDo: [ window alert: self mousePosition x asString , ',' , self mousePosition y asString ].\x0a\x09self moveGhost.\x0a\x09(pacman collidesWith: ghost) ifTrue: [ self end. window alert: 'You lost!' ]",
 messageSends: ["whileKeyPressed:do:", "leftArrow", "moveLeft", "rightArrow", "moveRight", "upArrow", "moveUp", "downArrow", "moveDown", "onMouseClickDo:", "alert:", ",", "asString", "x", "mousePosition", "y", "moveGhost", "ifTrue:", "collidesWith:", "end"],
 referencedClasses: ["Key"]
 }),
@@ -1570,7 +1943,7 @@ return smalltalk.withContext(function($ctx1) {
 var $2,$1,$receiver;
 $2=self["@scrollSpeed"];
 if(($receiver = $2) == null || $receiver.isNil){
-self["@scrollSpeed"]=(5);
+self["@scrollSpeed"]=(10);
 $1=self["@scrollSpeed"];
 } else {
 $1=$2;
@@ -1578,7 +1951,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"scrollSpeed",{},globals.SmallCave)})},
 args: [],
-source: "scrollSpeed\x0a\x09^ scrollSpeed ifNil: [scrollSpeed := 5]",
+source: "scrollSpeed\x0a\x09^ scrollSpeed ifNil: [scrollSpeed := 10]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),
@@ -1618,13 +1991,13 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 self["@fps"]=(30);
-self["@gravity"]=(1.1);
+self["@gravity"]=(2);
 self._width_((720));
 self._height_((540));
 $1=self._backgroundColor_("black");
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.SmallCave)})},
 args: [],
-source: "startGame\x0a\x09fps := 30.\x0a\x09gravity := 1.1.\x0a\x0a\x09self width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09backgroundColor: 'black'.",
+source: "startGame\x0a\x09fps := 30.\x0a\x09gravity := 2.\x0a\x0a\x09self width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09backgroundColor: 'black'.",
 messageSends: ["width:", "height:", "backgroundColor:"],
 referencedClasses: []
 }),
@@ -1937,6 +2310,7 @@ globals.SmallCave);
 
 
 smalltalk.addClass('Sokoban', globals.Game, ['guy', 'walls', 'stepSize', 'boxes', 'exits', 'lastMove', 'floor', 'currentLevel', 'directionDictionary', 'guyOffsetDictionary', 'boxOffsetDictionary'], 'Ludus-Examples');
+globals.Sokoban.comment="####Sound acknowledgements\x0a[Background industrial sound](http://www.freesound.org/people/pcaeldries/sounds/30033/)\x0a[Box sliding](http://www.freesound.org/people/OceanCookies/sounds/115473/)";
 smalltalk.addMethod(
 smalltalk.method({
 selector: "advanceLevel",
@@ -2981,22 +3355,22 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
+var $1,$2;
 self["@fps"]=(20);
 self["@stepSize"]=(10);
 self._width_((720));
 $1=self._height_((540));
-_st(self["@canvas"])._style_("background-image: url(\x22images/background.png\x22)");
+_st(self["@canvas"])._style_("border: 1px solid; background-image: url(\x22images/background.png\x22)");
 self._addSound_("sounds/slide.ogg");
 $ctx1.sendIdx["addSound:"]=1;
 self._addSound_("sounds/factory.ogg");
 $ctx1.sendIdx["addSound:"]=2;
-self._addSound_("sounds/applause.ogg");
+$2=self._addSound_("sounds/applause.ogg");
 _st(self._soundNamed_("factory"))._loop();
 self._createLevel();
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.Sokoban)})},
 args: [],
-source: "startGame\x0a\x09fps := 20.\x09\x0a\x09stepSize := 10.\x0a\x0a\x09self width: 720; \x0a\x09\x09height: 540.\x0a\x0a\x09canvas style: 'background-image: url(\x22images/background.png\x22)'.\x0a\x0a\x09self addSound: 'sounds/slide.ogg'.\x0a\x09self addSound: 'sounds/factory.ogg'.\x0a\x09self addSound: 'sounds/applause.ogg'.\x0a\x0a\x09(self soundNamed: 'factory') loop.\x0a\x0a\x09self createLevel.",
+source: "startGame\x0a\x09fps := 20.\x09\x0a\x09stepSize := 10.\x0a\x0a\x09self\x0a\x09\x09width: 720; \x0a\x09\x09height: 540.\x0a\x0a\x09canvas style: 'border: 1px solid; background-image: url(\x22images/background.png\x22)'.\x0a\x0a\x09self\x0a\x09\x09addSound: 'sounds/slide.ogg';\x0a\x09\x09addSound: 'sounds/factory.ogg';\x0a\x09\x09addSound: 'sounds/applause.ogg'.\x0a\x0a\x09(self soundNamed: 'factory') loop.\x0a\x0a\x09self createLevel.",
 messageSends: ["width:", "height:", "style:", "addSound:", "loop", "soundNamed:", "createLevel"],
 referencedClasses: []
 }),

@@ -1,7 +1,181 @@
 Smalltalk createPackage: 'Ludus-Examples'!
+Sprite subclass: #MemoryCard
+	instanceVariableNames: 'animalName'
+	package: 'Ludus-Examples'!
+
+!MemoryCard methodsFor: 'accessing'!
+
+animalName
+	^ animalName
+!
+
+animalName: aString
+	animalName := aString
+! !
+
+!MemoryCard methodsFor: 'animation'!
+
+flip
+	self nextFrame
+!
+
+hideAnimal
+	self restartAnimation.
+!
+
+showAnimal
+	self 
+		restartAnimation;
+		stopAnimation.
+! !
+
+Game subclass: #MemoryGame
+	instanceVariableNames: 'cards lastSelectedCard'
+	package: 'Ludus-Examples'!
+!MemoryGame commentStamp!
+Memory game with animals and sounds.
+Start with
+
+      MemoryGame start
+
+####Sound acknowledgements
+[Cow](http://www.freesound.org/people/confusion_music/sounds/103427/)
+[Pig](http://www.freesound.org/people/JarredGibb/sounds/233183/)
+[Cat](http://www.freesound.org/people/tuberatanka/sounds/110011/)
+[Sheep](http://www.freesound.org/people/confusion_music/sounds/103442/)
+[Mouse](http://opengameart.org/content/mouse-imitation)
+[Frog](http://www.freesound.org/people/esformouse/sounds/46241/)
+[Dog](http://freesound.org/people/davidmenke/sounds/231762/)
+[Lion](http://freesound.org/people/ecfike/sounds/132874/)
+[Monkey](http://freesound.org/people/sandyrb/sounds/41382/)
+
+####Image acknowledgements
+[Cow](http://openclipart.org/detail/167391/drawn-cow-by-frankes)
+[Pig](http://openclipart.org/detail/189959/pig-by-peterm-189959)
+[Cat](http://openclipart.org/detail/167390/drawn-cat-by-frankes)
+[Sheep](http://openclipart.org/detail/23819/sheep-icon-by-pitr-23819)
+[Mouse](http://openclipart.org/detail/12487/mouse-by-bsantos)
+[Frog](http://openclipart.org/detail/167395/drawn-frog-by-frankes)
+[Dog](http://openclipart.org/detail/167392/drawn-dog-by-frankes)
+[Lion](http://openclipart.org/detail/167398/drawn-leo-by-frankes)
+[Monkey](http://openclipart.org/detail/167399/drawn-monkey-by-frankes)!
+
+!MemoryGame methodsFor: 'accessing'!
+
+animalNames
+	^ #('cat' 'cow' 'mouse' 'pig' 'sheep' 'monkey' 'dog' 'lion' 'frog')
+!
+
+cards
+	^ cards ifNil: [ cards := #() ]
+! !
+
+!MemoryGame methodsFor: 'control'!
+
+step
+	self onMouseClickDo: [
+		self handleCardClick
+	]
+! !
+
+!MemoryGame methodsFor: 'drawing'!
+
+draw
+	self drawSpriteCollection: cards
+! !
+
+!MemoryGame methodsFor: 'events'!
+
+handleCardClick
+
+	| clickedCard |
+	
+	clickedCard := cards detect: [ :which | which touchingMousePointer: self mousePosition ] ifNone: [ nil ].
+	
+	clickedCard ifNotNil: [
+		(self soundNamed: clickedCard animalName) play.
+		clickedCard showAnimal.
+		lastSelectedCard 
+			ifNil: [ lastSelectedCard := clickedCard ]
+			ifNotNil: [
+				lastSelectedCard = clickedCard 
+					ifTrue: [ clickedCard hideAnimal ]
+					ifFalse: [
+						lastSelectedCard animalName = clickedCard animalName 
+							ifTrue: [ Transcript show: 'yay :)'; cr ]
+							ifFalse: [ 
+								lastSelectedCard hideAnimal.
+								clickedCard hideAnimal ]].
+				lastSelectedCard := nil.
+			]
+	]
+! !
+
+!MemoryGame methodsFor: 'initialization'!
+
+startGame
+	self
+		fps: 10;
+		width: 100 * self columns;
+		height: 100 * self rows;
+		addCards
+! !
+
+!MemoryGame methodsFor: 'sprite positioning'!
+
+columns
+	| cardNumber |
+	cardNumber := self animalNames size * 2.
+	
+	^ (cardNumber sqrt floor to: (cardNumber / 2)) detect: [ :i | ((cardNumber \\ i) = 0) ].
+!
+
+rows
+	^ (self animalNames size * 2) / self columns
+! !
+
+!MemoryGame methodsFor: 'sprites'!
+
+addCardForAnimal: anAnimal inPosition: aPosition
+
+	self cards add:
+		(MemoryCard new
+			animalName: anAnimal;
+			spriteSheet: 'images/memory/' , anAnimal , '.png';
+			addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;
+			centre: aPosition;
+			frameRate: 25;
+			loop: false;
+			flip;
+			stopAnimation)
+!
+
+addCards
+	| positions |
+	positions :=#().
+	
+	0 to: self rows - 1 do: [ :r |
+		0 to: self columns - 1 do: [ :c |
+			positions add: ((100*c) + 50)@((100*r) + 50) ]].
+
+	self animalNames do: [ :eachAnimal |
+		self addSound: 'sounds/' , eachAnimal , '.ogg'.
+		2 timesRepeat: [
+			| position |
+			position := positions atRandom.
+			positions remove: position.
+			self addCardForAnimal: eachAnimal inPosition: position.
+		]
+	]
+! !
+
 Game subclass: #Pong
 	instanceVariableNames: 'ball score paddle1 paddle2 speed ai'
 	package: 'Ludus-Examples'!
+!Pong commentStamp!
+####Sound acknowledgements
+[Paddle click](http://www.freesound.org/people/CeebFrack/sounds/108793/)
+[Applause](http://www.freesound.org/people/soundmary/sounds/117592/)!
 
 !Pong methodsFor: 'not yet classified'!
 
@@ -181,16 +355,17 @@ Sprite subclass: #Ship
 !Ship methodsFor: 'not yet classified'!
 
 decreaseSpeed
-	self speed: self speed - 0.05
+	self speed: self speed - 0.2
 !
 
 increaseSpeed
-	self speed: self speed + 0.05
+	self speed: self speed + 0.2
 !
 
 initialize
 	super initialize.
-	self spriteSheet: 'images/trail.png';
+	self 
+		spriteSheet: 'images/trail.png';
 		addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.
 !
 
@@ -311,9 +486,9 @@ step
 		whileKeyPressed: Key rightArrow do: [self moveRight];
 		whileKeyPressed: Key upArrow do: [self moveUp];
 		whileKeyPressed: Key downArrow do: [self moveDown].
-	self onMouseClickDo: [window alert: self mousePosition x asString , ',' , self mousePosition y asString].
+	self onMouseClickDo: [ window alert: self mousePosition x asString , ',' , self mousePosition y asString ].
 	self moveGhost.
-	(pacman collidesWith: ghost) ifTrue: [self end. window alert: 'You lost!!']
+	(pacman collidesWith: ghost) ifTrue: [ self end. window alert: 'You lost!!' ]
 ! !
 
 Game subclass: #SmallCave
@@ -435,7 +610,7 @@ obstaclePositions
 !
 
 scrollSpeed
-	^ scrollSpeed ifNil: [scrollSpeed := 5]
+	^ scrollSpeed ifNil: [scrollSpeed := 10]
 !
 
 ship
@@ -444,7 +619,7 @@ ship
 
 startGame
 	fps := 30.
-	gravity := 1.1.
+	gravity := 2.
 
 	self width: 720; 
 		height: 540;
@@ -513,6 +688,10 @@ updateTrail
 Game subclass: #Sokoban
 	instanceVariableNames: 'guy walls stepSize boxes exits lastMove floor currentLevel directionDictionary guyOffsetDictionary boxOffsetDictionary'
 	package: 'Ludus-Examples'!
+!Sokoban commentStamp!
+####Sound acknowledgements
+[Background industrial sound](http://www.freesound.org/people/pcaeldries/sounds/30033/)
+[Box sliding](http://www.freesound.org/people/OceanCookies/sounds/115473/)!
 
 !Sokoban methodsFor: 'control'!
 
@@ -534,14 +713,16 @@ startGame
 	fps := 20.	
 	stepSize := 10.
 
-	self width: 720; 
+	self
+		width: 720; 
 		height: 540.
 
-	canvas style: 'background-image: url("images/background.png")'.
+	canvas style: 'border: 1px solid; background-image: url("images/background.png")'.
 
-	self addSound: 'sounds/slide.ogg'.
-	self addSound: 'sounds/factory.ogg'.
-	self addSound: 'sounds/applause.ogg'.
+	self
+		addSound: 'sounds/slide.ogg';
+		addSound: 'sounds/factory.ogg';
+		addSound: 'sounds/applause.ogg'.
 
 	(self soundNamed: 'factory') loop.
 
