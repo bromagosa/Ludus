@@ -88,7 +88,7 @@ globals.MemoryCard);
 
 
 smalltalk.addClass('MemoryGame', globals.Game, ['cards', 'lastSelectedCard'], 'Ludus-Examples');
-globals.MemoryGame.comment="Memory game with animals and sounds.\x0aStart with\x0a\x0a      MemoryGame start";
+globals.MemoryGame.comment="Memory game with animals and sounds.\x0aStart with\x0a\x0a      MemoryGame start\x0a\x0a####Sound acknowledgements\x0a[Cow](http://www.freesound.org/people/confusion_music/sounds/103427/)\x0a[Pig](http://www.freesound.org/people/JarredGibb/sounds/233183/)\x0a[Cat](http://www.freesound.org/people/tuberatanka/sounds/110011/)\x0a[Sheep](http://www.freesound.org/people/confusion_music/sounds/103442/)\x0a[Mouse](http://opengameart.org/content/mouse-imitation)\x0a\x0a####Image acknowledgements\x0a[Cow](http://openclipart.org/detail/167391/drawn-cow-by-frankes)\x0a[Pig](http://openclipart.org/detail/189959/pig-by-peterm-189959)\x0a[Cat](http://openclipart.org/detail/167390/drawn-cat-by-frankes)\x0a[Sheep](http://openclipart.org/detail/23819/sheep-icon-by-pitr-23819)\x0a[Mouse](http://openclipart.org/detail/12487/mouse-by-bsantos)";
 smalltalk.addMethod(
 smalltalk.method({
 selector: "addCardForAnimal:inPosition:",
@@ -110,7 +110,7 @@ $7=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 _st($6)._addFrameGroupNamed_origin_size_frameCount_("card",$7,(100).__at((100)),(2));
 _st($3)._centre_(aPosition);
-_st($3)._frameRate_((60));
+_st($3)._frameRate_((25));
 _st($3)._loop_(false);
 _st($3)._flip();
 $8=_st($3)._stopAnimation();
@@ -118,7 +118,7 @@ $2=$8;
 _st($1)._add_($2);
 return self}, function($ctx1) {$ctx1.fill(self,"addCardForAnimal:inPosition:",{anAnimal:anAnimal,aPosition:aPosition},globals.MemoryGame)})},
 args: ["anAnimal", "aPosition"],
-source: "addCardForAnimal: anAnimal inPosition: aPosition\x0a\x0a\x09self cards add:\x0a\x09\x09(MemoryCard new\x0a\x09\x09\x09animalName: anAnimal;\x0a\x09\x09\x09spriteSheet: 'images/memory/' , anAnimal , '.png';\x0a\x09\x09\x09addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;\x0a\x09\x09\x09centre: aPosition;\x0a\x09\x09\x09frameRate: 60;\x0a\x09\x09\x09loop: false;\x0a\x09\x09\x09flip;\x0a\x09\x09\x09stopAnimation)",
+source: "addCardForAnimal: anAnimal inPosition: aPosition\x0a\x0a\x09self cards add:\x0a\x09\x09(MemoryCard new\x0a\x09\x09\x09animalName: anAnimal;\x0a\x09\x09\x09spriteSheet: 'images/memory/' , anAnimal , '.png';\x0a\x09\x09\x09addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;\x0a\x09\x09\x09centre: aPosition;\x0a\x09\x09\x09frameRate: 25;\x0a\x09\x09\x09loop: false;\x0a\x09\x09\x09flip;\x0a\x09\x09\x09stopAnimation)",
 messageSends: ["add:", "cards", "animalName:", "new", "spriteSheet:", ",", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "frameRate:", "loop:", "flip", "stopAnimation"],
 referencedClasses: ["MemoryCard"]
 }),
@@ -283,13 +283,14 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
+self._fps_((10));
 self._width_((500));
 $1=self._height_((200));
 self._addCards();
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.MemoryGame)})},
 args: [],
-source: "startGame\x0a\x09self \x0a\x09\x09width: 500;\x0a\x09\x09height: 200.\x0a\x09\x0a\x09self addCards",
-messageSends: ["width:", "height:", "addCards"],
+source: "startGame\x0a\x09self\x0a\x09\x09fps: 10;\x0a\x09\x09width: 500;\x0a\x09\x09height: 200.\x0a\x09\x0a\x09self addCards",
+messageSends: ["fps:", "width:", "height:", "addCards"],
 referencedClasses: []
 }),
 globals.MemoryGame);
@@ -316,6 +317,7 @@ globals.MemoryGame);
 
 
 smalltalk.addClass('Pong', globals.Game, ['ball', 'score', 'paddle1', 'paddle2', 'speed', 'ai'], 'Ludus-Examples');
+globals.Pong.comment="####Sound acknowledgements\x0a[Paddle click](http://www.freesound.org/people/CeebFrack/sounds/108793/)\x0a[Applause](http://www.freesound.org/people/soundmary/sounds/117592/)";
 smalltalk.addMethod(
 smalltalk.method({
 selector: "bounceAgainstPaddle1",
@@ -2250,6 +2252,7 @@ globals.SmallCave);
 
 
 smalltalk.addClass('Sokoban', globals.Game, ['guy', 'walls', 'stepSize', 'boxes', 'exits', 'lastMove', 'floor', 'currentLevel', 'directionDictionary', 'guyOffsetDictionary', 'boxOffsetDictionary'], 'Ludus-Examples');
+globals.Sokoban.comment="####Sound acknowledgements\x0a[Background industrial sound](http://www.freesound.org/people/pcaeldries/sounds/30033/)\x0a[Box sliding](http://www.freesound.org/people/OceanCookies/sounds/115473/)";
 smalltalk.addMethod(
 smalltalk.method({
 selector: "advanceLevel",

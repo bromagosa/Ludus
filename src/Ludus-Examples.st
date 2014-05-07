@@ -36,7 +36,21 @@ Game subclass: #MemoryGame
 Memory game with animals and sounds.
 Start with
 
-      MemoryGame start!
+      MemoryGame start
+
+####Sound acknowledgements
+[Cow](http://www.freesound.org/people/confusion_music/sounds/103427/)
+[Pig](http://www.freesound.org/people/JarredGibb/sounds/233183/)
+[Cat](http://www.freesound.org/people/tuberatanka/sounds/110011/)
+[Sheep](http://www.freesound.org/people/confusion_music/sounds/103442/)
+[Mouse](http://opengameart.org/content/mouse-imitation)
+
+####Image acknowledgements
+[Cow](http://openclipart.org/detail/167391/drawn-cow-by-frankes)
+[Pig](http://openclipart.org/detail/189959/pig-by-peterm-189959)
+[Cat](http://openclipart.org/detail/167390/drawn-cat-by-frankes)
+[Sheep](http://openclipart.org/detail/23819/sheep-icon-by-pitr-23819)
+[Mouse](http://openclipart.org/detail/12487/mouse-by-bsantos)!
 
 !MemoryGame methodsFor: 'accessing'!
 
@@ -88,7 +102,8 @@ handleCardClick
 !MemoryGame methodsFor: 'initialization'!
 
 startGame
-	self 
+	self
+		fps: 10;
 		width: 500;
 		height: 200.
 	
@@ -105,7 +120,7 @@ addCardForAnimal: anAnimal inPosition: aPosition
 			spriteSheet: 'images/memory/' , anAnimal , '.png';
 			addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;
 			centre: aPosition;
-			frameRate: 60;
+			frameRate: 25;
 			loop: false;
 			flip;
 			stopAnimation)
@@ -134,6 +149,10 @@ addCards
 Game subclass: #Pong
 	instanceVariableNames: 'ball score paddle1 paddle2 speed ai'
 	package: 'Ludus-Examples'!
+!Pong commentStamp!
+####Sound acknowledgements
+[Paddle click](http://www.freesound.org/people/CeebFrack/sounds/108793/)
+[Applause](http://www.freesound.org/people/soundmary/sounds/117592/)!
 
 !Pong methodsFor: 'not yet classified'!
 
@@ -646,6 +665,10 @@ updateTrail
 Game subclass: #Sokoban
 	instanceVariableNames: 'guy walls stepSize boxes exits lastMove floor currentLevel directionDictionary guyOffsetDictionary boxOffsetDictionary'
 	package: 'Ludus-Examples'!
+!Sokoban commentStamp!
+####Sound acknowledgements
+[Background industrial sound](http://www.freesound.org/people/pcaeldries/sounds/30033/)
+[Box sliding](http://www.freesound.org/people/OceanCookies/sounds/115473/)!
 
 !Sokoban methodsFor: 'control'!
 
