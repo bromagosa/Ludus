@@ -29,6 +29,11 @@ showAnimal
 Game subclass: #MemoryGame
 	instanceVariableNames: 'cards lastSelectedCard'
 	package: 'Ludus-Examples'!
+!MemoryGame commentStamp!
+Memory game with animals and sounds.
+Start with
+
+      MemoryGame start!
 
 !MemoryGame methodsFor: 'accessing'!
 
