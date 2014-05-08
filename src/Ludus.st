@@ -515,7 +515,7 @@ src: anUrl
 ! !
 
 Object subclass: #Sprite
-	instanceVariableNames: 'position direction spriteSheet currentFrameGroup frameGroups animating loop'
+	instanceVariableNames: 'speed position direction spriteSheet currentFrameGroup frameGroups animating loop'
 	package: 'Ludus'!
 !Sprite commentStamp!
 I am a Sprite. I need to have a spritesheet, which is an image file that displays all possible frames I can paint organized in an ordered fashion.
@@ -792,5 +792,10 @@ width
 moveCentreBy: anOffset
 	"aSprite moveCentreBy: 0@5"
 	self centre: self centre + anOffset
+!
+
+moveCentreBy: anOffset speed: anInteger
+	"aSprite moveCentreBy: 0@5"
+	self centre: self centre + (anOffset * anInteger)
 ! !
 
