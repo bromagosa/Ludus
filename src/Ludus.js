@@ -1656,7 +1656,7 @@ referencedClasses: []
 globals.Sound.klass);
 
 
-smalltalk.addClass('Sprite', globals.Object, ['position', 'direction', 'spriteSheet', 'currentFrameGroup', 'frameGroups', 'animating', 'loop'], 'Ludus');
+smalltalk.addClass('Sprite', globals.Object, ['speed', 'position', 'direction', 'spriteSheet', 'currentFrameGroup', 'frameGroups', 'animating', 'loop'], 'Ludus');
 globals.Sprite.comment="I am a Sprite. I need to have a spritesheet, which is an image file that displays all possible frames I can paint organized in an ordered fashion.\x0aYou define different frame groups for this spritesheet, and you can cycle through these framegroups and through the frames of each of them.\x0aI have a direction, defined by a unit vector. This vector will always be a unit vector. If someone tries to force-set my direction to a vector that is not a unit one, I will just convert it.\x0aI handle collisions with other sprites and sprite collections.\x0aOf course, I also have a position, defined by cartesian coordinates.";
 smalltalk.addMethod(
 smalltalk.method({
@@ -2331,6 +2331,22 @@ return self}, function($ctx1) {$ctx1.fill(self,"moveCentreBy:",{anOffset:anOffse
 args: ["anOffset"],
 source: "moveCentreBy: anOffset\x0a\x09\x22aSprite moveCentreBy: 0@5\x22\x0a\x09self centre: self centre + anOffset",
 messageSends: ["centre:", "+", "centre"],
+referencedClasses: []
+}),
+globals.Sprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "moveCentreBy:speed:",
+protocol: 'movement',
+fn: function (anOffset,anInteger){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._centre_(_st(self._centre()).__plus(_st(anOffset).__star(anInteger)));
+return self}, function($ctx1) {$ctx1.fill(self,"moveCentreBy:speed:",{anOffset:anOffset,anInteger:anInteger},globals.Sprite)})},
+args: ["anOffset", "anInteger"],
+source: "moveCentreBy: anOffset speed: anInteger\x0a\x09\x22aSprite moveCentreBy: 0@5\x22\x0a\x09self centre: self centre + (anOffset * anInteger)",
+messageSends: ["centre:", "+", "centre", "*"],
 referencedClasses: []
 }),
 globals.Sprite);
