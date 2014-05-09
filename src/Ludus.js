@@ -900,40 +900,44 @@ protocol: 'geometry',
 fn: function (aCanvas){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $5,$4,$6,$3,$8,$7,$2,$10,$9,$1;
-$5=self._x();
+var $6,$7,$5,$4,$9,$10,$8,$3,$11,$13,$12,$2,$1;
+$6=self._x();
 $ctx1.sendIdx["x"]=1;
+$7=self._width();
+$ctx1.sendIdx["width"]=1;
+$5=_st($6).__plus($7);
+$ctx1.sendIdx["+"]=1;
 $4=_st($5).__gt_eq((0));
 $ctx1.sendIdx[">="]=1;
 $3=_st($4)._and_((function(){
 return smalltalk.withContext(function($ctx2) {
-$6=self._y();
+$9=self._y();
 $ctx2.sendIdx["y"]=1;
-return _st($6).__gt_eq((0));
+$10=self._height();
+$ctx2.sendIdx["height"]=1;
+$8=_st($9).__plus($10);
+return _st($8).__gt_eq((0));
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $2=_st($3)._and_((function(){
 return smalltalk.withContext(function($ctx2) {
-$8=self._width();
-$ctx2.sendIdx["width"]=1;
-$7=_st($8).__plus(self._x());
-$ctx2.sendIdx["+"]=1;
-return _st($7).__lt_eq(_st(aCanvas)._width());
+$11=self._x();
+$13=_st(aCanvas)._element();
+$ctx2.sendIdx["element"]=1;
+$12=_st($13)._width();
+return _st($11).__lt_eq($12);
 $ctx2.sendIdx["<="]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 $ctx1.sendIdx["and:"]=2;
 $1=_st($2)._and_((function(){
 return smalltalk.withContext(function($ctx2) {
-$10=self._height();
-$ctx2.sendIdx["height"]=1;
-$9=_st($10).__plus(self._y());
-return _st($9).__lt_eq(_st(aCanvas)._height());
+return _st(self._y()).__lt_eq(_st(_st(aCanvas)._element())._height());
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 $ctx1.sendIdx["and:"]=1;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"isInsideCanvas:",{aCanvas:aCanvas},globals.Sprite)})},
 args: ["aCanvas"],
-source: "isInsideCanvas: aCanvas\x0a\x09^ (((self x >= 0) \x0a\x09\x09and: [ self y >= 0 ])\x0a\x09\x09\x09and: [ self width + self x <= aCanvas width ])\x0a\x09\x09\x09\x09and: [ self height + self y <= aCanvas height ]",
-messageSends: ["and:", ">=", "x", "y", "<=", "+", "width", "height"],
+source: "isInsideCanvas: aCanvas\x0a\x09^ ((((self x + self width) >= 0) \x0a\x09\x09and: [ (self y + self height) >= 0 ])\x0a\x09\x09\x09and: [ self x <= aCanvas element width ])\x0a\x09\x09\x09\x09and: [ self y <= aCanvas element height ]",
+messageSends: ["and:", ">=", "+", "x", "width", "y", "height", "<=", "element"],
 referencedClasses: []
 }),
 globals.Sprite);

@@ -330,10 +330,10 @@ distanceFromCentreTo: aPoint
 !
 
 isInsideCanvas: aCanvas
-	^ (((self x >= 0) 
-		and: [ self y >= 0 ])
-			and: [ self width + self x <= aCanvas width ])
-				and: [ self height + self y <= aCanvas height ]
+	^ ((((self x + self width) >= 0) 
+		and: [ (self y + self height) >= 0 ])
+			and: [ self x <= aCanvas element width ])
+				and: [ self y <= aCanvas element height ]
 ! !
 
 !Sprite methodsFor: 'movement'!
