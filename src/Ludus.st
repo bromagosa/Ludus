@@ -58,6 +58,18 @@ spriteSheet: anImageUrl
 	self spriteSheet src: anImageUrl
 ! !
 
+!Animation methodsFor: 'drawing'!
+
+drawOnContext: aContext
+	self subclassResponsibility
+!
+
+drawOnContext: aContext step: aStep
+	self 
+		drawOnContext: aContext;
+		nextFrameWithStep: aStep.
+! !
+
 !Animation methodsFor: 'frames'!
 
 addFrameGroupNamed: aString origin: anOriginPoint size: aSizePoint frameCount: anInteger
@@ -96,6 +108,54 @@ nextFrameGroup
 			currentFrameGroup := 
 				self frameGroups at: ((self frameGroups indexOf: self currentFrameGroup) + 1) ]
 		ifTrue: [ currentFrameGroup := self frameGroups first ]
+!
+
+nextFrameWithStep: aStep
+	(aStep \\ self currentFrameGroup frameRate) = 0 
+		ifTrue: [ self nextFrame ]
+! !
+
+!Animation methodsFor: 'geometry'!
+
+height
+	^ self currentFrameGroup height
+!
+
+width
+	^ self currentFrameGroup width
+! !
+
+Animation subclass: #Background
+	instanceVariableNames: 'parallaxSpeed'
+	package: 'Ludus'!
+
+!Background methodsFor: 'drawing'!
+
+drawOnContext: aContext step: aStep width: aWidth
+	self isParallax 
+		ifFalse: [ super drawOnContext: aContext step: aStep ]
+		ifTrue: [ 
+			self currentFrameGroup 
+				drawFromBackground: self onContext: aContext;
+				move ]
+! !
+
+!Background methodsFor: 'parallax'!
+
+addParallaxNamed: aString origin: anOriginPoint size: aSizePoint speed: anInteger
+	self frameGroups
+		add: 
+			(ParallaxImage new 
+				identifier: aString
+				origin: anOriginPoint
+				frameSize: aSizePoint
+				speed: anInteger)
+! !
+
+!Background methodsFor: 'testing'!
+
+isParallax
+	^ self currentFrameGroup isParallax
 ! !
 
 Animation subclass: #Sprite
@@ -241,6 +301,12 @@ topCollidesWithWhichOf: aSpriteCollection
 	^ (aSpriteCollection detect: [ :each | self topCollidesWith: each ])
 ! !
 
+!Sprite methodsFor: 'drawing'!
+
+drawOnContext: aContext
+	self currentFrameGroup drawFromSprite: self onContext: aContext
+! !
+
 !Sprite methodsFor: 'events'!
 
 touchingMousePointer: mousePosition
@@ -263,19 +329,11 @@ distanceFromCentreTo: aPoint
 				+ (Math pow: ((self centre y) - (aPoint y)) to: 2))
 !
 
-height
-	^ self currentFrameGroup height
-!
-
 isInsideCanvas: aCanvas
 	^ (((self x >= 0) 
 		and: [ self y >= 0 ])
 			and: [ self width + self x <= aCanvas width ])
 				and: [ self height + self y <= aCanvas height ]
-!
-
-width
-	^ self currentFrameGroup width
 ! !
 
 !Sprite methodsFor: 'movement'!
@@ -296,14 +354,20 @@ Object subclass: #FrameGroup
 !FrameGroup commentStamp!
 I represent a group of ordered frames. Each frame is a clip rectangle that a Sprite can retrieve from me to paint itself.!
 
+!FrameGroup methodsFor: 'accessing'!
+
+identifier
+	^ identifier
+!
+
+origin
+	^ origin
+! !
+
 !FrameGroup methodsFor: 'attributes'!
 
 height
 	^ frameSize y
-!
-
-identifier
-	^ identifier
 !
 
 identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anInteger
@@ -311,14 +375,26 @@ identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anIn
 	origin := anOriginPoint.
 	frameSize := aSizePoint.
 	frameCount := anInteger.
-!
-
-origin
-	^ origin
+	originalX := origin x.
 !
 
 width
 	^ frameSize x
+! !
+
+!FrameGroup methodsFor: 'drawing'!
+
+drawFromSprite: aSprite onContext: aContext
+	aContext
+		drawImage: aSprite spriteSheet
+		originX: self origin x + self offset
+		originY: self origin y
+		frameWidth: self width
+		frameHeight: self height
+		x: aSprite x 
+		y: aSprite y
+		scaleWidth: self width
+		scaleHeight: self height.
 ! !
 
 !FrameGroup methodsFor: 'frames'!
@@ -353,10 +429,76 @@ toFirstFrame
 	currentFrameNumber := 0
 ! !
 
-!FrameGroup class methodsFor: 'instance creation'!
+!FrameGroup methodsFor: 'testing'!
 
-identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anInteger
-	^ self new identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anInteger
+isParallax
+	^ false
+! !
+
+FrameGroup subclass: #ParallaxImage
+	instanceVariableNames: 'xPosition1 xPosition2 speed'
+	package: 'Ludus'!
+
+!ParallaxImage methodsFor: 'accessing'!
+
+speed
+	^ speed ifNil: [ speed := 1 ]
+!
+
+xPosition1
+	^ xPosition1 ifNil: [ xPosition1 := 0 ]
+!
+
+xPosition2
+	^ xPosition2 ifNil: [ xPosition2 := self width ]
+! !
+
+!ParallaxImage methodsFor: 'attributes'!
+
+identifier: aString origin: anOriginPoint frameSize: aSizePoint speed: anInteger
+	identifier := aString.
+	origin := anOriginPoint.
+	frameSize := aSizePoint.
+	speed := anInteger.
+! !
+
+!ParallaxImage methodsFor: 'drawing'!
+
+drawFromBackground: aBackground onContext: aContext
+	aContext
+		drawImage: aBackground spriteSheet
+		originX: self origin x + self offset
+		originY: self origin y
+		frameWidth: self width
+		frameHeight: self height
+		x: self xPosition1
+		y: 0
+		scaleWidth: self width
+		scaleHeight: self height;
+		drawImage: aBackground spriteSheet
+		originX: self origin x + self offset
+		originY: self origin y
+		frameWidth: self width
+		frameHeight: self height
+		x: self xPosition2
+		y: 0
+		scaleWidth: self width
+		scaleHeight: self height.
+! !
+
+!ParallaxImage methodsFor: 'positions'!
+
+move
+	(self xPosition1 + self width) < 0
+		ifTrue: [ xPosition1 := xPosition1 + self width	].
+	xPosition1 := self xPosition1 - self speed.
+	xPosition2 := self xPosition1 + self width.
+! !
+
+!ParallaxImage methodsFor: 'testing'!
+
+isParallax
+	^ true
 ! !
 
 Widget subclass: #Game
@@ -377,8 +519,24 @@ canvas
 	^ canvas
 !
 
+canvas: anObject
+	canvas := anObject
+!
+
+fps
+	^ fps
+!
+
 fps: anInteger
 	fps := anInteger
+!
+
+mouseDown
+	^ mouseDown
+!
+
+stepCount
+	^ step
 ! !
 
 !Game methodsFor: 'attributes'!
@@ -442,18 +600,7 @@ everyStepNumber: anInteger do: aBlock
 	(step \\ anInteger) = 0 ifTrue: aBlock
 !
 
-gameLoop
-	"Do not override me, use #step and #draw instead"
-	self gameOver 
-		ifFalse: [[
-			self 
-				step;
-				draw.
-			step := step + 1.
-			self gameLoop ] valueWithTimeout: (1000 / fps) ]
-!
-
-gameOver
+isGameOver
 	^ end ifNil: [ end := false ]
 !
 
@@ -475,16 +622,25 @@ start
 
 step
 	self subclassResponsibility
-!
+! !
 
-stepCount
-	^ step
+!Game methodsFor: 'control - private'!
+
+gameLoop
+	"Do not override me, use #step and #draw instead"
+	self isGameOver 
+		ifFalse: [[
+			self 
+				step;
+				draw.
+			step := step + 1.
+			self gameLoop ] valueWithTimeout: (1000 / fps) ]
 ! !
 
 !Game methodsFor: 'drawing'!
 
 clearCanvas
-	context
+	self context
 		clearRect: 0
 		y: 0
 		width: canvas element width
@@ -499,28 +655,18 @@ draw
 	self subclassResponsibility
 !
 
+drawBackground: aBackground
+	aBackground drawOnContext: self context step: step width: canvas element width
+!
+
 drawSprite: aSprite
-	context 
-		drawImage: aSprite spriteSheet
-		originX: aSprite currentFrameGroup origin x + (aSprite currentFrameGroup offset)
-		originY: aSprite currentFrameGroup origin y
-		frameWidth: aSprite width
-		frameHeight: aSprite height
-		x: aSprite x 
-		y: aSprite y
-		scaleWidth: aSprite width
-		scaleHeight: aSprite height.
-	(step \\ aSprite currentFrameGroup frameRate) = 0 ifTrue: [ aSprite nextFrame ].
+	aSprite drawOnContext: context step: step
 !
 
 drawSpriteCollection: aSpriteCollection
 	aSpriteCollection
 		do: [ :eachSprite | 
 			self drawSprite: eachSprite ]
-!
-
-drawSprites
-	self drawSpriteCollection: self sprites
 ! !
 
 !Game methodsFor: 'events'!

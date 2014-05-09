@@ -1,9 +1,17 @@
 Smalltalk createPackage: 'OVNI'!
 Game subclass: #OVNI
-	instanceVariableNames: 'ship scrollSpeed'
+	instanceVariableNames: 'ship scrollSpeed farBackground starField'
 	package: 'OVNI'!
 
 !OVNI methodsFor: 'accessing'!
+
+farBackground
+	^ farBackground ifNil: [ 
+		farBackground := 
+			Background new 
+				spriteSheet: 'images/ovni/farback.gif';
+				addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 2 ]
+!
 
 ship
 	^ ship ifNil: [ship := SpaceShip new centre: 105 @ (self height / 2)]
@@ -32,6 +40,7 @@ step
 draw
 	self 
 		clearCanvas;
+		drawBackground: self farBackground;
 		drawSprite: self ship
 ! !
 

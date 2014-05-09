@@ -2,7 +2,7 @@ define("HOS/OVNI", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber
 smalltalk.addPackage('OVNI');
 smalltalk.packages["OVNI"].transport = {"type":"amd","amdNamespace":"HOS"};
 
-smalltalk.addClass('OVNI', globals.Game, ['ship', 'scrollSpeed'], 'OVNI');
+smalltalk.addClass('OVNI', globals.Game, ['ship', 'scrollSpeed', 'farBackground', 'starField'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "draw",
@@ -12,12 +12,44 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 self._clearCanvas();
+self._drawBackground_(self._farBackground());
 $1=self._drawSprite_(self._ship());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVNI)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawSprite: self ship",
-messageSends: ["clearCanvas", "drawSprite:", "ship"],
+source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSprite: self ship",
+messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSprite:", "ship"],
 referencedClasses: []
+}),
+globals.OVNI);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "farBackground",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $Background(){return globals.Background||(typeof Background=="undefined"?nil:Background)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$5,$6,$4,$1,$receiver;
+$2=self["@farBackground"];
+if(($receiver = $2) == null || $receiver.isNil){
+$3=_st($Background())._new();
+_st($3)._spriteSheet_("images/ovni/farback.gif");
+$5=$3;
+$6=(0).__at((0));
+$ctx1.sendIdx["@"]=1;
+$4=_st($5)._addParallaxNamed_origin_size_speed_("background",$6,(1782).__at((600)),(2));
+self["@farBackground"]=$4;
+$1=self["@farBackground"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"farBackground",{},globals.OVNI)})},
+args: [],
+source: "farBackground\x0a\x09^ farBackground ifNil: [ \x0a\x09\x09farBackground := \x0a\x09\x09\x09Background new \x0a\x09\x09\x09\x09spriteSheet: 'images/ovni/farback.gif';\x0a\x09\x09\x09\x09addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 2 ]",
+messageSends: ["ifNil:", "spriteSheet:", "new", "addParallaxNamed:origin:size:speed:", "@"],
+referencedClasses: ["Background"]
 }),
 globals.OVNI);
 

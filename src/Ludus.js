@@ -107,6 +107,40 @@ globals.Animation);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "drawOnContext:",
+protocol: 'drawing',
+fn: function (aContext){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._subclassResponsibility();
+return self}, function($ctx1) {$ctx1.fill(self,"drawOnContext:",{aContext:aContext},globals.Animation)})},
+args: ["aContext"],
+source: "drawOnContext: aContext\x0a\x09self subclassResponsibility",
+messageSends: ["subclassResponsibility"],
+referencedClasses: []
+}),
+globals.Animation);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "drawOnContext:step:",
+protocol: 'drawing',
+fn: function (aContext,aStep){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._drawOnContext_(aContext);
+$1=self._nextFrameWithStep_(aStep);
+return self}, function($ctx1) {$ctx1.fill(self,"drawOnContext:step:",{aContext:aContext,aStep:aStep},globals.Animation)})},
+args: ["aContext", "aStep"],
+source: "drawOnContext: aContext step: aStep\x0a\x09self \x0a\x09\x09drawOnContext: aContext;\x0a\x09\x09nextFrameWithStep: aStep.",
+messageSends: ["drawOnContext:", "nextFrameWithStep:"],
+referencedClasses: []
+}),
+globals.Animation);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "frameGroups",
 protocol: 'frames',
 fn: function (){
@@ -145,6 +179,24 @@ return self}, function($ctx1) {$ctx1.fill(self,"frameRate:",{anInteger:anInteger
 args: ["anInteger"],
 source: "frameRate: anInteger\x0a\x09self frameGroups do: [ :each | each frameRate: anInteger ]",
 messageSends: ["do:", "frameGroups", "frameRate:"],
+referencedClasses: []
+}),
+globals.Animation);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "height",
+protocol: 'geometry',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._currentFrameGroup())._height();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"height",{},globals.Animation)})},
+args: [],
+source: "height\x0a\x09^ self currentFrameGroup height",
+messageSends: ["height", "currentFrameGroup"],
 referencedClasses: []
 }),
 globals.Animation);
@@ -263,6 +315,26 @@ globals.Animation);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "nextFrameWithStep:",
+protocol: 'frames',
+fn: function (aStep){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(_st(aStep).__backslash_backslash(_st(self._currentFrameGroup())._frameRate())).__eq((0));
+if(smalltalk.assert($1)){
+self._nextFrame();
+};
+return self}, function($ctx1) {$ctx1.fill(self,"nextFrameWithStep:",{aStep:aStep},globals.Animation)})},
+args: ["aStep"],
+source: "nextFrameWithStep: aStep\x0a\x09(aStep \x5c\x5c self currentFrameGroup frameRate) = 0 \x0a\x09\x09ifTrue: [ self nextFrame ]",
+messageSends: ["ifTrue:", "=", "\x5c\x5c", "frameRate", "currentFrameGroup", "nextFrame"],
+referencedClasses: []
+}),
+globals.Animation);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "restartAnimation",
 protocol: 'animation',
 fn: function (){
@@ -365,6 +437,88 @@ messageSends: ["not"],
 referencedClasses: []
 }),
 globals.Animation);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "width",
+protocol: 'geometry',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._currentFrameGroup())._width();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"width",{},globals.Animation)})},
+args: [],
+source: "width\x0a\x09^ self currentFrameGroup width",
+messageSends: ["width", "currentFrameGroup"],
+referencedClasses: []
+}),
+globals.Animation);
+
+
+
+smalltalk.addClass('Background', globals.Animation, ['parallaxSpeed'], 'Ludus');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addParallaxNamed:origin:size:speed:",
+protocol: 'parallax',
+fn: function (aString,anOriginPoint,aSizePoint,anInteger){
+var self=this;
+function $ParallaxImage(){return globals.ParallaxImage||(typeof ParallaxImage=="undefined"?nil:ParallaxImage)}
+return smalltalk.withContext(function($ctx1) { 
+_st(self._frameGroups())._add_(_st(_st($ParallaxImage())._new())._identifier_origin_frameSize_speed_(aString,anOriginPoint,aSizePoint,anInteger));
+return self}, function($ctx1) {$ctx1.fill(self,"addParallaxNamed:origin:size:speed:",{aString:aString,anOriginPoint:anOriginPoint,aSizePoint:aSizePoint,anInteger:anInteger},globals.Background)})},
+args: ["aString", "anOriginPoint", "aSizePoint", "anInteger"],
+source: "addParallaxNamed: aString origin: anOriginPoint size: aSizePoint speed: anInteger\x0a\x09self frameGroups\x0a\x09\x09add: \x0a\x09\x09\x09(ParallaxImage new \x0a\x09\x09\x09\x09identifier: aString\x0a\x09\x09\x09\x09origin: anOriginPoint\x0a\x09\x09\x09\x09frameSize: aSizePoint\x0a\x09\x09\x09\x09speed: anInteger)",
+messageSends: ["add:", "frameGroups", "identifier:origin:frameSize:speed:", "new"],
+referencedClasses: ["ParallaxImage"]
+}),
+globals.Background);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "drawOnContext:step:width:",
+protocol: 'drawing',
+fn: function (aContext,aStep,aWidth){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3;
+$1=self._isParallax();
+if(smalltalk.assert($1)){
+$2=self._currentFrameGroup();
+_st($2)._drawFromBackground_onContext_(self,aContext);
+$3=_st($2)._move();
+$3;
+} else {
+($ctx1.supercall = true, globals.Background.superclass.fn.prototype._drawOnContext_step_.apply(_st(self), [aContext,aStep]));
+$ctx1.supercall = false;
+};
+return self}, function($ctx1) {$ctx1.fill(self,"drawOnContext:step:width:",{aContext:aContext,aStep:aStep,aWidth:aWidth},globals.Background)})},
+args: ["aContext", "aStep", "aWidth"],
+source: "drawOnContext: aContext step: aStep width: aWidth\x0a\x09self isParallax \x0a\x09\x09ifFalse: [ super drawOnContext: aContext step: aStep ]\x0a\x09\x09ifTrue: [ \x0a\x09\x09\x09self currentFrameGroup \x0a\x09\x09\x09\x09drawFromBackground: self onContext: aContext;\x0a\x09\x09\x09\x09move ]",
+messageSends: ["ifFalse:ifTrue:", "isParallax", "drawOnContext:step:", "drawFromBackground:onContext:", "currentFrameGroup", "move"],
+referencedClasses: []
+}),
+globals.Background);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isParallax",
+protocol: 'testing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._currentFrameGroup())._isParallax();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"isParallax",{},globals.Background)})},
+args: [],
+source: "isParallax\x0a\x09^ self currentFrameGroup isParallax",
+messageSends: ["isParallax", "currentFrameGroup"],
+referencedClasses: []
+}),
+globals.Background);
 
 
 
@@ -725,18 +879,16 @@ globals.Sprite);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "height",
-protocol: 'geometry',
-fn: function (){
+selector: "drawOnContext:",
+protocol: 'drawing',
+fn: function (aContext){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self._currentFrameGroup())._height();
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"height",{},globals.Sprite)})},
-args: [],
-source: "height\x0a\x09^ self currentFrameGroup height",
-messageSends: ["height", "currentFrameGroup"],
+_st(self._currentFrameGroup())._drawFromSprite_onContext_(self,aContext);
+return self}, function($ctx1) {$ctx1.fill(self,"drawOnContext:",{aContext:aContext},globals.Sprite)})},
+args: ["aContext"],
+source: "drawOnContext: aContext\x0a\x09self currentFrameGroup drawFromSprite: self onContext: aContext",
+messageSends: ["drawFromSprite:onContext:", "currentFrameGroup"],
 referencedClasses: []
 }),
 globals.Sprite);
@@ -1119,24 +1271,6 @@ globals.Sprite);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "width",
-protocol: 'geometry',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self._currentFrameGroup())._width();
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"width",{},globals.Sprite)})},
-args: [],
-source: "width\x0a\x09^ self currentFrameGroup width",
-messageSends: ["width", "currentFrameGroup"],
-referencedClasses: []
-}),
-globals.Sprite);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "x",
 protocol: 'attributes',
 fn: function (){
@@ -1251,6 +1385,35 @@ globals.FrameGroup);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "drawFromSprite:onContext:",
+protocol: 'drawing',
+fn: function (aSprite,aContext){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$4,$3,$2,$5,$6,$7;
+$1=_st(aSprite)._spriteSheet();
+$4=self._origin();
+$ctx1.sendIdx["origin"]=1;
+$3=_st($4)._x();
+$ctx1.sendIdx["x"]=1;
+$2=_st($3).__plus(self._offset());
+$5=_st(self._origin())._y();
+$ctx1.sendIdx["y"]=1;
+$6=self._width();
+$ctx1.sendIdx["width"]=1;
+$7=self._height();
+$ctx1.sendIdx["height"]=1;
+_st(aContext)._drawImage_originX_originY_frameWidth_frameHeight_x_y_scaleWidth_scaleHeight_($1,$2,$5,$6,$7,_st(aSprite)._x(),_st(aSprite)._y(),self._width(),self._height());
+return self}, function($ctx1) {$ctx1.fill(self,"drawFromSprite:onContext:",{aSprite:aSprite,aContext:aContext},globals.FrameGroup)})},
+args: ["aSprite", "aContext"],
+source: "drawFromSprite: aSprite onContext: aContext\x0a\x09aContext\x0a\x09\x09drawImage: aSprite spriteSheet\x0a\x09\x09originX: self origin x + self offset\x0a\x09\x09originY: self origin y\x0a\x09\x09frameWidth: self width\x0a\x09\x09frameHeight: self height\x0a\x09\x09x: aSprite x \x0a\x09\x09y: aSprite y\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height.",
+messageSends: ["drawImage:originX:originY:frameWidth:frameHeight:x:y:scaleWidth:scaleHeight:", "spriteSheet", "+", "x", "origin", "offset", "y", "width", "height"],
+referencedClasses: []
+}),
+globals.FrameGroup);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "frameRate",
 protocol: 'frames',
 fn: function (){
@@ -1309,7 +1472,7 @@ globals.FrameGroup);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "identifier",
-protocol: 'attributes',
+protocol: 'accessing',
 fn: function (){
 var self=this;
 var $1;
@@ -1329,13 +1492,30 @@ selector: "identifier:origin:frameSize:frameCount:",
 protocol: 'attributes',
 fn: function (aString,anOriginPoint,aSizePoint,anInteger){
 var self=this;
+return smalltalk.withContext(function($ctx1) { 
 self["@identifier"]=aString;
 self["@origin"]=anOriginPoint;
 self["@frameSize"]=aSizePoint;
 self["@frameCount"]=anInteger;
-return self},
+self["@originalX"]=_st(self["@origin"])._x();
+return self}, function($ctx1) {$ctx1.fill(self,"identifier:origin:frameSize:frameCount:",{aString:aString,anOriginPoint:anOriginPoint,aSizePoint:aSizePoint,anInteger:anInteger},globals.FrameGroup)})},
 args: ["aString", "anOriginPoint", "aSizePoint", "anInteger"],
-source: "identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anInteger\x0a\x09identifier := aString.\x0a\x09origin := anOriginPoint.\x0a\x09frameSize := aSizePoint.\x0a\x09frameCount := anInteger.",
+source: "identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anInteger\x0a\x09identifier := aString.\x0a\x09origin := anOriginPoint.\x0a\x09frameSize := aSizePoint.\x0a\x09frameCount := anInteger.\x0a\x09originalX := origin x.",
+messageSends: ["x"],
+referencedClasses: []
+}),
+globals.FrameGroup);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isParallax",
+protocol: 'testing',
+fn: function (){
+var self=this;
+return false;
+},
+args: [],
+source: "isParallax\x0a\x09^ false",
 messageSends: [],
 referencedClasses: []
 }),
@@ -1386,7 +1566,7 @@ globals.FrameGroup);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "origin",
-protocol: 'attributes',
+protocol: 'accessing',
 fn: function (){
 var self=this;
 var $1;
@@ -1434,23 +1614,200 @@ referencedClasses: []
 globals.FrameGroup);
 
 
+
+smalltalk.addClass('ParallaxImage', globals.FrameGroup, ['xPosition1', 'xPosition2', 'speed'], 'Ludus');
 smalltalk.addMethod(
 smalltalk.method({
-selector: "identifier:origin:frameSize:frameCount:",
-protocol: 'instance creation',
-fn: function (aString,anOriginPoint,aSizePoint,anInteger){
+selector: "drawFromBackground:onContext:",
+protocol: 'drawing',
+fn: function (aBackground,aContext){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self._new())._identifier_origin_frameSize_frameCount_(aString,anOriginPoint,aSizePoint,anInteger);
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"identifier:origin:frameSize:frameCount:",{aString:aString,anOriginPoint:anOriginPoint,aSizePoint:aSizePoint,anInteger:anInteger},globals.FrameGroup.klass)})},
-args: ["aString", "anOriginPoint", "aSizePoint", "anInteger"],
-source: "identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anInteger\x0a\x09^ self new identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anInteger",
-messageSends: ["identifier:origin:frameSize:frameCount:", "new"],
+var $1,$4,$3,$5,$2,$7,$6,$8,$9,$10,$11,$12,$14,$17,$16,$15,$18,$19,$20,$13;
+$1=_st(aBackground)._spriteSheet();
+$ctx1.sendIdx["spriteSheet"]=1;
+$4=self._origin();
+$ctx1.sendIdx["origin"]=1;
+$3=_st($4)._x();
+$ctx1.sendIdx["x"]=1;
+$5=self._offset();
+$ctx1.sendIdx["offset"]=1;
+$2=_st($3).__plus($5);
+$ctx1.sendIdx["+"]=1;
+$7=self._origin();
+$ctx1.sendIdx["origin"]=2;
+$6=_st($7)._y();
+$ctx1.sendIdx["y"]=1;
+$8=self._width();
+$ctx1.sendIdx["width"]=1;
+$9=self._height();
+$ctx1.sendIdx["height"]=1;
+$10=self._xPosition1();
+$11=self._width();
+$ctx1.sendIdx["width"]=2;
+$12=self._height();
+$ctx1.sendIdx["height"]=2;
+_st(aContext)._drawImage_originX_originY_frameWidth_frameHeight_x_y_scaleWidth_scaleHeight_($1,$2,$6,$8,$9,$10,(0),$11,$12);
+$ctx1.sendIdx["drawImage:originX:originY:frameWidth:frameHeight:x:y:scaleWidth:scaleHeight:"]=1;
+$14=_st(aBackground)._spriteSheet();
+$17=self._origin();
+$ctx1.sendIdx["origin"]=3;
+$16=_st($17)._x();
+$15=_st($16).__plus(self._offset());
+$18=_st(self._origin())._y();
+$19=self._width();
+$ctx1.sendIdx["width"]=3;
+$20=self._height();
+$ctx1.sendIdx["height"]=3;
+$13=_st(aContext)._drawImage_originX_originY_frameWidth_frameHeight_x_y_scaleWidth_scaleHeight_($14,$15,$18,$19,$20,self._xPosition2(),(0),self._width(),self._height());
+return self}, function($ctx1) {$ctx1.fill(self,"drawFromBackground:onContext:",{aBackground:aBackground,aContext:aContext},globals.ParallaxImage)})},
+args: ["aBackground", "aContext"],
+source: "drawFromBackground: aBackground onContext: aContext\x0a\x09aContext\x0a\x09\x09drawImage: aBackground spriteSheet\x0a\x09\x09originX: self origin x + self offset\x0a\x09\x09originY: self origin y\x0a\x09\x09frameWidth: self width\x0a\x09\x09frameHeight: self height\x0a\x09\x09x: self xPosition1\x0a\x09\x09y: 0\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height;\x0a\x09\x09drawImage: aBackground spriteSheet\x0a\x09\x09originX: self origin x + self offset\x0a\x09\x09originY: self origin y\x0a\x09\x09frameWidth: self width\x0a\x09\x09frameHeight: self height\x0a\x09\x09x: self xPosition2\x0a\x09\x09y: 0\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height.",
+messageSends: ["drawImage:originX:originY:frameWidth:frameHeight:x:y:scaleWidth:scaleHeight:", "spriteSheet", "+", "x", "origin", "offset", "y", "width", "height", "xPosition1", "xPosition2"],
 referencedClasses: []
 }),
-globals.FrameGroup.klass);
+globals.ParallaxImage);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "identifier:origin:frameSize:speed:",
+protocol: 'attributes',
+fn: function (aString,anOriginPoint,aSizePoint,anInteger){
+var self=this;
+self["@identifier"]=aString;
+self["@origin"]=anOriginPoint;
+self["@frameSize"]=aSizePoint;
+self["@speed"]=anInteger;
+return self},
+args: ["aString", "anOriginPoint", "aSizePoint", "anInteger"],
+source: "identifier: aString origin: anOriginPoint frameSize: aSizePoint speed: anInteger\x0a\x09identifier := aString.\x0a\x09origin := anOriginPoint.\x0a\x09frameSize := aSizePoint.\x0a\x09speed := anInteger.",
+messageSends: [],
+referencedClasses: []
+}),
+globals.ParallaxImage);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isParallax",
+protocol: 'testing',
+fn: function (){
+var self=this;
+return true;
+},
+args: [],
+source: "isParallax\x0a\x09^ true",
+messageSends: [],
+referencedClasses: []
+}),
+globals.ParallaxImage);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "move",
+protocol: 'positions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $3,$4,$2,$1,$5,$6,$7;
+$3=self._xPosition1();
+$ctx1.sendIdx["xPosition1"]=1;
+$4=self._width();
+$ctx1.sendIdx["width"]=1;
+$2=_st($3).__plus($4);
+$ctx1.sendIdx["+"]=1;
+$1=_st($2).__lt((0));
+if(smalltalk.assert($1)){
+$5=self["@xPosition1"];
+$6=self._width();
+$ctx1.sendIdx["width"]=2;
+self["@xPosition1"]=_st($5).__plus($6);
+$ctx1.sendIdx["+"]=2;
+self["@xPosition1"];
+};
+$7=self._xPosition1();
+$ctx1.sendIdx["xPosition1"]=2;
+self["@xPosition1"]=_st($7).__minus(self._speed());
+self["@xPosition2"]=_st(self._xPosition1()).__plus(self._width());
+return self}, function($ctx1) {$ctx1.fill(self,"move",{},globals.ParallaxImage)})},
+args: [],
+source: "move\x0a\x09(self xPosition1 + self width) < 0\x0a\x09\x09ifTrue: [ xPosition1 := xPosition1 + self width\x09].\x0a\x09xPosition1 := self xPosition1 - self speed.\x0a\x09xPosition2 := self xPosition1 + self width.",
+messageSends: ["ifTrue:", "<", "+", "xPosition1", "width", "-", "speed"],
+referencedClasses: []
+}),
+globals.ParallaxImage);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "speed",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@speed"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@speed"]=(1);
+$1=self["@speed"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"speed",{},globals.ParallaxImage)})},
+args: [],
+source: "speed\x0a\x09^ speed ifNil: [ speed := 1 ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.ParallaxImage);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "xPosition1",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@xPosition1"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@xPosition1"]=(0);
+$1=self["@xPosition1"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"xPosition1",{},globals.ParallaxImage)})},
+args: [],
+source: "xPosition1\x0a\x09^ xPosition1 ifNil: [ xPosition1 := 0 ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.ParallaxImage);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "xPosition2",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@xPosition2"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@xPosition2"]=self._width();
+$1=self["@xPosition2"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"xPosition2",{},globals.ParallaxImage)})},
+args: [],
+source: "xPosition2\x0a\x09^ xPosition2 ifNil: [ xPosition2 := self width ]",
+messageSends: ["ifNil:", "width"],
+referencedClasses: []
+}),
+globals.ParallaxImage);
+
 
 
 smalltalk.addClass('Game', globals.Widget, ['canvas', 'context', 'fps', 'keys', 'step', 'end', 'mousePosition', 'mouseDown', 'sounds'], 'Ludus');
@@ -1522,21 +1879,36 @@ globals.Game);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "canvas:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@canvas"]=anObject;
+return self},
+args: ["anObject"],
+source: "canvas: anObject\x0a\x09canvas := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Game);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "clearCanvas",
 protocol: 'drawing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$3,$2;
-$1=self["@context"];
+$1=self._context();
 $3=_st(self["@canvas"])._element();
 $ctx1.sendIdx["element"]=1;
 $2=_st($3)._width();
 _st($1)._clearRect_y_width_height_((0),(0),$2,_st(_st(self["@canvas"])._element())._height());
 return self}, function($ctx1) {$ctx1.fill(self,"clearCanvas",{},globals.Game)})},
 args: [],
-source: "clearCanvas\x0a\x09context\x0a\x09\x09clearRect: 0\x0a\x09\x09y: 0\x0a\x09\x09width: canvas element width\x0a\x09\x09height: canvas element height.",
-messageSends: ["clearRect:y:width:height:", "width", "element", "height"],
+source: "clearCanvas\x0a\x09self context\x0a\x09\x09clearRect: 0\x0a\x09\x09y: 0\x0a\x09\x09width: canvas element width\x0a\x09\x09height: canvas element height.",
+messageSends: ["clearRect:y:width:height:", "context", "width", "element", "height"],
 referencedClasses: []
 }),
 globals.Game);
@@ -1576,42 +1948,32 @@ globals.Game);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "drawBackground:",
+protocol: 'drawing',
+fn: function (aBackground){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(aBackground)._drawOnContext_step_width_(self._context(),self["@step"],_st(_st(self["@canvas"])._element())._width());
+return self}, function($ctx1) {$ctx1.fill(self,"drawBackground:",{aBackground:aBackground},globals.Game)})},
+args: ["aBackground"],
+source: "drawBackground: aBackground\x0a\x09aBackground drawOnContext: self context step: step width: canvas element width",
+messageSends: ["drawOnContext:step:width:", "context", "width", "element"],
+referencedClasses: []
+}),
+globals.Game);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "drawSprite:",
 protocol: 'drawing',
 fn: function (aSprite){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$6,$5,$4,$8,$7,$3,$11,$10,$9,$12,$13,$14;
-$1=self["@context"];
-$2=_st(aSprite)._spriteSheet();
-$6=_st(aSprite)._currentFrameGroup();
-$ctx1.sendIdx["currentFrameGroup"]=1;
-$5=_st($6)._origin();
-$ctx1.sendIdx["origin"]=1;
-$4=_st($5)._x();
-$ctx1.sendIdx["x"]=1;
-$8=_st(aSprite)._currentFrameGroup();
-$ctx1.sendIdx["currentFrameGroup"]=2;
-$7=_st($8)._offset();
-$3=_st($4).__plus($7);
-$11=_st(aSprite)._currentFrameGroup();
-$ctx1.sendIdx["currentFrameGroup"]=3;
-$10=_st($11)._origin();
-$9=_st($10)._y();
-$ctx1.sendIdx["y"]=1;
-$12=_st(aSprite)._width();
-$ctx1.sendIdx["width"]=1;
-$13=_st(aSprite)._height();
-$ctx1.sendIdx["height"]=1;
-_st($1)._drawImage_originX_originY_frameWidth_frameHeight_x_y_scaleWidth_scaleHeight_($2,$3,$9,$12,$13,_st(aSprite)._x(),_st(aSprite)._y(),_st(aSprite)._width(),_st(aSprite)._height());
-$14=_st(_st(self["@step"]).__backslash_backslash(_st(_st(aSprite)._currentFrameGroup())._frameRate())).__eq((0));
-if(smalltalk.assert($14)){
-_st(aSprite)._nextFrame();
-};
+_st(aSprite)._drawOnContext_step_(self["@context"],self["@step"]);
 return self}, function($ctx1) {$ctx1.fill(self,"drawSprite:",{aSprite:aSprite},globals.Game)})},
 args: ["aSprite"],
-source: "drawSprite: aSprite\x0a\x09context \x0a\x09\x09drawImage: aSprite spriteSheet\x0a\x09\x09originX: aSprite currentFrameGroup origin x + (aSprite currentFrameGroup offset)\x0a\x09\x09originY: aSprite currentFrameGroup origin y\x0a\x09\x09frameWidth: aSprite width\x0a\x09\x09frameHeight: aSprite height\x0a\x09\x09x: aSprite x \x0a\x09\x09y: aSprite y\x0a\x09\x09scaleWidth: aSprite width\x0a\x09\x09scaleHeight: aSprite height.\x0a\x09(step \x5c\x5c aSprite currentFrameGroup frameRate) = 0 ifTrue: [ aSprite nextFrame ].",
-messageSends: ["drawImage:originX:originY:frameWidth:frameHeight:x:y:scaleWidth:scaleHeight:", "spriteSheet", "+", "x", "origin", "currentFrameGroup", "offset", "y", "width", "height", "ifTrue:", "=", "\x5c\x5c", "frameRate", "nextFrame"],
+source: "drawSprite: aSprite\x0a\x09aSprite drawOnContext: context step: step",
+messageSends: ["drawOnContext:step:"],
 referencedClasses: []
 }),
 globals.Game);
@@ -1631,22 +1993,6 @@ return self}, function($ctx1) {$ctx1.fill(self,"drawSpriteCollection:",{aSpriteC
 args: ["aSpriteCollection"],
 source: "drawSpriteCollection: aSpriteCollection\x0a\x09aSpriteCollection\x0a\x09\x09do: [ :eachSprite | \x0a\x09\x09\x09self drawSprite: eachSprite ]",
 messageSends: ["do:", "drawSprite:"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "drawSprites",
-protocol: 'drawing',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-self._drawSpriteCollection_(self._sprites());
-return self}, function($ctx1) {$ctx1.fill(self,"drawSprites",{},globals.Game)})},
-args: [],
-source: "drawSprites\x0a\x09self drawSpriteCollection: self sprites",
-messageSends: ["drawSpriteCollection:", "sprites"],
 referencedClasses: []
 }),
 globals.Game);
@@ -1702,6 +2048,23 @@ globals.Game);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "fps",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@fps"];
+return $1;
+},
+args: [],
+source: "fps\x0a\x09^ fps",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Game);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "fps:",
 protocol: 'accessing',
 fn: function (anInteger){
@@ -1718,12 +2081,12 @@ globals.Game);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "gameLoop",
-protocol: 'control',
+protocol: 'control - private',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2;
-$1=self._gameOver();
+$1=self._isGameOver();
 if(! smalltalk.assert($1)){
 _st((function(){
 return smalltalk.withContext(function($ctx2) {
@@ -1737,32 +2100,8 @@ return self._gameLoop();
 };
 return self}, function($ctx1) {$ctx1.fill(self,"gameLoop",{},globals.Game)})},
 args: [],
-source: "gameLoop\x0a\x09\x22Do not override me, use #step and #draw instead\x22\x0a\x09self gameOver \x0a\x09\x09ifFalse: [[\x0a\x09\x09\x09self \x0a\x09\x09\x09\x09step;\x0a\x09\x09\x09\x09draw.\x0a\x09\x09\x09step := step + 1.\x0a\x09\x09\x09self gameLoop ] valueWithTimeout: (1000 / fps) ]",
-messageSends: ["ifFalse:", "gameOver", "valueWithTimeout:", "step", "draw", "+", "gameLoop", "/"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "gameOver",
-protocol: 'control',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$receiver;
-$2=self["@end"];
-if(($receiver = $2) == null || $receiver.isNil){
-self["@end"]=false;
-$1=self["@end"];
-} else {
-$1=$2;
-};
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"gameOver",{},globals.Game)})},
-args: [],
-source: "gameOver\x0a\x09^ end ifNil: [ end := false ]",
-messageSends: ["ifNil:"],
+source: "gameLoop\x0a\x09\x22Do not override me, use #step and #draw instead\x22\x0a\x09self isGameOver \x0a\x09\x09ifFalse: [[\x0a\x09\x09\x09self \x0a\x09\x09\x09\x09step;\x0a\x09\x09\x09\x09draw.\x0a\x09\x09\x09step := step + 1.\x0a\x09\x09\x09self gameLoop ] valueWithTimeout: (1000 / fps) ]",
+messageSends: ["ifFalse:", "isGameOver", "valueWithTimeout:", "step", "draw", "+", "gameLoop", "/"],
 referencedClasses: []
 }),
 globals.Game);
@@ -1868,6 +2207,30 @@ globals.Game);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "isGameOver",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@end"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@end"]=false;
+$1=self["@end"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"isGameOver",{},globals.Game)})},
+args: [],
+source: "isGameOver\x0a\x09^ end ifNil: [ end := false ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Game);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "isMouseDown",
 protocol: 'events - testing',
 fn: function (){
@@ -1945,6 +2308,23 @@ return self}, function($ctx1) {$ctx1.fill(self,"kill",{},globals.Game)})},
 args: [],
 source: "kill\x0a\x09self end.\x0a\x09self class stop.",
 messageSends: ["end", "stop", "class"],
+referencedClasses: []
+}),
+globals.Game);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "mouseDown",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@mouseDown"];
+return $1;
+},
+args: [],
+source: "mouseDown\x0a\x09^ mouseDown",
+messageSends: [],
 referencedClasses: []
 }),
 globals.Game);
@@ -2242,7 +2622,7 @@ globals.Game);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "stepCount",
-protocol: 'control',
+protocol: 'accessing',
 fn: function (){
 var self=this;
 var $1;
