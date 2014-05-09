@@ -1,4 +1,295 @@
 Smalltalk createPackage: 'Ludus'!
+Object subclass: #Animation
+	instanceVariableNames: 'spriteSheet currentFrameGroup frameGroups animating loop'
+	package: 'Ludus'!
+
+!Animation methodsFor: 'animation'!
+
+animating
+	animating ifNil: [ animating := true ].
+	
+	^ (animating & (self loop | self atLastFrame not))
+!
+
+frameRate: anInteger
+	self frameGroups do: [ :each | each frameRate: anInteger ]
+!
+
+loop
+	^ loop ifNil: [ loop := true ]
+!
+
+loop: aBoolean
+	loop := aBoolean
+!
+
+restartAnimation
+	self stopAnimation.
+	self currentFrameGroup toFirstFrame.
+	self startAnimation.
+!
+
+startAnimation
+	animating := true
+!
+
+stopAnimation
+	animating := false
+!
+
+toggleAnimation
+	animating := animating not
+! !
+
+!Animation methodsFor: 'aspect'!
+
+newImage
+	^ document createElement: 'img'
+! !
+
+!Animation methodsFor: 'attributes'!
+
+spriteSheet
+	spriteSheet ifNil: [ spriteSheet := self newImage ].
+	^ spriteSheet
+!
+
+spriteSheet: anImageUrl
+	self spriteSheet src: anImageUrl
+! !
+
+!Animation methodsFor: 'frames'!
+
+addFrameGroupNamed: aString origin: anOriginPoint size: aSizePoint frameCount: anInteger
+	self frameGroups 
+		add: 
+			(FrameGroup new 
+				identifier: aString
+				origin: anOriginPoint
+				frameSize: aSizePoint
+				frameCount: anInteger)
+!
+
+atLastFrame
+	^ self currentFrameGroup atLastFrame
+!
+
+currentFrameGroup
+	^ currentFrameGroup ifNil: [ self frameGroups first ]
+!
+
+currentFrameGroup: anIdentifier
+	currentFrameGroup := self frameGroups detect: [ :each | each identifier = anIdentifier ].
+!
+
+frameGroups
+	^ frameGroups ifNil: [ frameGroups := Array new ]
+!
+
+nextFrame
+	self animating ifTrue: [ self currentFrameGroup nextFrame ].
+!
+
+nextFrameGroup
+	(self currentFrameGroup = self frameGroups last)
+		ifFalse: [ 
+			currentFrameGroup := 
+				self frameGroups at: ((self frameGroups indexOf: self currentFrameGroup) + 1) ]
+		ifTrue: [ currentFrameGroup := self frameGroups first ]
+! !
+
+Animation subclass: #Sprite
+	instanceVariableNames: 'speed position direction'
+	package: 'Ludus'!
+!Sprite commentStamp!
+I am a Sprite. I need to have a spritesheet, which is an image file that displays all possible frames I can paint organized in an ordered fashion.
+You define different frame groups for this spritesheet, and you can cycle through these framegroups and through the frames of each of them.
+I have a direction, defined by a unit vector. This vector will always be a unit vector. If someone tries to force-set my direction to a vector that is not a unit one, I will just convert it.
+I handle collisions with other sprites and sprite collections.
+Of course, I also have a position, defined by cartesian coordinates.!
+
+!Sprite methodsFor: 'attributes'!
+
+centre
+	^ ((self width / 2) + self x) @ ((self height / 2) + self y).
+!
+
+centre: aPoint
+	| xOffset yOffset |
+	xOffset := (self width / 2).
+	yOffset := (self height / 2).
+
+	self position: ((aPoint x - xOffset) @ (aPoint y - yOffset)).
+!
+
+direction
+	"The direction is always a unit vector"
+	direction ifNotNil: [
+		| angle |
+		direction y >= 0
+			ifTrue: [ angle := Math atan: (direction x / direction y) ]
+			ifFalse: [ angle := (Math atan: (direction x / direction y)) + Number pi ].
+		direction := (Math sin: angle) @ (Math cos: angle) ].
+
+	^ direction ifNil: [ direction := 0@1 ]
+!
+
+direction: aPoint
+	"The direction is always a unit vector"
+	| angle |
+	aPoint y >= 0
+		ifTrue: [ angle := Math atan: (aPoint x / aPoint y) ]
+		ifFalse: [ angle := (Math atan: (aPoint x / aPoint y)) + Number pi ].
+	direction := (Math sin: angle) @ (Math cos: angle).
+!
+
+position
+	^ position ifNil: [ position := 0 @ 0 ]
+!
+
+position: aPoint
+	^ position := aPoint
+!
+
+x
+	^ self position x
+!
+
+x: anInteger
+	self position x: anInteger
+!
+
+y
+	^ self position y
+!
+
+y: anInteger
+	self position y: anInteger
+! !
+
+!Sprite methodsFor: 'collisions'!
+
+bottomCollidesWith: aSprite
+	^ aSprite topCollidesWith: self
+!
+
+bottomCollidesWithAnyOf: aSpriteCollection
+	^ (aSpriteCollection select: [ :each | self bottomCollidesWith: each ]) notEmpty
+!
+
+bottomCollidesWithWhichOf: aSpriteCollection
+	^ (aSpriteCollection detect: [ :each | self bottomCollidesWith: each ])
+!
+
+collidesWith: aSprite
+	| x0 x1 y0 y1 |
+	x0 := self x + self width.
+	x1 := aSprite x + aSprite width.
+	y1 := aSprite y + aSprite height.
+	y0 := self y + self height.
+
+	^ (x0 > aSprite x) & (y0 > aSprite y) & (x1 > self x) & (y1 > self y).
+!
+
+collidesWithAnyOf: aSpriteCollection
+	^ (aSpriteCollection select: [ :each | self collidesWith: each ]) notEmpty
+!
+
+leftCollidesWith: aSprite
+	^ aSprite rightCollidesWith: self
+!
+
+leftCollidesWithAnyOf: aSpriteCollection
+	^ (aSpriteCollection select: [ :each | self leftCollidesWith: each ]) notEmpty
+!
+
+leftCollidesWithWhichOf: aSpriteCollection
+	^ (aSpriteCollection detect: [ :each | self leftCollidesWith: each ])
+!
+
+rightCollidesWith: aSprite
+	| x0  y0 y1 |
+	x0 := self x + self width.
+	y1 := aSprite y + aSprite height.
+	y0 := self y + self height.
+
+	^ (x0 >= aSprite x) & (y0 >= aSprite y) & (y1 >= self y) & (self x < aSprite x).
+!
+
+rightCollidesWithAnyOf: aSpriteCollection
+	^ (aSpriteCollection select: [ :each | self rightCollidesWith: each ]) notEmpty
+!
+
+rightCollidesWithWhichOf: aSpriteCollection
+	^ (aSpriteCollection detect: [ :each | self rightCollidesWith: each ])
+!
+
+topCollidesWith: aSprite
+	| x0 x1 y0 y1 |
+	x0 := self x + self width.
+	x1 := aSprite x + aSprite width.
+	y1 := aSprite y + aSprite height.
+
+	 ^ (self y <= y1) & (x0 >= aSprite x) & (self y > aSprite y) & (self x < x1)
+!
+
+topCollidesWithAnyOf: aSpriteCollection
+	^ (aSpriteCollection select: [ :each | self topCollidesWith: each ]) notEmpty
+!
+
+topCollidesWithWhichOf: aSpriteCollection
+	^ (aSpriteCollection detect: [ :each | self topCollidesWith: each ])
+! !
+
+!Sprite methodsFor: 'events'!
+
+touchingMousePointer: mousePosition
+	^ self containsPoint: mousePosition
+! !
+
+!Sprite methodsFor: 'geometry'!
+
+containsPoint: aPoint
+	^ (((self x <= aPoint x)
+		and: [ self y <= aPoint y ])
+			and: [ self width + self x >= aPoint x ])
+				and: [ self height + self y >= aPoint y ]
+!
+
+distanceFromCentreTo: aPoint
+	^ Math 
+		sqrt: 
+			((Math pow: ((self centre x) - (aPoint  x)) to: 2)
+				+ (Math pow: ((self centre y) - (aPoint y)) to: 2))
+!
+
+height
+	^ self currentFrameGroup height
+!
+
+isInsideCanvas: aCanvas
+	^ (((self x >= 0) 
+		and: [ self y >= 0 ])
+			and: [ self width + self x <= aCanvas width ])
+				and: [ self height + self y <= aCanvas height ]
+!
+
+width
+	^ self currentFrameGroup width
+! !
+
+!Sprite methodsFor: 'movement'!
+
+moveCentreBy: anOffset
+	"aSprite moveCentreBy: 0@5"
+	self centre: self centre + anOffset
+!
+
+moveCentreBy: anOffset speed: anInteger
+	"aSprite moveCentreBy: 0@5"
+	self centre: self centre + (anOffset * anInteger)
+! !
+
 Object subclass: #FrameGroup
 	instanceVariableNames: 'identifier origin frameSize frameCount currentFrameNumber frameRate'
 	package: 'Ludus'!
@@ -371,6 +662,13 @@ initialize
 "	'self start"
 ! !
 
+Game subclass: #Screen
+	instanceVariableNames: ''
+	package: 'Ludus'!
+!Screen commentStamp!
+I am a game screen. I subclass Game, so I work exactly the same way Game does.
+I can represent many things: levels, menu screens, or anything that needs to change the whole canvas.!
+
 Object subclass: #Key
 	instanceVariableNames: ''
 	package: 'Ludus'!
@@ -512,290 +810,5 @@ stop
 
 src: anUrl
 	^ self new src: anUrl
-! !
-
-Object subclass: #Sprite
-	instanceVariableNames: 'speed position direction spriteSheet currentFrameGroup frameGroups animating loop'
-	package: 'Ludus'!
-!Sprite commentStamp!
-I am a Sprite. I need to have a spritesheet, which is an image file that displays all possible frames I can paint organized in an ordered fashion.
-You define different frame groups for this spritesheet, and you can cycle through these framegroups and through the frames of each of them.
-I have a direction, defined by a unit vector. This vector will always be a unit vector. If someone tries to force-set my direction to a vector that is not a unit one, I will just convert it.
-I handle collisions with other sprites and sprite collections.
-Of course, I also have a position, defined by cartesian coordinates.!
-
-!Sprite methodsFor: 'animation'!
-
-animating
-	animating ifNil: [ animating := true ].
-	
-	^ (animating & (self loop | self atLastFrame not))
-!
-
-frameRate: anInteger
-	self frameGroups do: [ :each | each frameRate: anInteger ]
-!
-
-loop
-	^ loop ifNil: [ loop := true ]
-!
-
-loop: aBoolean
-	loop := aBoolean
-!
-
-restartAnimation
-	self stopAnimation.
-	self currentFrameGroup toFirstFrame.
-	self startAnimation.
-!
-
-startAnimation
-	animating := true
-!
-
-stopAnimation
-	animating := false
-!
-
-toggleAnimation
-	animating := animating not
-! !
-
-!Sprite methodsFor: 'aspect'!
-
-newImage
-	^ document createElement: 'img'
-! !
-
-!Sprite methodsFor: 'attributes'!
-
-centre
-	^ ((self width / 2) + self x) @ ((self height / 2) + self y).
-!
-
-centre: aPoint
-	| xOffset yOffset |
-	xOffset := (self width / 2).
-	yOffset := (self height / 2).
-
-	self position: ((aPoint x - xOffset) @ (aPoint y - yOffset)).
-!
-
-direction
-	"The direction is always a unit vector"
-	direction ifNotNil: [
-		| angle |
-		direction y >= 0
-			ifTrue: [ angle := Math atan: (direction x / direction y) ]
-			ifFalse: [ angle := (Math atan: (direction x / direction y)) + Number pi ].
-		direction := (Math sin: angle) @ (Math cos: angle) ].
-
-	^ direction ifNil: [ direction := 0@1 ]
-!
-
-direction: aPoint
-	"The direction is always a unit vector"
-	| angle |
-	aPoint y >= 0
-		ifTrue: [ angle := Math atan: (aPoint x / aPoint y) ]
-		ifFalse: [ angle := (Math atan: (aPoint x / aPoint y)) + Number pi ].
-	direction := (Math sin: angle) @ (Math cos: angle).
-!
-
-position
-	^ position ifNil: [ position := 0 @ 0 ]
-!
-
-position: aPoint
-	^ position := aPoint
-!
-
-spriteSheet
-	spriteSheet ifNil: [ spriteSheet := self newImage ].
-	^ spriteSheet
-!
-
-spriteSheet: anImageUrl
-	self spriteSheet src: anImageUrl
-!
-
-x
-	^ self position x
-!
-
-x: anInteger
-	self position x: anInteger
-!
-
-y
-	^ self position y
-!
-
-y: anInteger
-	self position y: anInteger
-! !
-
-!Sprite methodsFor: 'collisions'!
-
-bottomCollidesWith: aSprite
-	^ aSprite topCollidesWith: self
-!
-
-bottomCollidesWithAnyOf: aSpriteCollection
-	^ (aSpriteCollection select: [ :each | self bottomCollidesWith: each ]) notEmpty
-!
-
-bottomCollidesWithWhichOf: aSpriteCollection
-	^ (aSpriteCollection detect: [ :each | self bottomCollidesWith: each ])
-!
-
-collidesWith: aSprite
-	| x0 x1 y0 y1 |
-	x0 := self x + self width.
-	x1 := aSprite x + aSprite width.
-	y1 := aSprite y + aSprite height.
-	y0 := self y + self height.
-
-	^ (x0 > aSprite x) & (y0 > aSprite y) & (x1 > self x) & (y1 > self y).
-!
-
-collidesWithAnyOf: aSpriteCollection
-	^ (aSpriteCollection select: [ :each | self collidesWith: each ]) notEmpty
-!
-
-leftCollidesWith: aSprite
-	^ aSprite rightCollidesWith: self
-!
-
-leftCollidesWithAnyOf: aSpriteCollection
-	^ (aSpriteCollection select: [ :each | self leftCollidesWith: each ]) notEmpty
-!
-
-leftCollidesWithWhichOf: aSpriteCollection
-	^ (aSpriteCollection detect: [ :each | self leftCollidesWith: each ])
-!
-
-rightCollidesWith: aSprite
-	| x0  y0 y1 |
-	x0 := self x + self width.
-	y1 := aSprite y + aSprite height.
-	y0 := self y + self height.
-
-	^ (x0 >= aSprite x) & (y0 >= aSprite y) & (y1 >= self y) & (self x < aSprite x).
-!
-
-rightCollidesWithAnyOf: aSpriteCollection
-	^ (aSpriteCollection select: [ :each | self rightCollidesWith: each ]) notEmpty
-!
-
-rightCollidesWithWhichOf: aSpriteCollection
-	^ (aSpriteCollection detect: [ :each | self rightCollidesWith: each ])
-!
-
-topCollidesWith: aSprite
-	| x0 x1 y0 y1 |
-	x0 := self x + self width.
-	x1 := aSprite x + aSprite width.
-	y1 := aSprite y + aSprite height.
-
-	 ^ (self y <= y1) & (x0 >= aSprite x) & (self y > aSprite y) & (self x < x1)
-!
-
-topCollidesWithAnyOf: aSpriteCollection
-	^ (aSpriteCollection select: [ :each | self topCollidesWith: each ]) notEmpty
-!
-
-topCollidesWithWhichOf: aSpriteCollection
-	^ (aSpriteCollection detect: [ :each | self topCollidesWith: each ])
-! !
-
-!Sprite methodsFor: 'events'!
-
-touchingMousePointer: mousePosition
-	^ self containsPoint: mousePosition
-! !
-
-!Sprite methodsFor: 'frames'!
-
-addFrameGroupNamed: aString origin: anOriginPoint size: aSizePoint frameCount: anInteger
-	self frameGroups 
-		add: 
-			(FrameGroup new 
-				identifier: aString
-				origin: anOriginPoint
-				frameSize: aSizePoint
-				frameCount: anInteger)
-!
-
-atLastFrame
-	^ self currentFrameGroup atLastFrame
-!
-
-currentFrameGroup
-	^ currentFrameGroup ifNil: [ self frameGroups first ]
-!
-
-currentFrameGroup: anIdentifier
-	currentFrameGroup := self frameGroups detect: [ :each | each identifier = anIdentifier ].
-!
-
-frameGroups
-	^ frameGroups ifNil: [ frameGroups := Array new ]
-!
-
-nextFrame
-	self animating ifTrue: [ self currentFrameGroup nextFrame ].
-!
-
-nextFrameGroup
-	(self currentFrameGroup = self frameGroups last)
-		ifFalse: [ 
-			currentFrameGroup := 
-				self frameGroups at: ((self frameGroups indexOf: self currentFrameGroup) + 1) ]
-		ifTrue: [ currentFrameGroup := self frameGroups first ]
-! !
-
-!Sprite methodsFor: 'geometry'!
-
-containsPoint: aPoint
-	^ (((self x <= aPoint x)
-		and: [ self y <= aPoint y ])
-			and: [ self width + self x >= aPoint x ])
-				and: [ self height + self y >= aPoint y ]
-!
-
-distanceFromCentreTo: aPoint
-	^ Math 
-		sqrt: 
-			((Math pow: ((self centre x) - (aPoint  x)) to: 2)
-				+ (Math pow: ((self centre y) - (aPoint y)) to: 2))
-!
-
-height
-	^ self currentFrameGroup height
-!
-
-isInsideCanvas: aCanvas
-	^ (((self x >= 0) 
-		and: [ self y >= 0 ])
-			and: [ self width + self x <= aCanvas width ])
-				and: [ self height + self y <= aCanvas height ]
-!
-
-width
-	^ self currentFrameGroup width
-! !
-
-!Sprite methodsFor: 'movement'!
-
-moveCentreBy: anOffset
-	"aSprite moveCentreBy: 0@5"
-	self centre: self centre + anOffset
-!
-
-moveCentreBy: anOffset speed: anInteger
-	"aSprite moveCentreBy: 0@5"
-	self centre: self centre + (anOffset * anInteger)
 ! !
 
