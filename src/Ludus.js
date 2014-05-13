@@ -467,11 +467,11 @@ fn: function (aString,anOriginPoint,aSizePoint,anInteger){
 var self=this;
 function $ParallaxImage(){return globals.ParallaxImage||(typeof ParallaxImage=="undefined"?nil:ParallaxImage)}
 return smalltalk.withContext(function($ctx1) { 
-_st(self._frameGroups())._add_(_st(_st($ParallaxImage())._new())._identifier_origin_frameSize_speed_(aString,anOriginPoint,aSizePoint,anInteger));
+_st(self._frameGroups())._add_(_st(_st($ParallaxImage())._new())._identifier_origin_size_speed_(aString,anOriginPoint,aSizePoint,anInteger));
 return self}, function($ctx1) {$ctx1.fill(self,"addParallaxNamed:origin:size:speed:",{aString:aString,anOriginPoint:anOriginPoint,aSizePoint:aSizePoint,anInteger:anInteger},globals.Background)})},
 args: ["aString", "anOriginPoint", "aSizePoint", "anInteger"],
-source: "addParallaxNamed: aString origin: anOriginPoint size: aSizePoint speed: anInteger\x0a\x09self frameGroups\x0a\x09\x09add: \x0a\x09\x09\x09(ParallaxImage new \x0a\x09\x09\x09\x09identifier: aString\x0a\x09\x09\x09\x09origin: anOriginPoint\x0a\x09\x09\x09\x09frameSize: aSizePoint\x0a\x09\x09\x09\x09speed: anInteger)",
-messageSends: ["add:", "frameGroups", "identifier:origin:frameSize:speed:", "new"],
+source: "addParallaxNamed: aString origin: anOriginPoint size: aSizePoint speed: anInteger\x0a\x09self frameGroups\x0a\x09\x09add: \x0a\x09\x09\x09(ParallaxImage new \x0a\x09\x09\x09\x09identifier: aString\x0a\x09\x09\x09\x09origin: anOriginPoint\x0a\x09\x09\x09\x09size: aSizePoint\x0a\x09\x09\x09\x09speed: anInteger)",
+messageSends: ["add:", "frameGroups", "identifier:origin:size:speed:", "new"],
 referencedClasses: ["ParallaxImage"]
 }),
 globals.Background);
@@ -1343,22 +1343,251 @@ globals.Sprite);
 
 
 
-smalltalk.addClass('FrameGroup', globals.Object, ['identifier', 'origin', 'frameSize', 'frameCount', 'currentFrameNumber', 'frameRate'], 'Ludus');
-globals.FrameGroup.comment="I represent a group of ordered frames. Each frame is a clip rectangle that a Sprite can retrieve from me to paint itself.";
+smalltalk.addClass('Drawable', globals.Object, ['identifier', 'origin', 'size', 'source'], 'Ludus');
 smalltalk.addMethod(
 smalltalk.method({
-selector: "atLastFrame",
-protocol: 'frames',
+selector: "drawOnContext:atPosition:",
+protocol: 'drawing',
+fn: function (aContext,aPoint){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$2,$4,$5,$6;
+$1=self._source();
+$3=self._origin();
+$ctx1.sendIdx["origin"]=1;
+$2=_st($3)._x();
+$ctx1.sendIdx["x"]=1;
+$4=_st(self._origin())._y();
+$ctx1.sendIdx["y"]=1;
+$5=self._width();
+$ctx1.sendIdx["width"]=1;
+$6=self._height();
+$ctx1.sendIdx["height"]=1;
+_st(aContext)._drawImage_originX_originY_width_height_xPosition_yPosition_scaleWidth_scaleHeight_($1,$2,$4,$5,$6,_st(aPoint)._x(),_st(aPoint)._y(),self._width(),self._height());
+return self}, function($ctx1) {$ctx1.fill(self,"drawOnContext:atPosition:",{aContext:aContext,aPoint:aPoint},globals.Drawable)})},
+args: ["aContext", "aPoint"],
+source: "drawOnContext: aContext atPosition: aPoint\x0a\x09aContext\x0a\x09\x09drawImage: self source\x0a\x09\x09originX: self origin x\x0a\x09\x09originY: self origin y\x0a\x09\x09width: self width\x0a\x09\x09height: self height\x0a\x09\x09xPosition: aPoint x\x0a\x09\x09yPosition: aPoint y\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height.",
+messageSends: ["drawImage:originX:originY:width:height:xPosition:yPosition:scaleWidth:scaleHeight:", "source", "x", "origin", "y", "width", "height"],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "height",
+protocol: 'attributes',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(self["@currentFrameNumber"]).__eq(_st(self["@frameCount"]).__minus((1)));
+$1=_st(self._size())._y();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"height",{},globals.Drawable)})},
+args: [],
+source: "height\x0a\x09^ self size y",
+messageSends: ["y", "size"],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "identifier",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@identifier"];
+return $1;
+},
+args: [],
+source: "identifier\x0a\x09^ identifier",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "identifier:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@identifier"]=anObject;
+return self},
+args: ["anObject"],
+source: "identifier: anObject\x0a\x09identifier := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "identifier:origin:size:",
+protocol: 'accessing',
+fn: function (aString,anOriginPoint,aSizePoint){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._identifier_(aString);
+self._origin_(anOriginPoint);
+$1=self._size_(aSizePoint);
+return self}, function($ctx1) {$ctx1.fill(self,"identifier:origin:size:",{aString:aString,anOriginPoint:anOriginPoint,aSizePoint:aSizePoint},globals.Drawable)})},
+args: ["aString", "anOriginPoint", "aSizePoint"],
+source: "identifier: aString origin: anOriginPoint size: aSizePoint\x0a\x09self \x0a\x09\x09identifier: aString;\x0a\x09\x09origin: anOriginPoint;\x0a\x09\x09size: aSizePoint\x0a\x09",
+messageSends: ["identifier:", "origin:", "size:"],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isParallax",
+protocol: 'testing',
+fn: function (){
+var self=this;
+return false;
+},
+args: [],
+source: "isParallax\x0a\x09^ false",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "origin",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@origin"];
+return $1;
+},
+args: [],
+source: "origin\x0a\x09^ origin",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "origin:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@origin"]=anObject;
+return self},
+args: ["anObject"],
+source: "origin: anObject\x0a\x09origin := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "size",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@size"];
+return $1;
+},
+args: [],
+source: "size\x0a\x09^ size",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "size:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@size"]=anObject;
+return self},
+args: ["anObject"],
+source: "size: anObject\x0a\x09size := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "source",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@source"];
+return $1;
+},
+args: [],
+source: "source\x0a\x09^ source",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "source:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@source"]=anObject;
+return self},
+args: ["anObject"],
+source: "source: anObject\x0a\x09source := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "width",
+protocol: 'attributes',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._size())._x();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"width",{},globals.Drawable)})},
+args: [],
+source: "width\x0a\x09^ self size x",
+messageSends: ["x", "size"],
+referencedClasses: []
+}),
+globals.Drawable);
+
+
+
+smalltalk.addClass('FrameGroup', globals.Drawable, ['frameCount', 'currentFrameNumber', 'frameRate'], 'Ludus');
+globals.FrameGroup.comment="I represent a group of ordered frames. Each frame is a clip rectangle that a Sprite can retrieve from me to paint itself.";
+smalltalk.addMethod(
+smalltalk.method({
+selector: "atLastFrame",
+protocol: 'frames - testing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._currentFrameNumber()).__eq(_st(self._frameCount()).__minus((1)));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"atLastFrame",{},globals.FrameGroup)})},
 args: [],
-source: "atLastFrame\x0a\x09^ currentFrameNumber = (frameCount - 1)",
-messageSends: ["=", "-"],
+source: "atLastFrame\x0a\x09^ self currentFrameNumber = (self frameCount - 1)",
+messageSends: ["=", "currentFrameNumber", "-", "frameCount"],
 referencedClasses: []
 }),
 globals.FrameGroup);
@@ -1418,6 +1647,38 @@ globals.FrameGroup);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "frameCount",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@frameCount"];
+return $1;
+},
+args: [],
+source: "frameCount\x0a\x09^ frameCount",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FrameGroup);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "frameCount:",
+protocol: 'accessing',
+fn: function (anInteger){
+var self=this;
+self["@frameCount"]=anInteger;
+return self},
+args: ["anInteger"],
+source: "frameCount: anInteger\x0a\x09frameCount := anInteger",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FrameGroup);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "frameRate",
 protocol: 'frames',
 fn: function (){
@@ -1457,35 +1718,18 @@ globals.FrameGroup);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "height",
-protocol: 'attributes',
+selector: "frameSize",
+protocol: 'accessing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(self["@frameSize"])._y();
+$1=self._size();
 return $1;
-}, function($ctx1) {$ctx1.fill(self,"height",{},globals.FrameGroup)})},
+}, function($ctx1) {$ctx1.fill(self,"frameSize",{},globals.FrameGroup)})},
 args: [],
-source: "height\x0a\x09^ frameSize y",
-messageSends: ["y"],
-referencedClasses: []
-}),
-globals.FrameGroup);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "identifier",
-protocol: 'accessing',
-fn: function (){
-var self=this;
-var $1;
-$1=self["@identifier"];
-return $1;
-},
-args: [],
-source: "identifier\x0a\x09^ identifier",
-messageSends: [],
+source: "frameSize\x0a\x09^ self size",
+messageSends: ["size"],
 referencedClasses: []
 }),
 globals.FrameGroup);
@@ -1497,30 +1741,15 @@ protocol: 'attributes',
 fn: function (aString,anOriginPoint,aSizePoint,anInteger){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self["@identifier"]=aString;
-self["@origin"]=anOriginPoint;
-self["@frameSize"]=aSizePoint;
-self["@frameCount"]=anInteger;
-self["@originalX"]=_st(self["@origin"])._x();
+var $1;
+self._identifier_(aString);
+self._origin_(anOriginPoint);
+self._size_(aSizePoint);
+$1=self._frameCount_(anInteger);
 return self}, function($ctx1) {$ctx1.fill(self,"identifier:origin:frameSize:frameCount:",{aString:aString,anOriginPoint:anOriginPoint,aSizePoint:aSizePoint,anInteger:anInteger},globals.FrameGroup)})},
 args: ["aString", "anOriginPoint", "aSizePoint", "anInteger"],
-source: "identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anInteger\x0a\x09identifier := aString.\x0a\x09origin := anOriginPoint.\x0a\x09frameSize := aSizePoint.\x0a\x09frameCount := anInteger.\x0a\x09originalX := origin x.",
-messageSends: ["x"],
-referencedClasses: []
-}),
-globals.FrameGroup);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "isParallax",
-protocol: 'testing',
-fn: function (){
-var self=this;
-return false;
-},
-args: [],
-source: "isParallax\x0a\x09^ false",
-messageSends: [],
+source: "identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anInteger\x0a\x09self \x0a\x09\x09identifier: aString;\x0a\x09\x09origin: anOriginPoint;\x0a\x09\x09size: aSizePoint;\x0a\x09\x09frameCount: anInteger.",
+messageSends: ["identifier:", "origin:", "size:", "frameCount:"],
 referencedClasses: []
 }),
 globals.FrameGroup);
@@ -1569,23 +1798,6 @@ globals.FrameGroup);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "origin",
-protocol: 'accessing',
-fn: function (){
-var self=this;
-var $1;
-$1=self["@origin"];
-return $1;
-},
-args: [],
-source: "origin\x0a\x09^ origin",
-messageSends: [],
-referencedClasses: []
-}),
-globals.FrameGroup);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "toFirstFrame",
 protocol: 'frames',
 fn: function (){
@@ -1595,24 +1807,6 @@ return self},
 args: [],
 source: "toFirstFrame\x0a\x09currentFrameNumber := 0",
 messageSends: [],
-referencedClasses: []
-}),
-globals.FrameGroup);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "width",
-protocol: 'attributes',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self["@frameSize"])._x();
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"width",{},globals.FrameGroup)})},
-args: [],
-source: "width\x0a\x09^ frameSize x",
-messageSends: ["x"],
 referencedClasses: []
 }),
 globals.FrameGroup);
@@ -1674,18 +1868,20 @@ globals.ParallaxImage);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "identifier:origin:frameSize:speed:",
+selector: "identifier:origin:size:speed:",
 protocol: 'attributes',
 fn: function (aString,anOriginPoint,aSizePoint,anInteger){
 var self=this;
-self["@identifier"]=aString;
-self["@origin"]=anOriginPoint;
-self["@frameSize"]=aSizePoint;
-self["@speed"]=anInteger;
-return self},
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._identifier_(aString);
+self._origin_(anOriginPoint);
+self._size_(aSizePoint);
+$1=self._speed_(anInteger);
+return self}, function($ctx1) {$ctx1.fill(self,"identifier:origin:size:speed:",{aString:aString,anOriginPoint:anOriginPoint,aSizePoint:aSizePoint,anInteger:anInteger},globals.ParallaxImage)})},
 args: ["aString", "anOriginPoint", "aSizePoint", "anInteger"],
-source: "identifier: aString origin: anOriginPoint frameSize: aSizePoint speed: anInteger\x0a\x09identifier := aString.\x0a\x09origin := anOriginPoint.\x0a\x09frameSize := aSizePoint.\x0a\x09speed := anInteger.",
-messageSends: [],
+source: "identifier: aString origin: anOriginPoint size: aSizePoint speed: anInteger\x0a\x09self \x0a\x09\x09identifier: aString;\x0a\x09\x09origin: anOriginPoint;\x0a\x09\x09size: aSizePoint;\x0a\x09\x09speed: anInteger.",
+messageSends: ["identifier:", "origin:", "size:", "speed:"],
 referencedClasses: []
 }),
 globals.ParallaxImage);
@@ -1760,6 +1956,21 @@ return $1;
 args: [],
 source: "speed\x0a\x09^ speed ifNil: [ speed := 1 ]",
 messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.ParallaxImage);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "speed:",
+protocol: 'accessing',
+fn: function (anInteger){
+var self=this;
+self["@speed"]=anInteger;
+return self},
+args: ["anInteger"],
+source: "speed: anInteger\x0a\x09speed := anInteger",
+messageSends: [],
 referencedClasses: []
 }),
 globals.ParallaxImage);
@@ -1851,12 +2062,12 @@ $2=sound;
 _st($2)._cssClass_(_st(self._class())._name());
 $3=_st($2)._appendToJQuery_("body"._asJQuery());
 $3;
-_st(self["@sounds"])._add_(sound);
+_st(self._sounds())._add_(sound);
 };
 return self}, function($ctx1) {$ctx1.fill(self,"addSound:",{aSoundUrl:aSoundUrl},globals.Game)})},
 args: ["aSoundUrl"],
-source: "addSound: aSoundUrl\x0a\x09(self hasSound: aSoundUrl) ifFalse: [\x0a\x09\x09| sound |\x0a\x09\x09sound := (Sound src: aSoundUrl).\x0a\x09\x09sound \x0a\x09\x09\x09cssClass: self class name;\x0a\x09\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09sounds add: sound.\x0a\x09]",
-messageSends: ["ifFalse:", "hasSound:", "src:", "cssClass:", "name", "class", "appendToJQuery:", "asJQuery", "add:"],
+source: "addSound: aSoundUrl\x0a\x09(self hasSound: aSoundUrl) ifFalse: [\x0a\x09\x09| sound |\x0a\x09\x09sound := (Sound src: aSoundUrl).\x0a\x09\x09sound \x0a\x09\x09\x09cssClass: self class name;\x0a\x09\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09self sounds add: sound.\x0a\x09]",
+messageSends: ["ifFalse:", "hasSound:", "src:", "cssClass:", "name", "class", "appendToJQuery:", "asJQuery", "add:", "sounds"],
 referencedClasses: ["Sound"]
 }),
 globals.Game);
@@ -1869,14 +2080,14 @@ fn: function (aColor){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2;
-$1=self["@canvas"];
+$1=self._canvas();
 $2=_st("background-color: ".__comma(aColor)).__comma(";");
 $ctx1.sendIdx[","]=1;
 _st($1)._at_put_("style",$2);
 return self}, function($ctx1) {$ctx1.fill(self,"backgroundColor:",{aColor:aColor},globals.Game)})},
 args: ["aColor"],
-source: "backgroundColor: aColor\x0a\x09canvas at: 'style' put: ('background-color: ', aColor , ';')",
-messageSends: ["at:put:", ","],
+source: "backgroundColor: aColor\x0a\x09self canvas at: 'style' put: ('background-color: ', aColor , ';')",
+messageSends: ["at:put:", "canvas", ","],
 referencedClasses: []
 }),
 globals.Game);
@@ -1937,7 +2148,7 @@ globals.Game);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "context",
-protocol: 'drawing',
+protocol: 'accessing',
 fn: function (){
 var self=this;
 var $1;
@@ -1998,11 +2209,11 @@ protocol: 'drawing',
 fn: function (aBackground){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(aBackground)._drawOnContext_step_width_(self._context(),self["@step"],_st(_st(self["@canvas"])._element())._width());
+_st(aBackground)._drawOnContext_step_width_(self._context(),self["@step"],_st(_st(self._canvas())._element())._width());
 return self}, function($ctx1) {$ctx1.fill(self,"drawBackground:",{aBackground:aBackground},globals.Game)})},
 args: ["aBackground"],
-source: "drawBackground: aBackground\x0a\x09aBackground drawOnContext: self context step: step width: canvas element width",
-messageSends: ["drawOnContext:step:width:", "context", "width", "element"],
+source: "drawBackground: aBackground\x0a\x09aBackground drawOnContext: self context step: step width: self canvas element width",
+messageSends: ["drawOnContext:step:width:", "context", "width", "element", "canvas"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2014,11 +2225,11 @@ protocol: 'drawing',
 fn: function (aSprite){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(aSprite)._drawOnContext_step_(self["@context"],self["@step"]);
+_st(aSprite)._drawOnContext_step_(self._context(),self["@step"]);
 return self}, function($ctx1) {$ctx1.fill(self,"drawSprite:",{aSprite:aSprite},globals.Game)})},
 args: ["aSprite"],
-source: "drawSprite: aSprite\x0a\x09aSprite drawOnContext: context step: step",
-messageSends: ["drawOnContext:step:"],
+source: "drawSprite: aSprite\x0a\x09aSprite drawOnContext: self context step: step",
+messageSends: ["drawOnContext:step:", "context"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2160,15 +2371,15 @@ fn: function (aSoundUrl){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(self["@sounds"])._anySatisfy_((function(any){
+$1=_st(self._sounds())._anySatisfy_((function(any){
 return smalltalk.withContext(function($ctx2) {
 return _st(_st(any)._src()).__eq(aSoundUrl);
 }, function($ctx2) {$ctx2.fillBlock({any:any},$ctx1,1)})}));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"hasSound:",{aSoundUrl:aSoundUrl},globals.Game)})},
 args: ["aSoundUrl"],
-source: "hasSound: aSoundUrl\x0a\x09^ sounds anySatisfy: [ :any | any src = aSoundUrl ]",
-messageSends: ["anySatisfy:", "=", "src"],
+source: "hasSound: aSoundUrl\x0a\x09^ self sounds anySatisfy: [ :any | any src = aSoundUrl ]",
+messageSends: ["anySatisfy:", "sounds", "=", "src"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2181,12 +2392,12 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(_st(self["@canvas"])._element())._height();
+$1=_st(_st(self._canvas())._element())._height();
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"height",{},globals.Game)})},
 args: [],
-source: "height\x0a\x09^ canvas element height",
-messageSends: ["height", "element"],
+source: "height\x0a\x09^ self canvas element height",
+messageSends: ["height", "element", "canvas"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2198,11 +2409,11 @@ protocol: 'attributes',
 fn: function (anInteger){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(self["@canvas"])._at_put_("height",anInteger);
+_st(self._canvas())._at_put_("height",anInteger);
 return self}, function($ctx1) {$ctx1.fill(self,"height:",{anInteger:anInteger},globals.Game)})},
 args: ["anInteger"],
-source: "height: anInteger\x0a\x09canvas at: 'height' put: anInteger.",
-messageSends: ["at:put:"],
+source: "height: anInteger\x0a\x09self canvas at: 'height' put: anInteger.",
+messageSends: ["at:put:", "canvas"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2219,12 +2430,10 @@ $ctx1.supercall = false;
 self._initializeKeys();
 self["@mouseDown"]=false;
 self["@fps"]=(30);
-self["@sounds"]=[];
-self["@screens"]=[];
 self["@step"]=(1);
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.Game)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self initializeKeys.\x0a\x09mouseDown := false.\x0a\x09fps := 30.\x0a\x09sounds := #().\x0a\x09screens := #().\x0a\x09step := 1.",
+source: "initialize\x0a\x09super initialize.\x0a\x09self initializeKeys.\x0a\x09mouseDown := false.\x0a\x09fps := 30.\x0a\x09step := 1.",
 messageSends: ["initialize", "initializeKeys"],
 referencedClasses: []
 }),
@@ -2323,11 +2532,11 @@ protocol: 'events - private',
 fn: function (evt){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(self["@keys"])._at_put_(_st(evt)._keyCode(),true);
+_st(self._keys())._at_put_(_st(evt)._keyCode(),true);
 return self}, function($ctx1) {$ctx1.fill(self,"keyDown:",{evt:evt},globals.Game)})},
 args: ["evt"],
-source: "keyDown: evt\x0a\x09keys at: evt keyCode put: true.",
-messageSends: ["at:put:", "keyCode"],
+source: "keyDown: evt\x0a\x09self keys at: evt keyCode put: true.",
+messageSends: ["at:put:", "keys", "keyCode"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2339,11 +2548,11 @@ protocol: 'events - private',
 fn: function (evt){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(self["@keys"])._at_put_(_st(evt)._keyCode(),false);
+_st(self._keys())._at_put_(_st(evt)._keyCode(),false);
 return self}, function($ctx1) {$ctx1.fill(self,"keyUp:",{evt:evt},globals.Game)})},
 args: ["evt"],
-source: "keyUp: evt\x0a\x09keys at: evt keyCode put: false.",
-messageSends: ["at:put:", "keyCode"],
+source: "keyUp: evt\x0a\x09self keys at: evt keyCode put: false.",
+messageSends: ["at:put:", "keys", "keyCode"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2492,14 +2701,14 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$receiver;
 $1=self._eventData_("click");
 if(($receiver = $1) == null || $receiver.isNil){
-_st(self["@canvas"])._onClick_(aBlock);
+_st(self._canvas())._onClick_(aBlock);
 } else {
 $1;
 };
 return self}, function($ctx1) {$ctx1.fill(self,"onMouseClickDo:",{aBlock:aBlock},globals.Game)})},
 args: ["aBlock"],
-source: "onMouseClickDo: aBlock\x0a\x09(self eventData: 'click')\x0a\x09\x09ifNil: [ canvas onClick: aBlock ]",
-messageSends: ["ifNil:", "eventData:", "onClick:"],
+source: "onMouseClickDo: aBlock\x0a\x09(self eventData: 'click')\x0a\x09\x09ifNil: [ self canvas onClick: aBlock ]",
+messageSends: ["ifNil:", "eventData:", "onClick:", "canvas"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2514,14 +2723,14 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$receiver;
 $1=self._eventData_("mousedown");
 if(($receiver = $1) == null || $receiver.isNil){
-_st(self["@canvas"])._onMouseDown_(aBlock);
+_st(self._canvas())._onMouseDown_(aBlock);
 } else {
 $1;
 };
 return self}, function($ctx1) {$ctx1.fill(self,"onMouseDownDo:",{aBlock:aBlock},globals.Game)})},
 args: ["aBlock"],
-source: "onMouseDownDo: aBlock\x0a\x09(self eventData: 'mousedown')\x0a\x09\x09ifNil: [ canvas onMouseDown: aBlock ]",
-messageSends: ["ifNil:", "eventData:", "onMouseDown:"],
+source: "onMouseDownDo: aBlock\x0a\x09(self eventData: 'mousedown')\x0a\x09\x09ifNil: [ self canvas onMouseDown: aBlock ]",
+messageSends: ["ifNil:", "eventData:", "onMouseDown:", "canvas"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2536,14 +2745,14 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$receiver;
 $1=self._eventData_("mouseup");
 if(($receiver = $1) == null || $receiver.isNil){
-_st(self["@canvas"])._onMouseUp_(aBlock);
+_st(self._canvas())._onMouseUp_(aBlock);
 } else {
 $1;
 };
 return self}, function($ctx1) {$ctx1.fill(self,"onMouseUpDo:",{aBlock:aBlock},globals.Game)})},
 args: ["aBlock"],
-source: "onMouseUpDo: aBlock\x0a\x09(self eventData: 'mouseup')\x0a\x09\x09ifNil: [ canvas onMouseUp: aBlock ]",
-messageSends: ["ifNil:", "eventData:", "onMouseUp:"],
+source: "onMouseUpDo: aBlock\x0a\x09(self eventData: 'mouseup')\x0a\x09\x09ifNil: [ self canvas onMouseUp: aBlock ]",
+messageSends: ["ifNil:", "eventData:", "onMouseUp:", "canvas"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2555,9 +2764,11 @@ protocol: 'rendering',
 fn: function (html){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4;
+var $1,$2,$3,$4,$5,$6,$7;
 self["@canvas"]=_st(html)._canvas();
-$1=self["@canvas"];
+$ctx1.sendIdx["canvas"]=1;
+$1=self._canvas();
+$ctx1.sendIdx["canvas"]=2;
 _st($1)._at_put_("width",(250));
 $ctx1.sendIdx["at:put:"]=1;
 _st($1)._at_put_("height",(250));
@@ -2573,26 +2784,27 @@ _st(_st(window)._jQuery_(document))._keyup_((function(evt){
 return smalltalk.withContext(function($ctx2) {
 return self._keyUp_(evt);
 }, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,2)})}));
-_st(self["@canvas"])._onMouseDown_((function(evt){
+$4=self._canvas();
+$ctx1.sendIdx["canvas"]=3;
+_st($4)._onMouseDown_((function(evt){
 return smalltalk.withContext(function($ctx2) {
 return self._mouseDown_(evt);
 }, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,3)})}));
-$4=_st(self["@canvas"])._asJQuery();
-$ctx1.sendIdx["asJQuery"]=1;
-_st($4)._bind_do_("mouseup",(function(evt){
+$5=_st(self._canvas())._asJQuery();
+_st($5)._bind_do_("mouseup",(function(evt){
 return smalltalk.withContext(function($ctx2) {
 return self._mouseUp_(evt);
 }, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,4)})}));
 $ctx1.sendIdx["bind:do:"]=1;
-_st(_st(self["@canvas"])._asJQuery())._bind_do_("mousemove",(function(evt){
+$6=_st($5)._bind_do_("mousemove",(function(evt){
 return smalltalk.withContext(function($ctx2) {
 return self._mouseMove_(evt);
 }, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,5)})}));
 self._startGame();
-self._gameLoop();
+$7=self._gameLoop();
 return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.Game)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09\x22Do not override me, use #startGame instead\x22\x0a\x09canvas := html canvas.\x0a\x09canvas \x0a\x09\x09at: 'width' put: 250;\x0a\x09\x09at: 'height' put: 250;\x0a\x09\x09id: self class name.\x0a\x09context := canvas element getContext: '2d'.\x0a\x0a\x09(window jQuery: document) keydown: [ :evt | self keyDown: evt ].\x0a\x09(window jQuery: document) keyup: [ :evt | self keyUp: evt ].\x0a\x09canvas onMouseDown: [ :evt | self mouseDown: evt ].\x0a\x09canvas asJQuery bind: 'mouseup' do: [ :evt | self mouseUp: evt ].\x0a\x09canvas asJQuery bind: 'mousemove' do: [ :evt | self mouseMove: evt ].\x0a\x0a\x09self startGame.\x0a\x09self gameLoop.",
+source: "renderOn: html\x0a\x09\x22Do not override me, use #startGame instead\x22\x0a\x09canvas := html canvas.\x0a\x09self canvas \x0a\x09\x09at: 'width' put: 250;\x0a\x09\x09at: 'height' put: 250;\x0a\x09\x09id: self class name.\x0a\x09context := canvas element getContext: '2d'.\x0a\x0a\x09(window jQuery: document) keydown: [ :evt | self keyDown: evt ].\x0a\x09(window jQuery: document) keyup: [ :evt | self keyUp: evt ].\x0a\x09self canvas onMouseDown: [ :evt | self mouseDown: evt ].\x0a\x09self canvas asJQuery \x0a\x09\x09bind: 'mouseup' do: [ :evt | self mouseUp: evt ];\x0a\x09\x09bind: 'mousemove' do: [ :evt | self mouseMove: evt ].\x0a\x0a\x09self \x0a\x09\x09startGame;\x0a\x09\x09gameLoop.",
 messageSends: ["canvas", "at:put:", "id:", "name", "class", "getContext:", "element", "keydown:", "jQuery:", "keyDown:", "keyup:", "keyUp:", "onMouseDown:", "mouseDown:", "bind:do:", "asJQuery", "mouseUp:", "mouseMove:", "startGame", "gameLoop"],
 referencedClasses: []
 }),
@@ -2646,13 +2858,20 @@ selector: "screens",
 protocol: 'accessing',
 fn: function (){
 var self=this;
-var $1;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@screens"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@screens"]=[];
 $1=self["@screens"];
+} else {
+$1=$2;
+};
 return $1;
-},
+}, function($ctx1) {$ctx1.fill(self,"screens",{},globals.Game)})},
 args: [],
-source: "screens\x0a\x09^ screens",
-messageSends: [],
+source: "screens\x0a\x09^ screens ifNil: [ screens := #() ]",
+messageSends: ["ifNil:"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2665,15 +2884,39 @@ fn: function (aName){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(self["@sounds"])._detect_((function(each){
+$1=_st(self._sounds())._detect_((function(each){
 return smalltalk.withContext(function($ctx2) {
 return _st(_st(each)._id()).__eq(aName);
 }, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"soundNamed:",{aName:aName},globals.Game)})},
 args: ["aName"],
-source: "soundNamed: aName\x0a\x09^ sounds detect: [ :each | each id = aName ]",
-messageSends: ["detect:", "=", "id"],
+source: "soundNamed: aName\x0a\x09^ self sounds detect: [ :each | each id = aName ]",
+messageSends: ["detect:", "sounds", "=", "id"],
+referencedClasses: []
+}),
+globals.Game);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "sounds",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@sounds"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@sounds"]=[];
+$1=self["@sounds"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"sounds",{},globals.Game)})},
+args: [],
+source: "sounds\x0a\x09^ sounds ifNil: [ sounds := #() ]",
+messageSends: ["ifNil:"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2824,12 +3067,12 @@ fn: function (aBlock){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=self["@mouseDown"];
+$1=self._isMouseDown();
 _st($1)._ifTrue_(aBlock);
 return self}, function($ctx1) {$ctx1.fill(self,"whileMouseDownDo:",{aBlock:aBlock},globals.Game)})},
 args: ["aBlock"],
-source: "whileMouseDownDo: aBlock\x0a\x09mouseDown ifTrue: aBlock",
-messageSends: ["ifTrue:"],
+source: "whileMouseDownDo: aBlock\x0a\x09self isMouseDown ifTrue: aBlock",
+messageSends: ["ifTrue:", "isMouseDown"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2842,12 +3085,12 @@ fn: function (aBlock){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=self["@mouseDown"];
+$1=self._isMouseDown();
 _st($1)._ifFalse_(aBlock);
 return self}, function($ctx1) {$ctx1.fill(self,"whileMouseUpDo:",{aBlock:aBlock},globals.Game)})},
 args: ["aBlock"],
-source: "whileMouseUpDo: aBlock\x0a\x09mouseDown ifFalse: aBlock",
-messageSends: ["ifFalse:"],
+source: "whileMouseUpDo: aBlock\x0a\x09self isMouseDown ifFalse: aBlock",
+messageSends: ["ifFalse:", "isMouseDown"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2860,12 +3103,12 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(_st(self["@canvas"])._element())._width();
+$1=_st(_st(self._canvas())._element())._width();
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"width",{},globals.Game)})},
 args: [],
-source: "width\x0a\x09^ canvas element width",
-messageSends: ["width", "element"],
+source: "width\x0a\x09^ self canvas element width",
+messageSends: ["width", "element", "canvas"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2877,11 +3120,11 @@ protocol: 'attributes',
 fn: function (anInteger){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(self["@canvas"])._at_put_("width",anInteger);
+_st(self._canvas())._at_put_("width",anInteger);
 return self}, function($ctx1) {$ctx1.fill(self,"width:",{anInteger:anInteger},globals.Game)})},
 args: ["anInteger"],
-source: "width: anInteger\x0a\x09canvas at: 'width' put: anInteger.",
-messageSends: ["at:put:"],
+source: "width: anInteger\x0a\x09self canvas at: 'width' put: anInteger.",
+messageSends: ["at:put:", "canvas"],
 referencedClasses: []
 }),
 globals.Game);
@@ -2977,6 +3220,184 @@ messageSends: ["remove", "asJQuery", ",", "name"],
 referencedClasses: []
 }),
 globals.Game.klass);
+
+
+smalltalk.addClass('Screen', globals.Game, ['game', 'name'], 'Ludus');
+globals.Screen.comment="I am a game screen. I need to implement #startScreen, #step and #draw, as these will be called by the game who owns me.\x0aI can represent many things: levels, menu screens, or anything that needs to change the whole canvas.";
+smalltalk.addMethod(
+smalltalk.method({
+selector: "canvas",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._game())._canvas();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"canvas",{},globals.Screen)})},
+args: [],
+source: "canvas\x0a\x09^ self game canvas",
+messageSends: ["canvas", "game"],
+referencedClasses: []
+}),
+globals.Screen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "context",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._game())._context();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"context",{},globals.Screen)})},
+args: [],
+source: "context\x0a\x09^ self game context",
+messageSends: ["context", "game"],
+referencedClasses: []
+}),
+globals.Screen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "draw:atPosition:",
+protocol: 'drawing',
+fn: function (aDrawable,aPoint){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(aDrawable)._drawOnContext_atPosition_(self._context(),aPoint);
+return self}, function($ctx1) {$ctx1.fill(self,"draw:atPosition:",{aDrawable:aDrawable,aPoint:aPoint},globals.Screen)})},
+args: ["aDrawable", "aPoint"],
+source: "draw: aDrawable atPosition: aPoint\x0a\x09aDrawable drawOnContext: self context atPosition: aPoint",
+messageSends: ["drawOnContext:atPosition:", "context"],
+referencedClasses: []
+}),
+globals.Screen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "game",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@game"];
+return $1;
+},
+args: [],
+source: "game\x0a\x09^ game",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Screen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "game:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@game"]=anObject;
+return self},
+args: ["anObject"],
+source: "game: anObject\x0a\x09game := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Screen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "name",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@name"];
+if(($receiver = $2) == null || $receiver.isNil){
+$1=_st(self._class())._name();
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"name",{},globals.Screen)})},
+args: [],
+source: "name\x0a\x09^ name ifNil: [ self class name ]",
+messageSends: ["ifNil:", "name", "class"],
+referencedClasses: []
+}),
+globals.Screen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "name:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@name"]=anObject;
+return self},
+args: ["anObject"],
+source: "name: anObject\x0a\x09name := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Screen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "startGame",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._shouldNotImplement();
+return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.Screen)})},
+args: [],
+source: "startGame\x0a\x09self shouldNotImplement",
+messageSends: ["shouldNotImplement"],
+referencedClasses: []
+}),
+globals.Screen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "startScreen",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._subclassResponsibility();
+return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.Screen)})},
+args: [],
+source: "startScreen\x0a\x09self subclassResponsibility",
+messageSends: ["subclassResponsibility"],
+referencedClasses: []
+}),
+globals.Screen);
+
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "named:",
+protocol: 'instance creation',
+fn: function (aString){
+var self=this;
+var instance;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+instance=_st(self._new())._name_(aString);
+$1=instance;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"named:",{aString:aString,instance:instance},globals.Screen.klass)})},
+args: ["aString"],
+source: "named: aString\x0a\x09| instance |\x0a\x09instance := self new name: aString.\x0a\x09^ instance",
+messageSends: ["name:", "new"],
+referencedClasses: []
+}),
+globals.Screen.klass);
 
 
 smalltalk.addClass('Key', globals.Object, [], 'Ludus');
@@ -3152,148 +3573,6 @@ messageSends: [],
 referencedClasses: []
 }),
 globals.Key.klass);
-
-
-smalltalk.addClass('Screen', globals.Object, ['game', 'name'], 'Ludus');
-globals.Screen.comment="I am a game screen. I need to implement #startScreen, #step and #draw, as these will be called by the game who owns me.\x0aI can represent many things: levels, menu screens, or anything that needs to change the whole canvas.";
-smalltalk.addMethod(
-smalltalk.method({
-selector: "draw",
-protocol: 'drawing',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-self._sublassResponsibility();
-return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.Screen)})},
-args: [],
-source: "draw\x0a\x09self sublassResponsibility",
-messageSends: ["sublassResponsibility"],
-referencedClasses: []
-}),
-globals.Screen);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "game",
-protocol: 'accessing',
-fn: function (){
-var self=this;
-var $1;
-$1=self["@game"];
-return $1;
-},
-args: [],
-source: "game\x0a\x09^ game",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Screen);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "game:",
-protocol: 'accessing',
-fn: function (anObject){
-var self=this;
-self["@game"]=anObject;
-return self},
-args: ["anObject"],
-source: "game: anObject\x0a\x09game := anObject",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Screen);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "name",
-protocol: 'accessing',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$receiver;
-$2=self["@name"];
-if(($receiver = $2) == null || $receiver.isNil){
-$1=_st(self._class())._name();
-} else {
-$1=$2;
-};
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"name",{},globals.Screen)})},
-args: [],
-source: "name\x0a\x09^ name ifNil: [ self class name ]",
-messageSends: ["ifNil:", "name", "class"],
-referencedClasses: []
-}),
-globals.Screen);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "name:",
-protocol: 'accessing',
-fn: function (anObject){
-var self=this;
-self["@name"]=anObject;
-return self},
-args: ["anObject"],
-source: "name: anObject\x0a\x09name := anObject",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Screen);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "startScreen",
-protocol: 'initialization',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-self._subclassResponsibility();
-return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.Screen)})},
-args: [],
-source: "startScreen\x0a\x09self subclassResponsibility",
-messageSends: ["subclassResponsibility"],
-referencedClasses: []
-}),
-globals.Screen);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "step",
-protocol: 'control',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-self._sublassResponsibility();
-return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.Screen)})},
-args: [],
-source: "step\x0a\x09self sublassResponsibility",
-messageSends: ["sublassResponsibility"],
-referencedClasses: []
-}),
-globals.Screen);
-
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "named:",
-protocol: 'instance creation',
-fn: function (aString){
-var self=this;
-var instance;
-return smalltalk.withContext(function($ctx1) { 
-var $1;
-instance=_st(self._new())._name_(aString);
-$1=instance;
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"named:",{aString:aString,instance:instance},globals.Screen.klass)})},
-args: ["aString"],
-source: "named: aString\x0a\x09| instance |\x0a\x09instance := self new name: aString.\x0a\x09^ instance",
-messageSends: ["name:", "new"],
-referencedClasses: []
-}),
-globals.Screen.klass);
 
 
 smalltalk.addClass('Sound', globals.Widget, ['src', 'cssClass'], 'Ludus');

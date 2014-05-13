@@ -148,7 +148,7 @@ addParallaxNamed: aString origin: anOriginPoint size: aSizePoint speed: anIntege
 			(ParallaxImage new 
 				identifier: aString
 				origin: anOriginPoint
-				frameSize: aSizePoint
+				size: aSizePoint
 				speed: anInteger)
 ! !
 
@@ -348,38 +348,110 @@ moveCentreBy: anOffset speed: anInteger
 	self centre: self centre + (anOffset * anInteger)
 ! !
 
-Object subclass: #FrameGroup
-	instanceVariableNames: 'identifier origin frameSize frameCount currentFrameNumber frameRate'
+Object subclass: #Drawable
+	instanceVariableNames: 'identifier origin size source'
+	package: 'Ludus'!
+
+!Drawable methodsFor: 'accessing'!
+
+identifier
+	^ identifier
+!
+
+identifier: anObject
+	identifier := anObject
+!
+
+identifier: aString origin: anOriginPoint size: aSizePoint
+	self 
+		identifier: aString;
+		origin: anOriginPoint;
+		size: aSizePoint
+!
+
+origin
+	^ origin
+!
+
+origin: anObject
+	origin := anObject
+!
+
+size
+	^ size
+!
+
+size: anObject
+	size := anObject
+!
+
+source
+	^ source
+!
+
+source: anObject
+	source := anObject
+! !
+
+!Drawable methodsFor: 'attributes'!
+
+height
+	^ self size y
+!
+
+width
+	^ self size x
+! !
+
+!Drawable methodsFor: 'drawing'!
+
+drawOnContext: aContext atPosition: aPoint
+	aContext
+		drawImage: self source
+		originX: self origin x
+		originY: self origin y
+		width: self width
+		height: self height
+		xPosition: aPoint x
+		yPosition: aPoint y
+		scaleWidth: self width
+		scaleHeight: self height.
+! !
+
+!Drawable methodsFor: 'testing'!
+
+isParallax
+	^ false
+! !
+
+Drawable subclass: #FrameGroup
+	instanceVariableNames: 'frameCount currentFrameNumber frameRate'
 	package: 'Ludus'!
 !FrameGroup commentStamp!
 I represent a group of ordered frames. Each frame is a clip rectangle that a Sprite can retrieve from me to paint itself.!
 
 !FrameGroup methodsFor: 'accessing'!
 
-identifier
-	^ identifier
+frameCount
+	^ frameCount
 !
 
-origin
-	^ origin
+frameCount: anInteger
+	frameCount := anInteger
+!
+
+frameSize
+	^ self size
 ! !
 
 !FrameGroup methodsFor: 'attributes'!
 
-height
-	^ frameSize y
-!
-
 identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anInteger
-	identifier := aString.
-	origin := anOriginPoint.
-	frameSize := aSizePoint.
-	frameCount := anInteger.
-	originalX := origin x.
-!
-
-width
-	^ frameSize x
+	self 
+		identifier: aString;
+		origin: anOriginPoint;
+		size: aSizePoint;
+		frameCount: anInteger.
 ! !
 
 !FrameGroup methodsFor: 'drawing'!
@@ -398,10 +470,6 @@ drawFromSprite: aSprite onContext: aContext
 ! !
 
 !FrameGroup methodsFor: 'frames'!
-
-atLastFrame
-	^ currentFrameNumber = (frameCount - 1)
-!
 
 currentFrameNumber
 	^ currentFrameNumber ifNil: [ currentFrameNumber := 0 ]
@@ -429,10 +497,10 @@ toFirstFrame
 	currentFrameNumber := 0
 ! !
 
-!FrameGroup methodsFor: 'testing'!
+!FrameGroup methodsFor: 'frames - testing'!
 
-isParallax
-	^ false
+atLastFrame
+	^ self currentFrameNumber = (self frameCount - 1)
 ! !
 
 FrameGroup subclass: #ParallaxImage
@@ -445,6 +513,10 @@ speed
 	^ speed ifNil: [ speed := 1 ]
 !
 
+speed: anInteger
+	speed := anInteger
+!
+
 xPosition1
 	^ xPosition1 ifNil: [ xPosition1 := 0 ]
 !
@@ -455,11 +527,12 @@ xPosition2
 
 !ParallaxImage methodsFor: 'attributes'!
 
-identifier: aString origin: anOriginPoint frameSize: aSizePoint speed: anInteger
-	identifier := aString.
-	origin := anOriginPoint.
-	frameSize := aSizePoint.
-	speed := anInteger.
+identifier: aString origin: anOriginPoint size: aSizePoint speed: anInteger
+	self 
+		identifier: aString;
+		origin: anOriginPoint;
+		size: aSizePoint;
+		speed: anInteger.
 ! !
 
 !ParallaxImage methodsFor: 'drawing'!
@@ -523,6 +596,10 @@ canvas: anObject
 	canvas := anObject
 !
 
+context
+	^ context
+!
+
 currentScreen
 	^ currentScreen ifNil: [ currentScreen := self ]
 !
@@ -540,7 +617,11 @@ mouseDown
 !
 
 screens
-	^ screens
+	^ screens ifNil: [ screens := #() ]
+!
+
+sounds
+	^ sounds ifNil: [ sounds := #() ]
 !
 
 stepCount
@@ -550,23 +631,23 @@ stepCount
 !Game methodsFor: 'attributes'!
 
 backgroundColor: aColor
-	canvas at: 'style' put: ('background-color: ', aColor , ';')
+	self canvas at: 'style' put: ('background-color: ', aColor , ';')
 !
 
 height
-	^ canvas element height
+	^ self canvas element height
 !
 
 height: anInteger
-	canvas at: 'height' put: anInteger.
+	self canvas at: 'height' put: anInteger.
 !
 
 width
-	^ canvas element width
+	^ self canvas element width
 !
 
 width: anInteger
-	canvas at: 'width' put: anInteger.
+	self canvas at: 'width' put: anInteger.
 !
 
 windowScrollLeft
@@ -586,16 +667,16 @@ addSound: aSoundUrl
 		sound 
 			cssClass: self class name;
 			appendToJQuery: 'body' asJQuery.
-		sounds add: sound.
+		self sounds add: sound.
 	]
 !
 
 hasSound: aSoundUrl
-	^ sounds anySatisfy: [ :any | any src = aSoundUrl ]
+	^ self sounds anySatisfy: [ :any | any src = aSoundUrl ]
 !
 
 soundNamed: aName
-	^ sounds detect: [ :each | each id = aName ]
+	^ self sounds detect: [ :each | each id = aName ]
 ! !
 
 !Game methodsFor: 'control'!
@@ -661,20 +742,16 @@ clearCanvas
 		height: canvas element height.
 !
 
-context
-	^ context
-!
-
 draw
 	self subclassResponsibility
 !
 
 drawBackground: aBackground
-	aBackground drawOnContext: self context step: step width: canvas element width
+	aBackground drawOnContext: self context step: step width: self canvas element width
 !
 
 drawSprite: aSprite
-	aSprite drawOnContext: context step: step
+	aSprite drawOnContext: self context step: step
 !
 
 drawSpriteCollection: aSpriteCollection
@@ -691,17 +768,17 @@ mousePosition
 
 onMouseClickDo: aBlock
 	(self eventData: 'click')
-		ifNil: [ canvas onClick: aBlock ]
+		ifNil: [ self canvas onClick: aBlock ]
 !
 
 onMouseDownDo: aBlock
 	(self eventData: 'mousedown')
-		ifNil: [ canvas onMouseDown: aBlock ]
+		ifNil: [ self canvas onMouseDown: aBlock ]
 !
 
 onMouseUpDo: aBlock
 	(self eventData: 'mouseup')
-		ifNil: [ canvas onMouseUp: aBlock ]
+		ifNil: [ self canvas onMouseUp: aBlock ]
 !
 
 whileKeyPressed: aKeyCode do: aBlock
@@ -709,11 +786,11 @@ whileKeyPressed: aKeyCode do: aBlock
 !
 
 whileMouseDownDo: aBlock
-	mouseDown ifTrue: aBlock
+	self isMouseDown ifTrue: aBlock
 !
 
 whileMouseUpDo: aBlock
-	mouseDown ifFalse: aBlock
+	self isMouseDown ifFalse: aBlock
 ! !
 
 !Game methodsFor: 'events - private'!
@@ -723,11 +800,11 @@ eventData: anEvent
 !
 
 keyDown: evt
-	keys at: evt keyCode put: true.
+	self keys at: evt keyCode put: true.
 !
 
 keyUp: evt
-	keys at: evt keyCode put: false.
+	self keys at: evt keyCode put: false.
 !
 
 keys
@@ -766,8 +843,6 @@ initialize
 	self initializeKeys.
 	mouseDown := false.
 	fps := 30.
-	sounds := #().
-	screens := #().
 	step := 1.
 !
 
@@ -785,7 +860,7 @@ startGame
 renderOn: html
 	"Do not override me, use #startGame instead"
 	canvas := html canvas.
-	canvas 
+	self canvas 
 		at: 'width' put: 250;
 		at: 'height' put: 250;
 		id: self class name.
@@ -793,12 +868,14 @@ renderOn: html
 
 	(window jQuery: document) keydown: [ :evt | self keyDown: evt ].
 	(window jQuery: document) keyup: [ :evt | self keyUp: evt ].
-	canvas onMouseDown: [ :evt | self mouseDown: evt ].
-	canvas asJQuery bind: 'mouseup' do: [ :evt | self mouseUp: evt ].
-	canvas asJQuery bind: 'mousemove' do: [ :evt | self mouseMove: evt ].
+	self canvas onMouseDown: [ :evt | self mouseDown: evt ].
+	self canvas asJQuery 
+		bind: 'mouseup' do: [ :evt | self mouseUp: evt ];
+		bind: 'mousemove' do: [ :evt | self mouseMove: evt ].
 
-	self startGame.
-	self gameLoop.
+	self 
+		startGame;
+		gameLoop.
 ! !
 
 !Game methodsFor: 'screens'!
@@ -842,6 +919,63 @@ stop
 initialize
 	"uncomment if you want the game to start when loading the page"
 "	'self start"
+! !
+
+Game subclass: #Screen
+	instanceVariableNames: 'game name'
+	package: 'Ludus'!
+!Screen commentStamp!
+I am a game screen. I need to implement #startScreen, #step and #draw, as these will be called by the game who owns me.
+I can represent many things: levels, menu screens, or anything that needs to change the whole canvas.!
+
+!Screen methodsFor: 'accessing'!
+
+canvas
+	^ self game canvas
+!
+
+context
+	^ self game context
+!
+
+game
+	^ game
+!
+
+game: anObject
+	game := anObject
+!
+
+name
+	^ name ifNil: [ self class name ]
+!
+
+name: anObject
+	name := anObject
+! !
+
+!Screen methodsFor: 'drawing'!
+
+draw: aDrawable atPosition: aPoint
+	aDrawable drawOnContext: self context atPosition: aPoint
+! !
+
+!Screen methodsFor: 'initialization'!
+
+startGame
+	self shouldNotImplement
+!
+
+startScreen
+	self subclassResponsibility
+! !
+
+!Screen class methodsFor: 'instance creation'!
+
+named: aString
+	| instance |
+	instance := self new name: aString.
+	^ instance
 ! !
 
 Object subclass: #Key
@@ -905,57 +1039,6 @@ tab
 
 upArrow
 	^ 38
-! !
-
-Object subclass: #Screen
-	instanceVariableNames: 'game name'
-	package: 'Ludus'!
-!Screen commentStamp!
-I am a game screen. I need to implement #startScreen, #step and #draw, as these will be called by the game who owns me.
-I can represent many things: levels, menu screens, or anything that needs to change the whole canvas.!
-
-!Screen methodsFor: 'accessing'!
-
-game
-	^ game
-!
-
-game: anObject
-	game := anObject
-!
-
-name
-	^ name ifNil: [ self class name ]
-!
-
-name: anObject
-	name := anObject
-! !
-
-!Screen methodsFor: 'control'!
-
-step
-	self sublassResponsibility
-! !
-
-!Screen methodsFor: 'drawing'!
-
-draw
-	self sublassResponsibility
-! !
-
-!Screen methodsFor: 'initialization'!
-
-startScreen
-	self subclassResponsibility
-! !
-
-!Screen class methodsFor: 'instance creation'!
-
-named: aString
-	| instance |
-	instance := self new name: aString.
-	^ instance
 ! !
 
 Widget subclass: #Sound

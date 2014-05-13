@@ -75,34 +75,56 @@ step
 draw
 	self 
 		clearCanvas;
-		drawFarBackground;
+		drawBackground: self farBackground;
 		drawSprite: self ship;
 		drawSpriteCollection: self saucers;
 		drawBackground: self starField.
-!
-
-drawFarBackground
-	self drawBackground: self farBackground.
 ! !
 
 Screen subclass: #OVNIStartScreen
-	instanceVariableNames: ''
+	instanceVariableNames: 'saucers title'
 	package: 'OVNI'!
+
+!OVNIStartScreen methodsFor: 'accessing'!
+
+saucers
+	^ saucers
+!
+
+saucers: anObject
+	saucers := anObject
+!
+
+title
+	^ title
+!
+
+title: anObject
+	title := anObject
+! !
 
 !OVNIStartScreen methodsFor: 'control'!
 
 startScreen
-	"self doNothing"
+	self saucers: self game saucers copy.
+	self saucers do: [ :each | 
+		each 
+			x: (self game width - 100) atRandom + 50;
+			y: (self game height - 100) atRandom + 50 ].
+	self title: (Drawable new identifier: 'title' origin: 0@0 size: 600@196)
 !
 
 step
-	"self doNothing"
+	self saucers do: [ :each | each wander ]
 ! !
 
 !OVNIStartScreen methodsFor: 'drawing'!
 
 draw
-	self game drawFarBackground
+	self 
+		drawBackground: self game farBackground;
+		drawSpriteCollection: self saucers;
+		draw: self title atPosition: 30@50
 ! !
 
 Sprite subclass: #Saucer
@@ -121,7 +143,11 @@ initialize
 !Saucer methodsFor: 'movement'!
 
 move
-	self moveCentreBy: -2 @ (-2 to: 2) atRandom.
+	self moveCentreBy: -2 @ (5 atRandom - 3).
+!
+
+wander
+	self moveCentreBy: (3 atRandom - 2) @ (3 atRandom - 2).
 ! !
 
 Sprite subclass: #SpaceShip

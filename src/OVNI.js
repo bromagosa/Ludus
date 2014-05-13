@@ -12,30 +12,15 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 self._clearCanvas();
-self._drawFarBackground();
+self._drawBackground_(self._farBackground());
+$ctx1.sendIdx["drawBackground:"]=1;
 self._drawSprite_(self._ship());
 self._drawSpriteCollection_(self._saucers());
 $1=self._drawBackground_(self._starField());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVNI)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawFarBackground;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawBackground: self starField.",
-messageSends: ["clearCanvas", "drawFarBackground", "drawSprite:", "ship", "drawSpriteCollection:", "saucers", "drawBackground:", "starField"],
-referencedClasses: []
-}),
-globals.OVNI);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "drawFarBackground",
-protocol: 'drawing',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-self._drawBackground_(self._farBackground());
-return self}, function($ctx1) {$ctx1.fill(self,"drawFarBackground",{},globals.OVNI)})},
-args: [],
-source: "drawFarBackground\x0a\x09self drawBackground: self farBackground.",
-messageSends: ["drawBackground:", "farBackground"],
+source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawBackground: self starField.",
+messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSprite:", "ship", "drawSpriteCollection:", "saucers", "starField"],
 referencedClasses: []
 }),
 globals.OVNI);
@@ -249,7 +234,7 @@ globals.OVNI);
 
 
 
-smalltalk.addClass('OVNIStartScreen', globals.Screen, [], 'OVNI');
+smalltalk.addClass('OVNIStartScreen', globals.Screen, ['saucers', 'title'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "draw",
@@ -257,11 +242,46 @@ protocol: 'drawing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(self._game())._drawFarBackground();
+var $1;
+self._drawBackground_(_st(self._game())._farBackground());
+self._drawSpriteCollection_(self._saucers());
+$1=self._draw_atPosition_(self._title(),(30).__at((50)));
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVNIStartScreen)})},
 args: [],
-source: "draw\x0a\x09self game drawFarBackground",
-messageSends: ["drawFarBackground", "game"],
+source: "draw\x0a\x09self \x0a\x09\x09drawBackground: self game farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09draw: self title atPosition: 30@50",
+messageSends: ["drawBackground:", "farBackground", "game", "drawSpriteCollection:", "saucers", "draw:atPosition:", "title", "@"],
+referencedClasses: []
+}),
+globals.OVNIStartScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "saucers",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@saucers"];
+return $1;
+},
+args: [],
+source: "saucers\x0a\x09^ saucers",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVNIStartScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "saucers:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@saucers"]=anObject;
+return self},
+args: ["anObject"],
+source: "saucers: anObject\x0a\x09saucers := anObject",
+messageSends: [],
 referencedClasses: []
 }),
 globals.OVNIStartScreen);
@@ -272,11 +292,40 @@ selector: "startScreen",
 protocol: 'control',
 fn: function (){
 var self=this;
-return self},
+function $Drawable(){return globals.Drawable||(typeof Drawable=="undefined"?nil:Drawable)}
+return smalltalk.withContext(function($ctx1) { 
+var $3,$2,$1,$8,$7,$6,$5,$4,$9,$11,$12,$10;
+$3=self._game();
+$ctx1.sendIdx["game"]=1;
+$2=_st($3)._saucers();
+$ctx1.sendIdx["saucers"]=1;
+$1=_st($2)._copy();
+self._saucers_($1);
+_st(self._saucers())._do_((function(each){
+return smalltalk.withContext(function($ctx2) {
+$8=self._game();
+$ctx2.sendIdx["game"]=2;
+$7=_st($8)._width();
+$6=_st($7).__minus((100));
+$ctx2.sendIdx["-"]=1;
+$5=_st($6)._atRandom();
+$ctx2.sendIdx["atRandom"]=1;
+$4=_st($5).__plus((50));
+$ctx2.sendIdx["+"]=1;
+_st(each)._x_($4);
+$9=_st(each)._y_(_st(_st(_st(_st(self._game())._height()).__minus((100)))._atRandom()).__plus((50)));
+return $9;
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+$11=_st($Drawable())._new();
+$12=(0).__at((0));
+$ctx1.sendIdx["@"]=1;
+$10=_st($11)._identifier_origin_size_("title",$12,(600).__at((196)));
+self._title_($10);
+return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVNIStartScreen)})},
 args: [],
-source: "startScreen\x0a\x09\x22self doNothing\x22",
-messageSends: [],
-referencedClasses: []
+source: "startScreen\x0a\x09self saucers: self game saucers copy.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each \x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09self title: (Drawable new identifier: 'title' origin: 0@0 size: 600@196)",
+messageSends: ["saucers:", "copy", "saucers", "game", "do:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "identifier:origin:size:", "new", "@"],
+referencedClasses: ["Drawable"]
 }),
 globals.OVNIStartScreen);
 
@@ -286,9 +335,46 @@ selector: "step",
 protocol: 'control',
 fn: function (){
 var self=this;
-return self},
+return smalltalk.withContext(function($ctx1) { 
+_st(self._saucers())._do_((function(each){
+return smalltalk.withContext(function($ctx2) {
+return _st(each)._wander();
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVNIStartScreen)})},
 args: [],
-source: "step\x0a\x09\x22self doNothing\x22",
+source: "step\x0a\x09self saucers do: [ :each | each wander ]",
+messageSends: ["do:", "saucers", "wander"],
+referencedClasses: []
+}),
+globals.OVNIStartScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "title",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@title"];
+return $1;
+},
+args: [],
+source: "title\x0a\x09^ title",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVNIStartScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "title:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@title"]=anObject;
+return self},
+args: ["anObject"],
+source: "title: anObject\x0a\x09title := anObject",
 messageSends: [],
 referencedClasses: []
 }),
@@ -326,11 +412,33 @@ protocol: 'movement',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._moveCentreBy_((-2).__at(_st((-2)._to_((2)))._atRandom()));
+self._moveCentreBy_((-2).__at(_st((5)._atRandom()).__minus((3))));
 return self}, function($ctx1) {$ctx1.fill(self,"move",{},globals.Saucer)})},
 args: [],
-source: "move\x0a\x09self moveCentreBy: -2 @ (-2 to: 2) atRandom.\x0a\x09\x0a\x09",
-messageSends: ["moveCentreBy:", "@", "atRandom", "to:"],
+source: "move\x0a\x09self moveCentreBy: -2 @ (5 atRandom - 3).",
+messageSends: ["moveCentreBy:", "@", "-", "atRandom"],
+referencedClasses: []
+}),
+globals.Saucer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "wander",
+protocol: 'movement',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $3,$2,$1;
+$3=(3)._atRandom();
+$ctx1.sendIdx["atRandom"]=1;
+$2=_st($3).__minus((2));
+$ctx1.sendIdx["-"]=1;
+$1=_st($2).__at(_st((3)._atRandom()).__minus((2)));
+self._moveCentreBy_($1);
+return self}, function($ctx1) {$ctx1.fill(self,"wander",{},globals.Saucer)})},
+args: [],
+source: "wander\x0a\x09self moveCentreBy: (3 atRandom - 2) @ (3 atRandom - 2).",
+messageSends: ["moveCentreBy:", "@", "-", "atRandom"],
 referencedClasses: []
 }),
 globals.Saucer);
