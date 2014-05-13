@@ -502,7 +502,7 @@ isParallax
 ! !
 
 Widget subclass: #Game
-	instanceVariableNames: 'canvas context fps keys step end mousePosition mouseDown sounds'
+	instanceVariableNames: 'canvas context fps keys step end mousePosition mouseDown sounds screens pause currentScreen'
 	package: 'Ludus'!
 !Game commentStamp!
 I am a game. You need to override a couple of my methods to make me usable:
@@ -523,6 +523,10 @@ canvas: anObject
 	canvas := anObject
 !
 
+currentScreen
+	^ currentScreen ifNil: [ currentScreen := self ]
+!
+
 fps
 	^ fps
 !
@@ -533,6 +537,10 @@ fps: anInteger
 
 mouseDown
 	^ mouseDown
+!
+
+screens
+	^ screens
 !
 
 stepCount
@@ -600,10 +608,6 @@ everyStepNumber: anInteger do: aBlock
 	(step \\ anInteger) = 0 ifTrue: aBlock
 !
 
-isGameOver
-	^ end ifNil: [ end := false ]
-!
-
 kill
 	self end.
 	self class stop.
@@ -628,13 +632,23 @@ step
 
 gameLoop
 	"Do not override me, use #step and #draw instead"
-	self isGameOver 
+	(self isGameOver | self isPaused)
 		ifFalse: [[
-			self 
-				step;
-				draw.
+			self currentScreen
+					step;
+					draw.
 			step := step + 1.
 			self gameLoop ] valueWithTimeout: (1000 / fps) ]
+! !
+
+!Game methodsFor: 'control - testing'!
+
+isGameOver
+	^ end ifNil: [ end := false ]
+!
+
+isPaused
+	^ pause ifNil: [ pause := false ]
 ! !
 
 !Game methodsFor: 'drawing'!
@@ -682,12 +696,12 @@ onMouseClickDo: aBlock
 
 onMouseDownDo: aBlock
 	(self eventData: 'mousedown')
-		ifNil: [ canvas asJQuery bind: 'mousedown' do: aBlock ]
+		ifNil: [ canvas onMouseDown: aBlock ]
 !
 
 onMouseUpDo: aBlock
 	(self eventData: 'mouseup')
-		ifNil: [ canvas asJQuery bind: 'mouseup' do: aBlock ]
+		ifNil: [ canvas onMouseUp: aBlock ]
 !
 
 whileKeyPressed: aKeyCode do: aBlock
@@ -752,8 +766,8 @@ initialize
 	self initializeKeys.
 	mouseDown := false.
 	fps := 30.
-	sprites := #().
 	sounds := #().
+	screens := #().
 	step := 1.
 !
 
@@ -779,13 +793,35 @@ renderOn: html
 
 	(window jQuery: document) keydown: [ :evt | self keyDown: evt ].
 	(window jQuery: document) keyup: [ :evt | self keyUp: evt ].
-	canvas asJQuery bind: 'mousedown' do: [ :evt | self mouseDown: evt ].
+	canvas onMouseDown: [ :evt | self mouseDown: evt ].
 	canvas asJQuery bind: 'mouseup' do: [ :evt | self mouseUp: evt ].
 	canvas asJQuery bind: 'mousemove' do: [ :evt | self mouseMove: evt ].
 
 	self startGame.
-
 	self gameLoop.
+! !
+
+!Game methodsFor: 'screens'!
+
+addScreen: aScreen
+	aScreen game: self.
+	self screens add: aScreen.
+!
+
+screenNamed: aString
+	^ self screens detect: [ :which | which name = aString ] ifNone: [ nil ]
+!
+
+switchToGame
+	currentScreen := self
+!
+
+switchToScreen: aScreen
+	currentScreen := aScreen startScreen
+!
+
+switchToScreenNamed: aString
+	self switchToScreen: (self screenNamed: aString)
 ! !
 
 !Game class methodsFor: 'control'!
@@ -807,13 +843,6 @@ initialize
 	"uncomment if you want the game to start when loading the page"
 "	'self start"
 ! !
-
-Game subclass: #Screen
-	instanceVariableNames: ''
-	package: 'Ludus'!
-!Screen commentStamp!
-I am a game screen. I subclass Game, so I work exactly the same way Game does.
-I can represent many things: levels, menu screens, or anything that needs to change the whole canvas.!
 
 Object subclass: #Key
 	instanceVariableNames: ''
@@ -876,6 +905,57 @@ tab
 
 upArrow
 	^ 38
+! !
+
+Object subclass: #Screen
+	instanceVariableNames: 'game name'
+	package: 'Ludus'!
+!Screen commentStamp!
+I am a game screen. I need to implement #startScreen, #step and #draw, as these will be called by the game who owns me.
+I can represent many things: levels, menu screens, or anything that needs to change the whole canvas.!
+
+!Screen methodsFor: 'accessing'!
+
+game
+	^ game
+!
+
+game: anObject
+	game := anObject
+!
+
+name
+	^ name ifNil: [ self class name ]
+!
+
+name: anObject
+	name := anObject
+! !
+
+!Screen methodsFor: 'control'!
+
+step
+	self sublassResponsibility
+! !
+
+!Screen methodsFor: 'drawing'!
+
+draw
+	self sublassResponsibility
+! !
+
+!Screen methodsFor: 'initialization'!
+
+startScreen
+	self subclassResponsibility
+! !
+
+!Screen class methodsFor: 'instance creation'!
+
+named: aString
+	| instance |
+	instance := self new name: aString.
+	^ instance
 ! !
 
 Widget subclass: #Sound

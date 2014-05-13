@@ -40,10 +40,17 @@ starField
 
 startGame
 	fps := 30.
-
+	
 	self width: 720; 
 		height: 540;
-		backgroundColor: 'black'.
+		backgroundColor: 'black';
+		addSound: 'sounds/ovni/background.ogg';
+		addSound: 'sounds/ovni/laser.ogg';
+		addScreen: OVNIStartScreen new.
+	
+	self switchToScreen: self screens first.
+	
+	(self soundNamed: 'background') loop.
 !
 
 step
@@ -51,7 +58,8 @@ step
 		whileKeyPressed: Key leftArrow do: [ self ship goLeft ];
 		whileKeyPressed: Key rightArrow do: [ self ship goRight ];
 		whileKeyPressed: Key upArrow do: [ self ship goUp ];
-		whileKeyPressed: Key downArrow do: [ self ship goDown ].
+		whileKeyPressed: Key downArrow do: [ self ship goDown ];
+		whileKeyPressed: Key space do: [ (self soundNamed: 'laser') play ].
 		
 	self saucers do: [ :eachSaucer | 
 		eachSaucer move.
@@ -67,10 +75,34 @@ step
 draw
 	self 
 		clearCanvas;
-		drawBackground: self farBackground;
+		drawFarBackground;
 		drawSprite: self ship;
 		drawSpriteCollection: self saucers;
 		drawBackground: self starField.
+!
+
+drawFarBackground
+	self drawBackground: self farBackground.
+! !
+
+Screen subclass: #OVNIStartScreen
+	instanceVariableNames: ''
+	package: 'OVNI'!
+
+!OVNIStartScreen methodsFor: 'control'!
+
+startScreen
+	"self doNothing"
+!
+
+step
+	"self doNothing"
+! !
+
+!OVNIStartScreen methodsFor: 'drawing'!
+
+draw
+	self game drawFarBackground
 ! !
 
 Sprite subclass: #Saucer

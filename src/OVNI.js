@@ -12,15 +12,30 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 self._clearCanvas();
-self._drawBackground_(self._farBackground());
-$ctx1.sendIdx["drawBackground:"]=1;
+self._drawFarBackground();
 self._drawSprite_(self._ship());
 self._drawSpriteCollection_(self._saucers());
 $1=self._drawBackground_(self._starField());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVNI)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawBackground: self starField.",
-messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSprite:", "ship", "drawSpriteCollection:", "saucers", "starField"],
+source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawFarBackground;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawBackground: self starField.",
+messageSends: ["clearCanvas", "drawFarBackground", "drawSprite:", "ship", "drawSpriteCollection:", "saucers", "drawBackground:", "starField"],
+referencedClasses: []
+}),
+globals.OVNI);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "drawFarBackground",
+protocol: 'drawing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._drawBackground_(self._farBackground());
+return self}, function($ctx1) {$ctx1.fill(self,"drawFarBackground",{},globals.OVNI)})},
+args: [],
+source: "drawFarBackground\x0a\x09self drawBackground: self farBackground.",
+messageSends: ["drawBackground:", "farBackground"],
 referencedClasses: []
 }),
 globals.OVNI);
@@ -154,17 +169,24 @@ selector: "startGame",
 protocol: 'control',
 fn: function (){
 var self=this;
+function $OVNIStartScreen(){return globals.OVNIStartScreen||(typeof OVNIStartScreen=="undefined"?nil:OVNIStartScreen)}
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 self["@fps"]=(30);
 self._width_((720));
 self._height_((540));
-$1=self._backgroundColor_("black");
+self._backgroundColor_("black");
+self._addSound_("sounds/ovni/background.ogg");
+$ctx1.sendIdx["addSound:"]=1;
+self._addSound_("sounds/ovni/laser.ogg");
+$1=self._addScreen_(_st($OVNIStartScreen())._new());
+self._switchToScreen_(_st(self._screens())._first());
+_st(self._soundNamed_("background"))._loop();
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.OVNI)})},
 args: [],
-source: "startGame\x0a\x09fps := 30.\x0a\x0a\x09self width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09backgroundColor: 'black'.",
-messageSends: ["width:", "height:", "backgroundColor:"],
-referencedClasses: []
+source: "startGame\x0a\x09fps := 30.\x0a\x09\x0a\x09self width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09backgroundColor: 'black';\x0a\x09\x09addSound: 'sounds/ovni/background.ogg';\x0a\x09\x09addSound: 'sounds/ovni/laser.ogg';\x0a\x09\x09addScreen: OVNIStartScreen new.\x0a\x09\x0a\x09self switchToScreen: self screens first.\x0a\x09\x0a\x09(self soundNamed: 'background') loop.",
+messageSends: ["width:", "height:", "backgroundColor:", "addSound:", "addScreen:", "new", "switchToScreen:", "first", "screens", "loop", "soundNamed:"],
+referencedClasses: ["OVNIStartScreen"]
 }),
 globals.OVNI);
 
@@ -198,10 +220,15 @@ $ctx2.sendIdx["ship"]=3;
 return _st($3)._goUp();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=3;
-$4=self._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
+self._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return _st(self._ship())._goDown();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
+$ctx1.sendIdx["whileKeyPressed:do:"]=4;
+$4=self._whileKeyPressed_do_(_st($Key())._space(),(function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(self._soundNamed_("laser"))._play();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
 _st(self._saucers())._do_((function(eachSaucer){
 return smalltalk.withContext(function($ctx2) {
 _st(eachSaucer)._move();
@@ -211,14 +238,61 @@ _st(eachSaucer)._x_(self._width());
 $6=_st(eachSaucer)._y_(_st(self._height())._atRandom());
 return $6;
 };
-}, function($ctx2) {$ctx2.fillBlock({eachSaucer:eachSaucer},$ctx1,5)})}));
+}, function($ctx2) {$ctx2.fillBlock({eachSaucer:eachSaucer},$ctx1,6)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVNI)})},
 args: [],
-source: "step\x0a\x09self \x0a\x09\x09whileKeyPressed: Key leftArrow do: [ self ship goLeft ];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [ self ship goRight ];\x0a\x09\x09whileKeyPressed: Key upArrow do: [ self ship goUp ];\x0a\x09\x09whileKeyPressed: Key downArrow do: [ self ship goDown ].\x0a\x09\x09\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer move.\x0a\x09\x09(eachSaucer isInsideCanvas: self canvas) \x0a\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09eachSaucer\x0a\x09\x09\x09\x09\x09x: self width;\x0a\x09\x09\x09\x09\x09y: self height atRandom ]]",
-messageSends: ["whileKeyPressed:do:", "leftArrow", "goLeft", "ship", "rightArrow", "goRight", "upArrow", "goUp", "downArrow", "goDown", "do:", "saucers", "move", "ifFalse:", "isInsideCanvas:", "canvas", "x:", "width", "y:", "atRandom", "height"],
+source: "step\x0a\x09self \x0a\x09\x09whileKeyPressed: Key leftArrow do: [ self ship goLeft ];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [ self ship goRight ];\x0a\x09\x09whileKeyPressed: Key upArrow do: [ self ship goUp ];\x0a\x09\x09whileKeyPressed: Key downArrow do: [ self ship goDown ];\x0a\x09\x09whileKeyPressed: Key space do: [ (self soundNamed: 'laser') play ].\x0a\x09\x09\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer move.\x0a\x09\x09(eachSaucer isInsideCanvas: self canvas) \x0a\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09eachSaucer\x0a\x09\x09\x09\x09\x09x: self width;\x0a\x09\x09\x09\x09\x09y: self height atRandom ]]",
+messageSends: ["whileKeyPressed:do:", "leftArrow", "goLeft", "ship", "rightArrow", "goRight", "upArrow", "goUp", "downArrow", "goDown", "space", "play", "soundNamed:", "do:", "saucers", "move", "ifFalse:", "isInsideCanvas:", "canvas", "x:", "width", "y:", "atRandom", "height"],
 referencedClasses: ["Key"]
 }),
 globals.OVNI);
+
+
+
+smalltalk.addClass('OVNIStartScreen', globals.Screen, [], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "draw",
+protocol: 'drawing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._game())._drawFarBackground();
+return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVNIStartScreen)})},
+args: [],
+source: "draw\x0a\x09self game drawFarBackground",
+messageSends: ["drawFarBackground", "game"],
+referencedClasses: []
+}),
+globals.OVNIStartScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "startScreen",
+protocol: 'control',
+fn: function (){
+var self=this;
+return self},
+args: [],
+source: "startScreen\x0a\x09\x22self doNothing\x22",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVNIStartScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "step",
+protocol: 'control',
+fn: function (){
+var self=this;
+return self},
+args: [],
+source: "step\x0a\x09\x22self doNothing\x22",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVNIStartScreen);
 
 
 
