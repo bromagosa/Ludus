@@ -133,13 +133,20 @@ moveBullets
 
 moveSaucers
 	self saucers do: [ :eachSaucer | 
+		| killingBullet |
+		killingBullet := (eachSaucer collidesWithWhichOf: self bullets).
+		killingBullet ifNotNil: [ 
+			eachSaucer explode.
+			bullets remove: killingBullet ].
+		
 		eachSaucer move.
-		((eachSaucer x + eachSaucer width) < 0) 
-			| (eachSaucer collidesWithAnyOf: self bullets)
+		
+		((eachSaucer x + eachSaucer width) < 0) | eachSaucer dead
 				ifTrue: [
 					eachSaucer
 						x: self width atRandom + self width;
-						y: self height atRandom ]]
+						y: self height atRandom;
+						dead: false ]]
 !
 
 moveShip
@@ -213,8 +220,42 @@ draw
 ! !
 
 Sprite subclass: #Saucer
-	instanceVariableNames: ''
+	instanceVariableNames: 'exploding dead'
 	package: 'OVNI'!
+
+!Saucer methodsFor: 'accessing'!
+
+dead
+	^ dead ifNil: [ dead := false ]
+!
+
+dead: aBoolean
+	dead := aBoolean
+!
+
+exploding
+	^ exploding ifNil: [ exploding := false ]
+!
+
+exploding: aBoolean
+	exploding := aBoolean
+! !
+
+!Saucer methodsFor: 'actions'!
+
+die
+	self 
+		currentFrameGroup: 'flying';
+		loop: true;
+		dead: true.
+!
+
+explode
+	self currentFrameGroup: 'explosion'.
+	self
+		loop: false; 
+		exploding: true.
+! !
 
 !Saucer methodsFor: 'initialization'!
 
@@ -222,13 +263,21 @@ initialize
 	super initialize.
 	self 
 		spriteSheet: 'images/ovni/saucer.png';
-		addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6.
+		addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;
+		addFrameGroupNamed: 'explosion' origin: 0@40 size: 40@40 frameCount: 10.
+	
+	(self frameGroupNamed: 'explosion') frameRate: 2.
 ! !
 
 !Saucer methodsFor: 'movement'!
 
 move
 	self moveCentreBy: -2 @ (5 atRandom - 3).
+	(self exploding & self atLastFrame ) 
+		ifTrue: [ 
+			self 
+				exploding: false;
+				die ]
 !
 
 wander

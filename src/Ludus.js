@@ -93,14 +93,12 @@ protocol: 'frames',
 fn: function (anIdentifier){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self["@currentFrameGroup"]=_st(self._frameGroups())._detect_((function(each){
-return smalltalk.withContext(function($ctx2) {
-return _st(_st(each)._identifier()).__eq(anIdentifier);
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+self["@currentFrameGroup"]=self._frameGroupNamed_(anIdentifier);
+self._toFirstFrame();
 return self}, function($ctx1) {$ctx1.fill(self,"currentFrameGroup:",{anIdentifier:anIdentifier},globals.Animation)})},
 args: ["anIdentifier"],
-source: "currentFrameGroup: anIdentifier\x0a\x09currentFrameGroup := self frameGroups detect: [ :each | each identifier = anIdentifier ].",
-messageSends: ["detect:", "frameGroups", "=", "identifier"],
+source: "currentFrameGroup: anIdentifier\x0a\x09currentFrameGroup := self frameGroupNamed: anIdentifier.\x0a\x09self toFirstFrame",
+messageSends: ["frameGroupNamed:", "toFirstFrame"],
 referencedClasses: []
 }),
 globals.Animation);
@@ -135,6 +133,27 @@ return self}, function($ctx1) {$ctx1.fill(self,"drawOnContext:step:",{aContext:a
 args: ["aContext", "aStep"],
 source: "drawOnContext: aContext step: aStep\x0a\x09self \x0a\x09\x09drawOnContext: aContext;\x0a\x09\x09nextFrameWithStep: aStep.",
 messageSends: ["drawOnContext:", "nextFrameWithStep:"],
+referencedClasses: []
+}),
+globals.Animation);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "frameGroupNamed:",
+protocol: 'frames',
+fn: function (anIdentifier){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._frameGroups())._detect_((function(each){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st(each)._identifier()).__eq(anIdentifier);
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"frameGroupNamed:",{anIdentifier:anIdentifier},globals.Animation)})},
+args: ["anIdentifier"],
+source: "frameGroupNamed: anIdentifier\x0a\x09^ self frameGroups detect: [ :each | each identifier = anIdentifier ].",
+messageSends: ["detect:", "frameGroups", "=", "identifier"],
 referencedClasses: []
 }),
 globals.Animation);
@@ -424,6 +443,22 @@ globals.Animation);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "toFirstFrame",
+protocol: 'frames',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._currentFrameGroup())._toFirstFrame();
+return self}, function($ctx1) {$ctx1.fill(self,"toFirstFrame",{},globals.Animation)})},
+args: [],
+source: "toFirstFrame\x0a\x09self currentFrameGroup toFirstFrame",
+messageSends: ["toFirstFrame", "currentFrameGroup"],
+referencedClasses: []
+}),
+globals.Animation);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "toggleAnimation",
 protocol: 'animation',
 fn: function (){
@@ -571,15 +606,17 @@ fn: function (aSpriteCollection){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(aSpriteCollection)._detect_((function(each){
+$1=_st(aSpriteCollection)._detect_ifNone_((function(each){
 return smalltalk.withContext(function($ctx2) {
 return self._bottomCollidesWith_(each);
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}),(function(){
+return nil;
+}));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"bottomCollidesWithWhichOf:",{aSpriteCollection:aSpriteCollection},globals.Sprite)})},
 args: ["aSpriteCollection"],
-source: "bottomCollidesWithWhichOf: aSpriteCollection\x0a\x09^ (aSpriteCollection detect: [ :each | self bottomCollidesWith: each ])",
-messageSends: ["detect:", "bottomCollidesWith:"],
+source: "bottomCollidesWithWhichOf: aSpriteCollection\x0a\x09^ (aSpriteCollection detect: [ :each | self bottomCollidesWith: each ] ifNone: [ nil ])",
+messageSends: ["detect:ifNone:", "bottomCollidesWith:"],
 referencedClasses: []
 }),
 globals.Sprite);
@@ -701,6 +738,29 @@ return $1;
 args: ["aSpriteCollection"],
 source: "collidesWithAnyOf: aSpriteCollection\x0a\x09^ (aSpriteCollection select: [ :each | self collidesWith: each ]) notEmpty",
 messageSends: ["notEmpty", "select:", "collidesWith:"],
+referencedClasses: []
+}),
+globals.Sprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "collidesWithWhichOf:",
+protocol: 'collisions',
+fn: function (aSpriteCollection){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(aSpriteCollection)._detect_ifNone_((function(each){
+return smalltalk.withContext(function($ctx2) {
+return self._collidesWith_(each);
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}),(function(){
+return nil;
+}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"collidesWithWhichOf:",{aSpriteCollection:aSpriteCollection},globals.Sprite)})},
+args: ["aSpriteCollection"],
+source: "collidesWithWhichOf: aSpriteCollection\x0a\x09^ (aSpriteCollection detect: [ :each | self collidesWith: each ] ifNone: [ nil ])",
+messageSends: ["detect:ifNone:", "collidesWith:"],
 referencedClasses: []
 }),
 globals.Sprite);
@@ -1119,15 +1179,17 @@ fn: function (aSpriteCollection){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(aSpriteCollection)._detect_((function(each){
+$1=_st(aSpriteCollection)._detect_ifNone_((function(each){
 return smalltalk.withContext(function($ctx2) {
 return self._leftCollidesWith_(each);
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}),(function(){
+return nil;
+}));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"leftCollidesWithWhichOf:",{aSpriteCollection:aSpriteCollection},globals.Sprite)})},
 args: ["aSpriteCollection"],
-source: "leftCollidesWithWhichOf: aSpriteCollection\x0a\x09^ (aSpriteCollection detect: [ :each | self leftCollidesWith: each ])",
-messageSends: ["detect:", "leftCollidesWith:"],
+source: "leftCollidesWithWhichOf: aSpriteCollection\x0a\x09^ (aSpriteCollection detect: [ :each | self leftCollidesWith: each ] ifNone: [ nil ])",
+messageSends: ["detect:ifNone:", "leftCollidesWith:"],
 referencedClasses: []
 }),
 globals.Sprite);
@@ -1284,15 +1346,17 @@ fn: function (aSpriteCollection){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(aSpriteCollection)._detect_((function(each){
+$1=_st(aSpriteCollection)._detect_ifNone_((function(each){
 return smalltalk.withContext(function($ctx2) {
 return self._rightCollidesWith_(each);
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}),(function(){
+return nil;
+}));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"rightCollidesWithWhichOf:",{aSpriteCollection:aSpriteCollection},globals.Sprite)})},
 args: ["aSpriteCollection"],
-source: "rightCollidesWithWhichOf: aSpriteCollection\x0a\x09^ (aSpriteCollection detect: [ :each | self rightCollidesWith: each ])",
-messageSends: ["detect:", "rightCollidesWith:"],
+source: "rightCollidesWithWhichOf: aSpriteCollection\x0a\x09^ (aSpriteCollection detect: [ :each | self rightCollidesWith: each ] ifNone: [ nil ])",
+messageSends: ["detect:ifNone:", "rightCollidesWith:"],
 referencedClasses: []
 }),
 globals.Sprite);
@@ -1372,15 +1436,17 @@ fn: function (aSpriteCollection){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(aSpriteCollection)._detect_((function(each){
+$1=_st(aSpriteCollection)._detect_ifNone_((function(each){
 return smalltalk.withContext(function($ctx2) {
 return self._topCollidesWith_(each);
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}),(function(){
+return nil;
+}));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"topCollidesWithWhichOf:",{aSpriteCollection:aSpriteCollection},globals.Sprite)})},
 args: ["aSpriteCollection"],
-source: "topCollidesWithWhichOf: aSpriteCollection\x0a\x09^ (aSpriteCollection detect: [ :each | self topCollidesWith: each ])",
-messageSends: ["detect:", "topCollidesWith:"],
+source: "topCollidesWithWhichOf: aSpriteCollection\x0a\x09^ (aSpriteCollection detect: [ :each | self topCollidesWith: each ] ifNone: [ nil ])",
+messageSends: ["detect:ifNone:", "topCollidesWith:"],
 referencedClasses: []
 }),
 globals.Sprite);

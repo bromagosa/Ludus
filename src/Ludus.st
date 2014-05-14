@@ -91,7 +91,12 @@ currentFrameGroup
 !
 
 currentFrameGroup: anIdentifier
-	currentFrameGroup := self frameGroups detect: [ :each | each identifier = anIdentifier ].
+	currentFrameGroup := self frameGroupNamed: anIdentifier.
+	self toFirstFrame
+!
+
+frameGroupNamed: anIdentifier
+	^ self frameGroups detect: [ :each | each identifier = anIdentifier ].
 !
 
 frameGroups
@@ -113,6 +118,10 @@ nextFrameGroup
 nextFrameWithStep: aStep
 	(aStep \\ self currentFrameGroup frameRate) = 0 
 		ifTrue: [ self nextFrame ]
+!
+
+toFirstFrame
+	self currentFrameGroup toFirstFrame
 ! !
 
 !Animation methodsFor: 'geometry'!
@@ -238,7 +247,7 @@ bottomCollidesWithAnyOf: aSpriteCollection
 !
 
 bottomCollidesWithWhichOf: aSpriteCollection
-	^ (aSpriteCollection detect: [ :each | self bottomCollidesWith: each ])
+	^ (aSpriteCollection detect: [ :each | self bottomCollidesWith: each ] ifNone: [ nil ])
 !
 
 collidesWith: aSprite
@@ -255,6 +264,10 @@ collidesWithAnyOf: aSpriteCollection
 	^ (aSpriteCollection select: [ :each | self collidesWith: each ]) notEmpty
 !
 
+collidesWithWhichOf: aSpriteCollection
+	^ (aSpriteCollection detect: [ :each | self collidesWith: each ] ifNone: [ nil ])
+!
+
 leftCollidesWith: aSprite
 	^ aSprite rightCollidesWith: self
 !
@@ -264,7 +277,7 @@ leftCollidesWithAnyOf: aSpriteCollection
 !
 
 leftCollidesWithWhichOf: aSpriteCollection
-	^ (aSpriteCollection detect: [ :each | self leftCollidesWith: each ])
+	^ (aSpriteCollection detect: [ :each | self leftCollidesWith: each ] ifNone: [ nil ])
 !
 
 rightCollidesWith: aSprite
@@ -281,7 +294,7 @@ rightCollidesWithAnyOf: aSpriteCollection
 !
 
 rightCollidesWithWhichOf: aSpriteCollection
-	^ (aSpriteCollection detect: [ :each | self rightCollidesWith: each ])
+	^ (aSpriteCollection detect: [ :each | self rightCollidesWith: each ] ifNone: [ nil ])
 !
 
 topCollidesWith: aSprite
@@ -298,7 +311,7 @@ topCollidesWithAnyOf: aSpriteCollection
 !
 
 topCollidesWithWhichOf: aSpriteCollection
-	^ (aSpriteCollection detect: [ :each | self topCollidesWith: each ])
+	^ (aSpriteCollection detect: [ :each | self topCollidesWith: each ] ifNone: [ nil ])
 ! !
 
 !Sprite methodsFor: 'drawing'!
