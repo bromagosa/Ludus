@@ -2,7 +2,138 @@ define("HOS/OVNI", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber
 smalltalk.addPackage('OVNI');
 smalltalk.packages["OVNI"].transport = {"type":"amd","amdNamespace":"HOS"};
 
-smalltalk.addClass('OVNI', globals.Game, ['ship', 'saucers', 'scrollSpeed', 'farBackground', 'starField'], 'OVNI');
+smalltalk.addClass('Bullet', globals.Sprite, ['speed', 'acceleration'], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "accelerate",
+protocol: 'movement',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self["@speed"]=_st(self._speed()).__plus(self._acceleration());
+return self}, function($ctx1) {$ctx1.fill(self,"accelerate",{},globals.Bullet)})},
+args: [],
+source: "accelerate\x0a\x09speed := self speed + self acceleration",
+messageSends: ["+", "speed", "acceleration"],
+referencedClasses: []
+}),
+globals.Bullet);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "acceleration",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@acceleration"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@acceleration"]=(2);
+$1=self["@acceleration"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"acceleration",{},globals.Bullet)})},
+args: [],
+source: "acceleration\x0a\x09^ acceleration ifNil: [ acceleration := 2 ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Bullet);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "initialize",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+($ctx1.supercall = true, globals.Bullet.superclass.fn.prototype._initialize.apply(_st(self), []));
+$ctx1.supercall = false;
+self._spriteSheet_("images/ovni/bullet.png");
+$2=(0).__at((0));
+$ctx1.sendIdx["@"]=1;
+$1=self._addFrameGroupNamed_origin_size_frameCount_("shooting",$2,(9).__at((9)),(1));
+return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.Bullet)})},
+args: [],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09spriteSheet: 'images/ovni/bullet.png';\x0a\x09\x09addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.",
+messageSends: ["initialize", "spriteSheet:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
+referencedClasses: []
+}),
+globals.Bullet);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "move",
+protocol: 'movement',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._moveCentreBy_(_st(self._speed()).__at((0)));
+$1=self._accelerate();
+return self}, function($ctx1) {$ctx1.fill(self,"move",{},globals.Bullet)})},
+args: [],
+source: "move\x0a\x09self \x0a\x09\x09moveCentreBy: self speed @ 0;\x0a\x09\x09accelerate",
+messageSends: ["moveCentreBy:", "@", "speed", "accelerate"],
+referencedClasses: []
+}),
+globals.Bullet);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "speed",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@speed"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@speed"]=(5);
+$1=self["@speed"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"speed",{},globals.Bullet)})},
+args: [],
+source: "speed\x0a\x09^ speed ifNil: [ speed := 5 ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Bullet);
+
+
+
+smalltalk.addClass('OVNI', globals.Game, ['ship', 'saucers', 'scrollSpeed', 'farBackground', 'starField', 'bullets'], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "bullets",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@bullets"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@bullets"]=[];
+$1=self["@bullets"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"bullets",{},globals.OVNI)})},
+args: [],
+source: "bullets\x0a\x09^ bullets ifNil: [ bullets := #() ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVNI);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "draw",
@@ -14,13 +145,15 @@ var $1;
 self._clearCanvas();
 self._drawBackground_(self._farBackground());
 $ctx1.sendIdx["drawBackground:"]=1;
-self._drawSprite_(self._ship());
 self._drawSpriteCollection_(self._saucers());
+$ctx1.sendIdx["drawSpriteCollection:"]=1;
+self._drawSpriteCollection_(self._bullets());
+self._drawSprite_(self._ship());
 $1=self._drawBackground_(self._starField());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVNI)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawBackground: self starField.",
-messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSprite:", "ship", "drawSpriteCollection:", "saucers", "starField"],
+source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawSpriteCollection: self bullets;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawBackground: self starField.",
+messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSpriteCollection:", "saucers", "bullets", "drawSprite:", "ship", "starField"],
 referencedClasses: []
 }),
 globals.OVNI);
@@ -53,6 +186,136 @@ args: [],
 source: "farBackground\x0a\x09^ farBackground ifNil: [ \x0a\x09\x09farBackground := \x0a\x09\x09\x09Background new \x0a\x09\x09\x09\x09spriteSheet: 'images/ovni/farback.gif';\x0a\x09\x09\x09\x09addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 1 ]",
 messageSends: ["ifNil:", "spriteSheet:", "new", "addParallaxNamed:origin:size:speed:", "@"],
 referencedClasses: ["Background"]
+}),
+globals.OVNI);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "moveBullets",
+protocol: 'sprite processing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+_st(self._bullets())._do_((function(eachBullet){
+return smalltalk.withContext(function($ctx2) {
+_st(eachBullet)._move();
+$1=_st(eachBullet)._isAllInsideCanvas_(self._canvas());
+if(! smalltalk.assert($1)){
+return _st(self["@bullets"])._remove_(eachBullet);
+};
+}, function($ctx2) {$ctx2.fillBlock({eachBullet:eachBullet},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"moveBullets",{},globals.OVNI)})},
+args: [],
+source: "moveBullets\x0a\x09self bullets do: [ :eachBullet | \x0a\x09\x09eachBullet move.\x0a\x09\x09(eachBullet isAllInsideCanvas: self canvas) \x0a\x09\x09\x09ifFalse: [ bullets remove: eachBullet ]]",
+messageSends: ["do:", "bullets", "move", "ifFalse:", "isAllInsideCanvas:", "canvas", "remove:"],
+referencedClasses: []
+}),
+globals.OVNI);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "moveSaucers",
+protocol: 'sprite processing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $4,$5,$3,$2,$1,$8,$7,$6,$9;
+_st(self._saucers())._do_((function(eachSaucer){
+return smalltalk.withContext(function($ctx2) {
+_st(eachSaucer)._move();
+$4=_st(eachSaucer)._x();
+$5=_st(eachSaucer)._width();
+$ctx2.sendIdx["width"]=1;
+$3=_st($4).__plus($5);
+$ctx2.sendIdx["+"]=1;
+$2=_st($3).__lt((0));
+$1=_st($2).__or(_st(eachSaucer)._collidesWithAnyOf_(self._bullets()));
+if(smalltalk.assert($1)){
+$8=self._width();
+$ctx2.sendIdx["width"]=2;
+$7=_st($8)._atRandom();
+$ctx2.sendIdx["atRandom"]=1;
+$6=_st($7).__plus(self._width());
+_st(eachSaucer)._x_($6);
+$9=_st(eachSaucer)._y_(_st(self._height())._atRandom());
+return $9;
+};
+}, function($ctx2) {$ctx2.fillBlock({eachSaucer:eachSaucer},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"moveSaucers",{},globals.OVNI)})},
+args: [],
+source: "moveSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer move.\x0a\x09\x09((eachSaucer x + eachSaucer width) < 0) \x0a\x09\x09\x09| (eachSaucer collidesWithAnyOf: self bullets)\x0a\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09eachSaucer\x0a\x09\x09\x09\x09\x09\x09x: self width atRandom + self width;\x0a\x09\x09\x09\x09\x09\x09y: self height atRandom ]]",
+messageSends: ["do:", "saucers", "move", "ifTrue:", "|", "<", "+", "x", "width", "collidesWithAnyOf:", "bullets", "x:", "atRandom", "y:", "height"],
+referencedClasses: []
+}),
+globals.OVNI);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "moveShip",
+protocol: 'sprite processing',
+fn: function (){
+var self=this;
+function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$4,$2,$5,$7,$8,$6,$9,$11,$12,$10,$13,$16,$15,$14;
+$1=self._inputHandler();
+_st($1)._whileKeyPressed_do_(_st($Key())._leftArrow(),(function(){
+return smalltalk.withContext(function($ctx2) {
+$3=self._ship();
+$ctx2.sendIdx["ship"]=1;
+$4=self._canvas();
+$ctx2.sendIdx["canvas"]=1;
+$2=_st($3)._isLeftInsideCanvas_($4);
+if(smalltalk.assert($2)){
+$5=self._ship();
+$ctx2.sendIdx["ship"]=2;
+return _st($5)._goLeft();
+};
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["whileKeyPressed:do:"]=1;
+_st($1)._whileKeyPressed_do_(_st($Key())._rightArrow(),(function(){
+return smalltalk.withContext(function($ctx2) {
+$7=self._ship();
+$ctx2.sendIdx["ship"]=3;
+$8=self._canvas();
+$ctx2.sendIdx["canvas"]=2;
+$6=_st($7)._isRightInsideCanvas_($8);
+if(smalltalk.assert($6)){
+$9=self._ship();
+$ctx2.sendIdx["ship"]=4;
+return _st($9)._goRight();
+};
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
+$ctx1.sendIdx["whileKeyPressed:do:"]=2;
+_st($1)._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
+return smalltalk.withContext(function($ctx2) {
+$11=self._ship();
+$ctx2.sendIdx["ship"]=5;
+$12=self._canvas();
+$ctx2.sendIdx["canvas"]=3;
+$10=_st($11)._isTopInsideCanvas_($12);
+if(smalltalk.assert($10)){
+$13=self._ship();
+$ctx2.sendIdx["ship"]=6;
+return _st($13)._goUp();
+};
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
+$ctx1.sendIdx["whileKeyPressed:do:"]=3;
+$14=_st($1)._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
+return smalltalk.withContext(function($ctx2) {
+$16=self._ship();
+$ctx2.sendIdx["ship"]=7;
+$15=_st($16)._isBottomInsideCanvas_(self._canvas());
+if(smalltalk.assert($15)){
+return _st(self._ship())._goDown();
+};
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,7)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"moveShip",{},globals.OVNI)})},
+args: [],
+source: "moveShip\x0a\x09self inputHandler\x0a\x09\x09whileKeyPressed: Key leftArrow do: [ \x0a\x09\x09\x09(self ship isLeftInsideCanvas: self canvas) \x0a\x09\x09\x09\x09ifTrue: [ self ship goLeft ]];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [\x0a\x09\x09\x09(self ship isRightInsideCanvas: self canvas) \x0a\x09\x09\x09\x09ifTrue: [ self ship goRight ]];\x0a\x09\x09whileKeyPressed: Key upArrow do: [\x0a\x09\x09\x09(self ship isTopInsideCanvas: self canvas) \x0a\x09\x09\x09\x09ifTrue: [ self ship goUp ]];\x0a\x09\x09whileKeyPressed: Key downArrow do: [\x0a\x09\x09\x09(self ship isBottomInsideCanvas: self canvas) \x0a\x09\x09\x09\x09ifTrue: [ self ship goDown ]].",
+messageSends: ["whileKeyPressed:do:", "inputHandler", "leftArrow", "ifTrue:", "isLeftInsideCanvas:", "ship", "canvas", "goLeft", "rightArrow", "isRightInsideCanvas:", "goRight", "upArrow", "isTopInsideCanvas:", "goUp", "downArrow", "isBottomInsideCanvas:", "goDown"],
+referencedClasses: ["Key"]
 }),
 globals.OVNI);
 
@@ -114,6 +377,38 @@ args: [],
 source: "ship\x0a\x09^ ship ifNil: [ ship := SpaceShip new centre: 105 @ (self height / 2) ]",
 messageSends: ["ifNil:", "centre:", "new", "@", "/", "height"],
 referencedClasses: ["SpaceShip"]
+}),
+globals.OVNI);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "shoot",
+protocol: 'game actions',
+fn: function (){
+var self=this;
+function $Bullet(){return globals.Bullet||(typeof Bullet=="undefined"?nil:Bullet)}
+return smalltalk.withContext(function($ctx1) { 
+var $3,$2,$1,$4,$6,$9,$8,$7,$5;
+$3=self._bullets();
+$ctx1.sendIdx["bullets"]=1;
+$2=_st($3)._size();
+$1=_st($2).__lt((6));
+if(smalltalk.assert($1)){
+_st(self._soundNamed_("laser"))._play();
+$4=self._bullets();
+$6=_st($Bullet())._new();
+$9=self._ship();
+$ctx1.sendIdx["ship"]=1;
+$8=_st($9)._centre();
+$7=_st($8).__plus(_st(_st(_st(self._ship())._width()).__slash((2))).__at((0)));
+$5=_st($6)._centre_($7);
+_st($4)._add_($5);
+};
+return self}, function($ctx1) {$ctx1.fill(self,"shoot",{},globals.OVNI)})},
+args: [],
+source: "shoot\x0a\x09self bullets size < 6 ifTrue: [\x0a\x09\x09(self soundNamed: 'laser') play.\x0a\x09\x09self bullets \x0a\x09\x09\x09add: \x0a\x09\x09\x09\x09(Bullet new centre: (self ship centre + ((self ship width / 2) @ 0)))]",
+messageSends: ["ifTrue:", "<", "size", "bullets", "play", "soundNamed:", "add:", "centre:", "new", "+", "centre", "ship", "@", "/", "width"],
+referencedClasses: ["Bullet"]
 }),
 globals.OVNI);
 
@@ -183,51 +478,18 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6;
-self._whileKeyPressed_do_(_st($Key())._leftArrow(),(function(){
+var $1;
+self._moveShip();
+self._moveSaucers();
+$1=self._moveBullets();
+_st(self._inputHandler())._whileKeyPressed_do_(_st($Key())._space(),(function(){
 return smalltalk.withContext(function($ctx2) {
-$1=self._ship();
-$ctx2.sendIdx["ship"]=1;
-return _st($1)._goLeft();
+return self._shoot();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-$ctx1.sendIdx["whileKeyPressed:do:"]=1;
-self._whileKeyPressed_do_(_st($Key())._rightArrow(),(function(){
-return smalltalk.withContext(function($ctx2) {
-$2=self._ship();
-$ctx2.sendIdx["ship"]=2;
-return _st($2)._goRight();
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
-$ctx1.sendIdx["whileKeyPressed:do:"]=2;
-self._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
-return smalltalk.withContext(function($ctx2) {
-$3=self._ship();
-$ctx2.sendIdx["ship"]=3;
-return _st($3)._goUp();
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
-$ctx1.sendIdx["whileKeyPressed:do:"]=3;
-self._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
-return smalltalk.withContext(function($ctx2) {
-return _st(self._ship())._goDown();
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
-$ctx1.sendIdx["whileKeyPressed:do:"]=4;
-$4=self._whileKeyPressed_do_(_st($Key())._space(),(function(){
-return smalltalk.withContext(function($ctx2) {
-return _st(self._soundNamed_("laser"))._play();
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
-_st(self._saucers())._do_((function(eachSaucer){
-return smalltalk.withContext(function($ctx2) {
-_st(eachSaucer)._move();
-$5=_st(eachSaucer)._isInsideCanvas_(self._canvas());
-if(! smalltalk.assert($5)){
-_st(eachSaucer)._x_(self._width());
-$6=_st(eachSaucer)._y_(_st(self._height())._atRandom());
-return $6;
-};
-}, function($ctx2) {$ctx2.fillBlock({eachSaucer:eachSaucer},$ctx1,6)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVNI)})},
 args: [],
-source: "step\x0a\x09self \x0a\x09\x09whileKeyPressed: Key leftArrow do: [ self ship goLeft ];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [ self ship goRight ];\x0a\x09\x09whileKeyPressed: Key upArrow do: [ self ship goUp ];\x0a\x09\x09whileKeyPressed: Key downArrow do: [ self ship goDown ];\x0a\x09\x09whileKeyPressed: Key space do: [ (self soundNamed: 'laser') play ].\x0a\x09\x09\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer move.\x0a\x09\x09(eachSaucer isInsideCanvas: self canvas) \x0a\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09eachSaucer\x0a\x09\x09\x09\x09\x09x: self width;\x0a\x09\x09\x09\x09\x09y: self height atRandom ]]",
-messageSends: ["whileKeyPressed:do:", "leftArrow", "goLeft", "ship", "rightArrow", "goRight", "upArrow", "goUp", "downArrow", "goDown", "space", "play", "soundNamed:", "do:", "saucers", "move", "ifFalse:", "isInsideCanvas:", "canvas", "x:", "width", "y:", "atRandom", "height"],
+source: "step\x0a\x09self \x0a\x09\x09moveShip;\x0a\x09\x09moveSaucers;\x0a\x09\x09moveBullets.\x0a\x09self inputHandler whileKeyPressed: Key space do: [ self shoot ]",
+messageSends: ["moveShip", "moveSaucers", "moveBullets", "whileKeyPressed:do:", "inputHandler", "space", "shoot"],
 referencedClasses: ["Key"]
 }),
 globals.OVNI);
@@ -245,11 +507,11 @@ return smalltalk.withContext(function($ctx1) {
 var $1;
 self._drawBackground_(_st(self._game())._farBackground());
 self._drawSpriteCollection_(self._saucers());
-$1=self._draw_atPosition_(self._title(),(30).__at((50)));
+$1=self._draw_(self._title());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVNIStartScreen)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09drawBackground: self game farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09draw: self title atPosition: 30@50",
-messageSends: ["drawBackground:", "farBackground", "game", "drawSpriteCollection:", "saucers", "draw:atPosition:", "title", "@"],
+source: "draw\x0a\x09self \x0a\x09\x09drawBackground: self game farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09draw: self title",
+messageSends: ["drawBackground:", "farBackground", "game", "drawSpriteCollection:", "saucers", "draw:", "title"],
 referencedClasses: []
 }),
 globals.OVNIStartScreen);
@@ -294,37 +556,45 @@ fn: function (){
 var self=this;
 function $Drawable(){return globals.Drawable||(typeof Drawable=="undefined"?nil:Drawable)}
 return smalltalk.withContext(function($ctx1) { 
-var $3,$2,$1,$8,$7,$6,$5,$4,$9,$11,$12,$10;
-$3=self._game();
+var $2,$1,$7,$6,$5,$4,$3,$13,$12,$11,$10,$9,$8,$15,$16,$17,$14;
+$2=self._game();
 $ctx1.sendIdx["game"]=1;
-$2=_st($3)._saucers();
+$1=_st($2)._saucers();
 $ctx1.sendIdx["saucers"]=1;
-$1=_st($2)._copy();
 self._saucers_($1);
 _st(self._saucers())._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
-$8=self._game();
+$7=self._game();
 $ctx2.sendIdx["game"]=2;
-$7=_st($8)._width();
-$6=_st($7).__minus((100));
+$6=_st($7)._width();
+$5=_st($6).__minus((100));
 $ctx2.sendIdx["-"]=1;
-$5=_st($6)._atRandom();
+$4=_st($5)._atRandom();
 $ctx2.sendIdx["atRandom"]=1;
-$4=_st($5).__plus((50));
+$3=_st($4).__plus((50));
 $ctx2.sendIdx["+"]=1;
-_st(each)._x_($4);
-$9=_st(each)._y_(_st(_st(_st(_st(self._game())._height()).__minus((100)))._atRandom()).__plus((50)));
-return $9;
+_st(each)._x_($3);
+$13=self._game();
+$ctx2.sendIdx["game"]=3;
+$12=_st($13)._height();
+$ctx2.sendIdx["height"]=1;
+$11=_st($12).__minus((100));
+$10=_st($11)._atRandom();
+$9=_st($10).__plus((50));
+$8=_st(each)._y_($9);
+return $8;
 }, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
-$11=_st($Drawable())._new();
-$12=(0).__at((0));
+$15=_st($Drawable())._new();
+$16=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
-$10=_st($11)._identifier_origin_size_("title",$12,(600).__at((196)));
-self._title_($10);
+$17=(600).__at((196));
+$ctx1.sendIdx["@"]=2;
+$14=_st($15)._source_origin_size_position_("images/ovni/title.png",$16,$17,(55).__at(_st(self._game())._height()));
+self._title_($14);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVNIStartScreen)})},
 args: [],
-source: "startScreen\x0a\x09self saucers: self game saucers copy.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each \x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09self title: (Drawable new identifier: 'title' origin: 0@0 size: 600@196)",
-messageSends: ["saucers:", "copy", "saucers", "game", "do:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "identifier:origin:size:", "new", "@"],
+source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each \x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Drawable new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height)",
+messageSends: ["saucers:", "saucers", "game", "do:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "source:origin:size:position:", "new", "@"],
 referencedClasses: ["Drawable"]
 }),
 globals.OVNIStartScreen);
@@ -335,16 +605,32 @@ selector: "step",
 protocol: 'control',
 fn: function (){
 var self=this;
+function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
+var $3,$2,$1,$4;
+$3=self._title();
+$ctx1.sendIdx["title"]=1;
+$2=_st($3)._y();
+$ctx1.sendIdx["y"]=1;
+$1=_st($2).__gt((40));
+if(smalltalk.assert($1)){
+$4=self._title();
+$ctx1.sendIdx["title"]=2;
+_st($4)._y_(_st(_st(self._title())._y()).__minus((4)));
+};
 _st(self._saucers())._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
 return _st(each)._wander();
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,2)})}));
+_st(self._inputHandler())._whileKeyPressed_do_(_st($Key())._space(),(function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(self._game())._switchToGame();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVNIStartScreen)})},
 args: [],
-source: "step\x0a\x09self saucers do: [ :each | each wander ]",
-messageSends: ["do:", "saucers", "wander"],
-referencedClasses: []
+source: "step\x0a\x09self title y > 40 ifTrue: [ self title y: self title y - 4 ].\x0a\x09self saucers do: [ :each | each wander ].\x0a\x09self inputHandler whileKeyPressed: Key space do: [ self game switchToGame ]",
+messageSends: ["ifTrue:", ">", "y", "title", "y:", "-", "do:", "saucers", "wander", "whileKeyPressed:do:", "inputHandler", "space", "switchToGame", "game"],
+referencedClasses: ["Key"]
 }),
 globals.OVNIStartScreen);
 

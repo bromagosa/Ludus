@@ -264,7 +264,7 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$3,$2,$4,$5,$7,$6,$8,$receiver;
 clickedCard=_st(self["@cards"])._detect_ifNone_((function(which){
 return smalltalk.withContext(function($ctx2) {
-return _st(which)._touchingMousePointer_(self._mousePosition());
+return _st(which)._touchingMousePointer_(_st(self._inputHandler())._mousePosition());
 }, function($ctx2) {$ctx2.fillBlock({which:which},$ctx1,1)})}),(function(){
 return nil;
 }));
@@ -307,8 +307,8 @@ self["@lastSelectedCard"];
 };
 return self}, function($ctx1) {$ctx1.fill(self,"handleCardClick",{clickedCard:clickedCard},globals.MemoryGame)})},
 args: [],
-source: "handleCardClick\x0a\x0a\x09| clickedCard |\x0a\x09\x0a\x09clickedCard := cards detect: [ :which | which touchingMousePointer: self mousePosition ] ifNone: [ nil ].\x0a\x09\x0a\x09clickedCard ifNotNil: [\x0a\x09\x09(self soundNamed: clickedCard animalName) play.\x0a\x09\x09clickedCard showAnimal.\x0a\x09\x09lastSelectedCard \x0a\x09\x09\x09ifNil: [ lastSelectedCard := clickedCard ]\x0a\x09\x09\x09ifNotNil: [\x0a\x09\x09\x09\x09lastSelectedCard = clickedCard \x0a\x09\x09\x09\x09\x09ifTrue: [ clickedCard hideAnimal ]\x0a\x09\x09\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09\x09\x09lastSelectedCard animalName = clickedCard animalName \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [ Transcript show: 'yay :)'; cr ]\x0a\x09\x09\x09\x09\x09\x09\x09ifFalse: [ \x0a\x09\x09\x09\x09\x09\x09\x09\x09lastSelectedCard hideAnimal.\x0a\x09\x09\x09\x09\x09\x09\x09\x09clickedCard hideAnimal ]].\x0a\x09\x09\x09\x09lastSelectedCard := nil.\x0a\x09\x09\x09]\x0a\x09]",
-messageSends: ["detect:ifNone:", "touchingMousePointer:", "mousePosition", "ifNotNil:", "play", "soundNamed:", "animalName", "showAnimal", "ifNil:ifNotNil:", "ifTrue:ifFalse:", "=", "hideAnimal", "show:", "cr"],
+source: "handleCardClick\x0a\x0a\x09| clickedCard |\x0a\x09\x0a\x09clickedCard := \x0a\x09\x09cards \x0a\x09\x09\x09detect: [ :which | which touchingMousePointer: self inputHandler mousePosition ]\x0a\x09\x09\x09ifNone: [ nil ].\x0a\x09\x0a\x09clickedCard ifNotNil: [\x0a\x09\x09(self soundNamed: clickedCard animalName) play.\x0a\x09\x09clickedCard showAnimal.\x0a\x09\x09lastSelectedCard \x0a\x09\x09\x09ifNil: [ lastSelectedCard := clickedCard ]\x0a\x09\x09\x09ifNotNil: [\x0a\x09\x09\x09\x09lastSelectedCard = clickedCard \x0a\x09\x09\x09\x09\x09ifTrue: [ clickedCard hideAnimal ]\x0a\x09\x09\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09\x09\x09lastSelectedCard animalName = clickedCard animalName \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [ Transcript show: 'yay :)'; cr ]\x0a\x09\x09\x09\x09\x09\x09\x09ifFalse: [ \x0a\x09\x09\x09\x09\x09\x09\x09\x09lastSelectedCard hideAnimal.\x0a\x09\x09\x09\x09\x09\x09\x09\x09clickedCard hideAnimal ]].\x0a\x09\x09\x09\x09lastSelectedCard := nil.\x0a\x09\x09\x09]\x0a\x09]",
+messageSends: ["detect:ifNone:", "touchingMousePointer:", "mousePosition", "inputHandler", "ifNotNil:", "play", "soundNamed:", "animalName", "showAnimal", "ifNil:ifNotNil:", "ifTrue:ifFalse:", "=", "hideAnimal", "show:", "cr"],
 referencedClasses: ["Transcript"]
 }),
 globals.MemoryGame);
@@ -360,14 +360,14 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._onMouseClickDo_((function(){
+_st(self._inputHandler())._onMouseClickDo_((function(){
 return smalltalk.withContext(function($ctx2) {
 return self._handleCardClick();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.MemoryGame)})},
 args: [],
-source: "step\x0a\x09self onMouseClickDo: [\x0a\x09\x09self handleCardClick\x0a\x09]",
-messageSends: ["onMouseClickDo:", "handleCardClick"],
+source: "step\x0a\x09self inputHandler onMouseClickDo: [\x0a\x09\x09self handleCardClick\x0a\x09]",
+messageSends: ["onMouseClickDo:", "inputHandler", "handleCardClick"],
 referencedClasses: []
 }),
 globals.MemoryGame);
@@ -863,39 +863,42 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3;
+var $1,$2,$3,$4,$5;
 $1=self["@ai"];
 if(smalltalk.assert($1)){
 self._processAI();
 } else {
-self._whileKeyPressed_do_(_st($Key())._s(),(function(){
+$2=self._inputHandler();
+$ctx1.sendIdx["inputHandler"]=1;
+_st($2)._whileKeyPressed_do_(_st($Key())._s(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._goUp_(self["@paddle1"]);
 $ctx2.sendIdx["goUp:"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=1;
-$2=self._whileKeyPressed_do_(_st($Key())._x(),(function(){
+$3=_st($2)._whileKeyPressed_do_(_st($Key())._x(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._goDown_(self["@paddle1"]);
 $ctx2.sendIdx["goDown:"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=2;
-$2;
+$3;
 };
-self._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
+$4=self._inputHandler();
+_st($4)._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._goUp_(self["@paddle2"]);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=3;
-self._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
+$5=_st($4)._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._goDown_(self["@paddle2"]);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,6)})}));
-$3=self._processBallMovement();
+self._processBallMovement();
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.Pong)})},
 args: [],
-source: "step\x0a\x09ai\x0a\x09\x09ifFalse: [self whileKeyPressed: Key s do: [self goUp: paddle1];\x0a\x09\x09\x09whileKeyPressed: Key x do: [self goDown: paddle1]]\x0a\x09\x09ifTrue: [self processAI].\x0a\x09self whileKeyPressed: Key upArrow do: [self goUp: paddle2];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self goDown: paddle2];\x0a\x09\x09processBallMovement.",
-messageSends: ["ifFalse:ifTrue:", "whileKeyPressed:do:", "s", "goUp:", "x", "goDown:", "processAI", "upArrow", "downArrow", "processBallMovement"],
+source: "step\x0a\x09\x0a\x09ai\x0a\x09\x09ifFalse: \x0a\x09\x09\x09[self inputHandler \x0a\x09\x09\x09\x09whileKeyPressed: Key s do: [self goUp: paddle1];\x0a\x09\x09\x09\x09whileKeyPressed: Key x do: [self goDown: paddle1]]\x0a\x09\x09ifTrue: [self processAI].\x0a\x09\x0a\x09self inputHandler \x0a\x09\x09whileKeyPressed: Key upArrow do: [self goUp: paddle2];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self goDown: paddle2].\x0a\x09\x0a\x09self processBallMovement.",
+messageSends: ["ifFalse:ifTrue:", "whileKeyPressed:do:", "inputHandler", "s", "goUp:", "x", "goDown:", "processAI", "upArrow", "downArrow", "processBallMovement"],
 referencedClasses: ["Key"]
 }),
 globals.Pong);
@@ -1046,39 +1049,40 @@ fn: function (){
 var self=this;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;
+var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14;
 self["@ghost"]=_st(_st($Sprite())._new())._spriteSheet_("images/ghost.png");
 $1=self["@ghost"];
-$2=(0).__at((0));
+$2=$1;
+$3=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
-$3=(50).__at((55));
+$4=(50).__at((55));
 $ctx1.sendIdx["@"]=2;
-_st($1)._addFrameGroupNamed_origin_size_frameCount_("down",$2,$3,(2));
+_st($2)._addFrameGroupNamed_origin_size_frameCount_("down",$3,$4,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=1;
-$4=self["@ghost"];
-$5=(100).__at((0));
+$5=$1;
+$6=(100).__at((0));
 $ctx1.sendIdx["@"]=3;
-$6=(50).__at((55));
+$7=(50).__at((55));
 $ctx1.sendIdx["@"]=4;
-_st($4)._addFrameGroupNamed_origin_size_frameCount_("up",$5,$6,(2));
+_st($5)._addFrameGroupNamed_origin_size_frameCount_("up",$6,$7,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=2;
-$7=self["@ghost"];
-$8=(0).__at((55));
+$8=$1;
+$9=(0).__at((55));
 $ctx1.sendIdx["@"]=5;
-$9=(50).__at((55));
+$10=(50).__at((55));
 $ctx1.sendIdx["@"]=6;
-_st($7)._addFrameGroupNamed_origin_size_frameCount_("right",$8,$9,(2));
+_st($8)._addFrameGroupNamed_origin_size_frameCount_("right",$9,$10,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=3;
-$10=self["@ghost"];
-$11=(100).__at((55));
+$11=$1;
+$12=(100).__at((55));
 $ctx1.sendIdx["@"]=7;
-$12=(50).__at((55));
+$13=(50).__at((55));
 $ctx1.sendIdx["@"]=8;
-_st($10)._addFrameGroupNamed_origin_size_frameCount_("left",$11,$12,(2));
-_st(self["@ghost"])._centre_((500).__at((500)));
+_st($11)._addFrameGroupNamed_origin_size_frameCount_("left",$12,$13,(2));
+$14=_st($1)._centre_((500).__at((500)));
 return self}, function($ctx1) {$ctx1.fill(self,"createGhost",{},globals.SimplePacman)})},
 args: [],
-source: "createGhost\x0a\x09ghost := Sprite new spriteSheet: 'images/ghost.png'.\x0a\x09ghost addFrameGroupNamed: 'down' origin: (0@0) size: (50@55) frameCount: 2.\x0a\x09ghost addFrameGroupNamed: 'up' origin: (100@0) size: (50@55) frameCount: 2.\x0a\x09ghost addFrameGroupNamed: 'right' origin: (0@55) size: (50@55) frameCount: 2.\x0a\x09ghost addFrameGroupNamed: 'left' origin: (100@55) size: (50@55) frameCount: 2.\x0a\x09ghost centre: 500@500.",
+source: "createGhost\x0a\x09ghost := Sprite new spriteSheet: 'images/ghost.png'.\x0a\x09ghost \x0a\x09\x09addFrameGroupNamed: 'down' origin: (0@0) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'up' origin: (100@0) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'right' origin: (0@55) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'left' origin: (100@55) size: (50@55) frameCount: 2;\x0a\x09\x09centre: 500@500.",
 messageSends: ["spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:"],
 referencedClasses: ["Sprite"]
 }),
@@ -1092,39 +1096,40 @@ fn: function (){
 var self=this;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;
+var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14;
 self["@pacman"]=_st(_st($Sprite())._new())._spriteSheet_("images/pacman.png");
 $1=self["@pacman"];
-$2=(0).__at((0));
+$2=$1;
+$3=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
-$3=(50).__at((50));
+$4=(50).__at((50));
 $ctx1.sendIdx["@"]=2;
-_st($1)._addFrameGroupNamed_origin_size_frameCount_("left",$2,$3,(2));
+_st($2)._addFrameGroupNamed_origin_size_frameCount_("left",$3,$4,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=1;
-$4=self["@pacman"];
-$5=(0).__at((50));
+$5=$1;
+$6=(0).__at((50));
 $ctx1.sendIdx["@"]=3;
-$6=(50).__at((50));
+$7=(50).__at((50));
 $ctx1.sendIdx["@"]=4;
-_st($4)._addFrameGroupNamed_origin_size_frameCount_("right",$5,$6,(2));
+_st($5)._addFrameGroupNamed_origin_size_frameCount_("right",$6,$7,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=2;
-$7=self["@pacman"];
-$8=(100).__at((0));
+$8=$1;
+$9=(100).__at((0));
 $ctx1.sendIdx["@"]=5;
-$9=(50).__at((50));
+$10=(50).__at((50));
 $ctx1.sendIdx["@"]=6;
-_st($7)._addFrameGroupNamed_origin_size_frameCount_("down",$8,$9,(2));
+_st($8)._addFrameGroupNamed_origin_size_frameCount_("down",$9,$10,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=3;
-$10=self["@pacman"];
-$11=(100).__at((50));
+$11=$1;
+$12=(100).__at((50));
 $ctx1.sendIdx["@"]=7;
-$12=(50).__at((50));
+$13=(50).__at((50));
 $ctx1.sendIdx["@"]=8;
-_st($10)._addFrameGroupNamed_origin_size_frameCount_("up",$11,$12,(2));
-_st(self["@pacman"])._centre_((100).__at((100)));
+_st($11)._addFrameGroupNamed_origin_size_frameCount_("up",$12,$13,(2));
+$14=_st($1)._centre_((100).__at((100)));
 return self}, function($ctx1) {$ctx1.fill(self,"createPacman",{},globals.SimplePacman)})},
 args: [],
-source: "createPacman\x0a\x09pacman := Sprite new spriteSheet: 'images/pacman.png'.\x0a\x09pacman addFrameGroupNamed: 'left' origin: (0@0) size: (50@50) frameCount: 2.\x0a\x09pacman addFrameGroupNamed: 'right' origin: (0@50) size: (50@50) frameCount: 2.\x0a\x09pacman addFrameGroupNamed: 'down' origin: (100@0) size: (50@50) frameCount: 2.\x0a\x09pacman addFrameGroupNamed: 'up' origin: (100@50) size: (50@50) frameCount: 2.\x0a\x09pacman centre: 100@100.",
+source: "createPacman\x0a\x09pacman := Sprite new spriteSheet: 'images/pacman.png'.\x0a\x09pacman \x0a\x09\x09addFrameGroupNamed: 'left' origin: (0@0) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'right' origin: (0@50) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'down' origin: (100@0) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'up' origin: (100@50) size: (50@50) frameCount: 2;\x0a\x09\x09centre: 100@100.",
 messageSends: ["spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:"],
 referencedClasses: ["Sprite"]
 }),
@@ -1137,13 +1142,14 @@ protocol: 'not yet classified',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+var $1;
 self._clearCanvas();
 self._drawSprite_(self["@ghost"]);
 $ctx1.sendIdx["drawSprite:"]=1;
-self._drawSprite_(self["@pacman"]);
+$1=self._drawSprite_(self["@pacman"]);
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.SimplePacman)})},
 args: [],
-source: "draw\x0a\x09self clearCanvas.\x0a\x09self drawSprite: ghost.\x0a\x09self drawSprite: pacman.",
+source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawSprite: ghost;\x0a\x09\x09drawSprite: pacman.",
 messageSends: ["clearCanvas", "drawSprite:"],
 referencedClasses: []
 }),
@@ -1164,7 +1170,7 @@ _st(self["@pacman"])._moveCentreBy_((0).__at((15)));
 _st(self["@pacman"])._currentFrameGroup_("down");
 return self}, function($ctx1) {$ctx1.fill(self,"moveDown",{},globals.SimplePacman)})},
 args: [],
-source: "moveDown\x0a\x09(pacman centre y + 25) >= self height \x0a\x09\x09ifFalse: \x0a\x09\x09\x09[pacman moveCentreBy: (0@ 15)].\x0a\x09pacman currentFrameGroup: 'down'",
+source: "moveDown\x0a\x09(pacman centre y + 25) >= self height \x0a\x09\x09ifFalse: \x0a\x09\x09\x09[pacman moveCentreBy: (0@15)].\x0a\x09pacman currentFrameGroup: 'down'",
 messageSends: ["ifFalse:", ">=", "+", "y", "centre", "height", "moveCentreBy:", "@", "currentFrameGroup:"],
 referencedClasses: []
 }),
@@ -1383,50 +1389,54 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$7,$6,$5,$4,$3,$8;
-self._whileKeyPressed_do_(_st($Key())._leftArrow(),(function(){
+var $1,$3,$9,$8,$7,$6,$5,$4,$2,$10;
+$1=self._inputHandler();
+$ctx1.sendIdx["inputHandler"]=1;
+_st($1)._whileKeyPressed_do_(_st($Key())._leftArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._moveLeft();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=1;
-self._whileKeyPressed_do_(_st($Key())._rightArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._rightArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._moveRight();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=2;
-self._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._moveUp();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=3;
-$1=self._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._moveDown();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
-self._onMouseClickDo_((function(){
+$2=_st($1)._onMouseClickDo_((function(){
 return smalltalk.withContext(function($ctx2) {
-$2=window;
-$7=self._mousePosition();
+$3=window;
+$9=self._inputHandler();
+$ctx2.sendIdx["inputHandler"]=2;
+$8=_st($9)._mousePosition();
 $ctx2.sendIdx["mousePosition"]=1;
-$6=_st($7)._x();
-$5=_st($6)._asString();
+$7=_st($8)._x();
+$6=_st($7)._asString();
 $ctx2.sendIdx["asString"]=1;
-$4=_st($5).__comma(",");
-$3=_st($4).__comma(_st(_st(self._mousePosition())._y())._asString());
+$5=_st($6).__comma(",");
+$4=_st($5).__comma(_st(_st(_st(self._inputHandler())._mousePosition())._y())._asString());
 $ctx2.sendIdx[","]=1;
-return _st($2)._alert_($3);
+return _st($3)._alert_($4);
 $ctx2.sendIdx["alert:"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
 self._moveGhost();
-$8=_st(self["@pacman"])._collidesWith_(self["@ghost"]);
-if(smalltalk.assert($8)){
+$10=_st(self["@pacman"])._collidesWith_(self["@ghost"]);
+if(smalltalk.assert($10)){
 self._end();
 _st(window)._alert_("You lost!");
 };
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.SimplePacman)})},
 args: [],
-source: "step\x0a\x09self whileKeyPressed: Key leftArrow do: [self moveLeft];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [self moveRight];\x0a\x09\x09whileKeyPressed: Key upArrow do: [self moveUp];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self moveDown].\x0a\x09self onMouseClickDo: [ window alert: self mousePosition x asString , ',' , self mousePosition y asString ].\x0a\x09self moveGhost.\x0a\x09(pacman collidesWith: ghost) ifTrue: [ self end. window alert: 'You lost!' ]",
-messageSends: ["whileKeyPressed:do:", "leftArrow", "moveLeft", "rightArrow", "moveRight", "upArrow", "moveUp", "downArrow", "moveDown", "onMouseClickDo:", "alert:", ",", "asString", "x", "mousePosition", "y", "moveGhost", "ifTrue:", "collidesWith:", "end"],
+source: "step\x0a\x09self inputHandler \x0a\x09\x09whileKeyPressed: Key leftArrow do: [self moveLeft];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [self moveRight];\x0a\x09\x09whileKeyPressed: Key upArrow do: [self moveUp];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self moveDown];\x0a\x09\x09onMouseClickDo: [ \x0a\x09\x09\x09window alert: \x0a\x09\x09\x09\x09self inputHandler mousePosition x asString \x0a\x09\x09\x09\x09\x09, ','\x0a\x09\x09\x09\x09\x09, self inputHandler mousePosition y asString ].\x0a\x09\x09\x09\x09\x09\x0a\x09self moveGhost.\x0a\x09\x0a\x09(pacman collidesWith: ghost) ifTrue: [ self end. window alert: 'You lost!' ]",
+messageSends: ["whileKeyPressed:do:", "inputHandler", "leftArrow", "moveLeft", "rightArrow", "moveRight", "upArrow", "moveUp", "downArrow", "moveDown", "onMouseClickDo:", "alert:", ",", "asString", "x", "mousePosition", "y", "moveGhost", "ifTrue:", "collidesWith:", "end"],
 referencedClasses: ["Key"]
 }),
 globals.SimplePacman);
@@ -1549,14 +1559,10 @@ return self._drawSprite_(each);
 } else {
 self._drawWelcomeScreen();
 };
-self._onMouseClickDo_((function(){
-self["@started"]=true;
-return self["@started"];
-}));
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.SmallCave)})},
 args: [],
-source: "draw\x0a\x09self started \x0a\x09\x09ifFalse: [self drawWelcomeScreen]\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09self clearCanvas;\x0a\x09\x09\x09\x09drawCeiling; \x0a\x09\x09\x09\x09drawFloor;\x0a\x09\x09\x09\x09drawObstacles;\x0a\x09\x09\x09\x09drawSprite: ship.\x0a\x09\x09\x09self trail allButLast do: [:each | self drawSprite: each ]].\x0a\x09self onMouseClickDo: [started := true].",
-messageSends: ["ifFalse:ifTrue:", "started", "drawWelcomeScreen", "clearCanvas", "drawCeiling", "drawFloor", "drawObstacles", "drawSprite:", "do:", "allButLast", "trail", "onMouseClickDo:"],
+source: "draw\x0a\x09self started \x0a\x09\x09ifFalse: [self drawWelcomeScreen]\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09self clearCanvas;\x0a\x09\x09\x09\x09drawCeiling; \x0a\x09\x09\x09\x09drawFloor;\x0a\x09\x09\x09\x09drawObstacles;\x0a\x09\x09\x09\x09drawSprite: ship.\x0a\x09\x09\x09self trail allButLast do: [:each | self drawSprite: each ]].",
+messageSends: ["ifFalse:ifTrue:", "started", "drawWelcomeScreen", "clearCanvas", "drawCeiling", "drawFloor", "drawObstacles", "drawSprite:", "do:", "allButLast", "trail"],
 referencedClasses: []
 }),
 globals.SmallCave);
@@ -1834,30 +1840,31 @@ protocol: 'not yet classified',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$6,$5,$4;
-self._whileMouseUpDo_((function(){
-return smalltalk.withContext(function($ctx2) {
-$1=self._ship();
-$ctx2.sendIdx["ship"]=1;
-return _st($1)._increaseSpeed();
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-self._whileMouseDownDo_((function(){
+var $1,$2,$4,$3,$5,$8,$7,$6;
+$1=self._inputHandler();
+_st($1)._whileMouseUpDo_((function(){
 return smalltalk.withContext(function($ctx2) {
 $2=self._ship();
+$ctx2.sendIdx["ship"]=1;
+return _st($2)._increaseSpeed();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$3=_st($1)._whileMouseDownDo_((function(){
+return smalltalk.withContext(function($ctx2) {
+$4=self._ship();
 $ctx2.sendIdx["ship"]=2;
-return _st($2)._decreaseSpeed();
+return _st($4)._decreaseSpeed();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
-$3=self._ship();
+$5=self._ship();
 $ctx1.sendIdx["ship"]=3;
-$6=self._ship();
+$8=self._ship();
 $ctx1.sendIdx["ship"]=4;
-$5=_st($6)._y();
-$4=_st($5).__plus(_st(_st(self._ship())._speed()).__star(self["@gravity"]));
-_st($3)._y_($4);
+$7=_st($8)._y();
+$6=_st($7).__plus(_st(_st(self._ship())._speed()).__star(self["@gravity"]));
+_st($5)._y_($6);
 return self}, function($ctx1) {$ctx1.fill(self,"moveShip",{},globals.SmallCave)})},
 args: [],
-source: "moveShip\x0a\x09self whileMouseUpDo: [self ship increaseSpeed].\x0a\x09self whileMouseDownDo: [self ship decreaseSpeed].\x0a\x09self ship y: (self ship y + (self ship speed * gravity))",
-messageSends: ["whileMouseUpDo:", "increaseSpeed", "ship", "whileMouseDownDo:", "decreaseSpeed", "y:", "+", "y", "*", "speed"],
+source: "moveShip\x0a\x09self inputHandler\x0a\x09\x09whileMouseUpDo: [self ship increaseSpeed];\x0a\x09\x09whileMouseDownDo: [self ship decreaseSpeed].\x0a\x09self ship y: (self ship y + (self ship speed * gravity))",
+messageSends: ["whileMouseUpDo:", "inputHandler", "increaseSpeed", "ship", "whileMouseDownDo:", "decreaseSpeed", "y:", "+", "y", "*", "speed"],
 referencedClasses: []
 }),
 globals.SmallCave);
@@ -2045,10 +2052,14 @@ self._updateDifficulty();
 $2=self._moveShip();
 $2;
 };
+_st(self._inputHandler())._onMouseClickDo_((function(){
+self["@started"]=true;
+return self["@started"];
+}));
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.SmallCave)})},
 args: [],
-source: "step\x0a\x09self started ifTrue: [self detectCollision; updateTrail; updateBumps; updateObstacles; updateDifficulty; moveShip]",
-messageSends: ["ifTrue:", "started", "detectCollision", "updateTrail", "updateBumps", "updateObstacles", "updateDifficulty", "moveShip"],
+source: "step\x0a\x09self started ifTrue: [\x0a\x09\x09self \x0a\x09\x09\x09detectCollision; \x0a\x09\x09\x09updateTrail; \x0a\x09\x09\x09updateBumps; \x0a\x09\x09\x09updateObstacles; \x0a\x09\x09\x09updateDifficulty; \x0a\x09\x09\x09moveShip ].\x0a\x09\x09\x09\x0a\x09self inputHandler onMouseClickDo: [ started := true ].",
+messageSends: ["ifTrue:", "started", "detectCollision", "updateTrail", "updateBumps", "updateObstacles", "updateDifficulty", "moveShip", "onMouseClickDo:", "inputHandler"],
 referencedClasses: []
 }),
 globals.SmallCave);
@@ -3423,54 +3434,55 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2;
+var $1,$2,$3;
 _st(self["@guy"])._currentFrameGroup_("still".__comma(self._lastMove()));
-self._whileKeyPressed_do_(_st($Key())._leftArrow(),(function(){
+$1=self._inputHandler();
+_st($1)._whileKeyPressed_do_(_st($Key())._leftArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._go_("Left");
 $ctx2.sendIdx["go:"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=1;
-self._whileKeyPressed_do_(_st($Key())._rightArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._rightArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._go_("Right");
 $ctx2.sendIdx["go:"]=2;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=2;
-self._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._go_("Up");
 $ctx2.sendIdx["go:"]=3;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=3;
-self._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._go_("Down");
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=4;
-self._whileKeyPressed_do_(_st($Key())._r(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._r(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._restartLevel();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=5;
-self._whileKeyPressed_do_(_st($Key())._m(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._m(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return _st(self._soundNamed_("factory"))._stop();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,6)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=6;
-$1=self._whileKeyPressed_do_(_st($Key())._n(),(function(){
+$2=_st($1)._whileKeyPressed_do_(_st($Key())._n(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._advanceLevel();
 $ctx2.sendIdx["advanceLevel"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,7)})}));
-$2=self._isLevelOver();
-if(smalltalk.assert($2)){
+$3=self._isLevelOver();
+if(smalltalk.assert($3)){
 self._advanceLevel();
 };
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.Sokoban)})},
 args: [],
-source: "step\x0a\x09guy currentFrameGroup: 'still' , self lastMove.\x0a\x09self whileKeyPressed: Key leftArrow do: [self go: 'Left'];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [self go: 'Right'];\x0a\x09\x09whileKeyPressed: Key upArrow do: [self go: 'Up'];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self go: 'Down'];\x0a\x09\x09whileKeyPressed: Key r do: [self restartLevel];\x0a\x09\x09whileKeyPressed: Key m do: [(self soundNamed: 'factory') stop];\x0a\x09\x09whileKeyPressed: Key n do: [self advanceLevel].\x0a\x0a\x09self isLevelOver ifTrue: [self advanceLevel]",
-messageSends: ["currentFrameGroup:", ",", "lastMove", "whileKeyPressed:do:", "leftArrow", "go:", "rightArrow", "upArrow", "downArrow", "r", "restartLevel", "m", "stop", "soundNamed:", "n", "advanceLevel", "ifTrue:", "isLevelOver"],
+source: "step\x0a\x09guy currentFrameGroup: 'still' , self lastMove.\x0a\x09self inputHandler \x0a\x09\x09whileKeyPressed: Key leftArrow do: [ self go: 'Left' ];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [ self go: 'Right' ];\x0a\x09\x09whileKeyPressed: Key upArrow do: [ self go: 'Up'];\x0a\x09\x09whileKeyPressed: Key downArrow do: [ self go: 'Down'];\x0a\x09\x09whileKeyPressed: Key r do: [ self restartLevel ];\x0a\x09\x09whileKeyPressed: Key m do: [ (self soundNamed: 'factory') stop ];\x0a\x09\x09whileKeyPressed: Key n do: [ self advanceLevel ].\x0a\x0a\x09self isLevelOver ifTrue: [ self advanceLevel ]",
+messageSends: ["currentFrameGroup:", ",", "lastMove", "whileKeyPressed:do:", "inputHandler", "leftArrow", "go:", "rightArrow", "upArrow", "downArrow", "r", "restartLevel", "m", "stop", "soundNamed:", "n", "advanceLevel", "ifTrue:", "isLevelOver"],
 referencedClasses: ["Key"]
 }),
 globals.Sokoban);

@@ -1,9 +1,48 @@
 Smalltalk createPackage: 'OVNI'!
+Sprite subclass: #Bullet
+	instanceVariableNames: 'speed acceleration'
+	package: 'OVNI'!
+
+!Bullet methodsFor: 'accessing'!
+
+acceleration
+	^ acceleration ifNil: [ acceleration := 2 ]
+!
+
+speed
+	^ speed ifNil: [ speed := 5 ]
+! !
+
+!Bullet methodsFor: 'initialization'!
+
+initialize
+	super initialize.
+	self 
+		spriteSheet: 'images/ovni/bullet.png';
+		addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.
+! !
+
+!Bullet methodsFor: 'movement'!
+
+accelerate
+	speed := self speed + self acceleration
+!
+
+move
+	self 
+		moveCentreBy: self speed @ 0;
+		accelerate
+! !
+
 Game subclass: #OVNI
-	instanceVariableNames: 'ship saucers scrollSpeed farBackground starField'
+	instanceVariableNames: 'ship saucers scrollSpeed farBackground starField bullets'
 	package: 'OVNI'!
 
 !OVNI methodsFor: 'accessing'!
+
+bullets
+	^ bullets ifNil: [ bullets := #() ]
+!
 
 farBackground
 	^ farBackground ifNil: [ 
@@ -55,19 +94,10 @@ startGame
 
 step
 	self 
-		whileKeyPressed: Key leftArrow do: [ self ship goLeft ];
-		whileKeyPressed: Key rightArrow do: [ self ship goRight ];
-		whileKeyPressed: Key upArrow do: [ self ship goUp ];
-		whileKeyPressed: Key downArrow do: [ self ship goDown ];
-		whileKeyPressed: Key space do: [ (self soundNamed: 'laser') play ].
-		
-	self saucers do: [ :eachSaucer | 
-		eachSaucer move.
-		(eachSaucer isInsideCanvas: self canvas) 
-			ifFalse: [
-				eachSaucer
-					x: self width;
-					y: self height atRandom ]]
+		moveShip;
+		moveSaucers;
+		moveBullets.
+	self inputHandler whileKeyPressed: Key space do: [ self shoot ]
 ! !
 
 !OVNI methodsFor: 'drawing'!
@@ -76,9 +106,56 @@ draw
 	self 
 		clearCanvas;
 		drawBackground: self farBackground;
-		drawSprite: self ship;
 		drawSpriteCollection: self saucers;
+		drawSpriteCollection: self bullets;
+		drawSprite: self ship;
 		drawBackground: self starField.
+! !
+
+!OVNI methodsFor: 'game actions'!
+
+shoot
+	self bullets size < 6 ifTrue: [
+		(self soundNamed: 'laser') play.
+		self bullets 
+			add: 
+				(Bullet new centre: (self ship centre + ((self ship width / 2) @ 0)))]
+! !
+
+!OVNI methodsFor: 'sprite processing'!
+
+moveBullets
+	self bullets do: [ :eachBullet | 
+		eachBullet move.
+		(eachBullet isAllInsideCanvas: self canvas) 
+			ifFalse: [ bullets remove: eachBullet ]]
+!
+
+moveSaucers
+	self saucers do: [ :eachSaucer | 
+		eachSaucer move.
+		((eachSaucer x + eachSaucer width) < 0) 
+			| (eachSaucer collidesWithAnyOf: self bullets)
+				ifTrue: [
+					eachSaucer
+						x: self width atRandom + self width;
+						y: self height atRandom ]]
+!
+
+moveShip
+	self inputHandler
+		whileKeyPressed: Key leftArrow do: [ 
+			(self ship isLeftInsideCanvas: self canvas) 
+				ifTrue: [ self ship goLeft ]];
+		whileKeyPressed: Key rightArrow do: [
+			(self ship isRightInsideCanvas: self canvas) 
+				ifTrue: [ self ship goRight ]];
+		whileKeyPressed: Key upArrow do: [
+			(self ship isTopInsideCanvas: self canvas) 
+				ifTrue: [ self ship goUp ]];
+		whileKeyPressed: Key downArrow do: [
+			(self ship isBottomInsideCanvas: self canvas) 
+				ifTrue: [ self ship goDown ]].
 ! !
 
 Screen subclass: #OVNIStartScreen
@@ -106,16 +183,24 @@ title: anObject
 !OVNIStartScreen methodsFor: 'control'!
 
 startScreen
-	self saucers: self game saucers copy.
+	self saucers: self game saucers.
 	self saucers do: [ :each | 
 		each 
 			x: (self game width - 100) atRandom + 50;
 			y: (self game height - 100) atRandom + 50 ].
-	self title: (Drawable new identifier: 'title' origin: 0@0 size: 600@196)
+			
+	self title: 
+		(Drawable new 
+			source: 'images/ovni/title.png' 
+			origin: 0@0 
+			size: 600@196 
+			position: 55 @ self game height)
 !
 
 step
-	self saucers do: [ :each | each wander ]
+	self title y > 40 ifTrue: [ self title y: self title y - 4 ].
+	self saucers do: [ :each | each wander ].
+	self inputHandler whileKeyPressed: Key space do: [ self game switchToGame ]
 ! !
 
 !OVNIStartScreen methodsFor: 'drawing'!
@@ -124,7 +209,7 @@ draw
 	self 
 		drawBackground: self game farBackground;
 		drawSpriteCollection: self saucers;
-		draw: self title atPosition: 30@50
+		draw: self title
 ! !
 
 Sprite subclass: #Saucer

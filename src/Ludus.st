@@ -327,13 +327,6 @@ distanceFromCentreTo: aPoint
 		sqrt: 
 			((Math pow: ((self centre x) - (aPoint  x)) to: 2)
 				+ (Math pow: ((self centre y) - (aPoint y)) to: 2))
-!
-
-isInsideCanvas: aCanvas
-	^ ((((self x + self width) >= 0) 
-		and: [ (self y + self height) >= 0 ])
-			and: [ self x <= aCanvas element width ])
-				and: [ self y <= aCanvas element height ]
 ! !
 
 !Sprite methodsFor: 'movement'!
@@ -348,25 +341,47 @@ moveCentreBy: anOffset speed: anInteger
 	self centre: self centre + (anOffset * anInteger)
 ! !
 
+!Sprite methodsFor: 'position'!
+
+isAllInsideCanvas: aCanvas
+	^ ((((self x) >= 0) 
+		and: [ (self y) >= 0 ])
+			and: [ self x + self width <= aCanvas element width ])
+				and: [ self y + self height <= aCanvas element height ]
+!
+
+isBottomInsideCanvas: aCanvas
+	^ (self y + self height) <= aCanvas element height
+!
+
+isInsideCanvas: aCanvas
+	^ ((((self x + self width) >= 0) 
+		and: [ (self y + self height) >= 0 ])
+			and: [ self x <= aCanvas element width ])
+				and: [ self y <= aCanvas element height ]
+!
+
+isLeftInsideCanvas: aCanvas
+	^ self x >= 0
+!
+
+isRightInsideCanvas: aCanvas
+	^ (self x + self width) <= aCanvas element width
+!
+
+isTopInsideCanvas: aCanvas
+	^ self y >= 0
+! !
+
 Object subclass: #Drawable
-	instanceVariableNames: 'identifier origin size source'
+	instanceVariableNames: 'origin size image position'
 	package: 'Ludus'!
 
 !Drawable methodsFor: 'accessing'!
 
-identifier
-	^ identifier
-!
-
-identifier: anObject
-	identifier := anObject
-!
-
-identifier: aString origin: anOriginPoint size: aSizePoint
-	self 
-		identifier: aString;
-		origin: anOriginPoint;
-		size: aSizePoint
+image
+	image ifNil: [ image := self newImage ].
+	^ image
 !
 
 origin
@@ -377,6 +392,14 @@ origin: anObject
 	origin := anObject
 !
 
+position
+	^ position ifNil: [ position := 0@0 ]
+!
+
+position: aPosition
+	position := aPosition
+!
+
 size
 	^ size
 !
@@ -385,12 +408,22 @@ size: anObject
 	size := anObject
 !
 
-source
-	^ source
+source: anImageUrl
+	self image src: anImageUrl; yourself
 !
 
-source: anObject
-	source := anObject
+source: aSourceString origin: anOriginPoint size: aSizePoint position: aPosition
+	self 
+		source: aSourceString;
+		origin: anOriginPoint;
+		size: aSizePoint;
+		position: aPosition
+! !
+
+!Drawable methodsFor: 'aspect'!
+
+newImage
+	^ document createElement: 'img'
 ! !
 
 !Drawable methodsFor: 'attributes'!
@@ -401,19 +434,35 @@ height
 
 width
 	^ self size x
+!
+
+x
+	^ self position x
+!
+
+x: anInteger
+	self position x: anInteger
+!
+
+y
+	^ self position y
+!
+
+y: anInteger
+	self position y: anInteger
 ! !
 
 !Drawable methodsFor: 'drawing'!
 
-drawOnContext: aContext atPosition: aPoint
+drawOnContext: aContext
 	aContext
-		drawImage: self source
+		drawImage: self image
 		originX: self origin x
 		originY: self origin y
 		width: self width
 		height: self height
-		xPosition: aPoint x
-		yPosition: aPoint y
+		xPosition: self position x
+		yPosition: self position y
 		scaleWidth: self width
 		scaleHeight: self height.
 ! !
@@ -425,7 +474,7 @@ isParallax
 ! !
 
 Drawable subclass: #FrameGroup
-	instanceVariableNames: 'frameCount currentFrameNumber frameRate'
+	instanceVariableNames: 'identifier frameCount currentFrameNumber frameRate'
 	package: 'Ludus'!
 !FrameGroup commentStamp!
 I represent a group of ordered frames. Each frame is a clip rectangle that a Sprite can retrieve from me to paint itself.!
@@ -442,6 +491,14 @@ frameCount: anInteger
 
 frameSize
 	^ self size
+!
+
+identifier
+	^ identifier
+!
+
+identifier: anObject
+	identifier := anObject
 ! !
 
 !FrameGroup methodsFor: 'attributes'!
@@ -575,7 +632,7 @@ isParallax
 ! !
 
 Widget subclass: #Game
-	instanceVariableNames: 'canvas context fps keys step end mousePosition mouseDown sounds screens pause currentScreen'
+	instanceVariableNames: 'inputHandler canvas context fps step end sounds screens pause currentScreen'
 	package: 'Ludus'!
 !Game commentStamp!
 I am a game. You need to override a couple of my methods to make me usable:
@@ -612,8 +669,8 @@ fps: anInteger
 	fps := anInteger
 !
 
-mouseDown
-	^ mouseDown
+inputHandler
+	^ inputHandler ifNil: [ inputHandler := InputHandler new canvas: self canvas ]
 !
 
 screens
@@ -648,14 +705,6 @@ width
 
 width: anInteger
 	self canvas at: 'width' put: anInteger.
-!
-
-windowScrollLeft
-	<return $(window).scrollLeft();>
-!
-
-windowScrollTop
-	<return $(window).scrollTop();>
 ! !
 
 !Game methodsFor: 'audio'!
@@ -760,95 +809,12 @@ drawSpriteCollection: aSpriteCollection
 			self drawSprite: eachSprite ]
 ! !
 
-!Game methodsFor: 'events'!
-
-mousePosition
-	^ mousePosition ifNil: [ mousePosition := 0 @ 0 ]
-!
-
-onMouseClickDo: aBlock
-	(self eventData: 'click')
-		ifNil: [ self canvas onClick: aBlock ]
-!
-
-onMouseDownDo: aBlock
-	(self eventData: 'mousedown')
-		ifNil: [ self canvas onMouseDown: aBlock ]
-!
-
-onMouseUpDo: aBlock
-	(self eventData: 'mouseup')
-		ifNil: [ self canvas onMouseUp: aBlock ]
-!
-
-whileKeyPressed: aKeyCode do: aBlock
-	((self keys at: aKeyCode ifAbsent: [ false ]) and: [ self keys at: aKeyCode ]) ifTrue: aBlock
-!
-
-whileMouseDownDo: aBlock
-	self isMouseDown ifTrue: aBlock
-!
-
-whileMouseUpDo: aBlock
-	self isMouseDown ifFalse: aBlock
-! !
-
-!Game methodsFor: 'events - private'!
-
-eventData: anEvent
-	<return $._data($('#' + self._class()._name())[0],'events')[anEvent]>
-!
-
-keyDown: evt
-	self keys at: evt keyCode put: true.
-!
-
-keyUp: evt
-	self keys at: evt keyCode put: false.
-!
-
-keys
-	^ keys
-!
-
-mouseDown: evt
-	mouseDown := true.
-!
-
-mouseMove: evt
-	| canvasPosition windowScrollTop windowScrollLeft canvasRelative |
-
-	windowScrollTop := self windowScrollTop.
-	windowScrollLeft := self windowScrollLeft.
-	canvasPosition := 'canvas' asJQuery position.
-
-	canvasRelative := (canvasPosition left - windowScrollLeft) @ (canvasPosition top - windowScrollTop).
-	mousePosition := (evt clientX - canvasRelative x) @ (evt clientY - canvasRelative y).
-!
-
-mouseUp: evt
-	mouseDown := false.
-! !
-
-!Game methodsFor: 'events - testing'!
-
-isMouseDown
-	^ mouseDown
-! !
-
 !Game methodsFor: 'initialization'!
 
 initialize
 	super initialize.
-	self initializeKeys.
-	mouseDown := false.
 	fps := 30.
 	step := 1.
-!
-
-initializeKeys
-	keys := Array new.
-	255 timesRepeat: [ keys add: false ].
 !
 
 startGame
@@ -866,12 +832,7 @@ renderOn: html
 		id: self class name.
 	context := canvas element getContext: '2d'.
 
-	(window jQuery: document) keydown: [ :evt | self keyDown: evt ].
-	(window jQuery: document) keyup: [ :evt | self keyUp: evt ].
-	self canvas onMouseDown: [ :evt | self mouseDown: evt ].
-	self canvas asJQuery 
-		bind: 'mouseup' do: [ :evt | self mouseUp: evt ];
-		bind: 'mousemove' do: [ :evt | self mouseMove: evt ].
+	self inputHandler bindEvents.
 
 	self 
 		startGame;
@@ -946,6 +907,10 @@ game: anObject
 	game := anObject
 !
 
+inputHandler
+	^ self game inputHandler
+!
+
 name
 	^ name ifNil: [ self class name ]
 !
@@ -956,8 +921,8 @@ name: anObject
 
 !Screen methodsFor: 'drawing'!
 
-draw: aDrawable atPosition: aPoint
-	aDrawable drawOnContext: self context atPosition: aPoint
+draw: aDrawable
+	aDrawable drawOnContext: self context
 ! !
 
 !Screen methodsFor: 'initialization'!
@@ -976,6 +941,132 @@ named: aString
 	| instance |
 	instance := self new name: aString.
 	^ instance
+! !
+
+Object subclass: #InputHandler
+	instanceVariableNames: 'canvas keys mousePosition mouseDown'
+	package: 'Ludus'!
+
+!InputHandler methodsFor: 'accessing'!
+
+canvas
+	^ canvas
+!
+
+canvas: aCanvas
+	canvas := aCanvas
+!
+
+mouseDown
+	^ mouseDown
+! !
+
+!InputHandler methodsFor: 'attributes'!
+
+windowScrollLeft
+	<return $(window).scrollLeft();>
+!
+
+windowScrollTop
+	<return $(window).scrollTop();>
+! !
+
+!InputHandler methodsFor: 'events'!
+
+mousePosition
+	^ mousePosition ifNil: [ mousePosition := 0 @ 0 ]
+!
+
+onMouseClickDo: aBlock
+	(self eventData: 'click')
+		ifNil: [ self canvas onClick: aBlock ]
+!
+
+onMouseDownDo: aBlock
+	(self eventData: 'mousedown')
+		ifNil: [ self canvas onMouseDown: aBlock ]
+!
+
+onMouseUpDo: aBlock
+	(self eventData: 'mouseup')
+		ifNil: [ self canvas onMouseUp: aBlock ]
+!
+
+whileKeyPressed: aKeyCode do: aBlock
+	((self keys at: aKeyCode ifAbsent: [ false ]) and: [ self keys at: aKeyCode ]) ifTrue: aBlock
+!
+
+whileMouseDownDo: aBlock
+	self isMouseDown ifTrue: aBlock
+!
+
+whileMouseUpDo: aBlock
+	self isMouseDown ifFalse: aBlock
+! !
+
+!InputHandler methodsFor: 'events - private'!
+
+bindEvents
+	(window jQuery: document) keydown: [ :evt | self keyDown: evt ].
+	(window jQuery: document) keyup: [ :evt | self keyUp: evt ].
+	self canvas onMouseDown: [ :evt | self mouseDown: evt ].
+	self canvas asJQuery 
+		bind: 'mouseup' do: [ :evt | self mouseUp: evt ];
+		bind: 'mousemove' do: [ :evt | self mouseMove: evt ].
+!
+
+eventData: anEvent
+	<return $._data($('#' + self._canvas()._element().id)[0],'events')[anEvent]>
+!
+
+keyDown: evt
+	self keys at: evt keyCode put: true.
+!
+
+keyUp: evt
+	self keys at: evt keyCode put: false.
+!
+
+keys
+	^ keys
+!
+
+mouseDown: evt
+	mouseDown := true.
+!
+
+mouseMove: evt
+	| canvasPosition windowScrollTop windowScrollLeft canvasRelative |
+
+	windowScrollTop := self windowScrollTop.
+	windowScrollLeft := self windowScrollLeft.
+	canvasPosition := 'canvas' asJQuery position.
+
+	canvasRelative := (canvasPosition left - windowScrollLeft) @ (canvasPosition top - windowScrollTop).
+	mousePosition := (evt clientX - canvasRelative x) @ (evt clientY - canvasRelative y).
+!
+
+mouseUp: evt
+	mouseDown := false.
+! !
+
+!InputHandler methodsFor: 'events - testing'!
+
+isMouseDown
+	^ mouseDown
+! !
+
+!InputHandler methodsFor: 'initialization'!
+
+initialize
+	super initialize.
+	self initializeKeys.
+	mouseDown := false.
+!
+
+initializeKeys
+	keys := Array new.
+	255 timesRepeat: [ keys add: false ].
 ! !
 
 Object subclass: #Key

@@ -73,7 +73,7 @@ cards
 !MemoryGame methodsFor: 'control'!
 
 step
-	self onMouseClickDo: [
+	self inputHandler onMouseClickDo: [
 		self handleCardClick
 	]
 ! !
@@ -90,7 +90,10 @@ handleCardClick
 
 	| clickedCard |
 	
-	clickedCard := cards detect: [ :which | which touchingMousePointer: self mousePosition ] ifNone: [ nil ].
+	clickedCard := 
+		cards 
+			detect: [ :which | which touchingMousePointer: self inputHandler mousePosition ]
+			ifNone: [ nil ].
 	
 	clickedCard ifNotNil: [
 		(self soundNamed: clickedCard animalName) play.
@@ -329,13 +332,19 @@ startGame
 !
 
 step
+	
 	ai
-		ifFalse: [self whileKeyPressed: Key s do: [self goUp: paddle1];
-			whileKeyPressed: Key x do: [self goDown: paddle1]]
+		ifFalse: 
+			[self inputHandler 
+				whileKeyPressed: Key s do: [self goUp: paddle1];
+				whileKeyPressed: Key x do: [self goDown: paddle1]]
 		ifTrue: [self processAI].
-	self whileKeyPressed: Key upArrow do: [self goUp: paddle2];
-		whileKeyPressed: Key downArrow do: [self goDown: paddle2];
-		processBallMovement.
+	
+	self inputHandler 
+		whileKeyPressed: Key upArrow do: [self goUp: paddle2];
+		whileKeyPressed: Key downArrow do: [self goDown: paddle2].
+	
+	self processBallMovement.
 !
 
 verticalAngleFor: aPaddle
@@ -385,32 +394,35 @@ Game subclass: #SimplePacman
 
 createGhost
 	ghost := Sprite new spriteSheet: 'images/ghost.png'.
-	ghost addFrameGroupNamed: 'down' origin: (0@0) size: (50@55) frameCount: 2.
-	ghost addFrameGroupNamed: 'up' origin: (100@0) size: (50@55) frameCount: 2.
-	ghost addFrameGroupNamed: 'right' origin: (0@55) size: (50@55) frameCount: 2.
-	ghost addFrameGroupNamed: 'left' origin: (100@55) size: (50@55) frameCount: 2.
-	ghost centre: 500@500.
+	ghost 
+		addFrameGroupNamed: 'down' origin: (0@0) size: (50@55) frameCount: 2;
+		addFrameGroupNamed: 'up' origin: (100@0) size: (50@55) frameCount: 2;
+		addFrameGroupNamed: 'right' origin: (0@55) size: (50@55) frameCount: 2;
+		addFrameGroupNamed: 'left' origin: (100@55) size: (50@55) frameCount: 2;
+		centre: 500@500.
 !
 
 createPacman
 	pacman := Sprite new spriteSheet: 'images/pacman.png'.
-	pacman addFrameGroupNamed: 'left' origin: (0@0) size: (50@50) frameCount: 2.
-	pacman addFrameGroupNamed: 'right' origin: (0@50) size: (50@50) frameCount: 2.
-	pacman addFrameGroupNamed: 'down' origin: (100@0) size: (50@50) frameCount: 2.
-	pacman addFrameGroupNamed: 'up' origin: (100@50) size: (50@50) frameCount: 2.
-	pacman centre: 100@100.
+	pacman 
+		addFrameGroupNamed: 'left' origin: (0@0) size: (50@50) frameCount: 2;
+		addFrameGroupNamed: 'right' origin: (0@50) size: (50@50) frameCount: 2;
+		addFrameGroupNamed: 'down' origin: (100@0) size: (50@50) frameCount: 2;
+		addFrameGroupNamed: 'up' origin: (100@50) size: (50@50) frameCount: 2;
+		centre: 100@100.
 !
 
 draw
-	self clearCanvas.
-	self drawSprite: ghost.
-	self drawSprite: pacman.
+	self 
+		clearCanvas;
+		drawSprite: ghost;
+		drawSprite: pacman.
 !
 
 moveDown
 	(pacman centre y + 25) >= self height 
 		ifFalse: 
-			[pacman moveCentreBy: (0@ 15)].
+			[pacman moveCentreBy: (0@15)].
 	pacman currentFrameGroup: 'down'
 !
 
@@ -482,12 +494,19 @@ startGame
 !
 
 step
-	self whileKeyPressed: Key leftArrow do: [self moveLeft];
+	self inputHandler 
+		whileKeyPressed: Key leftArrow do: [self moveLeft];
 		whileKeyPressed: Key rightArrow do: [self moveRight];
 		whileKeyPressed: Key upArrow do: [self moveUp];
-		whileKeyPressed: Key downArrow do: [self moveDown].
-	self onMouseClickDo: [ window alert: self mousePosition x asString , ',' , self mousePosition y asString ].
+		whileKeyPressed: Key downArrow do: [self moveDown];
+		onMouseClickDo: [ 
+			window alert: 
+				self inputHandler mousePosition x asString 
+					, ','
+					, self inputHandler mousePosition y asString ].
+					
 	self moveGhost.
+	
 	(pacman collidesWith: ghost) ifTrue: [ self end. window alert: 'You lost!!' ]
 ! !
 
@@ -523,7 +542,6 @@ draw
 				drawObstacles;
 				drawSprite: ship.
 			self trail allButLast do: [:each | self drawSprite: each ]].
-	self onMouseClickDo: [started := true].
 !
 
 drawCeiling
@@ -595,8 +613,9 @@ maxVariation
 !
 
 moveShip
-	self whileMouseUpDo: [self ship increaseSpeed].
-	self whileMouseDownDo: [self ship decreaseSpeed].
+	self inputHandler
+		whileMouseUpDo: [self ship increaseSpeed];
+		whileMouseDownDo: [self ship decreaseSpeed].
 	self ship y: (self ship y + (self ship speed * gravity))
 !
 
@@ -631,7 +650,16 @@ started
 !
 
 step
-	self started ifTrue: [self detectCollision; updateTrail; updateBumps; updateObstacles; updateDifficulty; moveShip]
+	self started ifTrue: [
+		self 
+			detectCollision; 
+			updateTrail; 
+			updateBumps; 
+			updateObstacles; 
+			updateDifficulty; 
+			moveShip ].
+			
+	self inputHandler onMouseClickDo: [ started := true ].
 !
 
 trail
@@ -741,15 +769,16 @@ startPositionFor: aLevel
 
 step
 	guy currentFrameGroup: 'still' , self lastMove.
-	self whileKeyPressed: Key leftArrow do: [self go: 'Left'];
-		whileKeyPressed: Key rightArrow do: [self go: 'Right'];
-		whileKeyPressed: Key upArrow do: [self go: 'Up'];
-		whileKeyPressed: Key downArrow do: [self go: 'Down'];
-		whileKeyPressed: Key r do: [self restartLevel];
-		whileKeyPressed: Key m do: [(self soundNamed: 'factory') stop];
-		whileKeyPressed: Key n do: [self advanceLevel].
+	self inputHandler 
+		whileKeyPressed: Key leftArrow do: [ self go: 'Left' ];
+		whileKeyPressed: Key rightArrow do: [ self go: 'Right' ];
+		whileKeyPressed: Key upArrow do: [ self go: 'Up'];
+		whileKeyPressed: Key downArrow do: [ self go: 'Down'];
+		whileKeyPressed: Key r do: [ self restartLevel ];
+		whileKeyPressed: Key m do: [ (self soundNamed: 'factory') stop ];
+		whileKeyPressed: Key n do: [ self advanceLevel ].
 
-	self isLevelOver ifTrue: [self advanceLevel]
+	self isLevelOver ifTrue: [ self advanceLevel ]
 ! !
 
 !Sokoban methodsFor: 'drawing'!

@@ -895,8 +895,80 @@ globals.Sprite);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "isAllInsideCanvas:",
+protocol: 'position',
+fn: function (aCanvas){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $5,$4,$6,$3,$8,$9,$7,$11,$10,$2,$13,$14,$12,$1;
+$5=self._x();
+$ctx1.sendIdx["x"]=1;
+$4=_st($5).__gt_eq((0));
+$ctx1.sendIdx[">="]=1;
+$3=_st($4)._and_((function(){
+return smalltalk.withContext(function($ctx2) {
+$6=self._y();
+$ctx2.sendIdx["y"]=1;
+return _st($6).__gt_eq((0));
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$2=_st($3)._and_((function(){
+return smalltalk.withContext(function($ctx2) {
+$8=self._x();
+$9=self._width();
+$ctx2.sendIdx["width"]=1;
+$7=_st($8).__plus($9);
+$ctx2.sendIdx["+"]=1;
+$11=_st(aCanvas)._element();
+$ctx2.sendIdx["element"]=1;
+$10=_st($11)._width();
+return _st($7).__lt_eq($10);
+$ctx2.sendIdx["<="]=1;
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+$ctx1.sendIdx["and:"]=2;
+$1=_st($2)._and_((function(){
+return smalltalk.withContext(function($ctx2) {
+$13=self._y();
+$14=self._height();
+$ctx2.sendIdx["height"]=1;
+$12=_st($13).__plus($14);
+return _st($12).__lt_eq(_st(_st(aCanvas)._element())._height());
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
+$ctx1.sendIdx["and:"]=1;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"isAllInsideCanvas:",{aCanvas:aCanvas},globals.Sprite)})},
+args: ["aCanvas"],
+source: "isAllInsideCanvas: aCanvas\x0a\x09^ ((((self x) >= 0) \x0a\x09\x09and: [ (self y) >= 0 ])\x0a\x09\x09\x09and: [ self x + self width <= aCanvas element width ])\x0a\x09\x09\x09\x09and: [ self y + self height <= aCanvas element height ]",
+messageSends: ["and:", ">=", "x", "y", "<=", "+", "width", "element", "height"],
+referencedClasses: []
+}),
+globals.Sprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isBottomInsideCanvas:",
+protocol: 'position',
+fn: function (aCanvas){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $3,$4,$2,$1;
+$3=self._y();
+$4=self._height();
+$ctx1.sendIdx["height"]=1;
+$2=_st($3).__plus($4);
+$1=_st($2).__lt_eq(_st(_st(aCanvas)._element())._height());
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"isBottomInsideCanvas:",{aCanvas:aCanvas},globals.Sprite)})},
+args: ["aCanvas"],
+source: "isBottomInsideCanvas: aCanvas\x0a\x09^ (self y + self height) <= aCanvas element height",
+messageSends: ["<=", "+", "y", "height", "element"],
+referencedClasses: []
+}),
+globals.Sprite);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "isInsideCanvas:",
-protocol: 'geometry',
+protocol: 'position',
 fn: function (aCanvas){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -938,6 +1010,64 @@ return $1;
 args: ["aCanvas"],
 source: "isInsideCanvas: aCanvas\x0a\x09^ ((((self x + self width) >= 0) \x0a\x09\x09and: [ (self y + self height) >= 0 ])\x0a\x09\x09\x09and: [ self x <= aCanvas element width ])\x0a\x09\x09\x09\x09and: [ self y <= aCanvas element height ]",
 messageSends: ["and:", ">=", "+", "x", "width", "y", "height", "<=", "element"],
+referencedClasses: []
+}),
+globals.Sprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isLeftInsideCanvas:",
+protocol: 'position',
+fn: function (aCanvas){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._x()).__gt_eq((0));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"isLeftInsideCanvas:",{aCanvas:aCanvas},globals.Sprite)})},
+args: ["aCanvas"],
+source: "isLeftInsideCanvas: aCanvas\x0a\x09^ self x >= 0",
+messageSends: [">=", "x"],
+referencedClasses: []
+}),
+globals.Sprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isRightInsideCanvas:",
+protocol: 'position',
+fn: function (aCanvas){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $3,$4,$2,$1;
+$3=self._x();
+$4=self._width();
+$ctx1.sendIdx["width"]=1;
+$2=_st($3).__plus($4);
+$1=_st($2).__lt_eq(_st(_st(aCanvas)._element())._width());
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"isRightInsideCanvas:",{aCanvas:aCanvas},globals.Sprite)})},
+args: ["aCanvas"],
+source: "isRightInsideCanvas: aCanvas\x0a\x09^ (self x + self width) <= aCanvas element width",
+messageSends: ["<=", "+", "x", "width", "element"],
+referencedClasses: []
+}),
+globals.Sprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isTopInsideCanvas:",
+protocol: 'position',
+fn: function (aCanvas){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._y()).__gt_eq((0));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"isTopInsideCanvas:",{aCanvas:aCanvas},globals.Sprite)})},
+args: ["aCanvas"],
+source: "isTopInsideCanvas: aCanvas\x0a\x09^ self y >= 0",
+messageSends: [">=", "y"],
 referencedClasses: []
 }),
 globals.Sprite);
@@ -1343,16 +1473,16 @@ globals.Sprite);
 
 
 
-smalltalk.addClass('Drawable', globals.Object, ['identifier', 'origin', 'size', 'source'], 'Ludus');
+smalltalk.addClass('Drawable', globals.Object, ['origin', 'size', 'image', 'position'], 'Ludus');
 smalltalk.addMethod(
 smalltalk.method({
-selector: "drawOnContext:atPosition:",
+selector: "drawOnContext:",
 protocol: 'drawing',
-fn: function (aContext,aPoint){
+fn: function (aContext){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$3,$2,$4,$5,$6;
-$1=self._source();
+var $1,$3,$2,$4,$5,$6,$8,$7;
+$1=self._image();
 $3=self._origin();
 $ctx1.sendIdx["origin"]=1;
 $2=_st($3)._x();
@@ -1363,11 +1493,14 @@ $5=self._width();
 $ctx1.sendIdx["width"]=1;
 $6=self._height();
 $ctx1.sendIdx["height"]=1;
-_st(aContext)._drawImage_originX_originY_width_height_xPosition_yPosition_scaleWidth_scaleHeight_($1,$2,$4,$5,$6,_st(aPoint)._x(),_st(aPoint)._y(),self._width(),self._height());
-return self}, function($ctx1) {$ctx1.fill(self,"drawOnContext:atPosition:",{aContext:aContext,aPoint:aPoint},globals.Drawable)})},
-args: ["aContext", "aPoint"],
-source: "drawOnContext: aContext atPosition: aPoint\x0a\x09aContext\x0a\x09\x09drawImage: self source\x0a\x09\x09originX: self origin x\x0a\x09\x09originY: self origin y\x0a\x09\x09width: self width\x0a\x09\x09height: self height\x0a\x09\x09xPosition: aPoint x\x0a\x09\x09yPosition: aPoint y\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height.",
-messageSends: ["drawImage:originX:originY:width:height:xPosition:yPosition:scaleWidth:scaleHeight:", "source", "x", "origin", "y", "width", "height"],
+$8=self._position();
+$ctx1.sendIdx["position"]=1;
+$7=_st($8)._x();
+_st(aContext)._drawImage_originX_originY_width_height_xPosition_yPosition_scaleWidth_scaleHeight_($1,$2,$4,$5,$6,$7,_st(self._position())._y(),self._width(),self._height());
+return self}, function($ctx1) {$ctx1.fill(self,"drawOnContext:",{aContext:aContext},globals.Drawable)})},
+args: ["aContext"],
+source: "drawOnContext: aContext\x0a\x09aContext\x0a\x09\x09drawImage: self image\x0a\x09\x09originX: self origin x\x0a\x09\x09originY: self origin y\x0a\x09\x09width: self width\x0a\x09\x09height: self height\x0a\x09\x09xPosition: self position x\x0a\x09\x09yPosition: self position y\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height.",
+messageSends: ["drawImage:originX:originY:width:height:xPosition:yPosition:scaleWidth:scaleHeight:", "image", "x", "origin", "y", "width", "height", "position"],
 referencedClasses: []
 }),
 globals.Drawable);
@@ -1392,51 +1525,25 @@ globals.Drawable);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "identifier",
+selector: "image",
 protocol: 'accessing',
 fn: function (){
 var self=this;
-var $1;
-$1=self["@identifier"];
-return $1;
-},
-args: [],
-source: "identifier\x0a\x09^ identifier",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Drawable);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "identifier:",
-protocol: 'accessing',
-fn: function (anObject){
-var self=this;
-self["@identifier"]=anObject;
-return self},
-args: ["anObject"],
-source: "identifier: anObject\x0a\x09identifier := anObject",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Drawable);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "identifier:origin:size:",
-protocol: 'accessing',
-fn: function (aString,anOriginPoint,aSizePoint){
-var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-self._identifier_(aString);
-self._origin_(anOriginPoint);
-$1=self._size_(aSizePoint);
-return self}, function($ctx1) {$ctx1.fill(self,"identifier:origin:size:",{aString:aString,anOriginPoint:anOriginPoint,aSizePoint:aSizePoint},globals.Drawable)})},
-args: ["aString", "anOriginPoint", "aSizePoint"],
-source: "identifier: aString origin: anOriginPoint size: aSizePoint\x0a\x09self \x0a\x09\x09identifier: aString;\x0a\x09\x09origin: anOriginPoint;\x0a\x09\x09size: aSizePoint\x0a\x09",
-messageSends: ["identifier:", "origin:", "size:"],
+var $1,$2,$receiver;
+$1=self["@image"];
+if(($receiver = $1) == null || $receiver.isNil){
+self["@image"]=self._newImage();
+self["@image"];
+} else {
+$1;
+};
+$2=self["@image"];
+return $2;
+}, function($ctx1) {$ctx1.fill(self,"image",{},globals.Drawable)})},
+args: [],
+source: "image\x0a\x09image ifNil: [ image := self newImage ].\x0a\x09^ image",
+messageSends: ["ifNil:", "newImage"],
 referencedClasses: []
 }),
 globals.Drawable);
@@ -1452,6 +1559,24 @@ return false;
 args: [],
 source: "isParallax\x0a\x09^ false",
 messageSends: [],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "newImage",
+protocol: 'aspect',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(document)._createElement_("img");
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"newImage",{},globals.Drawable)})},
+args: [],
+source: "newImage\x0a\x09^ document createElement: 'img'",
+messageSends: ["createElement:"],
 referencedClasses: []
 }),
 globals.Drawable);
@@ -1483,6 +1608,45 @@ self["@origin"]=anObject;
 return self},
 args: ["anObject"],
 source: "origin: anObject\x0a\x09origin := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "position",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@position"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@position"]=(0).__at((0));
+$1=self["@position"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"position",{},globals.Drawable)})},
+args: [],
+source: "position\x0a\x09^ position ifNil: [ position := 0@0 ]",
+messageSends: ["ifNil:", "@"],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "position:",
+protocol: 'accessing',
+fn: function (aPosition){
+var self=this;
+self["@position"]=aPosition;
+return self},
+args: ["aPosition"],
+source: "position: aPosition\x0a\x09position := aPosition",
 messageSends: [],
 referencedClasses: []
 }),
@@ -1522,32 +1686,39 @@ globals.Drawable);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "source",
+selector: "source:",
 protocol: 'accessing',
-fn: function (){
+fn: function (anImageUrl){
 var self=this;
-var $1;
-$1=self["@source"];
-return $1;
-},
-args: [],
-source: "source\x0a\x09^ source",
-messageSends: [],
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+$1=self._image();
+_st($1)._src_(anImageUrl);
+$2=_st($1)._yourself();
+return self}, function($ctx1) {$ctx1.fill(self,"source:",{anImageUrl:anImageUrl},globals.Drawable)})},
+args: ["anImageUrl"],
+source: "source: anImageUrl\x0a\x09self image src: anImageUrl; yourself",
+messageSends: ["src:", "image", "yourself"],
 referencedClasses: []
 }),
 globals.Drawable);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "source:",
+selector: "source:origin:size:position:",
 protocol: 'accessing',
-fn: function (anObject){
+fn: function (aSourceString,anOriginPoint,aSizePoint,aPosition){
 var self=this;
-self["@source"]=anObject;
-return self},
-args: ["anObject"],
-source: "source: anObject\x0a\x09source := anObject",
-messageSends: [],
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._source_(aSourceString);
+self._origin_(anOriginPoint);
+self._size_(aSizePoint);
+$1=self._position_(aPosition);
+return self}, function($ctx1) {$ctx1.fill(self,"source:origin:size:position:",{aSourceString:aSourceString,anOriginPoint:anOriginPoint,aSizePoint:aSizePoint,aPosition:aPosition},globals.Drawable)})},
+args: ["aSourceString", "anOriginPoint", "aSizePoint", "aPosition"],
+source: "source: aSourceString origin: anOriginPoint size: aSizePoint position: aPosition\x0a\x09self \x0a\x09\x09source: aSourceString;\x0a\x09\x09origin: anOriginPoint;\x0a\x09\x09size: aSizePoint;\x0a\x09\x09position: aPosition",
+messageSends: ["source:", "origin:", "size:", "position:"],
 referencedClasses: []
 }),
 globals.Drawable);
@@ -1570,9 +1741,77 @@ referencedClasses: []
 }),
 globals.Drawable);
 
+smalltalk.addMethod(
+smalltalk.method({
+selector: "x",
+protocol: 'attributes',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._position())._x();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"x",{},globals.Drawable)})},
+args: [],
+source: "x\x0a\x09^ self position x",
+messageSends: ["x", "position"],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "x:",
+protocol: 'attributes',
+fn: function (anInteger){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._position())._x_(anInteger);
+return self}, function($ctx1) {$ctx1.fill(self,"x:",{anInteger:anInteger},globals.Drawable)})},
+args: ["anInteger"],
+source: "x: anInteger\x0a\x09self position x: anInteger",
+messageSends: ["x:", "position"],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "y",
+protocol: 'attributes',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._position())._y();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"y",{},globals.Drawable)})},
+args: [],
+source: "y\x0a\x09^ self position y",
+messageSends: ["y", "position"],
+referencedClasses: []
+}),
+globals.Drawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "y:",
+protocol: 'attributes',
+fn: function (anInteger){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._position())._y_(anInteger);
+return self}, function($ctx1) {$ctx1.fill(self,"y:",{anInteger:anInteger},globals.Drawable)})},
+args: ["anInteger"],
+source: "y: anInteger\x0a\x09self position y: anInteger",
+messageSends: ["y:", "position"],
+referencedClasses: []
+}),
+globals.Drawable);
 
 
-smalltalk.addClass('FrameGroup', globals.Drawable, ['frameCount', 'currentFrameNumber', 'frameRate'], 'Ludus');
+
+smalltalk.addClass('FrameGroup', globals.Drawable, ['identifier', 'frameCount', 'currentFrameNumber', 'frameRate'], 'Ludus');
 globals.FrameGroup.comment="I represent a group of ordered frames. Each frame is a clip rectangle that a Sprite can retrieve from me to paint itself.";
 smalltalk.addMethod(
 smalltalk.method({
@@ -1730,6 +1969,38 @@ return $1;
 args: [],
 source: "frameSize\x0a\x09^ self size",
 messageSends: ["size"],
+referencedClasses: []
+}),
+globals.FrameGroup);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "identifier",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@identifier"];
+return $1;
+},
+args: [],
+source: "identifier\x0a\x09^ identifier",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FrameGroup);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "identifier:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@identifier"]=anObject;
+return self},
+args: ["anObject"],
+source: "identifier: anObject\x0a\x09identifier := anObject",
+messageSends: [],
 referencedClasses: []
 }),
 globals.FrameGroup);
@@ -2025,7 +2296,7 @@ globals.ParallaxImage);
 
 
 
-smalltalk.addClass('Game', globals.Widget, ['canvas', 'context', 'fps', 'keys', 'step', 'end', 'mousePosition', 'mouseDown', 'sounds', 'screens', 'pause', 'currentScreen'], 'Ludus');
+smalltalk.addClass('Game', globals.Widget, ['inputHandler', 'canvas', 'context', 'fps', 'step', 'end', 'sounds', 'screens', 'pause', 'currentScreen'], 'Ludus');
 globals.Game.comment="I am a game. You need to override a couple of my methods to make me usable:\x0a\x0a**#startGame** Here you can define my intial conditions, such as the size of the canvas, my sounds, the background properties, the FPS, etc.\x0a\x0a**#step**  Here you can define what has to be done at each game cycle, or step. This method should control posititions, collisions, mouse and keyboard events, etc. This method should not deal with any graphic properties, these should be dealt with by:\x0a\x0a**#draw**  This is the method that controls my view. Here you should define the drawing of sprites and other graphic elements. Don't forget to clear the canvas before re-drawing sprites, if your game requires so.";
 smalltalk.addMethod(
 smalltalk.method({
@@ -2270,22 +2541,6 @@ globals.Game);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "eventData:",
-protocol: 'events - private',
-fn: function (anEvent){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-return $._data($('#' + self._class()._name())[0],'events')[anEvent];
-return self}, function($ctx1) {$ctx1.fill(self,"eventData:",{anEvent:anEvent},globals.Game)})},
-args: ["anEvent"],
-source: "eventData: anEvent\x0a\x09<return $._data($('#' + self._class()._name())[0],'events')[anEvent]>",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "everyStepNumber:do:",
 protocol: 'control',
 fn: function (anInteger,aBlock){
@@ -2427,36 +2682,38 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 ($ctx1.supercall = true, globals.Game.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._initializeKeys();
-self["@mouseDown"]=false;
 self["@fps"]=(30);
 self["@step"]=(1);
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.Game)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self initializeKeys.\x0a\x09mouseDown := false.\x0a\x09fps := 30.\x0a\x09step := 1.",
-messageSends: ["initialize", "initializeKeys"],
+source: "initialize\x0a\x09super initialize.\x0a\x09fps := 30.\x0a\x09step := 1.",
+messageSends: ["initialize"],
 referencedClasses: []
 }),
 globals.Game);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "initializeKeys",
-protocol: 'initialization',
+selector: "inputHandler",
+protocol: 'accessing',
 fn: function (){
 var self=this;
-function $Array(){return globals.Array||(typeof Array=="undefined"?nil:Array)}
+function $InputHandler(){return globals.InputHandler||(typeof InputHandler=="undefined"?nil:InputHandler)}
 return smalltalk.withContext(function($ctx1) { 
-self["@keys"]=_st($Array())._new();
-(255)._timesRepeat_((function(){
-return smalltalk.withContext(function($ctx2) {
-return _st(self["@keys"])._add_(false);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-return self}, function($ctx1) {$ctx1.fill(self,"initializeKeys",{},globals.Game)})},
+var $2,$1,$receiver;
+$2=self["@inputHandler"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@inputHandler"]=_st(_st($InputHandler())._new())._canvas_(self._canvas());
+$1=self["@inputHandler"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"inputHandler",{},globals.Game)})},
 args: [],
-source: "initializeKeys\x0a\x09keys := Array new.\x0a\x09255 timesRepeat: [ keys add: false ].",
-messageSends: ["new", "timesRepeat:", "add:"],
-referencedClasses: ["Array"]
+source: "inputHandler\x0a\x09^ inputHandler ifNil: [ inputHandler := InputHandler new canvas: self canvas ]",
+messageSends: ["ifNil:", "canvas:", "new", "canvas"],
+referencedClasses: ["InputHandler"]
 }),
 globals.Game);
 
@@ -2480,23 +2737,6 @@ return $1;
 args: [],
 source: "isGameOver\x0a\x09^ end ifNil: [ end := false ]",
 messageSends: ["ifNil:"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "isMouseDown",
-protocol: 'events - testing',
-fn: function (){
-var self=this;
-var $1;
-$1=self["@mouseDown"];
-return $1;
-},
-args: [],
-source: "isMouseDown\x0a\x09^ mouseDown",
-messageSends: [],
 referencedClasses: []
 }),
 globals.Game);
@@ -2527,55 +2767,6 @@ globals.Game);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "keyDown:",
-protocol: 'events - private',
-fn: function (evt){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-_st(self._keys())._at_put_(_st(evt)._keyCode(),true);
-return self}, function($ctx1) {$ctx1.fill(self,"keyDown:",{evt:evt},globals.Game)})},
-args: ["evt"],
-source: "keyDown: evt\x0a\x09self keys at: evt keyCode put: true.",
-messageSends: ["at:put:", "keys", "keyCode"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "keyUp:",
-protocol: 'events - private',
-fn: function (evt){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-_st(self._keys())._at_put_(_st(evt)._keyCode(),false);
-return self}, function($ctx1) {$ctx1.fill(self,"keyUp:",{evt:evt},globals.Game)})},
-args: ["evt"],
-source: "keyUp: evt\x0a\x09self keys at: evt keyCode put: false.",
-messageSends: ["at:put:", "keys", "keyCode"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "keys",
-protocol: 'events - private',
-fn: function (){
-var self=this;
-var $1;
-$1=self["@keys"];
-return $1;
-},
-args: [],
-source: "keys\x0a\x09^ keys",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "kill",
 protocol: 'control',
 fn: function (){
@@ -2593,219 +2784,27 @@ globals.Game);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "mouseDown",
-protocol: 'accessing',
-fn: function (){
-var self=this;
-var $1;
-$1=self["@mouseDown"];
-return $1;
-},
-args: [],
-source: "mouseDown\x0a\x09^ mouseDown",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "mouseDown:",
-protocol: 'events - private',
-fn: function (evt){
-var self=this;
-self["@mouseDown"]=true;
-return self},
-args: ["evt"],
-source: "mouseDown: evt\x0a\x09mouseDown := true.",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "mouseMove:",
-protocol: 'events - private',
-fn: function (evt){
-var self=this;
-var canvasPosition,windowScrollTop,windowScrollLeft,canvasRelative;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3;
-windowScrollTop=self._windowScrollTop();
-windowScrollLeft=self._windowScrollLeft();
-canvasPosition=_st("canvas"._asJQuery())._position();
-$1=_st(_st(canvasPosition)._left()).__minus(windowScrollLeft);
-$ctx1.sendIdx["-"]=1;
-$2=_st(_st(canvasPosition)._top()).__minus(windowScrollTop);
-$ctx1.sendIdx["-"]=2;
-canvasRelative=_st($1).__at($2);
-$ctx1.sendIdx["@"]=1;
-$3=_st(_st(evt)._clientX()).__minus(_st(canvasRelative)._x());
-$ctx1.sendIdx["-"]=3;
-self["@mousePosition"]=_st($3).__at(_st(_st(evt)._clientY()).__minus(_st(canvasRelative)._y()));
-return self}, function($ctx1) {$ctx1.fill(self,"mouseMove:",{evt:evt,canvasPosition:canvasPosition,windowScrollTop:windowScrollTop,windowScrollLeft:windowScrollLeft,canvasRelative:canvasRelative},globals.Game)})},
-args: ["evt"],
-source: "mouseMove: evt\x0a\x09| canvasPosition windowScrollTop windowScrollLeft canvasRelative |\x0a\x0a\x09windowScrollTop := self windowScrollTop.\x0a\x09windowScrollLeft := self windowScrollLeft.\x0a\x09canvasPosition := 'canvas' asJQuery position.\x0a\x0a\x09canvasRelative := (canvasPosition left - windowScrollLeft) @ (canvasPosition top - windowScrollTop).\x0a\x09mousePosition := (evt clientX - canvasRelative x) @ (evt clientY - canvasRelative y).",
-messageSends: ["windowScrollTop", "windowScrollLeft", "position", "asJQuery", "@", "-", "left", "top", "clientX", "x", "clientY", "y"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "mousePosition",
-protocol: 'events',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$receiver;
-$2=self["@mousePosition"];
-if(($receiver = $2) == null || $receiver.isNil){
-self["@mousePosition"]=(0).__at((0));
-$1=self["@mousePosition"];
-} else {
-$1=$2;
-};
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"mousePosition",{},globals.Game)})},
-args: [],
-source: "mousePosition\x0a\x09^ mousePosition ifNil: [ mousePosition := 0 @ 0 ]",
-messageSends: ["ifNil:", "@"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "mouseUp:",
-protocol: 'events - private',
-fn: function (evt){
-var self=this;
-self["@mouseDown"]=false;
-return self},
-args: ["evt"],
-source: "mouseUp: evt\x0a\x09mouseDown := false.",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "onMouseClickDo:",
-protocol: 'events',
-fn: function (aBlock){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$receiver;
-$1=self._eventData_("click");
-if(($receiver = $1) == null || $receiver.isNil){
-_st(self._canvas())._onClick_(aBlock);
-} else {
-$1;
-};
-return self}, function($ctx1) {$ctx1.fill(self,"onMouseClickDo:",{aBlock:aBlock},globals.Game)})},
-args: ["aBlock"],
-source: "onMouseClickDo: aBlock\x0a\x09(self eventData: 'click')\x0a\x09\x09ifNil: [ self canvas onClick: aBlock ]",
-messageSends: ["ifNil:", "eventData:", "onClick:", "canvas"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "onMouseDownDo:",
-protocol: 'events',
-fn: function (aBlock){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$receiver;
-$1=self._eventData_("mousedown");
-if(($receiver = $1) == null || $receiver.isNil){
-_st(self._canvas())._onMouseDown_(aBlock);
-} else {
-$1;
-};
-return self}, function($ctx1) {$ctx1.fill(self,"onMouseDownDo:",{aBlock:aBlock},globals.Game)})},
-args: ["aBlock"],
-source: "onMouseDownDo: aBlock\x0a\x09(self eventData: 'mousedown')\x0a\x09\x09ifNil: [ self canvas onMouseDown: aBlock ]",
-messageSends: ["ifNil:", "eventData:", "onMouseDown:", "canvas"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "onMouseUpDo:",
-protocol: 'events',
-fn: function (aBlock){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$receiver;
-$1=self._eventData_("mouseup");
-if(($receiver = $1) == null || $receiver.isNil){
-_st(self._canvas())._onMouseUp_(aBlock);
-} else {
-$1;
-};
-return self}, function($ctx1) {$ctx1.fill(self,"onMouseUpDo:",{aBlock:aBlock},globals.Game)})},
-args: ["aBlock"],
-source: "onMouseUpDo: aBlock\x0a\x09(self eventData: 'mouseup')\x0a\x09\x09ifNil: [ self canvas onMouseUp: aBlock ]",
-messageSends: ["ifNil:", "eventData:", "onMouseUp:", "canvas"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "renderOn:",
 protocol: 'rendering',
 fn: function (html){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6,$7;
+var $1,$2,$3;
 self["@canvas"]=_st(html)._canvas();
 $ctx1.sendIdx["canvas"]=1;
 $1=self._canvas();
-$ctx1.sendIdx["canvas"]=2;
 _st($1)._at_put_("width",(250));
 $ctx1.sendIdx["at:put:"]=1;
 _st($1)._at_put_("height",(250));
 $2=_st($1)._id_(_st(self._class())._name());
 self["@context"]=_st(_st(self["@canvas"])._element())._getContext_("2d");
-$3=_st(window)._jQuery_(document);
-$ctx1.sendIdx["jQuery:"]=1;
-_st($3)._keydown_((function(evt){
-return smalltalk.withContext(function($ctx2) {
-return self._keyDown_(evt);
-}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,1)})}));
-_st(_st(window)._jQuery_(document))._keyup_((function(evt){
-return smalltalk.withContext(function($ctx2) {
-return self._keyUp_(evt);
-}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,2)})}));
-$4=self._canvas();
-$ctx1.sendIdx["canvas"]=3;
-_st($4)._onMouseDown_((function(evt){
-return smalltalk.withContext(function($ctx2) {
-return self._mouseDown_(evt);
-}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,3)})}));
-$5=_st(self._canvas())._asJQuery();
-_st($5)._bind_do_("mouseup",(function(evt){
-return smalltalk.withContext(function($ctx2) {
-return self._mouseUp_(evt);
-}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,4)})}));
-$ctx1.sendIdx["bind:do:"]=1;
-$6=_st($5)._bind_do_("mousemove",(function(evt){
-return smalltalk.withContext(function($ctx2) {
-return self._mouseMove_(evt);
-}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,5)})}));
+_st(self._inputHandler())._bindEvents();
 self._startGame();
-$7=self._gameLoop();
+$3=self._gameLoop();
 return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.Game)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09\x22Do not override me, use #startGame instead\x22\x0a\x09canvas := html canvas.\x0a\x09self canvas \x0a\x09\x09at: 'width' put: 250;\x0a\x09\x09at: 'height' put: 250;\x0a\x09\x09id: self class name.\x0a\x09context := canvas element getContext: '2d'.\x0a\x0a\x09(window jQuery: document) keydown: [ :evt | self keyDown: evt ].\x0a\x09(window jQuery: document) keyup: [ :evt | self keyUp: evt ].\x0a\x09self canvas onMouseDown: [ :evt | self mouseDown: evt ].\x0a\x09self canvas asJQuery \x0a\x09\x09bind: 'mouseup' do: [ :evt | self mouseUp: evt ];\x0a\x09\x09bind: 'mousemove' do: [ :evt | self mouseMove: evt ].\x0a\x0a\x09self \x0a\x09\x09startGame;\x0a\x09\x09gameLoop.",
-messageSends: ["canvas", "at:put:", "id:", "name", "class", "getContext:", "element", "keydown:", "jQuery:", "keyDown:", "keyup:", "keyUp:", "onMouseDown:", "mouseDown:", "bind:do:", "asJQuery", "mouseUp:", "mouseMove:", "startGame", "gameLoop"],
+source: "renderOn: html\x0a\x09\x22Do not override me, use #startGame instead\x22\x0a\x09canvas := html canvas.\x0a\x09self canvas \x0a\x09\x09at: 'width' put: 250;\x0a\x09\x09at: 'height' put: 250;\x0a\x09\x09id: self class name.\x0a\x09context := canvas element getContext: '2d'.\x0a\x0a\x09self inputHandler bindEvents.\x0a\x0a\x09self \x0a\x09\x09startGame;\x0a\x09\x09gameLoop.",
+messageSends: ["canvas", "at:put:", "id:", "name", "class", "getContext:", "element", "bindEvents", "inputHandler", "startGame", "gameLoop"],
 referencedClasses: []
 }),
 globals.Game);
@@ -3035,68 +3034,6 @@ globals.Game);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "whileKeyPressed:do:",
-protocol: 'events',
-fn: function (aKeyCode,aBlock){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $3,$2,$1;
-$3=self._keys();
-$ctx1.sendIdx["keys"]=1;
-$2=_st($3)._at_ifAbsent_(aKeyCode,(function(){
-return false;
-}));
-$1=_st($2)._and_((function(){
-return smalltalk.withContext(function($ctx2) {
-return _st(self._keys())._at_(aKeyCode);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
-_st($1)._ifTrue_(aBlock);
-return self}, function($ctx1) {$ctx1.fill(self,"whileKeyPressed:do:",{aKeyCode:aKeyCode,aBlock:aBlock},globals.Game)})},
-args: ["aKeyCode", "aBlock"],
-source: "whileKeyPressed: aKeyCode do: aBlock\x0a\x09((self keys at: aKeyCode ifAbsent: [ false ]) and: [ self keys at: aKeyCode ]) ifTrue: aBlock",
-messageSends: ["ifTrue:", "and:", "at:ifAbsent:", "keys", "at:"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "whileMouseDownDo:",
-protocol: 'events',
-fn: function (aBlock){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=self._isMouseDown();
-_st($1)._ifTrue_(aBlock);
-return self}, function($ctx1) {$ctx1.fill(self,"whileMouseDownDo:",{aBlock:aBlock},globals.Game)})},
-args: ["aBlock"],
-source: "whileMouseDownDo: aBlock\x0a\x09self isMouseDown ifTrue: aBlock",
-messageSends: ["ifTrue:", "isMouseDown"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "whileMouseUpDo:",
-protocol: 'events',
-fn: function (aBlock){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=self._isMouseDown();
-_st($1)._ifFalse_(aBlock);
-return self}, function($ctx1) {$ctx1.fill(self,"whileMouseUpDo:",{aBlock:aBlock},globals.Game)})},
-args: ["aBlock"],
-source: "whileMouseUpDo: aBlock\x0a\x09self isMouseDown ifFalse: aBlock",
-messageSends: ["ifFalse:", "isMouseDown"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "width",
 protocol: 'attributes',
 fn: function (){
@@ -3125,38 +3062,6 @@ return self}, function($ctx1) {$ctx1.fill(self,"width:",{anInteger:anInteger},gl
 args: ["anInteger"],
 source: "width: anInteger\x0a\x09self canvas at: 'width' put: anInteger.",
 messageSends: ["at:put:", "canvas"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "windowScrollLeft",
-protocol: 'attributes',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-return $(window).scrollLeft();;
-return self}, function($ctx1) {$ctx1.fill(self,"windowScrollLeft",{},globals.Game)})},
-args: [],
-source: "windowScrollLeft\x0a\x09<return $(window).scrollLeft();>",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "windowScrollTop",
-protocol: 'attributes',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-return $(window).scrollTop();;
-return self}, function($ctx1) {$ctx1.fill(self,"windowScrollTop",{},globals.Game)})},
-args: [],
-source: "windowScrollTop\x0a\x09<return $(window).scrollTop();>",
-messageSends: [],
 referencedClasses: []
 }),
 globals.Game);
@@ -3262,16 +3167,16 @@ globals.Screen);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "draw:atPosition:",
+selector: "draw:",
 protocol: 'drawing',
-fn: function (aDrawable,aPoint){
+fn: function (aDrawable){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(aDrawable)._drawOnContext_atPosition_(self._context(),aPoint);
-return self}, function($ctx1) {$ctx1.fill(self,"draw:atPosition:",{aDrawable:aDrawable,aPoint:aPoint},globals.Screen)})},
-args: ["aDrawable", "aPoint"],
-source: "draw: aDrawable atPosition: aPoint\x0a\x09aDrawable drawOnContext: self context atPosition: aPoint",
-messageSends: ["drawOnContext:atPosition:", "context"],
+_st(aDrawable)._drawOnContext_(self._context());
+return self}, function($ctx1) {$ctx1.fill(self,"draw:",{aDrawable:aDrawable},globals.Screen)})},
+args: ["aDrawable"],
+source: "draw: aDrawable\x0a\x09aDrawable drawOnContext: self context",
+messageSends: ["drawOnContext:", "context"],
 referencedClasses: []
 }),
 globals.Screen);
@@ -3304,6 +3209,24 @@ return self},
 args: ["anObject"],
 source: "game: anObject\x0a\x09game := anObject",
 messageSends: [],
+referencedClasses: []
+}),
+globals.Screen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "inputHandler",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._game())._inputHandler();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"inputHandler",{},globals.Screen)})},
+args: [],
+source: "inputHandler\x0a\x09^ self game inputHandler",
+messageSends: ["inputHandler", "game"],
 referencedClasses: []
 }),
 globals.Screen);
@@ -3398,6 +3321,465 @@ messageSends: ["name:", "new"],
 referencedClasses: []
 }),
 globals.Screen.klass);
+
+
+smalltalk.addClass('InputHandler', globals.Object, ['canvas', 'keys', 'mousePosition', 'mouseDown'], 'Ludus');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "bindEvents",
+protocol: 'events - private',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3,$4;
+$1=_st(window)._jQuery_(document);
+$ctx1.sendIdx["jQuery:"]=1;
+_st($1)._keydown_((function(evt){
+return smalltalk.withContext(function($ctx2) {
+return self._keyDown_(evt);
+}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,1)})}));
+_st(_st(window)._jQuery_(document))._keyup_((function(evt){
+return smalltalk.withContext(function($ctx2) {
+return self._keyUp_(evt);
+}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,2)})}));
+$2=self._canvas();
+$ctx1.sendIdx["canvas"]=1;
+_st($2)._onMouseDown_((function(evt){
+return smalltalk.withContext(function($ctx2) {
+return self._mouseDown_(evt);
+}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,3)})}));
+$3=_st(self._canvas())._asJQuery();
+_st($3)._bind_do_("mouseup",(function(evt){
+return smalltalk.withContext(function($ctx2) {
+return self._mouseUp_(evt);
+}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,4)})}));
+$ctx1.sendIdx["bind:do:"]=1;
+$4=_st($3)._bind_do_("mousemove",(function(evt){
+return smalltalk.withContext(function($ctx2) {
+return self._mouseMove_(evt);
+}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,5)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"bindEvents",{},globals.InputHandler)})},
+args: [],
+source: "bindEvents\x0a\x09(window jQuery: document) keydown: [ :evt | self keyDown: evt ].\x0a\x09(window jQuery: document) keyup: [ :evt | self keyUp: evt ].\x0a\x09self canvas onMouseDown: [ :evt | self mouseDown: evt ].\x0a\x09self canvas asJQuery \x0a\x09\x09bind: 'mouseup' do: [ :evt | self mouseUp: evt ];\x0a\x09\x09bind: 'mousemove' do: [ :evt | self mouseMove: evt ].",
+messageSends: ["keydown:", "jQuery:", "keyDown:", "keyup:", "keyUp:", "onMouseDown:", "canvas", "mouseDown:", "bind:do:", "asJQuery", "mouseUp:", "mouseMove:"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "canvas",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@canvas"];
+return $1;
+},
+args: [],
+source: "canvas\x0a\x09^ canvas",
+messageSends: [],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "canvas:",
+protocol: 'accessing',
+fn: function (aCanvas){
+var self=this;
+self["@canvas"]=aCanvas;
+return self},
+args: ["aCanvas"],
+source: "canvas: aCanvas\x0a\x09canvas := aCanvas",
+messageSends: [],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "eventData:",
+protocol: 'events - private',
+fn: function (anEvent){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+return $._data($('#' + self._canvas()._element().id)[0],'events')[anEvent];
+return self}, function($ctx1) {$ctx1.fill(self,"eventData:",{anEvent:anEvent},globals.InputHandler)})},
+args: ["anEvent"],
+source: "eventData: anEvent\x0a\x09<return $._data($('#' + self._canvas()._element().id)[0],'events')[anEvent]>",
+messageSends: [],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "initialize",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+($ctx1.supercall = true, globals.InputHandler.superclass.fn.prototype._initialize.apply(_st(self), []));
+$ctx1.supercall = false;
+self._initializeKeys();
+self["@mouseDown"]=false;
+return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.InputHandler)})},
+args: [],
+source: "initialize\x0a\x09super initialize.\x0a\x09self initializeKeys.\x0a\x09mouseDown := false.",
+messageSends: ["initialize", "initializeKeys"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "initializeKeys",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+function $Array(){return globals.Array||(typeof Array=="undefined"?nil:Array)}
+return smalltalk.withContext(function($ctx1) { 
+self["@keys"]=_st($Array())._new();
+(255)._timesRepeat_((function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(self["@keys"])._add_(false);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"initializeKeys",{},globals.InputHandler)})},
+args: [],
+source: "initializeKeys\x0a\x09keys := Array new.\x0a\x09255 timesRepeat: [ keys add: false ].",
+messageSends: ["new", "timesRepeat:", "add:"],
+referencedClasses: ["Array"]
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isMouseDown",
+protocol: 'events - testing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@mouseDown"];
+return $1;
+},
+args: [],
+source: "isMouseDown\x0a\x09^ mouseDown",
+messageSends: [],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "keyDown:",
+protocol: 'events - private',
+fn: function (evt){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._keys())._at_put_(_st(evt)._keyCode(),true);
+return self}, function($ctx1) {$ctx1.fill(self,"keyDown:",{evt:evt},globals.InputHandler)})},
+args: ["evt"],
+source: "keyDown: evt\x0a\x09self keys at: evt keyCode put: true.",
+messageSends: ["at:put:", "keys", "keyCode"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "keyUp:",
+protocol: 'events - private',
+fn: function (evt){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._keys())._at_put_(_st(evt)._keyCode(),false);
+return self}, function($ctx1) {$ctx1.fill(self,"keyUp:",{evt:evt},globals.InputHandler)})},
+args: ["evt"],
+source: "keyUp: evt\x0a\x09self keys at: evt keyCode put: false.",
+messageSends: ["at:put:", "keys", "keyCode"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "keys",
+protocol: 'events - private',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@keys"];
+return $1;
+},
+args: [],
+source: "keys\x0a\x09^ keys",
+messageSends: [],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "mouseDown",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@mouseDown"];
+return $1;
+},
+args: [],
+source: "mouseDown\x0a\x09^ mouseDown",
+messageSends: [],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "mouseDown:",
+protocol: 'events - private',
+fn: function (evt){
+var self=this;
+self["@mouseDown"]=true;
+return self},
+args: ["evt"],
+source: "mouseDown: evt\x0a\x09mouseDown := true.",
+messageSends: [],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "mouseMove:",
+protocol: 'events - private',
+fn: function (evt){
+var self=this;
+var canvasPosition,windowScrollTop,windowScrollLeft,canvasRelative;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3;
+windowScrollTop=self._windowScrollTop();
+windowScrollLeft=self._windowScrollLeft();
+canvasPosition=_st("canvas"._asJQuery())._position();
+$1=_st(_st(canvasPosition)._left()).__minus(windowScrollLeft);
+$ctx1.sendIdx["-"]=1;
+$2=_st(_st(canvasPosition)._top()).__minus(windowScrollTop);
+$ctx1.sendIdx["-"]=2;
+canvasRelative=_st($1).__at($2);
+$ctx1.sendIdx["@"]=1;
+$3=_st(_st(evt)._clientX()).__minus(_st(canvasRelative)._x());
+$ctx1.sendIdx["-"]=3;
+self["@mousePosition"]=_st($3).__at(_st(_st(evt)._clientY()).__minus(_st(canvasRelative)._y()));
+return self}, function($ctx1) {$ctx1.fill(self,"mouseMove:",{evt:evt,canvasPosition:canvasPosition,windowScrollTop:windowScrollTop,windowScrollLeft:windowScrollLeft,canvasRelative:canvasRelative},globals.InputHandler)})},
+args: ["evt"],
+source: "mouseMove: evt\x0a\x09| canvasPosition windowScrollTop windowScrollLeft canvasRelative |\x0a\x0a\x09windowScrollTop := self windowScrollTop.\x0a\x09windowScrollLeft := self windowScrollLeft.\x0a\x09canvasPosition := 'canvas' asJQuery position.\x0a\x0a\x09canvasRelative := (canvasPosition left - windowScrollLeft) @ (canvasPosition top - windowScrollTop).\x0a\x09mousePosition := (evt clientX - canvasRelative x) @ (evt clientY - canvasRelative y).",
+messageSends: ["windowScrollTop", "windowScrollLeft", "position", "asJQuery", "@", "-", "left", "top", "clientX", "x", "clientY", "y"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "mousePosition",
+protocol: 'events',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@mousePosition"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@mousePosition"]=(0).__at((0));
+$1=self["@mousePosition"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"mousePosition",{},globals.InputHandler)})},
+args: [],
+source: "mousePosition\x0a\x09^ mousePosition ifNil: [ mousePosition := 0 @ 0 ]",
+messageSends: ["ifNil:", "@"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "mouseUp:",
+protocol: 'events - private',
+fn: function (evt){
+var self=this;
+self["@mouseDown"]=false;
+return self},
+args: ["evt"],
+source: "mouseUp: evt\x0a\x09mouseDown := false.",
+messageSends: [],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "onMouseClickDo:",
+protocol: 'events',
+fn: function (aBlock){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$receiver;
+$1=self._eventData_("click");
+if(($receiver = $1) == null || $receiver.isNil){
+_st(self._canvas())._onClick_(aBlock);
+} else {
+$1;
+};
+return self}, function($ctx1) {$ctx1.fill(self,"onMouseClickDo:",{aBlock:aBlock},globals.InputHandler)})},
+args: ["aBlock"],
+source: "onMouseClickDo: aBlock\x0a\x09(self eventData: 'click')\x0a\x09\x09ifNil: [ self canvas onClick: aBlock ]",
+messageSends: ["ifNil:", "eventData:", "onClick:", "canvas"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "onMouseDownDo:",
+protocol: 'events',
+fn: function (aBlock){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$receiver;
+$1=self._eventData_("mousedown");
+if(($receiver = $1) == null || $receiver.isNil){
+_st(self._canvas())._onMouseDown_(aBlock);
+} else {
+$1;
+};
+return self}, function($ctx1) {$ctx1.fill(self,"onMouseDownDo:",{aBlock:aBlock},globals.InputHandler)})},
+args: ["aBlock"],
+source: "onMouseDownDo: aBlock\x0a\x09(self eventData: 'mousedown')\x0a\x09\x09ifNil: [ self canvas onMouseDown: aBlock ]",
+messageSends: ["ifNil:", "eventData:", "onMouseDown:", "canvas"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "onMouseUpDo:",
+protocol: 'events',
+fn: function (aBlock){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$receiver;
+$1=self._eventData_("mouseup");
+if(($receiver = $1) == null || $receiver.isNil){
+_st(self._canvas())._onMouseUp_(aBlock);
+} else {
+$1;
+};
+return self}, function($ctx1) {$ctx1.fill(self,"onMouseUpDo:",{aBlock:aBlock},globals.InputHandler)})},
+args: ["aBlock"],
+source: "onMouseUpDo: aBlock\x0a\x09(self eventData: 'mouseup')\x0a\x09\x09ifNil: [ self canvas onMouseUp: aBlock ]",
+messageSends: ["ifNil:", "eventData:", "onMouseUp:", "canvas"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "whileKeyPressed:do:",
+protocol: 'events',
+fn: function (aKeyCode,aBlock){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $3,$2,$1;
+$3=self._keys();
+$ctx1.sendIdx["keys"]=1;
+$2=_st($3)._at_ifAbsent_(aKeyCode,(function(){
+return false;
+}));
+$1=_st($2)._and_((function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(self._keys())._at_(aKeyCode);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+_st($1)._ifTrue_(aBlock);
+return self}, function($ctx1) {$ctx1.fill(self,"whileKeyPressed:do:",{aKeyCode:aKeyCode,aBlock:aBlock},globals.InputHandler)})},
+args: ["aKeyCode", "aBlock"],
+source: "whileKeyPressed: aKeyCode do: aBlock\x0a\x09((self keys at: aKeyCode ifAbsent: [ false ]) and: [ self keys at: aKeyCode ]) ifTrue: aBlock",
+messageSends: ["ifTrue:", "and:", "at:ifAbsent:", "keys", "at:"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "whileMouseDownDo:",
+protocol: 'events',
+fn: function (aBlock){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=self._isMouseDown();
+_st($1)._ifTrue_(aBlock);
+return self}, function($ctx1) {$ctx1.fill(self,"whileMouseDownDo:",{aBlock:aBlock},globals.InputHandler)})},
+args: ["aBlock"],
+source: "whileMouseDownDo: aBlock\x0a\x09self isMouseDown ifTrue: aBlock",
+messageSends: ["ifTrue:", "isMouseDown"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "whileMouseUpDo:",
+protocol: 'events',
+fn: function (aBlock){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=self._isMouseDown();
+_st($1)._ifFalse_(aBlock);
+return self}, function($ctx1) {$ctx1.fill(self,"whileMouseUpDo:",{aBlock:aBlock},globals.InputHandler)})},
+args: ["aBlock"],
+source: "whileMouseUpDo: aBlock\x0a\x09self isMouseDown ifFalse: aBlock",
+messageSends: ["ifFalse:", "isMouseDown"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "windowScrollLeft",
+protocol: 'attributes',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+return $(window).scrollLeft();;
+return self}, function($ctx1) {$ctx1.fill(self,"windowScrollLeft",{},globals.InputHandler)})},
+args: [],
+source: "windowScrollLeft\x0a\x09<return $(window).scrollLeft();>",
+messageSends: [],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "windowScrollTop",
+protocol: 'attributes',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+return $(window).scrollTop();;
+return self}, function($ctx1) {$ctx1.fill(self,"windowScrollTop",{},globals.InputHandler)})},
+args: [],
+source: "windowScrollTop\x0a\x09<return $(window).scrollTop();>",
+messageSends: [],
+referencedClasses: []
+}),
+globals.InputHandler);
+
 
 
 smalltalk.addClass('Key', globals.Object, [], 'Ludus');
