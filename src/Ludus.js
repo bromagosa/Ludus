@@ -2,7 +2,7 @@ define("HOS/Ludus", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "ambe
 smalltalk.addPackage('Ludus');
 smalltalk.packages["Ludus"].transport = {"type":"amd","amdNamespace":"HOS"};
 
-smalltalk.addClass('Animation', globals.Object, ['spriteSheet', 'currentFrameGroup', 'frameGroups', 'animating', 'loop'], 'Ludus');
+smalltalk.addClass('Animation', globals.Object, ['spriteSheet', 'currentFrameGroup', 'frameGroups', 'animating', 'loop', 'image'], 'Ludus');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "addFrameGroupNamed:origin:size:frameCount:",
@@ -222,6 +222,47 @@ globals.Animation);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "image",
+protocol: 'attributes',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$receiver;
+$1=self["@image"];
+if(($receiver = $1) == null || $receiver.isNil){
+self["@image"]=self._newImage();
+self["@image"];
+} else {
+$1;
+};
+$2=self["@image"];
+return $2;
+}, function($ctx1) {$ctx1.fill(self,"image",{},globals.Animation)})},
+args: [],
+source: "image\x0a\x09image ifNil: [ image := self newImage ].\x0a\x09^ image",
+messageSends: ["ifNil:", "newImage"],
+referencedClasses: []
+}),
+globals.Animation);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "imageSrc:",
+protocol: 'attributes',
+fn: function (anImageUrl){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._image())._src_(anImageUrl);
+return self}, function($ctx1) {$ctx1.fill(self,"imageSrc:",{anImageUrl:anImageUrl},globals.Animation)})},
+args: ["anImageUrl"],
+source: "imageSrc: anImageUrl\x0a\x09self image src: anImageUrl",
+messageSends: ["src:", "image"],
+referencedClasses: []
+}),
+globals.Animation);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "loop",
 protocol: 'animation',
 fn: function (){
@@ -366,47 +407,6 @@ return self}, function($ctx1) {$ctx1.fill(self,"restartAnimation",{},globals.Ani
 args: [],
 source: "restartAnimation\x0a\x09self stopAnimation.\x0a\x09self currentFrameGroup toFirstFrame.\x0a\x09self startAnimation.",
 messageSends: ["stopAnimation", "toFirstFrame", "currentFrameGroup", "startAnimation"],
-referencedClasses: []
-}),
-globals.Animation);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "spriteSheet",
-protocol: 'attributes',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$receiver;
-$1=self["@spriteSheet"];
-if(($receiver = $1) == null || $receiver.isNil){
-self["@spriteSheet"]=self._newImage();
-self["@spriteSheet"];
-} else {
-$1;
-};
-$2=self["@spriteSheet"];
-return $2;
-}, function($ctx1) {$ctx1.fill(self,"spriteSheet",{},globals.Animation)})},
-args: [],
-source: "spriteSheet\x0a\x09spriteSheet ifNil: [ spriteSheet := self newImage ].\x0a\x09^ spriteSheet",
-messageSends: ["ifNil:", "newImage"],
-referencedClasses: []
-}),
-globals.Animation);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "spriteSheet:",
-protocol: 'attributes',
-fn: function (anImageUrl){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-_st(self._spriteSheet())._src_(anImageUrl);
-return self}, function($ctx1) {$ctx1.fill(self,"spriteSheet:",{anImageUrl:anImageUrl},globals.Animation)})},
-args: ["anImageUrl"],
-source: "spriteSheet: anImageUrl\x0a\x09self spriteSheet src: anImageUrl",
-messageSends: ["src:", "spriteSheet"],
 referencedClasses: []
 }),
 globals.Animation);
@@ -1929,7 +1929,7 @@ fn: function (aSprite,aContext){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$4,$3,$2,$5,$6,$7;
-$1=_st(aSprite)._spriteSheet();
+$1=_st(aSprite)._image();
 $4=self._origin();
 $ctx1.sendIdx["origin"]=1;
 $3=_st($4)._x();
@@ -1944,8 +1944,8 @@ $ctx1.sendIdx["height"]=1;
 _st(aContext)._drawImage_originX_originY_frameWidth_frameHeight_x_y_scaleWidth_scaleHeight_($1,$2,$5,$6,$7,_st(aSprite)._x(),_st(aSprite)._y(),self._width(),self._height());
 return self}, function($ctx1) {$ctx1.fill(self,"drawFromSprite:onContext:",{aSprite:aSprite,aContext:aContext},globals.FrameGroup)})},
 args: ["aSprite", "aContext"],
-source: "drawFromSprite: aSprite onContext: aContext\x0a\x09aContext\x0a\x09\x09drawImage: aSprite spriteSheet\x0a\x09\x09originX: self origin x + self offset\x0a\x09\x09originY: self origin y\x0a\x09\x09frameWidth: self width\x0a\x09\x09frameHeight: self height\x0a\x09\x09x: aSprite x \x0a\x09\x09y: aSprite y\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height.",
-messageSends: ["drawImage:originX:originY:frameWidth:frameHeight:x:y:scaleWidth:scaleHeight:", "spriteSheet", "+", "x", "origin", "offset", "y", "width", "height"],
+source: "drawFromSprite: aSprite onContext: aContext\x0a\x09aContext\x0a\x09\x09drawImage: aSprite image\x0a\x09\x09originX: self origin x + self offset\x0a\x09\x09originY: self origin y\x0a\x09\x09frameWidth: self width\x0a\x09\x09frameHeight: self height\x0a\x09\x09x: aSprite x \x0a\x09\x09y: aSprite y\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height.",
+messageSends: ["drawImage:originX:originY:frameWidth:frameHeight:x:y:scaleWidth:scaleHeight:", "image", "+", "x", "origin", "offset", "y", "width", "height"],
 referencedClasses: []
 }),
 globals.FrameGroup);
@@ -2159,8 +2159,8 @@ fn: function (aBackground,aContext){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$4,$3,$5,$2,$7,$6,$8,$9,$10,$11,$12,$14,$17,$16,$15,$18,$19,$20,$13;
-$1=_st(aBackground)._spriteSheet();
-$ctx1.sendIdx["spriteSheet"]=1;
+$1=_st(aBackground)._image();
+$ctx1.sendIdx["image"]=1;
 $4=self._origin();
 $ctx1.sendIdx["origin"]=1;
 $3=_st($4)._x();
@@ -2184,7 +2184,7 @@ $12=self._height();
 $ctx1.sendIdx["height"]=2;
 _st(aContext)._drawImage_originX_originY_frameWidth_frameHeight_x_y_scaleWidth_scaleHeight_($1,$2,$6,$8,$9,$10,(0),$11,$12);
 $ctx1.sendIdx["drawImage:originX:originY:frameWidth:frameHeight:x:y:scaleWidth:scaleHeight:"]=1;
-$14=_st(aBackground)._spriteSheet();
+$14=_st(aBackground)._image();
 $17=self._origin();
 $ctx1.sendIdx["origin"]=3;
 $16=_st($17)._x();
@@ -2197,8 +2197,8 @@ $ctx1.sendIdx["height"]=3;
 $13=_st(aContext)._drawImage_originX_originY_frameWidth_frameHeight_x_y_scaleWidth_scaleHeight_($14,$15,$18,$19,$20,self._xPosition2(),(0),self._width(),self._height());
 return self}, function($ctx1) {$ctx1.fill(self,"drawFromBackground:onContext:",{aBackground:aBackground,aContext:aContext},globals.ParallaxImage)})},
 args: ["aBackground", "aContext"],
-source: "drawFromBackground: aBackground onContext: aContext\x0a\x09aContext\x0a\x09\x09drawImage: aBackground spriteSheet\x0a\x09\x09originX: self origin x + self offset\x0a\x09\x09originY: self origin y\x0a\x09\x09frameWidth: self width\x0a\x09\x09frameHeight: self height\x0a\x09\x09x: self xPosition1\x0a\x09\x09y: 0\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height;\x0a\x09\x09drawImage: aBackground spriteSheet\x0a\x09\x09originX: self origin x + self offset\x0a\x09\x09originY: self origin y\x0a\x09\x09frameWidth: self width\x0a\x09\x09frameHeight: self height\x0a\x09\x09x: self xPosition2\x0a\x09\x09y: 0\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height.",
-messageSends: ["drawImage:originX:originY:frameWidth:frameHeight:x:y:scaleWidth:scaleHeight:", "spriteSheet", "+", "x", "origin", "offset", "y", "width", "height", "xPosition1", "xPosition2"],
+source: "drawFromBackground: aBackground onContext: aContext\x0a\x09aContext\x0a\x09\x09drawImage: aBackground image\x0a\x09\x09originX: self origin x + self offset\x0a\x09\x09originY: self origin y\x0a\x09\x09frameWidth: self width\x0a\x09\x09frameHeight: self height\x0a\x09\x09x: self xPosition1\x0a\x09\x09y: 0\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height;\x0a\x09\x09drawImage: aBackground image\x0a\x09\x09originX: self origin x + self offset\x0a\x09\x09originY: self origin y\x0a\x09\x09frameWidth: self width\x0a\x09\x09frameHeight: self height\x0a\x09\x09x: self xPosition2\x0a\x09\x09y: 0\x0a\x09\x09scaleWidth: self width\x0a\x09\x09scaleHeight: self height.",
+messageSends: ["drawImage:originX:originY:frameWidth:frameHeight:x:y:scaleWidth:scaleHeight:", "image", "+", "x", "origin", "offset", "y", "width", "height", "xPosition1", "xPosition2"],
 referencedClasses: []
 }),
 globals.ParallaxImage);
@@ -2364,6 +2364,30 @@ globals.ParallaxImage);
 
 smalltalk.addClass('Game', globals.Widget, ['inputHandler', 'canvas', 'context', 'fps', 'step', 'end', 'sounds', 'screens', 'pause', 'currentScreen'], 'Ludus');
 globals.Game.comment="I am a game. You need to override a couple of my methods to make me usable:\x0a\x0a**#startGame** Here you can define my intial conditions, such as the size of the canvas, my sounds, the background properties, the FPS, etc.\x0a\x0a**#step**  Here you can define what has to be done at each game cycle, or step. This method should control posititions, collisions, mouse and keyboard events, etc. This method should not deal with any graphic properties, these should be dealt with by:\x0a\x0a**#draw**  This is the method that controls my view. Here you should define the drawing of sprites and other graphic elements. Don't forget to clear the canvas before re-drawing sprites, if your game requires so.";
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addFont:named:",
+protocol: 'fonts',
+fn: function (aFontSrc,aFontName){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$4,$3,$2;
+$1="head"._asJQuery();
+$4=_st("<style type=\x22text/css\x22> @font-face { font-family: \x22".__comma(aFontName)).__comma("\x22;src: local('☺'), url('");
+$ctx1.sendIdx[","]=3;
+$3=_st($4).__comma(aFontSrc);
+$ctx1.sendIdx[","]=2;
+$2=_st($3).__comma("') format('opentype');}</style>");
+$ctx1.sendIdx[","]=1;
+_st($1)._prepend_($2);
+return self}, function($ctx1) {$ctx1.fill(self,"addFont:named:",{aFontSrc:aFontSrc,aFontName:aFontName},globals.Game)})},
+args: ["aFontSrc", "aFontName"],
+source: "addFont: aFontSrc named: aFontName\x0a\x09'head' asJQuery prepend: \x0a\x09\x09'<style type=\x22text/css\x22> @font-face { font-family: \x22'\x0a\x09\x09\x09, aFontName\x0a\x09\x09\x09, '\x22;src: local(''☺''), url('''\x0a\x09\x09\x09, aFontSrc\x0a\x09\x09\x09,''') format(''opentype'');}</style>'",
+messageSends: ["prepend:", "asJQuery", ","],
+referencedClasses: []
+}),
+globals.Game);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "addScreen:",
@@ -2678,7 +2702,7 @@ return self._gameLoop();
 };
 return self}, function($ctx1) {$ctx1.fill(self,"gameLoop",{},globals.Game)})},
 args: [],
-source: "gameLoop\x0a\x09\x22Do not override me, use #step and #draw instead\x22\x0a\x09(self isGameOver | self isPaused)\x0a\x09\x09ifFalse: [[\x0a\x09\x09\x09self currentScreen\x0a\x09\x09\x09\x09\x09step;\x0a\x09\x09\x09\x09\x09draw.\x0a\x09\x09\x09step := step + 1.\x0a\x09\x09\x09self gameLoop ] valueWithTimeout: (1000 / fps) ]",
+source: "gameLoop\x0a\x09\x22Do not override me, use #step and #draw instead\x22\x0a\x09(self isGameOver | self isPaused)\x0a\x09\x09ifFalse: [[\x0a\x09\x09\x09self currentScreen\x0a\x09\x09\x09\x09step;\x0a\x09\x09\x09\x09draw.\x0a\x09\x09\x09step := step + 1.\x0a\x09\x09\x09self gameLoop ] valueWithTimeout: (1000 / fps) ]",
 messageSends: ["ifFalse:", "|", "isGameOver", "isPaused", "valueWithTimeout:", "step", "currentScreen", "draw", "+", "gameLoop", "/"],
 referencedClasses: []
 }),
@@ -3772,7 +3796,7 @@ return _st(self._keys())._at_(aKeyCode);
 _st($1)._ifTrue_(aBlock);
 return self}, function($ctx1) {$ctx1.fill(self,"whileKeyPressed:do:",{aKeyCode:aKeyCode,aBlock:aBlock},globals.InputHandler)})},
 args: ["aKeyCode", "aBlock"],
-source: "whileKeyPressed: aKeyCode do: aBlock\x0a\x09((self keys at: aKeyCode ifAbsent: [ false ]) and: [ self keys at: aKeyCode ]) ifTrue: aBlock",
+source: "whileKeyPressed: aKeyCode do: aBlock\x0a\x09((self keys at: aKeyCode ifAbsent: [ false ]) \x0a\x09\x09and: [ self keys at: aKeyCode ]) \x0a\x09\x09\x09ifTrue: aBlock",
 messageSends: ["ifTrue:", "and:", "at:ifAbsent:", "keys", "at:"],
 referencedClasses: []
 }),
@@ -4260,5 +4284,420 @@ messageSends: ["src:", "new"],
 referencedClasses: []
 }),
 globals.Sound.klass);
+
+
+smalltalk.addClass('Text', globals.Object, ['fontName', 'fontSize', 'fontStyle', 'color', 'position', 'contents', 'outlineColor', 'outlineSize'], 'Ludus');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "beBold",
+protocol: 'attributes',
+fn: function (){
+var self=this;
+self["@fontStyle"]="bold";
+return self},
+args: [],
+source: "beBold\x0a\x09fontStyle := 'bold'",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "beItalic",
+protocol: 'attributes',
+fn: function (){
+var self=this;
+self["@fontStyle"]="italic";
+return self},
+args: [],
+source: "beItalic\x0a\x09fontStyle := 'italic'",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "beNormal",
+protocol: 'attributes',
+fn: function (){
+var self=this;
+self["@fontStyle"]="";
+return self},
+args: [],
+source: "beNormal\x0a\x09fontStyle := ''",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "color",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@color"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@color"]="red";
+$1=self["@color"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"color",{},globals.Text)})},
+args: [],
+source: "color\x0a\x09^ color ifNil: [ color := 'red' ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "color:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@color"]=anObject;
+return self},
+args: ["anObject"],
+source: "color: anObject\x0a\x09color := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "contents",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@contents"];
+if(($receiver = $2) == null || $receiver.isNil){
+$1="";
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"contents",{},globals.Text)})},
+args: [],
+source: "contents\x0a\x09^ contents ifNil: [ '' ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "contents:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@contents"]=anObject;
+return self},
+args: ["anObject"],
+source: "contents: anObject\x0a\x09contents := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "drawOnContext:",
+protocol: 'drawing',
+fn: function (aContext){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$4,$3,$6,$5,$1,$9,$8,$11,$10,$7,$13,$15,$14,$12;
+_st(aContext)._font_(self._fontDefinition());
+_st(aContext)._fillStyle_(self._color());
+$2=self._contents();
+$ctx1.sendIdx["contents"]=1;
+$4=self._position();
+$ctx1.sendIdx["position"]=1;
+$3=_st($4)._x();
+$ctx1.sendIdx["x"]=1;
+$6=self._position();
+$ctx1.sendIdx["position"]=2;
+$5=_st($6)._y();
+$ctx1.sendIdx["y"]=1;
+$1=_st(aContext)._fillText_x_y_($2,$3,$5);
+$9=self._outlineSize();
+$ctx1.sendIdx["outlineSize"]=1;
+$8=_st($9)._notNil();
+$ctx1.sendIdx["notNil"]=1;
+$11=self._outlineColor();
+$ctx1.sendIdx["outlineColor"]=1;
+$10=_st($11)._notNil();
+$7=_st($8).__and($10);
+if(smalltalk.assert($7)){
+_st(aContext)._lineWidth_(self._outlineSize());
+_st(aContext)._strokeStyle_(self._outlineColor());
+$13=self._contents();
+$15=self._position();
+$ctx1.sendIdx["position"]=3;
+$14=_st($15)._x();
+$12=_st(aContext)._strokeText_x_y_($13,$14,_st(self._position())._y());
+$12;
+};
+return self}, function($ctx1) {$ctx1.fill(self,"drawOnContext:",{aContext:aContext},globals.Text)})},
+args: ["aContext"],
+source: "drawOnContext: aContext\x0a\x09aContext\x0a\x09\x09font: self fontDefinition;\x0a\x09\x09fillStyle: self color;\x0a\x09\x09fillText: self contents\x0a\x09\x09\x09x: self position x\x0a\x09\x09\x09y: self position y.\x0a\x09(self outlineSize notNil & self outlineColor notNil) ifTrue: [\x0a\x09\x09aContext\x0a\x09\x09\x09lineWidth: self outlineSize;\x0a\x09\x09\x09strokeStyle: self outlineColor;\x0a\x09\x09\x09strokeText: self contents\x0a\x09\x09\x09\x09x: self position x\x0a\x09\x09\x09\x09y: self position y ]",
+messageSends: ["font:", "fontDefinition", "fillStyle:", "color", "fillText:x:y:", "contents", "x", "position", "y", "ifTrue:", "&", "notNil", "outlineSize", "outlineColor", "lineWidth:", "strokeStyle:", "strokeText:x:y:"],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "fontDefinition",
+protocol: 'drawing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $3,$2,$1;
+$3=_st(_st(self._fontStyle()).__comma(" ")).__comma(_st(self._fontSize())._printString());
+$ctx1.sendIdx[","]=3;
+$2=_st($3).__comma("px ");
+$ctx1.sendIdx[","]=2;
+$1=_st($2).__comma(self._fontName());
+$ctx1.sendIdx[","]=1;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"fontDefinition",{},globals.Text)})},
+args: [],
+source: "fontDefinition\x0a\x09^ self fontStyle  , ' ' , self fontSize printString , 'px ' , self fontName",
+messageSends: [",", "fontStyle", "printString", "fontSize", "fontName"],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "fontName",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@fontName"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@fontName"]="Sans";
+$1=self["@fontName"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"fontName",{},globals.Text)})},
+args: [],
+source: "fontName\x0a\x09^ fontName ifNil: [ fontName := 'Sans' ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "fontName:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@fontName"]=anObject;
+return self},
+args: ["anObject"],
+source: "fontName: anObject\x0a\x09fontName := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "fontSize",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@fontSize"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@fontSize"]=(12);
+$1=self["@fontSize"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"fontSize",{},globals.Text)})},
+args: [],
+source: "fontSize\x0a\x09^ fontSize ifNil: [ fontSize := 12 ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "fontSize:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@fontSize"]=anObject;
+return self},
+args: ["anObject"],
+source: "fontSize: anObject\x0a\x09fontSize := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "fontStyle",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@fontStyle"];
+if(($receiver = $2) == null || $receiver.isNil){
+$1="";
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"fontStyle",{},globals.Text)})},
+args: [],
+source: "fontStyle\x0a\x09^ fontStyle ifNil: [ '' ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "outlineColor",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@outlineColor"];
+return $1;
+},
+args: [],
+source: "outlineColor\x0a\x09^ outlineColor",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "outlineColor:",
+protocol: 'accessing',
+fn: function (aColorName){
+var self=this;
+self["@outlineColor"]=aColorName;
+return self},
+args: ["aColorName"],
+source: "outlineColor: aColorName\x0a\x09outlineColor := aColorName.",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "outlineSize",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@outlineSize"];
+return $1;
+},
+args: [],
+source: "outlineSize\x0a\x09^ outlineSize",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "outlineSize:",
+protocol: 'accessing',
+fn: function (aSize){
+var self=this;
+self["@outlineSize"]=aSize;
+return self},
+args: ["aSize"],
+source: "outlineSize: aSize\x0a\x09outlineSize := aSize",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "position",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@position"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@position"]=(10).__at((10));
+$1=self["@position"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"position",{},globals.Text)})},
+args: [],
+source: "position\x0a\x09^ position ifNil: [ position := 10@10 ]",
+messageSends: ["ifNil:", "@"],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "position:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@position"]=anObject;
+return self},
+args: ["anObject"],
+source: "position: anObject\x0a\x09position := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "removeOutline",
+protocol: 'attributes',
+fn: function (){
+var self=this;
+self["@outlineColor"]=nil;
+self["@outlineSize"]=nil;
+return self},
+args: [],
+source: "removeOutline\x0a\x09outlineColor := nil.\x0a\x09outlineSize := nil.",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Text);
+
 
 });

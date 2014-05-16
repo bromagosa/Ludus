@@ -18,7 +18,7 @@ speed
 initialize
 	super initialize.
 	self 
-		spriteSheet: 'images/ovni/bullet.png';
+		imageSrc: 'images/ovni/bullet.png';
 		addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.
 ! !
 
@@ -48,7 +48,7 @@ farBackground
 	^ farBackground ifNil: [ 
 		farBackground := 
 			Background new 
-				spriteSheet: 'images/ovni/farback.gif';
+				imageSrc: 'images/ovni/farback.gif';
 				addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 1 ]
 !
 
@@ -71,7 +71,7 @@ starField
 	^ starField ifNil: [ 
 		starField := 
 			Background new 
-				spriteSheet: 'images/ovni/starfield.png';
+				imageSrc: 'images/ovni/starfield.png';
 				addParallaxNamed: 'background' origin: 0@0 size: 800@600 speed: 6 ]
 ! !
 
@@ -80,12 +80,14 @@ starField
 startGame
 	fps := 30.
 	
-	self width: 720; 
+	self
+		width: 720; 
 		height: 540;
 		backgroundColor: 'black';
 		addSound: 'sounds/ovni/background.ogg';
 		addSound: 'sounds/ovni/laser.ogg';
-		addScreen: OVNIStartScreen new.
+		addScreen: OVNIStartScreen new;
+		addFont: 'fonts/ChangaOne-Regular.ttf' named: 'ChangaOne'.
 	
 	self switchToScreen: self screens first.
 	
@@ -115,7 +117,7 @@ draw
 !OVNI methodsFor: 'game actions'!
 
 shoot
-	self bullets size < 6 ifTrue: [
+	self bullets size < 4 ifTrue: [
 		(self soundNamed: 'laser') play.
 		self bullets 
 			add: 
@@ -135,9 +137,10 @@ moveSaucers
 	self saucers do: [ :eachSaucer | 
 		| killingBullet |
 		killingBullet := (eachSaucer collidesWithWhichOf: self bullets).
-		killingBullet ifNotNil: [ 
-			eachSaucer explode.
-			bullets remove: killingBullet ].
+		(killingBullet notNil & eachSaucer exploding not) 
+			ifTrue: [ 
+				eachSaucer explode.
+				bullets remove: killingBullet ].
 		
 		eachSaucer move.
 		
@@ -166,7 +169,7 @@ moveShip
 ! !
 
 Screen subclass: #OVNIStartScreen
-	instanceVariableNames: 'saucers title'
+	instanceVariableNames: 'saucers title startGameText'
 	package: 'OVNI'!
 
 !OVNIStartScreen methodsFor: 'accessing'!
@@ -177,6 +180,14 @@ saucers
 
 saucers: anObject
 	saucers := anObject
+!
+
+startGameText
+	^ startGameText
+!
+
+startGameText: someText
+	startGameText := someText
 !
 
 title
@@ -201,7 +212,17 @@ startScreen
 			source: 'images/ovni/title.png' 
 			origin: 0@0 
 			size: 600@196 
-			position: 55 @ self game height)
+			position: 55 @ self game height).
+			
+	self startGameText:
+		(Text new 
+			contents: 'Press SPACE to start';
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 2;
+			fontName: 'ChangaOne';
+			fontSize: 40;
+			position: 180@320)
 !
 
 step
@@ -216,7 +237,9 @@ draw
 	self 
 		drawBackground: self game farBackground;
 		drawSpriteCollection: self saucers;
-		draw: self title
+		draw: self title.
+		
+	self title y < 75 ifTrue: [ self draw: self startGameText ]
 ! !
 
 Sprite subclass: #Saucer
@@ -262,7 +285,7 @@ explode
 initialize
 	super initialize.
 	self 
-		spriteSheet: 'images/ovni/saucer.png';
+		imageSrc: 'images/ovni/saucer.png';
 		addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;
 		addFrameGroupNamed: 'explosion' origin: 0@40 size: 40@40 frameCount: 10.
 	
@@ -299,7 +322,7 @@ speed
 initialize
 	super initialize.
 	self 
-		spriteSheet: 'images/ovni/ship.png';
+		imageSrc: 'images/ovni/ship.png';
 		addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4.
 ! !
 

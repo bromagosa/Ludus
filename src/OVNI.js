@@ -53,14 +53,14 @@ return smalltalk.withContext(function($ctx1) {
 var $2,$1;
 ($ctx1.supercall = true, globals.Bullet.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._spriteSheet_("images/ovni/bullet.png");
+self._imageSrc_("images/ovni/bullet.png");
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 $1=self._addFrameGroupNamed_origin_size_frameCount_("shooting",$2,(9).__at((9)),(1));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.Bullet)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09spriteSheet: 'images/ovni/bullet.png';\x0a\x09\x09addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.",
-messageSends: ["initialize", "spriteSheet:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/bullet.png';\x0a\x09\x09addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.",
+messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
 referencedClasses: []
 }),
 globals.Bullet);
@@ -170,7 +170,7 @@ var $2,$3,$5,$6,$4,$1,$receiver;
 $2=self["@farBackground"];
 if(($receiver = $2) == null || $receiver.isNil){
 $3=_st($Background())._new();
-_st($3)._spriteSheet_("images/ovni/farback.gif");
+_st($3)._imageSrc_("images/ovni/farback.gif");
 $5=$3;
 $6=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -183,8 +183,8 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"farBackground",{},globals.OVNI)})},
 args: [],
-source: "farBackground\x0a\x09^ farBackground ifNil: [ \x0a\x09\x09farBackground := \x0a\x09\x09\x09Background new \x0a\x09\x09\x09\x09spriteSheet: 'images/ovni/farback.gif';\x0a\x09\x09\x09\x09addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 1 ]",
-messageSends: ["ifNil:", "spriteSheet:", "new", "addParallaxNamed:origin:size:speed:", "@"],
+source: "farBackground\x0a\x09^ farBackground ifNil: [ \x0a\x09\x09farBackground := \x0a\x09\x09\x09Background new \x0a\x09\x09\x09\x09imageSrc: 'images/ovni/farback.gif';\x0a\x09\x09\x09\x09addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 1 ]",
+messageSends: ["ifNil:", "imageSrc:", "new", "addParallaxNamed:origin:size:speed:", "@"],
 referencedClasses: ["Background"]
 }),
 globals.OVNI);
@@ -220,16 +220,14 @@ protocol: 'sprite processing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$5,$6,$4,$3,$2,$9,$8,$7,$10,$receiver;
+var $1,$5,$6,$4,$3,$2,$9,$8,$7,$10;
 _st(self._saucers())._do_((function(eachSaucer){
 var killingBullet;
 return smalltalk.withContext(function($ctx2) {
 killingBullet=_st(eachSaucer)._collidesWithWhichOf_(self._bullets());
 killingBullet;
-$1=killingBullet;
-if(($receiver = $1) == null || $receiver.isNil){
-$1;
-} else {
+$1=_st(_st(killingBullet)._notNil()).__and(_st(_st(eachSaucer)._exploding())._not());
+if(smalltalk.assert($1)){
 _st(eachSaucer)._explode();
 _st(self["@bullets"])._remove_(killingBullet);
 };
@@ -255,8 +253,8 @@ return $10;
 }, function($ctx2) {$ctx2.fillBlock({eachSaucer:eachSaucer,killingBullet:killingBullet},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"moveSaucers",{},globals.OVNI)})},
 args: [],
-source: "moveSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09| killingBullet |\x0a\x09\x09killingBullet := (eachSaucer collidesWithWhichOf: self bullets).\x0a\x09\x09killingBullet ifNotNil: [ \x0a\x09\x09\x09eachSaucer explode.\x0a\x09\x09\x09bullets remove: killingBullet ].\x0a\x09\x09\x0a\x09\x09eachSaucer move.\x0a\x09\x09\x0a\x09\x09((eachSaucer x + eachSaucer width) < 0) | eachSaucer dead\x0a\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09eachSaucer\x0a\x09\x09\x09\x09\x09\x09x: self width atRandom + self width;\x0a\x09\x09\x09\x09\x09\x09y: self height atRandom;\x0a\x09\x09\x09\x09\x09\x09dead: false ]]",
-messageSends: ["do:", "saucers", "collidesWithWhichOf:", "bullets", "ifNotNil:", "explode", "remove:", "move", "ifTrue:", "|", "<", "+", "x", "width", "dead", "x:", "atRandom", "y:", "height", "dead:"],
+source: "moveSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09| killingBullet |\x0a\x09\x09killingBullet := (eachSaucer collidesWithWhichOf: self bullets).\x0a\x09\x09(killingBullet notNil & eachSaucer exploding not) \x0a\x09\x09\x09ifTrue: [ \x0a\x09\x09\x09\x09eachSaucer explode.\x0a\x09\x09\x09\x09bullets remove: killingBullet ].\x0a\x09\x09\x0a\x09\x09eachSaucer move.\x0a\x09\x09\x0a\x09\x09((eachSaucer x + eachSaucer width) < 0) | eachSaucer dead\x0a\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09eachSaucer\x0a\x09\x09\x09\x09\x09\x09x: self width atRandom + self width;\x0a\x09\x09\x09\x09\x09\x09y: self height atRandom;\x0a\x09\x09\x09\x09\x09\x09dead: false ]]",
+messageSends: ["do:", "saucers", "collidesWithWhichOf:", "bullets", "ifTrue:", "&", "notNil", "not", "exploding", "explode", "remove:", "move", "|", "<", "+", "x", "width", "dead", "x:", "atRandom", "y:", "height", "dead:"],
 referencedClasses: []
 }),
 globals.OVNI);
@@ -403,7 +401,7 @@ var $3,$2,$1,$4,$6,$9,$8,$7,$5;
 $3=self._bullets();
 $ctx1.sendIdx["bullets"]=1;
 $2=_st($3)._size();
-$1=_st($2).__lt((6));
+$1=_st($2).__lt((4));
 if(smalltalk.assert($1)){
 _st(self._soundNamed_("laser"))._play();
 $4=self._bullets();
@@ -417,7 +415,7 @@ _st($4)._add_($5);
 };
 return self}, function($ctx1) {$ctx1.fill(self,"shoot",{},globals.OVNI)})},
 args: [],
-source: "shoot\x0a\x09self bullets size < 6 ifTrue: [\x0a\x09\x09(self soundNamed: 'laser') play.\x0a\x09\x09self bullets \x0a\x09\x09\x09add: \x0a\x09\x09\x09\x09(Bullet new centre: (self ship centre + ((self ship width / 2) @ 0)))]",
+source: "shoot\x0a\x09self bullets size < 4 ifTrue: [\x0a\x09\x09(self soundNamed: 'laser') play.\x0a\x09\x09self bullets \x0a\x09\x09\x09add: \x0a\x09\x09\x09\x09(Bullet new centre: (self ship centre + ((self ship width / 2) @ 0)))]",
 messageSends: ["ifTrue:", "<", "size", "bullets", "play", "soundNamed:", "add:", "centre:", "new", "+", "centre", "ship", "@", "/", "width"],
 referencedClasses: ["Bullet"]
 }),
@@ -435,7 +433,7 @@ var $2,$3,$5,$6,$4,$1,$receiver;
 $2=self["@starField"];
 if(($receiver = $2) == null || $receiver.isNil){
 $3=_st($Background())._new();
-_st($3)._spriteSheet_("images/ovni/starfield.png");
+_st($3)._imageSrc_("images/ovni/starfield.png");
 $5=$3;
 $6=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -448,8 +446,8 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"starField",{},globals.OVNI)})},
 args: [],
-source: "starField\x0a\x09^ starField ifNil: [ \x0a\x09\x09starField := \x0a\x09\x09\x09Background new \x0a\x09\x09\x09\x09spriteSheet: 'images/ovni/starfield.png';\x0a\x09\x09\x09\x09addParallaxNamed: 'background' origin: 0@0 size: 800@600 speed: 6 ]",
-messageSends: ["ifNil:", "spriteSheet:", "new", "addParallaxNamed:origin:size:speed:", "@"],
+source: "starField\x0a\x09^ starField ifNil: [ \x0a\x09\x09starField := \x0a\x09\x09\x09Background new \x0a\x09\x09\x09\x09imageSrc: 'images/ovni/starfield.png';\x0a\x09\x09\x09\x09addParallaxNamed: 'background' origin: 0@0 size: 800@600 speed: 6 ]",
+messageSends: ["ifNil:", "imageSrc:", "new", "addParallaxNamed:origin:size:speed:", "@"],
 referencedClasses: ["Background"]
 }),
 globals.OVNI);
@@ -470,13 +468,14 @@ self._backgroundColor_("black");
 self._addSound_("sounds/ovni/background.ogg");
 $ctx1.sendIdx["addSound:"]=1;
 self._addSound_("sounds/ovni/laser.ogg");
-$1=self._addScreen_(_st($OVNIStartScreen())._new());
+self._addScreen_(_st($OVNIStartScreen())._new());
+$1=self._addFont_named_("fonts/ChangaOne-Regular.ttf","ChangaOne");
 self._switchToScreen_(_st(self._screens())._first());
 _st(self._soundNamed_("background"))._loop();
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.OVNI)})},
 args: [],
-source: "startGame\x0a\x09fps := 30.\x0a\x09\x0a\x09self width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09backgroundColor: 'black';\x0a\x09\x09addSound: 'sounds/ovni/background.ogg';\x0a\x09\x09addSound: 'sounds/ovni/laser.ogg';\x0a\x09\x09addScreen: OVNIStartScreen new.\x0a\x09\x0a\x09self switchToScreen: self screens first.\x0a\x09\x0a\x09(self soundNamed: 'background') loop.",
-messageSends: ["width:", "height:", "backgroundColor:", "addSound:", "addScreen:", "new", "switchToScreen:", "first", "screens", "loop", "soundNamed:"],
+source: "startGame\x0a\x09fps := 30.\x0a\x09\x0a\x09self\x0a\x09\x09width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09backgroundColor: 'black';\x0a\x09\x09addSound: 'sounds/ovni/background.ogg';\x0a\x09\x09addSound: 'sounds/ovni/laser.ogg';\x0a\x09\x09addScreen: OVNIStartScreen new;\x0a\x09\x09addFont: 'fonts/ChangaOne-Regular.ttf' named: 'ChangaOne'.\x0a\x09\x0a\x09self switchToScreen: self screens first.\x0a\x09\x0a\x09(self soundNamed: 'background') loop.",
+messageSends: ["width:", "height:", "backgroundColor:", "addSound:", "addScreen:", "new", "addFont:named:", "switchToScreen:", "first", "screens", "loop", "soundNamed:"],
 referencedClasses: ["OVNIStartScreen"]
 }),
 globals.OVNI);
@@ -507,7 +506,7 @@ globals.OVNI);
 
 
 
-smalltalk.addClass('OVNIStartScreen', globals.Screen, ['saucers', 'title'], 'OVNI');
+smalltalk.addClass('OVNIStartScreen', globals.Screen, ['saucers', 'title', 'startGameText'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "draw",
@@ -515,14 +514,21 @@ protocol: 'drawing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
+var $2,$1,$3;
 self._drawBackground_(_st(self._game())._farBackground());
 self._drawSpriteCollection_(self._saucers());
-$1=self._draw_(self._title());
+$2=self._title();
+$ctx1.sendIdx["title"]=1;
+$1=self._draw_($2);
+$ctx1.sendIdx["draw:"]=1;
+$3=_st(_st(self._title())._y()).__lt((75));
+if(smalltalk.assert($3)){
+self._draw_(self._startGameText());
+};
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVNIStartScreen)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09drawBackground: self game farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09draw: self title",
-messageSends: ["drawBackground:", "farBackground", "game", "drawSpriteCollection:", "saucers", "draw:", "title"],
+source: "draw\x0a\x09self \x0a\x09\x09drawBackground: self game farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09draw: self title.\x0a\x09\x09\x0a\x09self title y < 75 ifTrue: [ self draw: self startGameText ]",
+messageSends: ["drawBackground:", "farBackground", "game", "drawSpriteCollection:", "saucers", "draw:", "title", "ifTrue:", "<", "y", "startGameText"],
 referencedClasses: []
 }),
 globals.OVNIStartScreen);
@@ -561,13 +567,46 @@ globals.OVNIStartScreen);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "startGameText",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@startGameText"];
+return $1;
+},
+args: [],
+source: "startGameText\x0a\x09^ startGameText",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVNIStartScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "startGameText:",
+protocol: 'accessing',
+fn: function (someText){
+var self=this;
+self["@startGameText"]=someText;
+return self},
+args: ["someText"],
+source: "startGameText: someText\x0a\x09startGameText := someText",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVNIStartScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "startScreen",
 protocol: 'control',
 fn: function (){
 var self=this;
 function $Drawable(){return globals.Drawable||(typeof Drawable=="undefined"?nil:Drawable)}
+function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$7,$6,$5,$4,$3,$13,$12,$11,$10,$9,$8,$15,$16,$17,$14;
+var $2,$1,$7,$6,$5,$4,$3,$13,$12,$11,$10,$9,$8,$15,$16,$17,$18,$14,$19,$20;
 $2=self._game();
 $ctx1.sendIdx["game"]=1;
 $1=_st($2)._saucers();
@@ -596,17 +635,29 @@ $8=_st(each)._y_($9);
 return $8;
 }, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
 $15=_st($Drawable())._new();
+$ctx1.sendIdx["new"]=1;
 $16=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 $17=(600).__at((196));
 $ctx1.sendIdx["@"]=2;
-$14=_st($15)._source_origin_size_position_("images/ovni/title.png",$16,$17,(55).__at(_st(self._game())._height()));
+$18=(55).__at(_st(self._game())._height());
+$ctx1.sendIdx["@"]=3;
+$14=_st($15)._source_origin_size_position_("images/ovni/title.png",$16,$17,$18);
 self._title_($14);
+$19=_st($Text())._new();
+_st($19)._contents_("Press SPACE to start");
+_st($19)._color_("rgba(90,113,26,0.7)");
+_st($19)._outlineColor_("rgba(242,246,144,0.8)");
+_st($19)._outlineSize_((2));
+_st($19)._fontName_("ChangaOne");
+_st($19)._fontSize_((40));
+$20=_st($19)._position_((180).__at((320)));
+self._startGameText_($20);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVNIStartScreen)})},
 args: [],
-source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each \x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Drawable new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height)",
-messageSends: ["saucers:", "saucers", "game", "do:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "source:origin:size:position:", "new", "@"],
-referencedClasses: ["Drawable"]
+source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each \x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Drawable new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height).\x0a\x09\x09\x09\x0a\x09self startGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to start';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 2;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 180@320)",
+messageSends: ["saucers:", "saucers", "game", "do:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "source:origin:size:position:", "new", "@", "startGameText:", "contents:", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:"],
+referencedClasses: ["Drawable", "Text"]
 }),
 globals.OVNIStartScreen);
 
@@ -806,7 +857,7 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$2,$4,$3;
 ($ctx1.supercall = true, globals.Saucer.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._spriteSheet_("images/ovni/saucer.png");
+self._imageSrc_("images/ovni/saucer.png");
 $1=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 $2=(40).__at((40));
@@ -819,8 +870,8 @@ $3=self._addFrameGroupNamed_origin_size_frameCount_("explosion",$4,(40).__at((40
 _st(self._frameGroupNamed_("explosion"))._frameRate_((2));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.Saucer)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09spriteSheet: 'images/ovni/saucer.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;\x0a\x09\x09addFrameGroupNamed: 'explosion' origin: 0@40 size: 40@40 frameCount: 10.\x0a\x09\x0a\x09(self frameGroupNamed: 'explosion') frameRate: 2.",
-messageSends: ["initialize", "spriteSheet:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:", "frameGroupNamed:"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/saucer.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;\x0a\x09\x09addFrameGroupNamed: 'explosion' origin: 0@40 size: 40@40 frameCount: 10.\x0a\x09\x0a\x09(self frameGroupNamed: 'explosion') frameRate: 2.",
+messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:", "frameGroupNamed:"],
 referencedClasses: []
 }),
 globals.Saucer);
@@ -947,14 +998,14 @@ return smalltalk.withContext(function($ctx1) {
 var $2,$1;
 ($ctx1.supercall = true, globals.SpaceShip.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._spriteSheet_("images/ovni/ship.png");
+self._imageSrc_("images/ovni/ship.png");
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 $1=self._addFrameGroupNamed_origin_size_frameCount_("flying",$2,(64).__at((29)),(4));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.SpaceShip)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09spriteSheet: 'images/ovni/ship.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4.",
-messageSends: ["initialize", "spriteSheet:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/ship.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4.",
+messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
 referencedClasses: []
 }),
 globals.SpaceShip);

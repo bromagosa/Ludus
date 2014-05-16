@@ -1,6 +1,6 @@
 Smalltalk createPackage: 'Ludus'!
 Object subclass: #Animation
-	instanceVariableNames: 'spriteSheet currentFrameGroup frameGroups animating loop'
+	instanceVariableNames: 'spriteSheet currentFrameGroup frameGroups animating loop image'
 	package: 'Ludus'!
 
 !Animation methodsFor: 'animation'!
@@ -49,13 +49,13 @@ newImage
 
 !Animation methodsFor: 'attributes'!
 
-spriteSheet
-	spriteSheet ifNil: [ spriteSheet := self newImage ].
-	^ spriteSheet
+image
+	image ifNil: [ image := self newImage ].
+	^ image
 !
 
-spriteSheet: anImageUrl
-	self spriteSheet src: anImageUrl
+imageSrc: anImageUrl
+	self image src: anImageUrl
 ! !
 
 !Animation methodsFor: 'drawing'!
@@ -528,7 +528,7 @@ identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anIn
 
 drawFromSprite: aSprite onContext: aContext
 	aContext
-		drawImage: aSprite spriteSheet
+		drawImage: aSprite image
 		originX: self origin x + self offset
 		originY: self origin y
 		frameWidth: self width
@@ -609,7 +609,7 @@ identifier: aString origin: anOriginPoint size: aSizePoint speed: anInteger
 
 drawFromBackground: aBackground onContext: aContext
 	aContext
-		drawImage: aBackground spriteSheet
+		drawImage: aBackground image
 		originX: self origin x + self offset
 		originY: self origin y
 		frameWidth: self width
@@ -618,7 +618,7 @@ drawFromBackground: aBackground onContext: aContext
 		y: 0
 		scaleWidth: self width
 		scaleHeight: self height;
-		drawImage: aBackground spriteSheet
+		drawImage: aBackground image
 		originX: self origin x + self offset
 		originY: self origin y
 		frameWidth: self width
@@ -778,8 +778,8 @@ gameLoop
 	(self isGameOver | self isPaused)
 		ifFalse: [[
 			self currentScreen
-					step;
-					draw.
+				step;
+				draw.
 			step := step + 1.
 			self gameLoop ] valueWithTimeout: (1000 / fps) ]
 ! !
@@ -820,6 +820,17 @@ drawSpriteCollection: aSpriteCollection
 	aSpriteCollection
 		do: [ :eachSprite | 
 			self drawSprite: eachSprite ]
+! !
+
+!Game methodsFor: 'fonts'!
+
+addFont: aFontSrc named: aFontName
+	'head' asJQuery prepend: 
+		'<style type="text/css"> @font-face { font-family: "'
+			, aFontName
+			, '";src: local(''☺''), url('''
+			, aFontSrc
+			,''') format(''opentype'');}</style>'
 ! !
 
 !Game methodsFor: 'initialization'!
@@ -1006,7 +1017,9 @@ onMouseUpDo: aBlock
 !
 
 whileKeyPressed: aKeyCode do: aBlock
-	((self keys at: aKeyCode ifAbsent: [ false ]) and: [ self keys at: aKeyCode ]) ifTrue: aBlock
+	((self keys at: aKeyCode ifAbsent: [ false ]) 
+		and: [ self keys at: aKeyCode ]) 
+			ifTrue: aBlock
 !
 
 whileMouseDownDo: aBlock
@@ -1223,5 +1236,112 @@ stop
 
 src: anUrl
 	^ self new src: anUrl
+! !
+
+Object subclass: #Text
+	instanceVariableNames: 'fontName fontSize fontStyle color position contents outlineColor outlineSize'
+	package: 'Ludus'!
+
+!Text methodsFor: 'accessing'!
+
+color
+	^ color ifNil: [ color := 'red' ]
+!
+
+color: anObject
+	color := anObject
+!
+
+contents
+	^ contents ifNil: [ '' ]
+!
+
+contents: anObject
+	contents := anObject
+!
+
+fontName
+	^ fontName ifNil: [ fontName := 'Sans' ]
+!
+
+fontName: anObject
+	fontName := anObject
+!
+
+fontSize
+	^ fontSize ifNil: [ fontSize := 12 ]
+!
+
+fontSize: anObject
+	fontSize := anObject
+!
+
+fontStyle
+	^ fontStyle ifNil: [ '' ]
+!
+
+outlineColor
+	^ outlineColor
+!
+
+outlineColor: aColorName
+	outlineColor := aColorName.
+!
+
+outlineSize
+	^ outlineSize
+!
+
+outlineSize: aSize
+	outlineSize := aSize
+!
+
+position
+	^ position ifNil: [ position := 10@10 ]
+!
+
+position: anObject
+	position := anObject
+! !
+
+!Text methodsFor: 'attributes'!
+
+beBold
+	fontStyle := 'bold'
+!
+
+beItalic
+	fontStyle := 'italic'
+!
+
+beNormal
+	fontStyle := ''
+!
+
+removeOutline
+	outlineColor := nil.
+	outlineSize := nil.
+! !
+
+!Text methodsFor: 'drawing'!
+
+drawOnContext: aContext
+	aContext
+		font: self fontDefinition;
+		fillStyle: self color;
+		fillText: self contents
+			x: self position x
+			y: self position y.
+	(self outlineSize notNil & self outlineColor notNil) ifTrue: [
+		aContext
+			lineWidth: self outlineSize;
+			strokeStyle: self outlineColor;
+			strokeText: self contents
+				x: self position x
+				y: self position y ]
+!
+
+fontDefinition
+	^ self fontStyle  , ' ' , self fontSize printString , 'px ' , self fontName
 ! !
 
