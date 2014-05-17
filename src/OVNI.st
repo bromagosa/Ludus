@@ -1,9 +1,9 @@
 Smalltalk createPackage: 'OVNI'!
-Sprite subclass: #Bullet
+Sprite subclass: #OVBullet
 	instanceVariableNames: 'speed acceleration'
 	package: 'OVNI'!
 
-!Bullet methodsFor: 'accessing'!
+!OVBullet methodsFor: 'accessing'!
 
 acceleration
 	^ acceleration ifNil: [ acceleration := 2 ]
@@ -13,7 +13,7 @@ speed
 	^ speed ifNil: [ speed := 5 ]
 ! !
 
-!Bullet methodsFor: 'initialization'!
+!OVBullet methodsFor: 'initialization'!
 
 initialize
 	super initialize.
@@ -22,7 +22,7 @@ initialize
 		addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.
 ! !
 
-!Bullet methodsFor: 'movement'!
+!OVBullet methodsFor: 'movement'!
 
 accelerate
 	speed := self speed + self acceleration
@@ -34,11 +34,11 @@ move
 		accelerate
 ! !
 
-Bullet subclass: #EnemyBullet
+OVBullet subclass: #OVEnemyBullet
 	instanceVariableNames: ''
 	package: 'OVNI'!
 
-!EnemyBullet methodsFor: 'accessing'!
+!OVEnemyBullet methodsFor: 'accessing'!
 
 acceleration
 	^ acceleration ifNil: [ acceleration := -1 ]
@@ -48,7 +48,7 @@ speed
 	^ speed ifNil: [ speed := 1 ]
 ! !
 
-!EnemyBullet methodsFor: 'initialization'!
+!OVEnemyBullet methodsFor: 'initialization'!
 
 initialize
 	super initialize.
@@ -57,11 +57,11 @@ initialize
 		addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.
 ! !
 
-Game subclass: #OVNI
+Game subclass: #OVGame
 	instanceVariableNames: 'ship saucers scrollSpeed farBackground starField bullets enemyBullets'
 	package: 'OVNI'!
 
-!OVNI methodsFor: 'accessing'!
+!OVGame methodsFor: 'accessing'!
 
 bullets
 	^ bullets ifNil: [ bullets := #() ]
@@ -84,14 +84,14 @@ saucers
 		saucers := #().
 		5 timesRepeat: [ 
 			saucers add:
-				(Saucer new centre: self width atRandom @ self height atRandom)
+				(OVSaucer new centre: self width atRandom @ self height atRandom)
 		].
 		saucers.
 	]
 !
 
 ship
-	^ ship ifNil: [ ship := SpaceShip new centre: 105 @ (self height / 2) ]
+	^ ship ifNil: [ ship := OVSpaceShip new centre: 105 @ (self height / 2) ]
 !
 
 starField
@@ -102,7 +102,7 @@ starField
 				addParallaxNamed: 'background' origin: 0@0 size: 800@600 speed: 6 ]
 ! !
 
-!OVNI methodsFor: 'control'!
+!OVGame methodsFor: 'control'!
 
 end
 	ship := nil.
@@ -120,9 +120,11 @@ startGame
 		backgroundColor: 'black';
 		addSound: 'sounds/ovni/background.ogg';
 		addSound: 'sounds/ovni/laser.ogg';
-		addScreen: OVNIStartScreen new named: 'start';
-		addScreen: OVNIPauseScreen new named: 'pause';
-		addScreen: OVNIGameOverScreen new named: 'end';
+		addScreen: OVStartScreen new named: 'start';
+		addScreen: OVMainMenu new named: 'mainMenu';
+		addScreen: OVOptionsMenu new named: 'optionsMenu';
+		addScreen: OVPauseScreen new named: 'pause';
+		addScreen: OVGameOverScreen new named: 'end';
 		addFont: 'fonts/ChangaOne-Regular.ttf' named: 'ChangaOne'.
 	
 	self switchToScreenNamed: 'start'.
@@ -140,7 +142,7 @@ step
 		onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].
 ! !
 
-!OVNI methodsFor: 'drawing'!
+!OVGame methodsFor: 'drawing'!
 
 draw
 	self 
@@ -153,14 +155,14 @@ draw
 		drawBackground: self starField.
 ! !
 
-!OVNI methodsFor: 'game actions'!
+!OVGame methodsFor: 'game actions'!
 
 shoot
 	(self soundNamed: 'laser') play.
 	self bullets add: self ship newBullet
 ! !
 
-!OVNI methodsFor: 'sprite processing'!
+!OVGame methodsFor: 'sprite processing'!
 
 controlBullets
 	self bullets do: [ :eachBullet | 
@@ -191,11 +193,11 @@ controlShip
 	self ship moveWithHandler: self inputHandler inCanvas: self canvas.
 ! !
 
-Screen subclass: #OVNIGameOverScreen
+Screen subclass: #OVGameOverScreen
 	instanceVariableNames: 'gameOverText restartGameText'
 	package: 'OVNI'!
 
-!OVNIGameOverScreen methodsFor: 'accessing'!
+!OVGameOverScreen methodsFor: 'accessing'!
 
 gameOverText
 	^ gameOverText
@@ -213,13 +215,13 @@ restartGameText: aText
 	restartGameText := aText
 ! !
 
-!OVNIGameOverScreen methodsFor: 'control'!
+!OVGameOverScreen methodsFor: 'control'!
 
 step
 	self inputHandler onKeyPressed: Key space do: [ self game switchToScreenNamed: 'start' ]
 ! !
 
-!OVNIGameOverScreen methodsFor: 'drawing'!
+!OVGameOverScreen methodsFor: 'drawing'!
 
 draw
 	self 
@@ -228,7 +230,7 @@ draw
 		draw: self restartGameText
 ! !
 
-!OVNIGameOverScreen methodsFor: 'initialization'!
+!OVGameOverScreen methodsFor: 'initialization'!
 
 startScreen
 	self gameOverText:
@@ -251,15 +253,265 @@ startScreen
 			position: 170@320)
 ! !
 
-Screen subclass: #OVNIMainMenu
-	instanceVariableNames: ''
+Screen subclass: #OVMainMenu
+	instanceVariableNames: 'startGameText optionsMenuText options pointer currentOption'
 	package: 'OVNI'!
 
-Screen subclass: #OVNIPauseScreen
+!OVMainMenu methodsFor: 'accessing'!
+
+currentOption
+	^ currentOption ifNil: [ currentOption := self options first ]
+!
+
+currentOption: anOption
+	currentOption := anOption
+!
+
+options
+	^ options ifNil: [ options := #(#selectStartGame #selectOptions) ]
+!
+
+optionsMenuText
+	^ optionsMenuText
+!
+
+optionsMenuText: anObject
+	optionsMenuText := anObject
+!
+
+pointer
+	^ pointer
+!
+
+pointer: anObject
+	pointer := anObject
+!
+
+startGameText
+	^ startGameText
+!
+
+startGameText: anObject
+	startGameText := anObject
+! !
+
+!OVMainMenu methodsFor: 'control'!
+
+nextOption
+	self currentOption: (self options at: ((self options indexOf: self currentOption) \\ self options size) + 1).
+	self pointer y: (((self options indexOf: self currentOption) - 1) * 80) +  205
+!
+
+selectOptions
+	self game switchToScreenNamed: 'optionsMenu'
+!
+
+selectStartGame
+	^ self game switchToGame
+!
+
+step
+	self inputHandler 
+		onKeyPressed: Key downArrow do: [ self nextOption ];
+		onKeyPressed: Key upArrow do: [ self nextOption ];
+		onKeyPressed: Key enter do: [ self perform: self currentOption ];
+		onKeyPressed: Key space do: [ self perform: self currentOption ]
+! !
+
+!OVMainMenu methodsFor: 'drawing'!
+
+draw
+	self 
+		drawBackground: self game farBackground;
+		draw: startGameText;
+		draw: optionsMenuText;
+		drawSprite: pointer
+! !
+
+!OVMainMenu methodsFor: 'initialization'!
+
+startScreen
+	self 
+		startGameText:
+			(Text new 
+				contents: 'START';
+				color: 'rgba(90,113,26,0.7)';
+				outlineColor: 'rgba(242,246,144,0.8)';
+				outlineSize: 3;
+				fontName: 'ChangaOne';
+				fontSize: 80;
+				position: 150@250);
+		optionsMenuText:
+			(Text new 
+				contents: 'OPTIONS';
+				color: 'rgba(90,113,26,0.7)';
+				outlineColor: 'rgba(242,246,144,0.8)';
+				outlineSize: 3;
+				fontName: 'ChangaOne';
+				fontSize: 80;
+				position: 150@330);
+		pointer:
+			((Sprite new
+				imageSrc: 'images/ovni/pointer.png';
+				addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)
+					position: 75@205;
+					yourself).
+! !
+
+Screen subclass: #OVOptionsMenu
+	instanceVariableNames: 'goBackText difficultyText muteMusicText muteSoundsText options pointer currentOption'
+	package: 'OVNI'!
+
+!OVOptionsMenu methodsFor: 'accessing'!
+
+currentOption
+	^ currentOption ifNil: [ currentOption := self options first ]
+!
+
+currentOption: anOption
+	currentOption := anOption
+!
+
+difficultyText
+	^ difficultyText
+!
+
+difficultyText: anObject
+	difficultyText := anObject
+!
+
+goBackText
+	^ goBackText
+!
+
+goBackText: anObject
+	goBackText := anObject
+!
+
+muteMusicText
+	^ muteMusicText
+!
+
+muteMusicText: anObject
+	muteMusicText := anObject
+!
+
+muteSoundsText
+	^ muteSoundsText
+!
+
+muteSoundsText: anObject
+	muteSoundsText := anObject
+!
+
+options
+	^ options ifNil: [ options := #(#selectGoBack #selectDifficulty #selectMuteMusic #selectMuteSounds) ]
+!
+
+options: anObject
+	options := anObject
+!
+
+pointer
+	^ pointer
+!
+
+pointer: anObject
+	pointer := anObject
+! !
+
+!OVOptionsMenu methodsFor: 'control'!
+
+nextOption
+	self currentOption: (self options at: ((self options indexOf: self currentOption) \\ self options size) + 1).
+	self pointer y: (((self options indexOf: self currentOption) - 1) * 80) +  205
+!
+
+selectDifficulty
+!
+
+selectGoBack
+!
+
+selectMuteMusic
+!
+
+selectMuteSounds
+!
+
+step
+	self inputHandler 
+		onKeyPressed: Key downArrow do: [ self nextOption ];
+		onKeyPressed: Key upArrow do: [ self nextOption ];
+		onKeyPressed: Key enter do: [ self perform: self currentOption ];
+		onKeyPressed: Key space do: [ self perform: self currentOption ]
+! !
+
+!OVOptionsMenu methodsFor: 'drawing'!
+
+draw
+	self 
+		drawBackground: self game farBackground;
+		draw: goBackText;
+		draw: difficultyText;
+		draw: muteMusicText;
+		draw: muteSoundsText;
+		drawSprite: pointer
+! !
+
+!OVOptionsMenu methodsFor: 'initialization'!
+
+startScreen
+	self 
+		goBackText:
+			(Text new 
+				contents: 'BACK';
+				color: 'rgba(90,113,26,0.7)';
+				outlineColor: 'rgba(242,246,144,0.8)';
+				outlineSize: 3;
+				fontName: 'ChangaOne';
+				fontSize: 80;
+				position: 150@160);
+		difficultyText:
+			(Text new 
+				contents: 'DIFFICULTY: 1';
+				color: 'rgba(90,113,26,0.7)';
+				outlineColor: 'rgba(242,246,144,0.8)';
+				outlineSize: 3;
+				fontName: 'ChangaOne';
+				fontSize: 80;
+				position: 150@240);
+		muteSoundsText:
+			(Text new 
+				contents: 'MUTE SOUNDS';
+				color: 'rgba(90,113,26,0.7)';
+				outlineColor: 'rgba(242,246,144,0.8)';
+				outlineSize: 3;
+				fontName: 'ChangaOne';
+				fontSize: 80;
+				position: 150@320); 
+		muteMusicText:
+			(Text new 
+				contents: 'MUTE MUSIC';
+				color: 'rgba(90,113,26,0.7)';
+				outlineColor: 'rgba(242,246,144,0.8)';
+				outlineSize: 3;
+				fontName: 'ChangaOne';
+				fontSize: 80;
+				position: 150@400);
+		pointer:
+			((Sprite new
+				imageSrc: 'images/ovni/pointer.png';
+				addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)
+					position: 75@125;
+					yourself).
+! !
+
+Screen subclass: #OVPauseScreen
 	instanceVariableNames: 'gamePausedText resumeGameText'
 	package: 'OVNI'!
 
-!OVNIPauseScreen methodsFor: 'accessing'!
+!OVPauseScreen methodsFor: 'accessing'!
 
 gamePausedText
 	^ gamePausedText
@@ -281,7 +533,7 @@ step
 	self inputHandler onKeyPressed: Key space do: [ self game switchToGame ]
 ! !
 
-!OVNIPauseScreen methodsFor: 'drawing'!
+!OVPauseScreen methodsFor: 'drawing'!
 
 draw
 	self game draw.
@@ -290,7 +542,7 @@ draw
 		draw: self resumeGameText
 ! !
 
-!OVNIPauseScreen methodsFor: 'initialization'!
+!OVPauseScreen methodsFor: 'initialization'!
 
 startScreen
 	self gamePausedText:
@@ -310,90 +562,14 @@ startScreen
 			outlineSize: 2;
 			fontName: 'ChangaOne';
 			fontSize: 40;
-			position: 120@320)
+			position: 155@320)
 ! !
 
-Screen subclass: #OVNIStartScreen
-	instanceVariableNames: 'saucers title startGameText'
-	package: 'OVNI'!
-
-!OVNIStartScreen methodsFor: 'accessing'!
-
-saucers
-	^ saucers
-!
-
-saucers: anObject
-	saucers := anObject
-!
-
-startGameText
-	^ startGameText
-!
-
-startGameText: someText
-	startGameText := someText
-!
-
-title
-	^ title
-!
-
-title: anObject
-	title := anObject
-! !
-
-!OVNIStartScreen methodsFor: 'control'!
-
-startScreen
-	self saucers: self game saucers.
-	self saucers do: [ :each | 
-		each 
-			x: (self game width - 100) atRandom + 50;
-			y: (self game height - 100) atRandom + 50 ].
-			
-	self title: 
-		(Drawable new 
-			source: 'images/ovni/title.png' 
-			origin: 0@0 
-			size: 600@196 
-			position: 55 @ self game height).
-			
-	self startGameText:
-		(Text new 
-			contents: 'Press SPACE to start';
-			color: 'rgba(90,113,26,0.7)';
-			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 2;
-			fontName: 'ChangaOne';
-			fontSize: 40;
-			position: 180@320)
-!
-
-step
-	self title y > 40 ifTrue: [ self title y: self title y - 4 ].
-	self saucers do: [ :each | each wander ].
-	self inputHandler onKeyPressed: Key space do: [ 
-		self saucers do: [ :each | each x: -100 ].
-		self game switchToGame ]
-! !
-
-!OVNIStartScreen methodsFor: 'drawing'!
-
-draw
-	self 
-		drawBackground: self game farBackground;
-		drawSpriteCollection: self saucers;
-		draw: self title.
-		
-	self title y < 75 ifTrue: [ self draw: self startGameText ]
-! !
-
-Sprite subclass: #Saucer
+Sprite subclass: #OVSaucer
 	instanceVariableNames: 'exploding dead shootProbability'
 	package: 'OVNI'!
 
-!Saucer methodsFor: 'accessing'!
+!OVSaucer methodsFor: 'accessing'!
 
 dead
 	^ dead ifNil: [ dead := false ]
@@ -412,14 +588,14 @@ exploding: aBoolean
 !
 
 newBullet
-	^ EnemyBullet new centre: (self centre - ((self width / 2) @ 0))
+	^ OVEnemyBullet new centre: (self centre - ((self width / 2) @ 0))
 !
 
 shootProbability
 	^ shootProbability ifNil: [ shootProbability := 100 ]
 ! !
 
-!Saucer methodsFor: 'actions'!
+!OVSaucer methodsFor: 'actions'!
 
 die
 	self 
@@ -442,7 +618,7 @@ respawnAtX: anX y: aY
 		dead: false
 ! !
 
-!Saucer methodsFor: 'collisions'!
+!OVSaucer methodsFor: 'collisions'!
 
 checkCollisionWith: aSpriteCollection
 	| killingBullet |
@@ -453,7 +629,7 @@ checkCollisionWith: aSpriteCollection
 			aSpriteCollection remove: killingBullet ].
 ! !
 
-!Saucer methodsFor: 'control'!
+!OVSaucer methodsFor: 'control'!
 
 checkShouldDie
 	(self exploding & self atLastFrame ) 
@@ -477,7 +653,7 @@ step
 		checkShouldDie
 ! !
 
-!Saucer methodsFor: 'initialization'!
+!OVSaucer methodsFor: 'initialization'!
 
 initialize
 	super initialize.
@@ -489,7 +665,7 @@ initialize
 	(self frameGroupNamed: 'explosion') frameRate: 2.
 ! !
 
-!Saucer methodsFor: 'movement'!
+!OVSaucer methodsFor: 'movement'!
 
 move
 	self moveCentreBy: -2 @ (5 atRandom - 3).
@@ -499,21 +675,21 @@ wander
 	self moveCentreBy: (3 atRandom - 2) @ (3 atRandom - 2).
 ! !
 
-Sprite subclass: #SpaceShip
+Sprite subclass: #OVSpaceShip
 	instanceVariableNames: 'speed'
 	package: 'OVNI'!
 
-!SpaceShip methodsFor: 'accessing'!
+!OVSpaceShip methodsFor: 'accessing'!
 
 newBullet
-	^ Bullet new centre: (self centre + ((self width / 2) @ 0))
+	^ OVBullet new centre: (self centre + ((self width / 2) @ 0))
 !
 
 speed
 	^ speed ifNil: [ speed := 5 ]
 ! !
 
-!SpaceShip methodsFor: 'initialization'!
+!OVSpaceShip methodsFor: 'initialization'!
 
 initialize
 	super initialize.
@@ -522,7 +698,7 @@ initialize
 		addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4.
 ! !
 
-!SpaceShip methodsFor: 'movement'!
+!OVSpaceShip methodsFor: 'movement'!
 
 goDown
 	self moveCentreBy: (0 @ 1) speed: self speed
@@ -554,5 +730,81 @@ moveWithHandler: anInputHandler inCanvas: aCanvas
 		whileKeyPressed: Key downArrow do: [
 			(self isBottomInsideCanvas: aCanvas) 
 				ifTrue: [ self goDown ]].
+! !
+
+Screen subclass: #OVStartScreen
+	instanceVariableNames: 'saucers title startGameText'
+	package: 'OVNI'!
+
+!OVStartScreen methodsFor: 'accessing'!
+
+saucers
+	^ saucers
+!
+
+saucers: anObject
+	saucers := anObject
+!
+
+startGameText
+	^ startGameText
+!
+
+startGameText: someText
+	startGameText := someText
+!
+
+title
+	^ title
+!
+
+title: anObject
+	title := anObject
+! !
+
+!OVStartScreen methodsFor: 'control'!
+
+startScreen
+	self saucers: self game saucers.
+	self saucers do: [ :each | 
+		each 
+			x: (self game width - 100) atRandom + 50;
+			y: (self game height - 100) atRandom + 50 ].
+			
+	self title: 
+		(Drawable new 
+			source: 'images/ovni/title.png' 
+			origin: 0@0 
+			size: 600@196 
+			position: 55 @ self game height).
+			
+	self startGameText:
+		(Text new 
+			contents: 'Press SPACE to start';
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 2;
+			fontName: 'ChangaOne';
+			fontSize: 40;
+			position: 180@320)
+!
+
+step
+	self title y > 40 ifTrue: [ self title y: self title y - 4 ].
+	self saucers do: [ :each | each wander ].
+	self inputHandler onKeyPressed: Key space do: [ 
+		self saucers do: [ :each | each x: -100 ].
+		self game switchToScreenNamed: 'mainMenu' ]
+! !
+
+!OVStartScreen methodsFor: 'drawing'!
+
+draw
+	self 
+		drawBackground: self game farBackground;
+		drawSpriteCollection: self saucers;
+		draw: self title.
+		
+	self title y < 75 ifTrue: [ self draw: self startGameText ]
 ! !
 

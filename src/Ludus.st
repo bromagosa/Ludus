@@ -796,8 +796,8 @@ clearCanvas
 	self context
 		clearRect: 0
 		y: 0
-		width: canvas element width
-		height: canvas element height.
+		width: self canvas element width
+		height: self canvas element height.
 !
 
 draw

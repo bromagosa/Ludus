@@ -2494,16 +2494,18 @@ protocol: 'drawing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$3,$2;
+var $1,$4,$3,$2;
 $1=self._context();
-$3=_st(self["@canvas"])._element();
+$4=self._canvas();
+$ctx1.sendIdx["canvas"]=1;
+$3=_st($4)._element();
 $ctx1.sendIdx["element"]=1;
 $2=_st($3)._width();
-_st($1)._clearRect_y_width_height_((0),(0),$2,_st(_st(self["@canvas"])._element())._height());
+_st($1)._clearRect_y_width_height_((0),(0),$2,_st(_st(self._canvas())._element())._height());
 return self}, function($ctx1) {$ctx1.fill(self,"clearCanvas",{},globals.Game)})},
 args: [],
-source: "clearCanvas\x0a\x09self context\x0a\x09\x09clearRect: 0\x0a\x09\x09y: 0\x0a\x09\x09width: canvas element width\x0a\x09\x09height: canvas element height.",
-messageSends: ["clearRect:y:width:height:", "context", "width", "element", "height"],
+source: "clearCanvas\x0a\x09self context\x0a\x09\x09clearRect: 0\x0a\x09\x09y: 0\x0a\x09\x09width: self canvas element width\x0a\x09\x09height: self canvas element height.",
+messageSends: ["clearRect:y:width:height:", "context", "width", "element", "canvas", "height"],
 referencedClasses: []
 }),
 globals.Game);
