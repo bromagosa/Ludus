@@ -645,7 +645,7 @@ isParallax
 ! !
 
 Widget subclass: #Game
-	instanceVariableNames: 'inputHandler canvas context fps step end sounds screens pause currentScreen'
+	instanceVariableNames: 'inputHandler canvas context fps step end sounds screens currentScreen'
 	package: 'Ludus'!
 !Game commentStamp!
 I am a game. You need to override a couple of my methods to make me usable:
@@ -775,7 +775,7 @@ step
 
 gameLoop
 	"Do not override me, use #step and #draw instead"
-	(self isGameOver | self isPaused)
+	self isGameOver
 		ifFalse: [[
 			self currentScreen
 				step;
@@ -788,10 +788,6 @@ gameLoop
 
 isGameOver
 	^ end ifNil: [ end := false ]
-!
-
-isPaused
-	^ pause ifNil: [ pause := false ]
 ! !
 
 !Game methodsFor: 'drawing'!
@@ -865,8 +861,10 @@ renderOn: html
 
 !Game methodsFor: 'screens'!
 
-addScreen: aScreen
-	aScreen game: self.
+addScreen: aScreen named: aString
+	aScreen
+		name: aString;
+		game: self.
 	self screens add: aScreen.
 !
 
@@ -895,6 +893,9 @@ start
 !
 
 stop
+	document asJQuery
+		unbind: 'keydown';
+		unbind: 'keyup'.
 	('canvas#' , self name) asJQuery remove.
 	('audio.' , self name) asJQuery remove.
 ! !
@@ -968,7 +969,7 @@ named: aString
 ! !
 
 Object subclass: #InputHandler
-	instanceVariableNames: 'canvas keys mousePosition mouseDown'
+	instanceVariableNames: 'canvas keys releasedKeys mousePosition mouseDown'
 	package: 'Ludus'!
 
 !InputHandler methodsFor: 'accessing'!
@@ -999,6 +1000,14 @@ windowScrollTop
 
 mousePosition
 	^ mousePosition ifNil: [ mousePosition := 0 @ 0 ]
+!
+
+onKeyPressed: aKeyCode do: aBlock
+	((self keys at: aKeyCode)
+		and: [ self releasedKeys at: aKeyCode ])
+			ifTrue: [ 
+				self releasedKeys at: aKeyCode put: false.
+				aBlock value ]
 !
 
 onMouseClickDo: aBlock
@@ -1033,12 +1042,13 @@ whileMouseUpDo: aBlock
 !InputHandler methodsFor: 'events - private'!
 
 bindEvents
-	(window jQuery: document) keydown: [ :evt | self keyDown: evt ].
-	(window jQuery: document) keyup: [ :evt | self keyUp: evt ].
-	self canvas onMouseDown: [ :evt | self mouseDown: evt ].
-	self canvas asJQuery 
-		bind: 'mouseup' do: [ :evt | self mouseUp: evt ];
-		bind: 'mousemove' do: [ :evt | self mouseMove: evt ].
+	document asJQuery
+		keydown: [ :evt | self keyDown: evt ];
+		keyup: [ :evt | self keyUp: evt ].
+	self canvas 
+		onMouseDown: [ :evt | self mouseDown: evt ];
+		onMouseUp: [ :evt | self mouseUp: evt ];
+		onMouseMove: [ :evt | self mouseMove: evt ].
 !
 
 eventData: anEvent
@@ -1051,6 +1061,7 @@ keyDown: evt
 
 keyUp: evt
 	self keys at: evt keyCode put: false.
+	self releasedKeys at: evt keyCode put: true
 !
 
 keys
@@ -1074,6 +1085,10 @@ mouseMove: evt
 
 mouseUp: evt
 	mouseDown := false.
+!
+
+releasedKeys
+	^ releasedKeys
 ! !
 
 !InputHandler methodsFor: 'events - testing'!
@@ -1091,8 +1106,11 @@ initialize
 !
 
 initializeKeys
-	keys := Array new.
-	255 timesRepeat: [ keys add: false ].
+	keys := #().
+	releasedKeys := #().
+	255 timesRepeat: [ 
+		keys add: false.
+		releasedKeys add: true ]
 ! !
 
 Object subclass: #Key
@@ -1126,6 +1144,14 @@ downArrow
 
 enter
 	^ 13
+!
+
+esc
+	^ 27
+!
+
+escape
+	^ 27
 !
 
 keyCodeFor: aValue

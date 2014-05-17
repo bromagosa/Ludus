@@ -34,14 +34,41 @@ move
 		accelerate
 ! !
 
+Bullet subclass: #EnemyBullet
+	instanceVariableNames: ''
+	package: 'OVNI'!
+
+!EnemyBullet methodsFor: 'accessing'!
+
+acceleration
+	^ acceleration ifNil: [ acceleration := -1 ]
+!
+
+speed
+	^ speed ifNil: [ speed := 1 ]
+! !
+
+!EnemyBullet methodsFor: 'initialization'!
+
+initialize
+	super initialize.
+	self 
+		imageSrc: 'images/ovni/enemybullet.png';
+		addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.
+! !
+
 Game subclass: #OVNI
-	instanceVariableNames: 'ship saucers scrollSpeed farBackground starField bullets'
+	instanceVariableNames: 'ship saucers scrollSpeed farBackground starField bullets enemyBullets'
 	package: 'OVNI'!
 
 !OVNI methodsFor: 'accessing'!
 
 bullets
 	^ bullets ifNil: [ bullets := #() ]
+!
+
+enemyBullets
+	^ enemyBullets ifNil: [ enemyBullets := #() ]
 !
 
 farBackground
@@ -77,6 +104,13 @@ starField
 
 !OVNI methodsFor: 'control'!
 
+end
+	ship := nil.
+	self enemyBullets removeAll.
+	self bullets removeAll.
+	self switchToScreenNamed: 'end'.
+!
+
 startGame
 	fps := 30.
 	
@@ -86,20 +120,24 @@ startGame
 		backgroundColor: 'black';
 		addSound: 'sounds/ovni/background.ogg';
 		addSound: 'sounds/ovni/laser.ogg';
-		addScreen: OVNIStartScreen new;
+		addScreen: OVNIStartScreen new named: 'start';
+		addScreen: OVNIPauseScreen new named: 'pause';
+		addScreen: OVNIGameOverScreen new named: 'end';
 		addFont: 'fonts/ChangaOne-Regular.ttf' named: 'ChangaOne'.
 	
-	self switchToScreen: self screens first.
+	self switchToScreenNamed: 'start'.
 	
 	(self soundNamed: 'background') loop.
 !
 
 step
 	self 
-		moveShip;
-		moveSaucers;
-		moveBullets.
-	self inputHandler whileKeyPressed: Key space do: [ self shoot ]
+		controlShip;
+		controlSaucers;
+		controlBullets.
+	self inputHandler 
+		onKeyPressed: Key space do: [ self shoot ];
+		onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].
 ! !
 
 !OVNI methodsFor: 'drawing'!
@@ -110,6 +148,7 @@ draw
 		drawBackground: self farBackground;
 		drawSpriteCollection: self saucers;
 		drawSpriteCollection: self bullets;
+		drawSpriteCollection: self enemyBullets;
 		drawSprite: self ship;
 		drawBackground: self starField.
 ! !
@@ -117,55 +156,161 @@ draw
 !OVNI methodsFor: 'game actions'!
 
 shoot
-	self bullets size < 4 ifTrue: [
-		(self soundNamed: 'laser') play.
-		self bullets 
-			add: 
-				(Bullet new centre: (self ship centre + ((self ship width / 2) @ 0)))]
+	(self soundNamed: 'laser') play.
+	self bullets add: self ship newBullet
 ! !
 
 !OVNI methodsFor: 'sprite processing'!
 
-moveBullets
+controlBullets
 	self bullets do: [ :eachBullet | 
 		eachBullet move.
 		(eachBullet isAllInsideCanvas: self canvas) 
-			ifFalse: [ bullets remove: eachBullet ]]
+			ifFalse: [ bullets remove: eachBullet ]].
+	self enemyBullets do: [ :eachBullet | 
+		eachBullet move.
+		(eachBullet isAllInsideCanvas: self canvas) 
+			ifFalse: [ enemyBullets remove: eachBullet ]]
 !
 
-moveSaucers
+controlSaucers
 	self saucers do: [ :eachSaucer | 
-		| killingBullet |
-		killingBullet := (eachSaucer collidesWithWhichOf: self bullets).
-		(killingBullet notNil & eachSaucer exploding not) 
-			ifTrue: [ 
-				eachSaucer explode.
-				bullets remove: killingBullet ].
-		
-		eachSaucer move.
-		
-		((eachSaucer x + eachSaucer width) < 0) | eachSaucer dead
-				ifTrue: [
-					eachSaucer
-						x: self width atRandom + self width;
-						y: self height atRandom;
-						dead: false ]]
+		eachSaucer 
+			checkCollisionWith: self bullets;
+			step.
+		eachSaucer shouldRespawn ifTrue: [
+			eachSaucer 
+				respawnAtX: self width + self width atRandom y: self height atRandom ].
+		eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].
 !
 
-moveShip
-	self inputHandler
-		whileKeyPressed: Key leftArrow do: [ 
-			(self ship isLeftInsideCanvas: self canvas) 
-				ifTrue: [ self ship goLeft ]];
-		whileKeyPressed: Key rightArrow do: [
-			(self ship isRightInsideCanvas: self canvas) 
-				ifTrue: [ self ship goRight ]];
-		whileKeyPressed: Key upArrow do: [
-			(self ship isTopInsideCanvas: self canvas) 
-				ifTrue: [ self ship goUp ]];
-		whileKeyPressed: Key downArrow do: [
-			(self ship isBottomInsideCanvas: self canvas) 
-				ifTrue: [ self ship goDown ]].
+controlShip
+	((self ship collidesWithAnyOf: self enemyBullets)
+		or: [ (self ship collidesWithAnyOf: self saucers) ])
+			ifTrue: [ self end ].
+	self ship moveWithHandler: self inputHandler inCanvas: self canvas.
+! !
+
+Screen subclass: #OVNIGameOverScreen
+	instanceVariableNames: 'gameOverText restartGameText'
+	package: 'OVNI'!
+
+!OVNIGameOverScreen methodsFor: 'accessing'!
+
+gameOverText
+	^ gameOverText
+!
+
+gameOverText: anObject
+	gameOverText := anObject
+!
+
+restartGameText
+	^ restartGameText
+!
+
+restartGameText: aText
+	restartGameText := aText
+! !
+
+!OVNIGameOverScreen methodsFor: 'control'!
+
+step
+	self inputHandler onKeyPressed: Key space do: [ self game switchToScreenNamed: 'start' ]
+! !
+
+!OVNIGameOverScreen methodsFor: 'drawing'!
+
+draw
+	self 
+		drawBackground: self game farBackground;
+		draw: self gameOverText;
+		draw: self restartGameText
+! !
+
+!OVNIGameOverScreen methodsFor: 'initialization'!
+
+startScreen
+	self gameOverText:
+		(Text new 
+			contents: 'GAME OVER';
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 3;
+			fontName: 'ChangaOne';
+			fontSize: 92;
+			position: 130@280).
+	self restartGameText:
+		(Text new 
+			contents: 'Press SPACE to restart';
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 2;
+			fontName: 'ChangaOne';
+			fontSize: 40;
+			position: 170@320)
+! !
+
+Screen subclass: #OVNIMainMenu
+	instanceVariableNames: ''
+	package: 'OVNI'!
+
+Screen subclass: #OVNIPauseScreen
+	instanceVariableNames: 'gamePausedText resumeGameText'
+	package: 'OVNI'!
+
+!OVNIPauseScreen methodsFor: 'accessing'!
+
+gamePausedText
+	^ gamePausedText
+!
+
+gamePausedText: anObject
+	gamePausedText := anObject
+!
+
+resumeGameText
+	^ resumeGameText
+!
+
+resumeGameText: anObject
+	resumeGameText := anObject
+!
+
+step
+	self inputHandler onKeyPressed: Key space do: [ self game switchToGame ]
+! !
+
+!OVNIPauseScreen methodsFor: 'drawing'!
+
+draw
+	self game draw.
+	self 
+		draw: self gamePausedText;
+		draw: self resumeGameText
+! !
+
+!OVNIPauseScreen methodsFor: 'initialization'!
+
+startScreen
+	self gamePausedText:
+		(Text new 
+			contents: 'GAME PAUSED';
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 3;
+			fontName: 'ChangaOne';
+			fontSize: 92;
+			position: 70@280).
+	self resumeGameText:
+		(Text new 
+			contents: 'Press SPACE to resume';
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 2;
+			fontName: 'ChangaOne';
+			fontSize: 40;
+			position: 120@320)
 ! !
 
 Screen subclass: #OVNIStartScreen
@@ -228,7 +373,9 @@ startScreen
 step
 	self title y > 40 ifTrue: [ self title y: self title y - 4 ].
 	self saucers do: [ :each | each wander ].
-	self inputHandler whileKeyPressed: Key space do: [ self game switchToGame ]
+	self inputHandler onKeyPressed: Key space do: [ 
+		self saucers do: [ :each | each x: -100 ].
+		self game switchToGame ]
 ! !
 
 !OVNIStartScreen methodsFor: 'drawing'!
@@ -243,7 +390,7 @@ draw
 ! !
 
 Sprite subclass: #Saucer
-	instanceVariableNames: 'exploding dead'
+	instanceVariableNames: 'exploding dead shootProbability'
 	package: 'OVNI'!
 
 !Saucer methodsFor: 'accessing'!
@@ -262,6 +409,14 @@ exploding
 
 exploding: aBoolean
 	exploding := aBoolean
+!
+
+newBullet
+	^ EnemyBullet new centre: (self centre - ((self width / 2) @ 0))
+!
+
+shootProbability
+	^ shootProbability ifNil: [ shootProbability := 100 ]
 ! !
 
 !Saucer methodsFor: 'actions'!
@@ -278,6 +433,48 @@ explode
 	self
 		loop: false; 
 		exploding: true.
+!
+
+respawnAtX: anX y: aY
+	self 
+		x: anX;
+		y: aY;
+		dead: false
+! !
+
+!Saucer methodsFor: 'collisions'!
+
+checkCollisionWith: aSpriteCollection
+	| killingBullet |
+	killingBullet := (self collidesWithWhichOf: aSpriteCollection).
+	(killingBullet notNil & self exploding not) 
+		ifTrue: [ 
+			self explode.
+			aSpriteCollection remove: killingBullet ].
+! !
+
+!Saucer methodsFor: 'control'!
+
+checkShouldDie
+	(self exploding & self atLastFrame ) 
+		ifTrue: [ 
+			self 
+				exploding: false;
+				die ]
+!
+
+shouldRespawn
+	^ ((self x + self width) < 0) | self dead
+!
+
+shouldShoot
+	^ self shootProbability atRandom = 1
+!
+
+step
+	self 
+		move;
+		checkShouldDie
 ! !
 
 !Saucer methodsFor: 'initialization'!
@@ -296,11 +493,6 @@ initialize
 
 move
 	self moveCentreBy: -2 @ (5 atRandom - 3).
-	(self exploding & self atLastFrame ) 
-		ifTrue: [ 
-			self 
-				exploding: false;
-				die ]
 !
 
 wander
@@ -312,6 +504,10 @@ Sprite subclass: #SpaceShip
 	package: 'OVNI'!
 
 !SpaceShip methodsFor: 'accessing'!
+
+newBullet
+	^ Bullet new centre: (self centre + ((self width / 2) @ 0))
+!
 
 speed
 	^ speed ifNil: [ speed := 5 ]
@@ -342,5 +538,21 @@ goRight
 
 goUp
 	self moveCentreBy: (0 @ -1) speed: self speed
+!
+
+moveWithHandler: anInputHandler inCanvas: aCanvas
+	anInputHandler
+		whileKeyPressed: Key leftArrow do: [ 
+			(self isLeftInsideCanvas: aCanvas) 
+				ifTrue: [ self goLeft ]];
+		whileKeyPressed: Key rightArrow do: [
+			(self isRightInsideCanvas: aCanvas) 
+				ifTrue: [ self goRight ]];
+		whileKeyPressed: Key upArrow do: [
+			(self isTopInsideCanvas: aCanvas) 
+				ifTrue: [ self goUp ]];
+		whileKeyPressed: Key downArrow do: [
+			(self isBottomInsideCanvas: aCanvas) 
+				ifTrue: [ self goDown ]].
 ! !
 
