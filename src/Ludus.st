@@ -1,4 +1,410 @@
 Smalltalk createPackage: 'Ludus'!
+Widget subclass: #AbstractScreen
+	instanceVariableNames: 'inputHandler canvas context fps step'
+	package: 'Ludus'!
+
+!AbstractScreen methodsFor: 'accessing'!
+
+canvas
+	^ canvas
+!
+
+canvas: anObject
+	canvas := anObject
+!
+
+context
+	^ context
+!
+
+fps
+	^ fps
+!
+
+fps: anInteger
+	fps := anInteger
+!
+
+inputHandler
+	^ inputHandler ifNil: [ inputHandler := InputHandler new canvas: self canvas ]
+!
+
+stepCount
+	^ step
+! !
+
+!AbstractScreen methodsFor: 'attributes'!
+
+backgroundColor: aColor
+	self canvas at: 'style' put: ('background-color: ', aColor , ';')
+!
+
+height
+	^ self canvas element height
+!
+
+height: anInteger
+	self canvas at: 'height' put: anInteger.
+!
+
+width
+	^ self canvas element width
+!
+
+width: anInteger
+	self canvas at: 'width' put: anInteger.
+! !
+
+!AbstractScreen methodsFor: 'control'!
+
+everyStepNumber: anInteger do: aBlock
+	(step \\ anInteger) = 0 ifTrue: aBlock
+!
+
+step
+	self subclassResponsibility
+! !
+
+!AbstractScreen methodsFor: 'control - private'!
+
+gameLoop
+	"Do not override me, use #step and #draw instead"
+	self isGameOver
+		ifFalse: [[
+			self currentScreen
+				step;
+				draw.
+			step := step + 1.
+			self gameLoop ] valueWithTimeout: (1000 / fps) ]
+! !
+
+!AbstractScreen methodsFor: 'drawing'!
+
+clearCanvas
+	self context
+		clearRect: 0
+		y: 0
+		width: self canvas element width
+		height: self canvas element height.
+!
+
+draw
+	self subclassResponsibility
+!
+
+drawBackground: aBackground
+	aBackground drawOnContext: self context step: step width: self canvas element width
+!
+
+drawSprite: aSprite
+	aSprite drawOnContext: self context step: step
+!
+
+drawSpriteCollection: aSpriteCollection
+	aSpriteCollection
+		do: [ :eachSprite | 
+			self drawSprite: eachSprite ]
+! !
+
+!AbstractScreen methodsFor: 'fonts'!
+
+addFont: aFontSrc named: aFontName
+	'head' asJQuery prepend: 
+		'<style type="text/css"> @font-face { font-family: "'
+			, aFontName
+			, '";src: local(''☺''), url('''
+			, aFontSrc
+			,''') format(''opentype'');}</style>'
+! !
+
+!AbstractScreen methodsFor: 'initialization'!
+
+initialize
+	super initialize.
+	fps := 30.
+	step := 1.
+! !
+
+!AbstractScreen methodsFor: 'rendering'!
+
+renderOn: html
+	"Do not override me, use #startGame instead"
+	canvas := html canvas.
+	self canvas 
+		at: 'width' put: 250;
+		at: 'height' put: 250;
+		id: self class name.
+	context := canvas element getContext: '2d'.
+
+	self inputHandler bindEvents.
+
+	self 
+		startGame;
+		gameLoop.
+! !
+
+AbstractScreen subclass: #Game
+	instanceVariableNames: 'end sounds screens currentScreen'
+	package: 'Ludus'!
+!Game commentStamp!
+I am a game. You need to override a couple of my methods to make me usable:
+
+**#startGame** Here you can define my intial conditions, such as the size of the canvas, my sounds, the background properties, the FPS, etc.
+
+**#step**  Here you can define what has to be done at each game cycle, or step. This method should control posititions, collisions, mouse and keyboard events, etc. This method should not deal with any graphic properties, these should be dealt with by:
+
+**#draw**  This is the method that controls my view. Here you should define the drawing of sprites and other graphic elements. Don't forget to clear the canvas before re-drawing sprites, if your game requires so.!
+
+!Game methodsFor: 'accessing'!
+
+currentScreen
+	^ currentScreen ifNil: [ currentScreen := self ]
+!
+
+screens
+	^ screens ifNil: [ screens := #() ]
+!
+
+sounds
+	^ sounds ifNil: [ sounds := #() ]
+! !
+
+!Game methodsFor: 'audio'!
+
+addSound: aSoundUrl
+	(self hasSound: aSoundUrl) ifFalse: [
+		| sound |
+		sound := (Sound src: aSoundUrl).
+		sound 
+			cssClass: self class name;
+			appendToJQuery: 'body' asJQuery.
+		self sounds add: sound.
+	]
+!
+
+hasSound: aSoundUrl
+	^ self sounds anySatisfy: [ :any | any src = aSoundUrl ]
+!
+
+soundNamed: aName
+	^ self sounds detect: [ :each | each id = aName ]
+! !
+
+!Game methodsFor: 'control'!
+
+end
+	end := true
+!
+
+kill
+	self end.
+	self class stop.
+!
+
+restart
+	self
+		kill;
+		initialize;
+		start.
+!
+
+start
+	self appendToJQuery: ('body' asJQuery).
+! !
+
+!Game methodsFor: 'control - testing'!
+
+isGameOver
+	^ end ifNil: [ end := false ]
+! !
+
+!Game methodsFor: 'initialization'!
+
+startGame
+	self subclassResponsibility
+! !
+
+!Game methodsFor: 'screens'!
+
+addScreen: aScreen named: aString
+	aScreen
+		name: aString;
+		game: self.
+	self screens add: aScreen.
+!
+
+screenNamed: aString
+	^ self screens detect: [ :which | which name = aString ] ifNone: [ nil ]
+!
+
+switchToGame
+	currentScreen := self
+!
+
+switchToScreen: aScreen
+	currentScreen := aScreen startScreen
+!
+
+switchToScreenNamed: aString
+	self switchToScreen: (self screenNamed: aString)
+! !
+
+!Game class methodsFor: 'control'!
+
+start
+	|instance|
+	instance := self new start.
+	^ instance
+!
+
+stop
+	document asJQuery
+		unbind: 'keydown';
+		unbind: 'keyup'.
+	('canvas#' , self name) asJQuery remove.
+	('audio.' , self name) asJQuery remove.
+! !
+
+!Game class methodsFor: 'initialization'!
+
+initialize
+	"uncomment if you want the game to start when loading the page"
+"	'self start"
+! !
+
+AbstractScreen subclass: #Screen
+	instanceVariableNames: 'game name'
+	package: 'Ludus'!
+!Screen commentStamp!
+I am a game screen. I need to implement #startScreen, #step and #draw, as these will be called by the game who owns me.
+I can represent many things: levels, menu screens, or anything that needs to change the whole canvas.!
+
+!Screen methodsFor: 'accessing'!
+
+canvas
+	^ self game canvas
+!
+
+context
+	^ self game context
+!
+
+game
+	^ game
+!
+
+game: anObject
+	game := anObject
+!
+
+inputHandler
+	^ self game inputHandler
+!
+
+name
+	^ name ifNil: [ self class name ]
+!
+
+name: anObject
+	name := anObject
+! !
+
+!Screen methodsFor: 'drawing'!
+
+draw: aDrawable
+	aDrawable drawOnContext: self context
+! !
+
+!Screen methodsFor: 'initialization'!
+
+startScreen
+	self subclassResponsibility
+! !
+
+!Screen class methodsFor: 'instance creation'!
+
+named: aString
+	| instance |
+	instance := self new name: aString.
+	^ instance
+! !
+
+Screen subclass: #Menu
+	instanceVariableNames: 'options currentOption pointer optionSeparation pointerOriginY'
+	package: 'Ludus'!
+
+!Menu methodsFor: 'accessing'!
+
+currentOption
+	^ currentOption ifNil: [ currentOption := self options first ]
+!
+
+currentOption: anOption
+	currentOption := anOption
+!
+
+optionSeparation
+	^ optionSeparation ifNil: [ optionSeparation := 50 ]
+!
+
+optionSeparation: anObject
+	optionSeparation := anObject
+!
+
+options
+	^ options ifNil: [ options := #() ]
+!
+
+options: anObject
+	options := anObject
+!
+
+pointer
+	^ pointer
+!
+
+pointer: anObject
+	pointer := anObject
+!
+
+pointerOriginY
+	^ pointerOriginY ifNil: [ pointerOriginY := 100 ]
+!
+
+pointerOriginY: anObject
+	pointerOriginY := anObject
+! !
+
+!Menu methodsFor: 'control'!
+
+nextOption
+	self 
+		currentOption: 
+			(self options at: 
+				(((self options indexOf: self currentOption) + 1) min: self options size));
+		placePointer.
+!
+
+placePointer
+	self pointer y: (((self options indexOf: self currentOption) - 1) * self optionSeparation) +  self pointerOriginY
+!
+
+previousOption
+	self 
+		currentOption: 
+			(self options at: 
+				(((self options indexOf: self currentOption) - 1) max: 1)) ;
+		placePointer.
+!
+
+step
+	self inputHandler 
+		onKeyPressed: Key downArrow do: [ self nextOption ];
+		onKeyPressed: Key upArrow do: [ self previousOption ];
+		onKeyPressed: Key enter do: [ self perform: self currentOption ];
+		onKeyPressed: Key space do: [ self perform: self currentOption ]
+! !
+
 Object subclass: #Animation
 	instanceVariableNames: 'spriteSheet currentFrameGroup frameGroups animating loop image'
 	package: 'Ludus'!
@@ -642,330 +1048,6 @@ move
 
 isParallax
 	^ true
-! !
-
-Widget subclass: #Game
-	instanceVariableNames: 'inputHandler canvas context fps step end sounds screens currentScreen'
-	package: 'Ludus'!
-!Game commentStamp!
-I am a game. You need to override a couple of my methods to make me usable:
-
-**#startGame** Here you can define my intial conditions, such as the size of the canvas, my sounds, the background properties, the FPS, etc.
-
-**#step**  Here you can define what has to be done at each game cycle, or step. This method should control posititions, collisions, mouse and keyboard events, etc. This method should not deal with any graphic properties, these should be dealt with by:
-
-**#draw**  This is the method that controls my view. Here you should define the drawing of sprites and other graphic elements. Don't forget to clear the canvas before re-drawing sprites, if your game requires so.!
-
-!Game methodsFor: 'accessing'!
-
-canvas
-	^ canvas
-!
-
-canvas: anObject
-	canvas := anObject
-!
-
-context
-	^ context
-!
-
-currentScreen
-	^ currentScreen ifNil: [ currentScreen := self ]
-!
-
-fps
-	^ fps
-!
-
-fps: anInteger
-	fps := anInteger
-!
-
-inputHandler
-	^ inputHandler ifNil: [ inputHandler := InputHandler new canvas: self canvas ]
-!
-
-screens
-	^ screens ifNil: [ screens := #() ]
-!
-
-sounds
-	^ sounds ifNil: [ sounds := #() ]
-!
-
-stepCount
-	^ step
-! !
-
-!Game methodsFor: 'attributes'!
-
-backgroundColor: aColor
-	self canvas at: 'style' put: ('background-color: ', aColor , ';')
-!
-
-height
-	^ self canvas element height
-!
-
-height: anInteger
-	self canvas at: 'height' put: anInteger.
-!
-
-width
-	^ self canvas element width
-!
-
-width: anInteger
-	self canvas at: 'width' put: anInteger.
-! !
-
-!Game methodsFor: 'audio'!
-
-addSound: aSoundUrl
-	(self hasSound: aSoundUrl) ifFalse: [
-		| sound |
-		sound := (Sound src: aSoundUrl).
-		sound 
-			cssClass: self class name;
-			appendToJQuery: 'body' asJQuery.
-		self sounds add: sound.
-	]
-!
-
-hasSound: aSoundUrl
-	^ self sounds anySatisfy: [ :any | any src = aSoundUrl ]
-!
-
-soundNamed: aName
-	^ self sounds detect: [ :each | each id = aName ]
-! !
-
-!Game methodsFor: 'control'!
-
-end
-	end := true
-!
-
-everyStepNumber: anInteger do: aBlock
-	(step \\ anInteger) = 0 ifTrue: aBlock
-!
-
-kill
-	self end.
-	self class stop.
-!
-
-restart
-	self
-		kill;
-		initialize;
-		start.
-!
-
-start
-	self appendToJQuery: ('body' asJQuery).
-!
-
-step
-	self subclassResponsibility
-! !
-
-!Game methodsFor: 'control - private'!
-
-gameLoop
-	"Do not override me, use #step and #draw instead"
-	self isGameOver
-		ifFalse: [[
-			self currentScreen
-				step;
-				draw.
-			step := step + 1.
-			self gameLoop ] valueWithTimeout: (1000 / fps) ]
-! !
-
-!Game methodsFor: 'control - testing'!
-
-isGameOver
-	^ end ifNil: [ end := false ]
-! !
-
-!Game methodsFor: 'drawing'!
-
-clearCanvas
-	self context
-		clearRect: 0
-		y: 0
-		width: self canvas element width
-		height: self canvas element height.
-!
-
-draw
-	self subclassResponsibility
-!
-
-drawBackground: aBackground
-	aBackground drawOnContext: self context step: step width: self canvas element width
-!
-
-drawSprite: aSprite
-	aSprite drawOnContext: self context step: step
-!
-
-drawSpriteCollection: aSpriteCollection
-	aSpriteCollection
-		do: [ :eachSprite | 
-			self drawSprite: eachSprite ]
-! !
-
-!Game methodsFor: 'fonts'!
-
-addFont: aFontSrc named: aFontName
-	'head' asJQuery prepend: 
-		'<style type="text/css"> @font-face { font-family: "'
-			, aFontName
-			, '";src: local(''☺''), url('''
-			, aFontSrc
-			,''') format(''opentype'');}</style>'
-! !
-
-!Game methodsFor: 'initialization'!
-
-initialize
-	super initialize.
-	fps := 30.
-	step := 1.
-!
-
-startGame
-	self subclassResponsibility
-! !
-
-!Game methodsFor: 'rendering'!
-
-renderOn: html
-	"Do not override me, use #startGame instead"
-	canvas := html canvas.
-	self canvas 
-		at: 'width' put: 250;
-		at: 'height' put: 250;
-		id: self class name.
-	context := canvas element getContext: '2d'.
-
-	self inputHandler bindEvents.
-
-	self 
-		startGame;
-		gameLoop.
-! !
-
-!Game methodsFor: 'screens'!
-
-addScreen: aScreen named: aString
-	aScreen
-		name: aString;
-		game: self.
-	self screens add: aScreen.
-!
-
-screenNamed: aString
-	^ self screens detect: [ :which | which name = aString ] ifNone: [ nil ]
-!
-
-switchToGame
-	currentScreen := self
-!
-
-switchToScreen: aScreen
-	currentScreen := aScreen startScreen
-!
-
-switchToScreenNamed: aString
-	self switchToScreen: (self screenNamed: aString)
-! !
-
-!Game class methodsFor: 'control'!
-
-start
-	|instance|
-	instance := self new start.
-	^ instance
-!
-
-stop
-	document asJQuery
-		unbind: 'keydown';
-		unbind: 'keyup'.
-	('canvas#' , self name) asJQuery remove.
-	('audio.' , self name) asJQuery remove.
-! !
-
-!Game class methodsFor: 'initialization'!
-
-initialize
-	"uncomment if you want the game to start when loading the page"
-"	'self start"
-! !
-
-Game subclass: #Screen
-	instanceVariableNames: 'game name'
-	package: 'Ludus'!
-!Screen commentStamp!
-I am a game screen. I need to implement #startScreen, #step and #draw, as these will be called by the game who owns me.
-I can represent many things: levels, menu screens, or anything that needs to change the whole canvas.!
-
-!Screen methodsFor: 'accessing'!
-
-canvas
-	^ self game canvas
-!
-
-context
-	^ self game context
-!
-
-game
-	^ game
-!
-
-game: anObject
-	game := anObject
-!
-
-inputHandler
-	^ self game inputHandler
-!
-
-name
-	^ name ifNil: [ self class name ]
-!
-
-name: anObject
-	name := anObject
-! !
-
-!Screen methodsFor: 'drawing'!
-
-draw: aDrawable
-	aDrawable drawOnContext: self context
-! !
-
-!Screen methodsFor: 'initialization'!
-
-startGame
-	self shouldNotImplement
-!
-
-startScreen
-	self subclassResponsibility
-! !
-
-!Screen class methodsFor: 'instance creation'!
-
-named: aString
-	| instance |
-	instance := self new name: aString.
-	^ instance
 ! !
 
 Object subclass: #InputHandler

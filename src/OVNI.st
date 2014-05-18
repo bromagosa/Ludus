@@ -58,13 +58,21 @@ initialize
 ! !
 
 Game subclass: #OVGame
-	instanceVariableNames: 'ship saucers scrollSpeed farBackground starField bullets enemyBullets'
+	instanceVariableNames: 'ship saucers scrollSpeed farBackground starField bullets enemyBullets difficulty soundIsMute musicIsMute'
 	package: 'OVNI'!
 
 !OVGame methodsFor: 'accessing'!
 
 bullets
 	^ bullets ifNil: [ bullets := #() ]
+!
+
+difficulty
+	^ difficulty ifNil: [ difficulty := 1 ]
+!
+
+difficulty: anInteger
+	difficulty := anInteger
 !
 
 enemyBullets
@@ -77,6 +85,14 @@ farBackground
 			Background new 
 				imageSrc: 'images/ovni/farback.gif';
 				addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 1 ]
+!
+
+musicIsMute
+	^ musicIsMute ifNil: [ musicIsMute := false ]
+!
+
+musicIsMute: aBoolean
+	musicIsMute := aBoolean
 !
 
 saucers
@@ -92,6 +108,14 @@ saucers
 
 ship
 	^ ship ifNil: [ ship := OVSpaceShip new centre: 105 @ (self height / 2) ]
+!
+
+soundIsMute
+	^ soundIsMute ifNil: [ soundIsMute := false ]
+!
+
+soundIsMute: aBoolean
+	soundIsMute := aBoolean
 !
 
 starField
@@ -140,6 +164,17 @@ step
 	self inputHandler 
 		onKeyPressed: Key space do: [ self shoot ];
 		onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].
+!
+
+toggleMuteMusic
+	self musicIsMute: self musicIsMute not.
+	self musicIsMute 
+		ifTrue: [ (self soundNamed: 'background') stop ]
+		ifFalse: [ (self soundNamed: 'background') loop ]
+!
+
+toggleMuteSounds
+	self soundIsMute: self soundIsMute not
 ! !
 
 !OVGame methodsFor: 'drawing'!
@@ -158,7 +193,7 @@ draw
 !OVGame methodsFor: 'game actions'!
 
 shoot
-	(self soundNamed: 'laser') play.
+	self soundIsMute ifFalse: [ (self soundNamed: 'laser') play ].
 	self bullets add: self ship newBullet
 ! !
 
@@ -253,18 +288,14 @@ startScreen
 			position: 170@320)
 ! !
 
-Screen subclass: #OVMainMenu
-	instanceVariableNames: 'startGameText optionsMenuText options pointer currentOption'
+Menu subclass: #OVMainMenu
+	instanceVariableNames: 'startGameText optionsMenuText pointer'
 	package: 'OVNI'!
 
 !OVMainMenu methodsFor: 'accessing'!
 
-currentOption
-	^ currentOption ifNil: [ currentOption := self options first ]
-!
-
-currentOption: anOption
-	currentOption := anOption
+optionSeparation
+	^ optionSeparation ifNil: [ optionSeparation := 80 ]
 !
 
 options
@@ -279,12 +310,8 @@ optionsMenuText: anObject
 	optionsMenuText := anObject
 !
 
-pointer
-	^ pointer
-!
-
-pointer: anObject
-	pointer := anObject
+pointerOriginY
+	^ pointerOriginY ifNil: [ pointerOriginY := 205 ]
 !
 
 startGameText
@@ -297,25 +324,12 @@ startGameText: anObject
 
 !OVMainMenu methodsFor: 'control'!
 
-nextOption
-	self currentOption: (self options at: ((self options indexOf: self currentOption) \\ self options size) + 1).
-	self pointer y: (((self options indexOf: self currentOption) - 1) * 80) +  205
-!
-
 selectOptions
 	self game switchToScreenNamed: 'optionsMenu'
 !
 
 selectStartGame
 	^ self game switchToGame
-!
-
-step
-	self inputHandler 
-		onKeyPressed: Key downArrow do: [ self nextOption ];
-		onKeyPressed: Key upArrow do: [ self nextOption ];
-		onKeyPressed: Key enter do: [ self perform: self currentOption ];
-		onKeyPressed: Key space do: [ self perform: self currentOption ]
 ! !
 
 !OVMainMenu methodsFor: 'drawing'!
@@ -358,19 +372,11 @@ startScreen
 					yourself).
 ! !
 
-Screen subclass: #OVOptionsMenu
-	instanceVariableNames: 'goBackText difficultyText muteMusicText muteSoundsText options pointer currentOption'
+Menu subclass: #OVOptionsMenu
+	instanceVariableNames: 'goBackText difficultyText muteMusicText muteSoundsText'
 	package: 'OVNI'!
 
 !OVOptionsMenu methodsFor: 'accessing'!
-
-currentOption
-	^ currentOption ifNil: [ currentOption := self options first ]
-!
-
-currentOption: anOption
-	currentOption := anOption
-!
 
 difficultyText
 	^ difficultyText
@@ -404,47 +410,38 @@ muteSoundsText: anObject
 	muteSoundsText := anObject
 !
 
+optionSeparation
+	^ optionSeparation ifNil: [ optionSeparation := 80 ]
+!
+
 options
-	^ options ifNil: [ options := #(#selectGoBack #selectDifficulty #selectMuteMusic #selectMuteSounds) ]
+	^ options ifNil: [ options := #(#selectGoBack #selectDifficulty #selectMuteSounds #selectMuteMusic) ]
 !
 
-options: anObject
-	options := anObject
-!
-
-pointer
-	^ pointer
-!
-
-pointer: anObject
-	pointer := anObject
+pointerOriginY
+	^ pointerOriginY ifNil: [ pointerOriginY := 115 ]
 ! !
 
 !OVOptionsMenu methodsFor: 'control'!
 
-nextOption
-	self currentOption: (self options at: ((self options indexOf: self currentOption) \\ self options size) + 1).
-	self pointer y: (((self options indexOf: self currentOption) - 1) * 80) +  205
-!
-
 selectDifficulty
+	self game difficulty: (self game difficulty \\ 4) + 1.
+	self difficultyText contents: 'DIFFICULTY: ' , self game difficulty printString
 !
 
 selectGoBack
+	self game switchToScreenNamed: 'mainMenu'.
+	self game currentScreen placePointer.
 !
 
 selectMuteMusic
+	self game toggleMuteMusic.
+	self muteMusicText contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ])
 !
 
 selectMuteSounds
-!
-
-step
-	self inputHandler 
-		onKeyPressed: Key downArrow do: [ self nextOption ];
-		onKeyPressed: Key upArrow do: [ self nextOption ];
-		onKeyPressed: Key enter do: [ self perform: self currentOption ];
-		onKeyPressed: Key space do: [ self perform: self currentOption ]
+	self game toggleMuteSounds.
+	self muteSoundsText contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ])
 ! !
 
 !OVOptionsMenu methodsFor: 'drawing'!
@@ -474,7 +471,7 @@ startScreen
 				position: 150@160);
 		difficultyText:
 			(Text new 
-				contents: 'DIFFICULTY: 1';
+				contents: 'DIFFICULTY: ' , self game difficulty printString;
 				color: 'rgba(90,113,26,0.7)';
 				outlineColor: 'rgba(242,246,144,0.8)';
 				outlineSize: 3;
@@ -483,7 +480,7 @@ startScreen
 				position: 150@240);
 		muteSoundsText:
 			(Text new 
-				contents: 'MUTE SOUNDS';
+				contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);
 				color: 'rgba(90,113,26,0.7)';
 				outlineColor: 'rgba(242,246,144,0.8)';
 				outlineSize: 3;
@@ -492,7 +489,7 @@ startScreen
 				position: 150@320); 
 		muteMusicText:
 			(Text new 
-				contents: 'MUTE MUSIC';
+				contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);
 				color: 'rgba(90,113,26,0.7)';
 				outlineColor: 'rgba(242,246,144,0.8)';
 				outlineSize: 3;
@@ -503,7 +500,7 @@ startScreen
 			((Sprite new
 				imageSrc: 'images/ovni/pointer.png';
 				addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)
-					position: 75@125;
+					position: 75@115;
 					yourself).
 ! !
 
@@ -733,10 +730,18 @@ moveWithHandler: anInputHandler inCanvas: aCanvas
 ! !
 
 Screen subclass: #OVStartScreen
-	instanceVariableNames: 'saucers title startGameText'
+	instanceVariableNames: 'saucers title startGameText authorText'
 	package: 'OVNI'!
 
 !OVStartScreen methodsFor: 'accessing'!
+
+authorText
+	^ authorText
+!
+
+authorText: someText
+	authorText := someText
+!
 
 saucers
 	^ saucers
@@ -783,10 +788,18 @@ startScreen
 			contents: 'Press SPACE to start';
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 2;
+			outlineSize: 1;
 			fontName: 'ChangaOne';
 			fontSize: 40;
-			position: 180@320)
+			position: 180@320).
+			
+	self authorText:
+		(Text new 
+			contents: 'Bernat Romagosa 2014';
+			color: 'rgba(90,113,26,0.7)';
+			fontName: 'ChangaOne';
+			fontSize: 12;
+			position: 580@530)
 !
 
 step
@@ -803,7 +816,8 @@ draw
 	self 
 		drawBackground: self game farBackground;
 		drawSpriteCollection: self saucers;
-		draw: self title.
+		draw: self title;
+		draw: self authorText.
 		
 	self title y < 75 ifTrue: [ self draw: self startGameText ]
 ! !
