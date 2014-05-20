@@ -73,7 +73,7 @@ cards
 !MemoryGame methodsFor: 'control'!
 
 step
-	self onMouseClickDo: [
+	self inputHandler onMouseClickDo: [
 		self handleCardClick
 	]
 ! !
@@ -90,7 +90,10 @@ handleCardClick
 
 	| clickedCard |
 	
-	clickedCard := cards detect: [ :which | which touchingMousePointer: self mousePosition ] ifNone: [ nil ].
+	clickedCard := 
+		cards 
+			detect: [ :which | which touchingMousePointer: self inputHandler mousePosition ]
+			ifNone: [ nil ].
 	
 	clickedCard ifNotNil: [
 		(self soundNamed: clickedCard animalName) play.
@@ -141,7 +144,7 @@ addCardForAnimal: anAnimal inPosition: aPosition
 	self cards add:
 		(MemoryCard new
 			animalName: anAnimal;
-			spriteSheet: 'images/memory/' , anAnimal , '.png';
+			imageSrc: 'images/memory/' , anAnimal , '.png';
 			addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;
 			centre: aPosition;
 			frameRate: 25;
@@ -193,7 +196,7 @@ bounceAgainstPaddle2
 
 createBall
 	|offsetX offsetY|
-	ball := Sprite new spriteSheet: 'images/ball.png'.
+	ball := Sprite new imageSrc: 'images/ball.png'.
 	ball addFrameGroupNamed: 'moving' origin: (0@0) size: (15@15) frameCount: 6.
 	ball centre:  ((self width / 2) @ (self height / 2)).
 	ball frameRate: 5.
@@ -201,7 +204,7 @@ createBall
 
 createPaddle1
 	|verticalOffset|
-	paddle1 := Sprite new spriteSheet: 'images/paddle.png'.
+	paddle1 := Sprite new imageSrc: 'images/paddle.png'.
 	paddle1 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.
 	paddle1 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.
 	paddle1 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.
@@ -211,7 +214,7 @@ createPaddle1
 !
 
 createPaddle2
-	paddle2 := Sprite new spriteSheet: 'images/paddle.png'.
+	paddle2 := Sprite new imageSrc: 'images/paddle.png'.
 	paddle2 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.
 	paddle2 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.
 	paddle2 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.
@@ -329,13 +332,19 @@ startGame
 !
 
 step
+	
 	ai
-		ifFalse: [self whileKeyPressed: Key s do: [self goUp: paddle1];
-			whileKeyPressed: Key x do: [self goDown: paddle1]]
+		ifFalse: 
+			[self inputHandler 
+				whileKeyPressed: Key s do: [self goUp: paddle1];
+				whileKeyPressed: Key x do: [self goDown: paddle1]]
 		ifTrue: [self processAI].
-	self whileKeyPressed: Key upArrow do: [self goUp: paddle2];
-		whileKeyPressed: Key downArrow do: [self goDown: paddle2];
-		processBallMovement.
+	
+	self inputHandler 
+		whileKeyPressed: Key upArrow do: [self goUp: paddle2];
+		whileKeyPressed: Key downArrow do: [self goDown: paddle2].
+	
+	self processBallMovement.
 !
 
 verticalAngleFor: aPaddle
@@ -365,7 +374,7 @@ increaseSpeed
 initialize
 	super initialize.
 	self 
-		spriteSheet: 'images/trail.png';
+		imageSrc: 'images/trail.png';
 		addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.
 !
 
@@ -384,33 +393,36 @@ Game subclass: #SimplePacman
 !SimplePacman methodsFor: 'not yet classified'!
 
 createGhost
-	ghost := Sprite new spriteSheet: 'images/ghost.png'.
-	ghost addFrameGroupNamed: 'down' origin: (0@0) size: (50@55) frameCount: 2.
-	ghost addFrameGroupNamed: 'up' origin: (100@0) size: (50@55) frameCount: 2.
-	ghost addFrameGroupNamed: 'right' origin: (0@55) size: (50@55) frameCount: 2.
-	ghost addFrameGroupNamed: 'left' origin: (100@55) size: (50@55) frameCount: 2.
-	ghost centre: 500@500.
+	ghost := Sprite new imageSrc: 'images/ghost.png'.
+	ghost 
+		addFrameGroupNamed: 'down' origin: (0@0) size: (50@55) frameCount: 2;
+		addFrameGroupNamed: 'up' origin: (100@0) size: (50@55) frameCount: 2;
+		addFrameGroupNamed: 'right' origin: (0@55) size: (50@55) frameCount: 2;
+		addFrameGroupNamed: 'left' origin: (100@55) size: (50@55) frameCount: 2;
+		centre: 500@500.
 !
 
 createPacman
-	pacman := Sprite new spriteSheet: 'images/pacman.png'.
-	pacman addFrameGroupNamed: 'left' origin: (0@0) size: (50@50) frameCount: 2.
-	pacman addFrameGroupNamed: 'right' origin: (0@50) size: (50@50) frameCount: 2.
-	pacman addFrameGroupNamed: 'down' origin: (100@0) size: (50@50) frameCount: 2.
-	pacman addFrameGroupNamed: 'up' origin: (100@50) size: (50@50) frameCount: 2.
-	pacman centre: 100@100.
+	pacman := Sprite new imageSrc: 'images/pacman.png'.
+	pacman 
+		addFrameGroupNamed: 'left' origin: (0@0) size: (50@50) frameCount: 2;
+		addFrameGroupNamed: 'right' origin: (0@50) size: (50@50) frameCount: 2;
+		addFrameGroupNamed: 'down' origin: (100@0) size: (50@50) frameCount: 2;
+		addFrameGroupNamed: 'up' origin: (100@50) size: (50@50) frameCount: 2;
+		centre: 100@100.
 !
 
 draw
-	self clearCanvas.
-	self drawSprite: ghost.
-	self drawSprite: pacman.
+	self 
+		clearCanvas;
+		drawSprite: ghost;
+		drawSprite: pacman.
 !
 
 moveDown
 	(pacman centre y + 25) >= self height 
 		ifFalse: 
-			[pacman moveCentreBy: (0@ 15)].
+			[pacman moveCentreBy: (0@15)].
 	pacman currentFrameGroup: 'down'
 !
 
@@ -482,12 +494,19 @@ startGame
 !
 
 step
-	self whileKeyPressed: Key leftArrow do: [self moveLeft];
+	self inputHandler 
+		whileKeyPressed: Key leftArrow do: [self moveLeft];
 		whileKeyPressed: Key rightArrow do: [self moveRight];
 		whileKeyPressed: Key upArrow do: [self moveUp];
-		whileKeyPressed: Key downArrow do: [self moveDown].
-	self onMouseClickDo: [ window alert: self mousePosition x asString , ',' , self mousePosition y asString ].
+		whileKeyPressed: Key downArrow do: [self moveDown];
+		onMouseClickDo: [ 
+			window alert: 
+				self inputHandler mousePosition x asString 
+					, ','
+					, self inputHandler mousePosition y asString ].
+					
 	self moveGhost.
+	
 	(pacman collidesWith: ghost) ifTrue: [ self end. window alert: 'You lost!!' ]
 ! !
 
@@ -523,7 +542,6 @@ draw
 				drawObstacles;
 				drawSprite: ship.
 			self trail allButLast do: [:each | self drawSprite: each ]].
-	self onMouseClickDo: [started := true].
 !
 
 drawCeiling
@@ -595,8 +613,9 @@ maxVariation
 !
 
 moveShip
-	self whileMouseUpDo: [self ship increaseSpeed].
-	self whileMouseDownDo: [self ship decreaseSpeed].
+	self inputHandler
+		whileMouseUpDo: [self ship increaseSpeed];
+		whileMouseDownDo: [self ship decreaseSpeed].
 	self ship y: (self ship y + (self ship speed * gravity))
 !
 
@@ -631,7 +650,16 @@ started
 !
 
 step
-	self started ifTrue: [self detectCollision; updateTrail; updateBumps; updateObstacles; updateDifficulty; moveShip]
+	self started ifTrue: [
+		self 
+			detectCollision; 
+			updateTrail; 
+			updateBumps; 
+			updateObstacles; 
+			updateDifficulty; 
+			moveShip ].
+			
+	self inputHandler onMouseClickDo: [ started := true ].
 !
 
 trail
@@ -639,7 +667,7 @@ trail
         	trail := #().
           	0 to: 10 do: [:i |
                              |ghostBall|
-                              ghostBall := Sprite new spriteSheet: 'images/trail.png'.
+                              ghostBall := Sprite new imageSrc: 'images/trail.png'.
                               ghostBall addFrameGroupNamed: 'trail' origin: (0@0) size: (10@10) frameCount: 1.
                               ghostBall position: (i * 10) @ (self height / 2).
                               trail add: ghostBall.
@@ -731,36 +759,40 @@ startGame
 
 startPositionFor: aLevel
 	aLevel
-		withIndexDo: [:eachRow :y | 
+		withIndexDo: [ :eachRow :y | 
 			(eachRow includes: 8) 
-                              	ifTrue: 
-                              		[eachRow withIndexDo: [:eachColumn :x |
-						eachColumn = 8 
+				ifTrue: [
+					eachRow withIndexDo: [ :eachColumn :x |
+						eachColumn = 8
 							ifTrue: [ ^ ((x * 30) - 15) @ ((y * 30) - 15) ]]]].
 !
 
 step
 	guy currentFrameGroup: 'still' , self lastMove.
-	self whileKeyPressed: Key leftArrow do: [self go: 'Left'];
-		whileKeyPressed: Key rightArrow do: [self go: 'Right'];
-		whileKeyPressed: Key upArrow do: [self go: 'Up'];
-		whileKeyPressed: Key downArrow do: [self go: 'Down'];
-		whileKeyPressed: Key r do: [self restartLevel];
-		whileKeyPressed: Key m do: [(self soundNamed: 'factory') stop];
-		whileKeyPressed: Key n do: [self advanceLevel].
+	
+	self inputHandler
+		whileKeyPressed: Key leftArrow do: [ self go: 'Left' ];
+		whileKeyPressed: Key rightArrow do: [ self go: 'Right' ];
+		whileKeyPressed: Key upArrow do: [ self go: 'Up'];
+		whileKeyPressed: Key downArrow do: [ self go: 'Down'];
+		whileKeyPressed: Key r do: [ self restartLevel ];
+		whileKeyPressed: Key m do: [ (self soundNamed: 'factory') stop ];
+		whileKeyPressed: Key n do: [ self advanceLevel ].
 
-	self isLevelOver ifTrue: [self advanceLevel]
+	self isLevelOver ifTrue: [ self advanceLevel ]
 ! !
 
 !Sokoban methodsFor: 'drawing'!
 
 draw
 	self clearCanvas.
-        self floor do: [:each | self drawSprite: each].
-	self walls do: [:each | self drawSprite: each].
-	self exits do: [:each | self drawSprite: each].
+    
+	{ self floor. self walls. self exits. self boxes } 
+		do: [ :eachCollection | 
+			eachCollection do: [ :eachSprite | 
+				self drawSprite: eachSprite ]].
+				
 	self drawSprite: guy.
-	self boxes do: [:each | self drawSprite: each].
 ! !
 
 !Sokoban methodsFor: 'levels'!
@@ -768,10 +800,11 @@ draw
 advanceLevel
 	(self soundNamed: 'applause') play.
 	(self class methodAt: 'level' , (currentLevel + 1) asString) 
-		ifNil: [self end]
-		ifNotNil:	[currentLevel := currentLevel + 1].
-	self clearLevel.
-	self createLevel.
+		ifNil: [ self end ]
+		ifNotNil: [ currentLevel := currentLevel + 1 ].
+	self 
+		clearLevel;
+		createLevel.
 !
 
 clearLevel
@@ -782,7 +815,8 @@ clearLevel
 !
 
 createLevel
-	self createFloor;
+	self 
+		createFloor;
 		createExits;
 		createGuy;
 		createBoxes;
@@ -790,7 +824,7 @@ createLevel
 !
 
 currentLevel
-	currentLevel ifNil: [currentLevel := 1].
+	currentLevel ifNil: [ currentLevel := 1 ].
 	^ self perform: 'level' , currentLevel asString
 !
 
@@ -1196,7 +1230,8 @@ level9
 !
 
 restartLevel
-	self clearLevel;
+	self 
+		clearLevel;
 		createLevel.
 ! !
 
@@ -1211,24 +1246,25 @@ directionDictionary
 !
 
 go: aDirection
-	|side offset|
+	| side offset |
 	side := self directionDictionary at: aDirection.
 	offset := self guyOffsetDictionary at: aDirection.
 
 	guy moveCentreBy: offset.
-	(guy perform: side , 'CollidesWithAnyOf:' withArguments: {walls})
-		ifFalse:
-			[(guy perform: side , 'CollidesWithAnyOf:' withArguments: {boxes})
-                         	ifTrue: 
-                         		[self moveBox: (guy perform: side , 'CollidesWithWhichOf:' withArguments: {boxes}) direction: aDirection.
-                                        guy moveCentreBy: (offset * -1).
-                                        guy currentFrameGroup: 'push', aDirection]
-	                        ifFalse: 
-                         		[guy moveCentreBy: ((offset / 8) * (stepSize - 8)).
-        	                	guy currentFrameGroup: 'walk', aDirection]]
-		ifTrue: 
-			[guy moveCentreBy: (offset * -1).
-                        guy currentFrameGroup: 'push' , aDirection].
+	
+	(guy perform: side , 'CollidesWithAnyOf:' withArguments: { walls })
+		ifFalse: [
+			(guy perform: side , 'CollidesWithAnyOf:' withArguments: { boxes })
+				ifTrue: [ 
+					self moveBox: (guy perform: side , 'CollidesWithWhichOf:' withArguments: { boxes }) direction: aDirection.
+					guy moveCentreBy: (offset * -1).
+					guy currentFrameGroup: 'push', aDirection ]
+				ifFalse: [ 
+					guy moveCentreBy: ((offset / 8) * (stepSize - 8)).
+					guy currentFrameGroup: 'walk', aDirection ]]
+		ifTrue: [
+			guy moveCentreBy: (offset * -1).
+			guy currentFrameGroup: 'push' , aDirection ].
 
 	lastMove := aDirection.
 !
@@ -1238,7 +1274,7 @@ guyOffsetDictionary
 !
 
 lastMove
-	^ lastMove ifNil: [lastMove := 'Down']
+	^ lastMove ifNil: [ lastMove := 'Down' ]
 !
 
 moveBox: aBox direction: aDirection
@@ -1248,17 +1284,16 @@ moveBox: aBox direction: aDirection
 
 	aBox centre: aBox centre + offset.
 	(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {walls})
-		ifFalse:
-			[(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {boxes})
-                         	ifFalse: 
-                         		[ (self soundNamed: 'slide') play.
-                                          5 timesRepeat: 
-                                         	[[aBox moveCentreBy: offset] valueWithTimeout: 100.
-                                         	self clearCanvas. 
-                                         	self boxes do: [:each | self drawSprite: each]]]
-	                        ifTrue: 
-                         		[aBox centre: aBox centre - offset]]
-		ifTrue: [aBox centre: aBox centre - offset]
+		ifFalse: [
+			(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {boxes})
+				ifFalse: [
+					(self soundNamed: 'slide') play.
+                    5 timesRepeat: [
+						[ aBox moveCentreBy: offset ] valueWithTimeout: 100.
+						self clearCanvas. 
+						self boxes do: [ :each | self drawSprite: each ]]]
+				ifTrue: [ aBox centre: aBox centre - offset ]]
+		ifTrue: [ aBox centre: aBox centre - offset ]
 !
 
 processMovement
@@ -1268,15 +1303,15 @@ processMovement
 !Sokoban methodsFor: 'sprite collections'!
 
 boxes
-	^ boxes ifNil: [boxes := #()]
+	^ boxes ifNil: [ boxes := #() ]
 !
 
 exits
-	^ exits ifNil: [exits := #()]
+	^ exits ifNil: [ exits := #() ]
 !
 
 floor
-	^ floor ifNil: [floor := #()]
+	^ floor ifNil: [ floor := #() ]
 !
 
 walls
@@ -1286,54 +1321,52 @@ walls
 !Sokoban methodsFor: 'sprite creation'!
 
 createBoxes
-	|box|
-
+	| box |
 	self currentLevel
-		withIndexDo: [:eachRow :y | 
+		withIndexDo: [ :eachRow :y | 
 			(eachRow includes: 7) 
-                              	ifTrue: 
-                              		[eachRow withIndexDo: [:eachColumn :x |
+				ifTrue: 
+					[ eachRow withIndexDo: [ :eachColumn :x |
 						eachColumn = 7 
 							ifTrue: [
-                                                        	box := Sprite new spriteSheet: 'images/box.png'.
+								box := Sprite new imageSrc: 'images/box.png'.
 								box addFrameGroupNamed: 'still' origin: (((6 atRandom - 1) * 28)@0) size: (28@28) frameCount: 1.
 								box centre: ((x * 30) - 15) @ ((y * 30) - 15).
 								self boxes add: box ]]]].
 !
 
 createExits
-	|exit|
-
+	| exit |
 	self currentLevel
-		withIndexDo: [:eachRow :y | 
+		withIndexDo: [ :eachRow :y | 
 			(eachRow includes: 9) 
-                              	ifTrue: 
-                              		[eachRow withIndexDo: [:eachColumn :x |
+				ifTrue: 
+					[ eachRow withIndexDo: [ :eachColumn :x |
 						eachColumn = 9 
 							ifTrue: [
-                                                        	exit := Sprite new spriteSheet: 'images/exit.png'.
+								exit := Sprite new imageSrc: 'images/exit.png'.
 								exit addFrameGroupNamed: 'exit' origin: (0@0) size: (28@28) frameCount: 1.
 								exit centre: ((x * 30) - 15) @ ((y * 30) - 15).
 								self exits add: exit ]]]].
 !
 
 createFloor
-	|tile|
+	| tile |
 	self currentLevel
-		withIndexDo: [:eachRow :y | 
+		withIndexDo: [ :eachRow :y | 
 			(eachRow includes: 1) 
-                              	ifTrue: 
-                              		[eachRow withIndexDo: [:eachColumn :x |
+				ifTrue: 
+					[ eachRow withIndexDo:  [ :eachColumn :x |
 						eachColumn > 1
 							ifTrue: [
-                                                        	tile := Sprite new spriteSheet: 'images/floor.png'.
+								tile := Sprite new imageSrc: 'images/floor.png'.
 								tile addFrameGroupNamed: 'tile' origin: (0@0) size: (30@30) frameCount: 1.
 								tile centre: ((x * 30) - 15) @ ((y * 30) - 15).
 								self floor add: tile]]]].
 !
 
 createGuy
-	guy := Sprite new spriteSheet: 'images/guy.png'.
+	guy := Sprite new imageSrc: 'images/guy.png'.
 	guy addFrameGroupNamed: 'walkDown' origin: (0@0) size: (25@25) frameCount: 2.
 	guy addFrameGroupNamed: 'walkUp' origin: (0@25) size: (25@25) frameCount: 2.
 	guy addFrameGroupNamed: 'walkLeft' origin: (0@50) size: (25@25) frameCount: 2.
@@ -1358,13 +1391,13 @@ createWalls
 	|wall|
 
 	self currentLevel
-		withIndexDo: [:eachRow :y | 
+		withIndexDo: [ :eachRow :y | 
 			(eachRow includes: 1) 
-                              	ifTrue: 
-                              		[eachRow withIndexDo: [:eachColumn :x |
+				ifTrue: 
+					[ eachRow withIndexDo: [ :eachColumn :x |
 						eachColumn = 1 
 							ifTrue: [
-                                                        	wall := Sprite new spriteSheet: 'images/wall.png'.
+								wall := Sprite new imageSrc: 'images/wall.png'.
 								wall addFrameGroupNamed: 'wall' origin: (0@0) size: (30@30) frameCount: 1.
 								wall x: ((x * 30) - 30); y: ((y * 30) - 30).
 								self walls add: wall ]]]].
