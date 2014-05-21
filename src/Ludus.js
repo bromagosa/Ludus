@@ -4154,33 +4154,6 @@ globals.InputHandler);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "whileNoKeyPressedDo:",
-protocol: 'events',
-fn: function (aBlock){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(_st(self._keys())._noneSatisfy_((function(all){
-return all;
-})))._and_((function(){
-return smalltalk.withContext(function($ctx2) {
-return _st(self._releasedKeys())._allSatisfy_((function(all){
-return all;
-}));
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
-if(smalltalk.assert($1)){
-_st(aBlock)._value();
-};
-return self}, function($ctx1) {$ctx1.fill(self,"whileNoKeyPressedDo:",{aBlock:aBlock},globals.InputHandler)})},
-args: ["aBlock"],
-source: "whileNoKeyPressedDo: aBlock\x0a\x09((self keys noneSatisfy: [ :all | all ])\x0a\x09\x09and: [ self releasedKeys allSatisfy: [ :all | all ] ])\x0a\x09\x09\x09ifTrue: [ aBlock value ]",
-messageSends: ["ifTrue:", "and:", "noneSatisfy:", "keys", "allSatisfy:", "releasedKeys", "value"],
-referencedClasses: []
-}),
-globals.InputHandler);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "windowScrollLeft",
 protocol: 'attributes',
 fn: function (){

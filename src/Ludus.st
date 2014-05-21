@@ -1118,12 +1118,6 @@ whileMouseDownDo: aBlock
 
 whileMouseUpDo: aBlock
 	self isMouseDown ifFalse: aBlock
-!
-
-whileNoKeyPressedDo: aBlock
-	((self keys noneSatisfy: [ :all | all ])
-		and: [ self releasedKeys allSatisfy: [ :all | all ] ])
-			ifTrue: [ aBlock value ]
 ! !
 
 !InputHandler methodsFor: 'events - private'!

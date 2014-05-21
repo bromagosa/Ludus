@@ -602,7 +602,9 @@ die
 !
 
 explode
-	self currentFrameGroup: 'explosion'.
+	self 
+		currentFrameGroup: 'explosion'; 
+		toFirstFrame.
 	self
 		loop: false; 
 		exploding: true.

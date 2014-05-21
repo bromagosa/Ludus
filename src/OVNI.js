@@ -1910,14 +1910,15 @@ protocol: 'actions',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
+var $1,$2;
 self._currentFrameGroup_("explosion");
+$1=self._toFirstFrame();
 self._loop_(false);
-$1=self._exploding_(true);
+$2=self._exploding_(true);
 return self}, function($ctx1) {$ctx1.fill(self,"explode",{},globals.OVSaucer)})},
 args: [],
-source: "explode\x0a\x09self currentFrameGroup: 'explosion'.\x0a\x09self\x0a\x09\x09loop: false; \x0a\x09\x09exploding: true.",
-messageSends: ["currentFrameGroup:", "loop:", "exploding:"],
+source: "explode\x0a\x09self \x0a\x09\x09currentFrameGroup: 'explosion'; \x0a\x09\x09toFirstFrame.\x0a\x09self\x0a\x09\x09loop: false; \x0a\x09\x09exploding: true.",
+messageSends: ["currentFrameGroup:", "toFirstFrame", "loop:", "exploding:"],
 referencedClasses: []
 }),
 globals.OVSaucer);
