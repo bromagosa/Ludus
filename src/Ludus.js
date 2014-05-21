@@ -1,4 +1,4 @@
-define("HOS/Ludus", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core/Web"], function(smalltalk,nil,_st, globals){
+define("HOS/Ludus", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Web", "amber_core/Kernel-Objects"], function(smalltalk,nil,_st, globals){
 smalltalk.addPackage('Ludus');
 smalltalk.packages["Ludus"].transport = {"type":"amd","amdNamespace":"HOS"};
 
@@ -1411,11 +1411,10 @@ fn: function (anIdentifier){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 self["@currentFrameGroup"]=self._frameGroupNamed_(anIdentifier);
-self._toFirstFrame();
 return self}, function($ctx1) {$ctx1.fill(self,"currentFrameGroup:",{anIdentifier:anIdentifier},globals.Animation)})},
 args: ["anIdentifier"],
-source: "currentFrameGroup: anIdentifier\x0a\x09currentFrameGroup := self frameGroupNamed: anIdentifier.\x0a\x09self toFirstFrame",
-messageSends: ["frameGroupNamed:", "toFirstFrame"],
+source: "currentFrameGroup: anIdentifier\x0a\x09currentFrameGroup := self frameGroupNamed: anIdentifier.",
+messageSends: ["frameGroupNamed:"],
 referencedClasses: []
 }),
 globals.Animation);
@@ -4149,6 +4148,33 @@ return self}, function($ctx1) {$ctx1.fill(self,"whileMouseUpDo:",{aBlock:aBlock}
 args: ["aBlock"],
 source: "whileMouseUpDo: aBlock\x0a\x09self isMouseDown ifFalse: aBlock",
 messageSends: ["ifFalse:", "isMouseDown"],
+referencedClasses: []
+}),
+globals.InputHandler);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "whileNoKeyPressedDo:",
+protocol: 'events',
+fn: function (aBlock){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(_st(self._keys())._noneSatisfy_((function(all){
+return all;
+})))._and_((function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(self._releasedKeys())._allSatisfy_((function(all){
+return all;
+}));
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+if(smalltalk.assert($1)){
+_st(aBlock)._value();
+};
+return self}, function($ctx1) {$ctx1.fill(self,"whileNoKeyPressedDo:",{aBlock:aBlock},globals.InputHandler)})},
+args: ["aBlock"],
+source: "whileNoKeyPressedDo: aBlock\x0a\x09((self keys noneSatisfy: [ :all | all ])\x0a\x09\x09and: [ self releasedKeys allSatisfy: [ :all | all ] ])\x0a\x09\x09\x09ifTrue: [ aBlock value ]",
+messageSends: ["ifTrue:", "and:", "noneSatisfy:", "keys", "allSatisfy:", "releasedKeys", "value"],
 referencedClasses: []
 }),
 globals.InputHandler);

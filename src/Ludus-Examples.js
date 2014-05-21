@@ -2377,7 +2377,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"boxOffsetDictionary",{},globals.Sokoban)})},
 args: [],
-source: "boxOffsetDictionary\x0a\x09^ boxOffsetDictionary ifNil: [ boxOffsetDictionary := #{'Down' -> (0@5). 'Up' -> (0@ -5). 'Left' -> (-5@0). 'Right' -> (5@0)} ]",
+source: "boxOffsetDictionary\x0a\x09^ boxOffsetDictionary ifNil: [ boxOffsetDictionary := #{ 'Down' -> (0@5). 'Up' -> (0@ -5). 'Left' -> (-5@0). 'Right' -> (5@0) } ]",
 messageSends: ["ifNil:", "@"],
 referencedClasses: []
 }),
@@ -2564,7 +2564,7 @@ return _st(self._floor())._add_(tile);
 $ctx1.sendIdx["withIndexDo:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"createFloor",{tile:tile},globals.Sokoban)})},
 args: [],
-source: "createFloor\x0a\x09| tile |\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 1) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo:  [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn > 1\x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile := Sprite new imageSrc: 'images/floor.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile addFrameGroupNamed: 'tile' origin: (0@0) size: (30@30) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self floor add: tile]]]].",
+source: "createFloor\x0a\x09| tile |\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 1) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn > 1\x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile := Sprite new imageSrc: 'images/floor.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile addFrameGroupNamed: 'tile' origin: (0@0) size: (30@30) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self floor add: tile ]]]].",
 messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", ">", "imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "-", "*", "add:", "floor"],
 referencedClasses: ["Sprite"]
 }),
@@ -2578,94 +2578,95 @@ fn: function (){
 var self=this;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35;
+var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35,$36,$37;
 self["@guy"]=_st(_st($Sprite())._new())._imageSrc_("images/guy.png");
 $1=self["@guy"];
-$2=(0).__at((0));
+$2=$1;
+$3=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
-$3=(25).__at((25));
+$4=(25).__at((25));
 $ctx1.sendIdx["@"]=2;
-_st($1)._addFrameGroupNamed_origin_size_frameCount_("walkDown",$2,$3,(2));
+_st($2)._addFrameGroupNamed_origin_size_frameCount_("walkDown",$3,$4,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=1;
-$4=self["@guy"];
-$5=(0).__at((25));
+$5=$1;
+$6=(0).__at((25));
 $ctx1.sendIdx["@"]=3;
-$6=(25).__at((25));
+$7=(25).__at((25));
 $ctx1.sendIdx["@"]=4;
-_st($4)._addFrameGroupNamed_origin_size_frameCount_("walkUp",$5,$6,(2));
+_st($5)._addFrameGroupNamed_origin_size_frameCount_("walkUp",$6,$7,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=2;
-$7=self["@guy"];
-$8=(0).__at((50));
+$8=$1;
+$9=(0).__at((50));
 $ctx1.sendIdx["@"]=5;
-$9=(25).__at((25));
+$10=(25).__at((25));
 $ctx1.sendIdx["@"]=6;
-_st($7)._addFrameGroupNamed_origin_size_frameCount_("walkLeft",$8,$9,(2));
+_st($8)._addFrameGroupNamed_origin_size_frameCount_("walkLeft",$9,$10,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=3;
-$10=self["@guy"];
-$11=(0).__at((75));
+$11=$1;
+$12=(0).__at((75));
 $ctx1.sendIdx["@"]=7;
-$12=(25).__at((25));
+$13=(25).__at((25));
 $ctx1.sendIdx["@"]=8;
-_st($10)._addFrameGroupNamed_origin_size_frameCount_("walkRight",$11,$12,(2));
+_st($11)._addFrameGroupNamed_origin_size_frameCount_("walkRight",$12,$13,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=4;
-$13=self["@guy"];
-$14=(50).__at((0));
+$14=$1;
+$15=(50).__at((0));
 $ctx1.sendIdx["@"]=9;
-$15=(25).__at((25));
+$16=(25).__at((25));
 $ctx1.sendIdx["@"]=10;
-_st($13)._addFrameGroupNamed_origin_size_frameCount_("stillDown",$14,$15,(1));
+_st($14)._addFrameGroupNamed_origin_size_frameCount_("stillDown",$15,$16,(1));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=5;
-$16=self["@guy"];
-$17=(50).__at((25));
+$17=$1;
+$18=(50).__at((25));
 $ctx1.sendIdx["@"]=11;
-$18=(25).__at((25));
+$19=(25).__at((25));
 $ctx1.sendIdx["@"]=12;
-_st($16)._addFrameGroupNamed_origin_size_frameCount_("stillUp",$17,$18,(1));
+_st($17)._addFrameGroupNamed_origin_size_frameCount_("stillUp",$18,$19,(1));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=6;
-$19=self["@guy"];
-$20=(50).__at((50));
+$20=$1;
+$21=(50).__at((50));
 $ctx1.sendIdx["@"]=13;
-$21=(25).__at((25));
+$22=(25).__at((25));
 $ctx1.sendIdx["@"]=14;
-_st($19)._addFrameGroupNamed_origin_size_frameCount_("stillLeft",$20,$21,(1));
+_st($20)._addFrameGroupNamed_origin_size_frameCount_("stillLeft",$21,$22,(1));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=7;
-$22=self["@guy"];
-$23=(50).__at((75));
+$23=$1;
+$24=(50).__at((75));
 $ctx1.sendIdx["@"]=15;
-$24=(25).__at((25));
+$25=(25).__at((25));
 $ctx1.sendIdx["@"]=16;
-_st($22)._addFrameGroupNamed_origin_size_frameCount_("stillRight",$23,$24,(1));
+_st($23)._addFrameGroupNamed_origin_size_frameCount_("stillRight",$24,$25,(1));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=8;
-$25=self["@guy"];
-$26=(75).__at((0));
+$26=$1;
+$27=(75).__at((0));
 $ctx1.sendIdx["@"]=17;
-$27=(25).__at((25));
+$28=(25).__at((25));
 $ctx1.sendIdx["@"]=18;
-_st($25)._addFrameGroupNamed_origin_size_frameCount_("pushDown",$26,$27,(2));
+_st($26)._addFrameGroupNamed_origin_size_frameCount_("pushDown",$27,$28,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=9;
-$28=self["@guy"];
-$29=(75).__at((25));
+$29=$1;
+$30=(75).__at((25));
 $ctx1.sendIdx["@"]=19;
-$30=(25).__at((25));
+$31=(25).__at((25));
 $ctx1.sendIdx["@"]=20;
-_st($28)._addFrameGroupNamed_origin_size_frameCount_("pushUp",$29,$30,(2));
+_st($29)._addFrameGroupNamed_origin_size_frameCount_("pushUp",$30,$31,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=10;
-$31=self["@guy"];
-$32=(75).__at((50));
+$32=$1;
+$33=(75).__at((50));
 $ctx1.sendIdx["@"]=21;
-$33=(25).__at((25));
+$34=(25).__at((25));
 $ctx1.sendIdx["@"]=22;
-_st($31)._addFrameGroupNamed_origin_size_frameCount_("pushLeft",$32,$33,(2));
+_st($32)._addFrameGroupNamed_origin_size_frameCount_("pushLeft",$33,$34,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=11;
-$34=self["@guy"];
-$35=(75).__at((75));
+$35=$1;
+$36=(75).__at((75));
 $ctx1.sendIdx["@"]=23;
-_st($34)._addFrameGroupNamed_origin_size_frameCount_("pushRight",$35,(25).__at((25)),(2));
-_st(self["@guy"])._centre_(self._startPositionFor_(self._currentLevel()));
-_st(self["@guy"])._frameRate_((2));
+_st($35)._addFrameGroupNamed_origin_size_frameCount_("pushRight",$36,(25).__at((25)),(2));
+_st($1)._centre_(self._startPositionFor_(self._currentLevel()));
+$37=_st($1)._frameRate_((2));
 return self}, function($ctx1) {$ctx1.fill(self,"createGuy",{},globals.Sokoban)})},
 args: [],
-source: "createGuy\x0a\x09guy := Sprite new imageSrc: 'images/guy.png'.\x0a\x09guy addFrameGroupNamed: 'walkDown' origin: (0@0) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'walkUp' origin: (0@25) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'walkLeft' origin: (0@50) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'walkRight' origin: (0@75) size: (25@25) frameCount: 2.\x0a\x0a\x09guy addFrameGroupNamed: 'stillDown' origin: (50@0) size: (25@25) frameCount: 1.\x0a\x09guy addFrameGroupNamed: 'stillUp' origin: (50@25) size: (25@25) frameCount: 1.\x0a\x09guy addFrameGroupNamed: 'stillLeft' origin: (50@50) size: (25@25) frameCount: 1.\x0a\x09guy addFrameGroupNamed: 'stillRight' origin: (50@75) size: (25@25) frameCount: 1.\x0a\x0a\x09guy addFrameGroupNamed: 'pushDown' origin: (75@0) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'pushUp' origin: (75@25) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'pushLeft' origin: (75@50) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'pushRight' origin: (75@75) size: (25@25) frameCount: 2.\x0a\x0a\x09guy centre: (self startPositionFor: self currentLevel).\x0a\x0a\x09guy frameRate: 2.",
+source: "createGuy\x0a\x09guy := Sprite new imageSrc: 'images/guy.png'.\x0a\x09guy\x0a\x09\x09addFrameGroupNamed: 'walkDown' origin: (0@0) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkUp' origin: (0@25) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkLeft' origin: (0@50) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkRight' origin: (0@75) size: (25@25) frameCount: 2;\x0a\x0a\x09\x09addFrameGroupNamed: 'stillDown' origin: (50@0) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillUp' origin: (50@25) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillLeft' origin: (50@50) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillRight' origin: (50@75) size: (25@25) frameCount: 1;\x0a\x0a\x09\x09addFrameGroupNamed: 'pushDown' origin: (75@0) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushUp' origin: (75@25) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushLeft' origin: (75@50) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushRight' origin: (75@75) size: (25@25) frameCount: 2;\x0a\x0a\x09\x09centre: (self startPositionFor: self currentLevel);\x0a\x0a\x09\x09frameRate: 2.",
 messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "startPositionFor:", "currentLevel", "frameRate:"],
 referencedClasses: ["Sprite"]
 }),
@@ -2782,7 +2783,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"directionDictionary",{},globals.Sokoban)})},
 args: [],
-source: "directionDictionary\x0a\x09^ directionDictionary ifNil: [ directionDictionary := #{'Down' -> 'bottom'. 'Up' -> 'top'. 'Left' -> 'left'. 'Right' -> 'right'} ]",
+source: "directionDictionary\x0a\x09^ directionDictionary ifNil: [ directionDictionary := #{ 'Down' -> 'bottom'. 'Up' -> 'top'. 'Left' -> 'left'. 'Right' -> 'right' } ]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),
@@ -2798,18 +2799,13 @@ return smalltalk.withContext(function($ctx1) {
 self._clearCanvas();
 _st([self._floor(),self._walls(),self._exits(),self._boxes()])._do_((function(eachCollection){
 return smalltalk.withContext(function($ctx2) {
-return _st(eachCollection)._do_((function(eachSprite){
-return smalltalk.withContext(function($ctx3) {
-return self._drawSprite_(eachSprite);
-$ctx3.sendIdx["drawSprite:"]=1;
-}, function($ctx3) {$ctx3.fillBlock({eachSprite:eachSprite},$ctx2,2)})}));
+return self._drawSpriteCollection_(eachCollection);
 }, function($ctx2) {$ctx2.fillBlock({eachCollection:eachCollection},$ctx1,1)})}));
-$ctx1.sendIdx["do:"]=1;
 self._drawSprite_(self["@guy"]);
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.Sokoban)})},
 args: [],
-source: "draw\x0a\x09self clearCanvas.\x0a    \x0a\x09{ self floor. self walls. self exits. self boxes } \x0a\x09\x09do: [ :eachCollection | \x0a\x09\x09\x09eachCollection do: [ :eachSprite | \x0a\x09\x09\x09\x09self drawSprite: eachSprite ]].\x0a\x09\x09\x09\x09\x0a\x09self drawSprite: guy.",
-messageSends: ["clearCanvas", "do:", "floor", "walls", "exits", "boxes", "drawSprite:"],
+source: "draw\x0a\x09self clearCanvas.\x0a    \x0a\x09{ self floor. self walls. self exits. self boxes } \x0a\x09\x09do: [ :eachCollection | self drawSpriteCollection: eachCollection ].\x0a\x0a\x09self drawSprite: guy.",
+messageSends: ["clearCanvas", "do:", "floor", "walls", "exits", "boxes", "drawSpriteCollection:", "drawSprite:"],
 referencedClasses: []
 }),
 globals.Sokoban);
@@ -2970,7 +2966,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"guyOffsetDictionary",{},globals.Sokoban)})},
 args: [],
-source: "guyOffsetDictionary\x0a\x09^ guyOffsetDictionary ifNil: [ guyOffsetDictionary := #{'Down' -> (0@8). 'Up' -> (0@ -8). 'Left' -> (-8@0). 'Right' -> (8@0)} ]",
+source: "guyOffsetDictionary\x0a\x09^ guyOffsetDictionary ifNil: [ guyOffsetDictionary := #{ 'Down' -> (0@8). 'Up' -> (0@ -8). 'Left' -> (-8@0). 'Right' -> (8@0) } ]",
 messageSends: ["ifNil:", "@"],
 referencedClasses: []
 }),
@@ -3045,7 +3041,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level1\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 7 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 1 1 1 2 2 7 1 1 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 1 2 2 7 2 7 2 1 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 1 1 1 2 1 2 1 1 2 1 0 0 1 1 1 1 1 1 0 0 0)\x0a       #(0 0 0 1 2 2 2 1 2 1 1 2 1 1 1 1 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 1 2 7 2 2 7 2 2 2 2 2 2 2 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 1 1 1 1 1 2 1 1 1 2 1 8 1 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 2 2 2 2 2 1 1 1 1 1 1 1 1 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level1\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 7 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 1 1 1 2 2 7 1 1 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 1 2 2 7 2 7 2 1 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 1 1 1 2 1 2 1 1 2 1 0 0 1 1 1 1 1 1 0 0 0)\x0a       #(0 0 0 1 2 2 2 1 2 1 1 2 1 1 1 1 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 1 2 7 2 2 7 2 2 2 2 2 2 2 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 1 1 1 1 1 2 1 1 1 2 1 8 1 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 2 2 2 2 2 1 1 1 1 1 1 1 1 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3062,7 +3058,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level10\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 1 1 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 1 1 8 1 1 1 1 2 2 2 2 2 2 2 1 2 2 2 1 0 0 0) \x0a#(0 0 1 2 7 7 2 2 2 7 7 2 2 7 2 7 2 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 7 7 7 1 2 2 2 2 7 2 2 1 9 9 9 1 0 0 0) \x0a#(0 0 1 2 7 2 2 2 1 2 7 7 2 7 7 2 1 9 9 9 1 0 0 0) \x0a#(0 0 1 1 1 2 2 2 1 2 2 7 2 2 2 2 1 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 2 2 2 1 2 7 2 7 2 7 2 1 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 2 2 1 1 1 1 1 1 2 1 1 1 9 9 9 1 0 0 0) \x0a#(0 0 1 1 2 1 2 2 1 2 2 7 2 7 2 2 1 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 1 1 2 1 2 7 7 2 7 2 7 1 1 9 9 1 0 0 0) \x0a#(0 0 1 2 9 9 1 2 1 2 2 7 2 2 2 2 2 2 1 9 1 0 0 0) \x0a#(0 0 1 2 9 9 1 2 1 2 7 7 7 2 7 7 7 2 1 9 1 0 0 0) \x0a#(0 0 1 1 1 1 1 2 1 2 2 2 2 2 2 2 1 2 1 9 1 0 0 0) \x0a#(0 0 0 0 0 0 1 2 1 1 1 1 1 1 1 1 1 2 1 9 1 0 0 0) \x0a#(0 0 0 0 0 0 1 2 2 2 2 2 2 2 2 2 2 2 1 9 1 0 0 0) \x0a#(0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level10\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 1 1 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 1 1 8 1 1 1 1 2 2 2 2 2 2 2 1 2 2 2 1 0 0 0) \x0a       #(0 0 1 2 7 7 2 2 2 7 7 2 2 7 2 7 2 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 7 7 7 1 2 2 2 2 7 2 2 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 7 2 2 2 1 2 7 7 2 7 7 2 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 1 1 2 2 2 1 2 2 7 2 2 2 2 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 2 2 2 1 2 7 2 7 2 7 2 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 2 2 1 1 1 1 1 1 2 1 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 1 2 1 2 2 1 2 2 7 2 7 2 2 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 1 1 2 1 2 7 7 2 7 2 7 1 1 9 9 1 0 0 0) \x0a       #(0 0 1 2 9 9 1 2 1 2 2 7 2 2 2 2 2 2 1 9 1 0 0 0) \x0a       #(0 0 1 2 9 9 1 2 1 2 7 7 7 2 7 7 7 2 1 9 1 0 0 0) \x0a       #(0 0 1 1 1 1 1 2 1 2 2 2 2 2 2 2 1 2 1 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 1 2 1 1 1 1 1 1 1 1 1 2 1 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 1 2 2 2 2 2 2 2 2 2 2 2 1 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x09   \x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3079,7 +3075,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level11\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a#(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 1 1 1 1 0 1 2 2 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 1 2 8 1 1 1 7 2 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 1 1 2 2 2 2 2 2 7 2 2 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 1 2 2 7 2 7 7 1 1 2 1 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 1 7 1 1 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 1 2 7 2 7 7 2 1 2 1 1 1 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 2 7 2 1 2 2 1 2 7 2 1 1 1 1 1 0 0 0 0) \x0a#(0 1 1 1 1 2 2 2 2 1 2 2 7 7 2 1 2 2 2 1 0 0 0 0) \x0a#(0 1 1 1 1 2 1 1 2 7 2 2 2 2 2 2 2 2 2 1 0 0 0 0) \x0a#(0 1 9 2 2 2 2 1 1 1 2 2 1 1 1 1 1 1 1 1 0 0 0 0) \x0a#(0 1 9 9 2 9 9 1 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 1 9 9 9 1 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)  \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level11\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 1 1 1 1 0 1 2 2 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 1 2 8 1 1 1 7 2 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 1 1 2 2 2 2 2 2 7 2 2 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 1 2 2 7 2 7 7 1 1 2 1 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 1 7 1 1 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 1 2 7 2 7 7 2 1 2 1 1 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 2 7 2 1 2 2 1 2 7 2 1 1 1 1 1 0 0 0 0) \x0a       #(0 1 1 1 1 2 2 2 2 1 2 2 7 7 2 1 2 2 2 1 0 0 0 0) \x0a       #(0 1 1 1 1 2 1 1 2 7 2 2 2 2 2 2 2 2 2 1 0 0 0 0) \x0a       #(0 1 9 2 2 2 2 1 1 1 2 2 1 1 1 1 1 1 1 1 0 0 0 0) \x0a       #(0 1 9 9 2 9 9 1 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 1 9 9 9 1 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)  \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x09   \x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3096,7 +3092,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level12\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0) \x0a#(0 0 0 0 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 0 0 0 0) \x0a#(0 0 0 0 1 2 1 2 1 1 1 1 1 1 2 2 2 2 2 1 0 0 0 0) \x0a#(0 0 0 0 1 2 1 2 2 7 2 7 2 7 2 7 1 2 2 1 0 0 0 0) \x0a#(0 0 0 0 1 2 1 2 2 2 7 8 7 2 2 2 1 1 2 1 1 0 0 0) \x0a#(0 0 0 0 1 2 1 2 2 7 2 7 2 7 1 1 1 9 9 9 1 0 0 0) \x0a#(0 0 0 0 1 2 1 2 2 2 7 2 7 2 2 1 1 9 9 9 1 0 0 0) \x0a#(0 0 0 0 1 2 1 1 1 7 7 7 2 7 2 1 1 9 9 9 1 0 0 0) \x0a#(0 0 0 0 1 2 2 2 2 2 1 2 1 1 2 1 1 9 9 9 1 0 0 0) \x0a#(0 0 0 0 1 1 1 1 1 2 2 2 1 1 2 1 1 9 9 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 1 1 1 1 1 2 2 2 2 2 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 1 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level12\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0) \x0a       #(0 0 0 0 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 0 0 0 0) \x0a       #(0 0 0 0 1 2 1 2 1 1 1 1 1 1 2 2 2 2 2 1 0 0 0 0) \x0a       #(0 0 0 0 1 2 1 2 2 7 2 7 2 7 2 7 1 2 2 1 0 0 0 0) \x0a       #(0 0 0 0 1 2 1 2 2 2 7 8 7 2 2 2 1 1 2 1 1 0 0 0) \x0a       #(0 0 0 0 1 2 1 2 2 7 2 7 2 7 1 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 1 2 1 2 2 2 7 2 7 2 2 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 1 2 1 1 1 7 7 7 2 7 2 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 1 2 2 2 2 2 1 2 1 1 2 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 1 2 2 2 1 1 2 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 1 1 1 1 1 2 2 2 2 2 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x09   \x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3113,7 +3109,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level13\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 2 2 2 1 1 2 2 1 1 1 1 1 1 0 0 0 0 0) \x0a#(0 0 1 1 1 2 2 2 2 2 1 2 2 1 2 2 2 2 1 1 1 0 0 0) \x0a#(0 0 1 2 2 7 2 1 7 2 1 2 2 1 2 2 9 9 9 2 1 0 0 0) \x0a#(0 0 1 2 1 2 7 1 8 7 1 1 2 1 2 1 9 1 9 2 1 0 0 0) \x0a#(0 0 1 2 2 1 2 1 7 2 2 1 2 2 2 2 9 2 9 2 1 0 0 0) \x0a#(0 0 1 2 7 2 2 2 2 7 2 1 2 1 2 1 9 1 9 2 1 0 0 0) \x0a#(0 0 1 2 2 2 1 1 2 2 1 1 7 2 7 2 9 2 9 2 1 0 0 0) \x0a#(0 0 1 2 7 2 1 2 2 2 1 2 2 1 7 1 9 1 9 2 1 0 0 0) \x0a#(0 0 1 1 2 7 2 2 7 2 2 2 7 2 2 7 9 9 9 2 1 0 0 0) \x0a#(0 0 0 1 7 2 1 1 1 1 1 1 2 2 2 2 1 1 2 2 1 0 0 0) \x0a#(0 0 0 1 2 2 1 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level13\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 2 2 2 1 1 2 2 1 1 1 1 1 1 0 0 0 0 0) \x0a       #(0 0 1 1 1 2 2 2 2 2 1 2 2 1 2 2 2 2 1 1 1 0 0 0) \x0a       #(0 0 1 2 2 7 2 1 7 2 1 2 2 1 2 2 9 9 9 2 1 0 0 0) \x0a       #(0 0 1 2 1 2 7 1 8 7 1 1 2 1 2 1 9 1 9 2 1 0 0 0) \x0a       #(0 0 1 2 2 1 2 1 7 2 2 1 2 2 2 2 9 2 9 2 1 0 0 0) \x0a       #(0 0 1 2 7 2 2 2 2 7 2 1 2 1 2 1 9 1 9 2 1 0 0 0) \x0a       #(0 0 1 2 2 2 1 1 2 2 1 1 7 2 7 2 9 2 9 2 1 0 0 0) \x0a       #(0 0 1 2 7 2 1 2 2 2 1 2 2 1 7 1 9 1 9 2 1 0 0 0) \x0a       #(0 0 1 1 2 7 2 2 7 2 2 2 7 2 2 7 9 9 9 2 1 0 0 0) \x0a       #(0 0 0 1 7 2 1 1 1 1 1 1 2 2 2 2 1 1 2 2 1 0 0 0) \x0a       #(0 0 0 1 2 2 1 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3130,7 +3126,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level2\x0a\x09^  \x0a   #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 2 2 2 2 1 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 7 2 2 7 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 7 1 1 1 1 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 2 2 8 2 1 1 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 1 2 2 7 2 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 1 1 1 1 1 2 1 1 7 2 7 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 2 7 2 2 7 2 7 2 7 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 2 2 2 2 1 2 2 2 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level2\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 2 2 2 2 1 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 7 2 2 7 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 7 1 1 1 1 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 2 2 8 2 1 1 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 1 2 2 7 2 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 1 1 1 1 1 2 1 1 7 2 7 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 2 7 2 2 7 2 7 2 7 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 2 2 2 2 1 2 2 2 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3147,7 +3143,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level3\x0a\x09^\x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)  \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 8 1 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 2 7 1 7 2 1 1 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 2 7 2 2 7 1 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 1 7 2 7 2 1 0 0 0 0 0 0) \x0a#(0 0 0 1 1 1 1 1 1 1 1 1 2 7 2 1 2 1 1 1 0 0 0 0) \x0a#(0 0 0 1 9 9 9 9 2 2 1 1 2 7 2 2 7 2 2 1 0 0 0 0) \x0a#(0 0 0 1 1 9 9 9 2 2 2 2 7 2 2 7 2 2 2 1 0 0 0 0) \x0a#(0 0 0 1 9 9 9 9 2 2 1 1 1 1 1 1 1 1 1 1 0 0 0 0) \x0a#(0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level3\x0a\x09^\x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)  \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 8 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 2 7 1 7 2 1 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 2 7 2 2 7 1 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 1 7 2 7 2 1 0 0 0 0 0 0) \x0a       #(0 0 0 1 1 1 1 1 1 1 1 1 2 7 2 1 2 1 1 1 0 0 0 0) \x0a       #(0 0 0 1 9 9 9 9 2 2 1 1 2 7 2 2 7 2 2 1 0 0 0 0) \x0a       #(0 0 0 1 1 9 9 9 2 2 2 2 7 2 2 7 2 2 2 1 0 0 0 0) \x0a       #(0 0 0 1 9 9 9 9 2 2 1 1 1 1 1 1 1 1 1 1 0 0 0 0) \x0a       #(0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3164,7 +3160,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level4\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 9 9 9 9 1 0 0 0) \x0a#(0 0 1 1 1 1 1 1 1 1 1 1 1 1 2 2 9 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 2 2 1 2 2 7 2 7 2 2 2 9 9 9 9 1 0 0 0) \x0a#(0 0 1 2 7 7 7 1 7 2 2 7 2 1 2 2 9 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 7 2 2 2 2 2 7 2 1 2 2 9 9 9 9 1 0 0 0) \x0a#(0 0 1 2 7 7 2 1 7 2 7 2 7 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 1 2 2 7 2 1 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 1 2 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 2 2 1 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 2 2 2 7 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 7 7 1 7 7 2 2 8 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 2 2 1 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0)\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level4\x0a\x09^\x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 9 9 9 9 1 0 0 0) \x0a       #(0 0 1 1 1 1 1 1 1 1 1 1 1 1 2 2 9 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 2 2 1 2 2 7 2 7 2 2 2 9 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 7 7 7 1 7 2 2 7 2 1 2 2 9 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 7 2 2 2 2 2 7 2 1 2 2 9 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 7 7 2 1 7 2 7 2 7 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 1 2 2 7 2 1 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 1 2 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 2 2 1 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 2 2 2 7 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 7 7 1 7 7 2 2 8 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 2 2 1 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3181,7 +3177,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level5\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 2 1 7 1 1 2 2 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 7 2 1 0 0 0) \x0a#(0 0 0 0 1 1 1 1 1 1 1 1 1 2 1 1 1 2 2 2 1 0 0 0) \x0a#(0 0 0 0 1 9 9 9 9 2 2 1 1 2 7 2 2 7 1 1 1 0 0 0) \x0a#(0 0 0 0 1 9 9 9 9 2 2 2 2 7 2 7 7 2 1 1 0 0 0 0) \x0a#(0 0 0 0 1 9 9 9 9 2 2 1 1 7 2 2 7 2 8 1 0 0 0 0) \x0a#(0 0 0 0 1 1 1 1 1 1 1 1 1 2 2 7 2 2 1 1 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 2 7 2 7 2 2 1 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 2 1 1 2 1 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 1 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level5\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 2 1 7 1 1 2 2 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 7 2 1 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 1 1 1 1 1 2 1 1 1 2 2 2 1 0 0 0) \x0a       #(0 0 0 0 1 9 9 9 9 2 2 1 1 2 7 2 2 7 1 1 1 0 0 0) \x0a       #(0 0 0 0 1 9 9 9 9 2 2 2 2 7 2 7 7 2 1 1 0 0 0 0) \x0a       #(0 0 0 0 1 9 9 9 9 2 2 1 1 7 2 2 7 2 8 1 0 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 1 1 1 1 1 2 2 7 2 2 1 1 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 2 7 2 7 2 2 1 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 2 1 1 2 1 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 1 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x09   \x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3198,7 +3194,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level6\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 1 1 0 0 1 1 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 2 2 1 0 1 1 8 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 2 2 1 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 2 2 2 2 2 7 7 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 2 2 1 2 1 2 7 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 1 1 1 2 1 2 7 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 2 7 2 1 7 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 1 2 2 7 1 2 7 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 1 2 7 2 2 7 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 1 2 2 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level6\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 1 1 0 0 1 1 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 2 2 1 0 1 1 8 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 2 2 1 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 2 2 2 2 2 7 7 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 2 2 1 2 1 2 7 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 1 1 1 2 1 2 7 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 2 7 2 1 7 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 1 2 2 7 1 2 7 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 1 2 7 2 2 7 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 1 2 2 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3215,7 +3211,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level7\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 1 1 1 2 2 2 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 2 1 2 8 1 1 2 7 7 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 2 2 2 7 2 2 2 2 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 2 7 2 2 1 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 1 2 1 1 1 1 1 7 1 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 7 2 2 1 1 1 2 9 9 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 7 2 7 2 7 2 9 9 9 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 2 2 2 1 1 1 9 9 9 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 7 7 2 1 0 1 9 9 9 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 2 1 1 1 0 1 1 1 1 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level7\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 1 1 1 2 2 2 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 2 1 2 8 1 1 2 7 7 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 2 2 2 7 2 2 2 2 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 2 7 2 2 1 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 1 2 1 1 1 1 1 7 1 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 7 2 2 1 1 1 2 9 9 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 7 2 7 2 7 2 9 9 9 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 2 2 2 1 1 1 9 9 9 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 7 7 2 1 0 1 9 9 9 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 2 1 1 1 0 1 1 1 1 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x09   \x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3232,7 +3228,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level8\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 2 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 2 2 2 7 2 2 2 7 2 7 2 1 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 7 1 2 7 2 1 2 2 7 2 2 1 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 2 7 2 7 2 2 1 2 2 2 2 1 0 0 0 0 0) \x0a#(0 0 0 1 1 1 2 7 1 2 1 2 2 1 1 1 1 2 1 0 0 0 0 0) \x0a#(0 0 0 1 8 1 7 2 7 2 7 2 2 1 1 2 2 2 1 0 0 0 0 0) \x0a#(0 0 0 1 2 2 2 2 7 2 1 7 1 2 2 2 1 2 1 0 0 0 0 0) \x0a#(0 0 0 1 2 2 2 7 2 2 2 2 7 2 7 2 7 2 1 0 0 0 0 0) \x0a#(0 0 0 1 1 1 1 1 2 2 1 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level8\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 2 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 2 2 2 7 2 2 2 7 2 7 2 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 7 1 2 7 2 1 2 2 7 2 2 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 2 7 2 7 2 2 1 2 2 2 2 1 0 0 0 0 0) \x0a       #(0 0 0 1 1 1 2 7 1 2 1 2 2 1 1 1 1 2 1 0 0 0 0 0) \x0a       #(0 0 0 1 8 1 7 2 7 2 7 2 2 1 1 2 2 2 1 0 0 0 0 0) \x0a       #(0 0 0 1 2 2 2 2 7 2 1 7 1 2 2 2 1 2 1 0 0 0 0 0) \x0a       #(0 0 0 1 2 2 2 7 2 2 2 2 7 2 7 2 7 2 1 0 0 0 0 0) \x0a       #(0 0 0 1 1 1 1 1 2 2 1 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3249,7 +3245,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level9\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 9 9 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 2 2 9 9 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 2 9 2 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 1 2 2 1 1 2 2 9 9 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 1 1 2 1 1 2 2 9 9 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 1 1 1 2 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 1 2 7 7 7 2 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 1 2 2 7 2 7 2 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 1 1 2 2 2 1 7 2 7 2 2 2 1 2 2 2 1 0 0 0) \x0a#(0 0 0 0 1 8 2 7 2 2 7 2 2 2 2 7 2 2 7 2 1 0 0 0) \x0a#(0 0 0 0 1 1 1 1 1 1 2 7 7 2 7 2 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level9\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 2 2 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 2 9 2 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 1 2 2 1 1 2 2 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 1 1 2 1 1 2 2 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 1 1 1 2 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 1 2 7 7 7 2 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 1 2 2 7 2 7 2 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 1 1 2 2 2 1 7 2 7 2 2 2 1 2 2 2 1 0 0 0) \x0a       #(0 0 0 0 1 8 2 7 2 2 7 2 2 2 2 7 2 2 7 2 1 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 1 1 2 7 7 2 7 2 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22       ",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3307,22 +3303,6 @@ return self}, function($ctx1) {$ctx1.fill(self,"moveBox:direction:",{aBox:aBox,a
 args: ["aBox", "aDirection"],
 source: "moveBox: aBox direction: aDirection\x0a\x09|side offset|\x0a\x09side := self directionDictionary at: aDirection.\x0a\x09offset := self boxOffsetDictionary at: aDirection.\x0a\x0a\x09aBox centre: aBox centre + offset.\x0a\x09(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {walls})\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {boxes})\x0a\x09\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09\x09(self soundNamed: 'slide') play.\x0a                    5 timesRepeat: [\x0a\x09\x09\x09\x09\x09\x09[ aBox moveCentreBy: offset ] valueWithTimeout: 100.\x0a\x09\x09\x09\x09\x09\x09self clearCanvas. \x0a\x09\x09\x09\x09\x09\x09self boxes do: [ :each | self drawSprite: each ]]]\x0a\x09\x09\x09\x09ifTrue: [ aBox centre: aBox centre - offset ]]\x0a\x09\x09ifTrue: [ aBox centre: aBox centre - offset ]",
 messageSends: ["at:", "directionDictionary", "boxOffsetDictionary", "centre:", "+", "centre", "ifFalse:ifTrue:", "perform:withArguments:", ",", "play", "soundNamed:", "timesRepeat:", "valueWithTimeout:", "moveCentreBy:", "clearCanvas", "do:", "boxes", "drawSprite:", "-"],
-referencedClasses: []
-}),
-globals.Sokoban);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "processMovement",
-protocol: 'movement',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-_st(self["@guy"])._currentFrameGroup_("still".__comma(self._lastMove()));
-return self}, function($ctx1) {$ctx1.fill(self,"processMovement",{},globals.Sokoban)})},
-args: [],
-source: "processMovement\x0a\x09guy currentFrameGroup: 'still' , self lastMove.",
-messageSends: ["currentFrameGroup:", ",", "lastMove"],
 referencedClasses: []
 }),
 globals.Sokoban);
@@ -3467,7 +3447,7 @@ self._advanceLevel();
 };
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.Sokoban)})},
 args: [],
-source: "step\x0a\x09guy currentFrameGroup: 'still' , self lastMove.\x0a\x09\x0a\x09self inputHandler\x0a\x09\x09whileKeyPressed: Key leftArrow do: [ self go: 'Left' ];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [ self go: 'Right' ];\x0a\x09\x09whileKeyPressed: Key upArrow do: [ self go: 'Up'];\x0a\x09\x09whileKeyPressed: Key downArrow do: [ self go: 'Down'];\x0a\x09\x09whileKeyPressed: Key r do: [ self restartLevel ];\x0a\x09\x09whileKeyPressed: Key m do: [ (self soundNamed: 'factory') stop ];\x0a\x09\x09whileKeyPressed: Key n do: [ self advanceLevel ].\x0a\x0a\x09self isLevelOver ifTrue: [ self advanceLevel ]",
+source: "step\x0a\x09guy currentFrameGroup: 'still' , self lastMove.\x0a\x09\x0a\x09self inputHandler\x0a\x09\x09whileKeyPressed: Key leftArrow do: [ self go: 'Left' ];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [ self go: 'Right' ];\x0a\x09\x09whileKeyPressed: Key upArrow do: [ self go: 'Up'];\x0a\x09\x09whileKeyPressed: Key downArrow do: [ self go: 'Down'];\x0a\x09\x09whileKeyPressed: Key r do: [ self restartLevel ];\x0a\x09\x09whileKeyPressed: Key m do: [ (self soundNamed: 'factory') stop ];\x0a\x09\x09whileKeyPressed: Key n do: [ self advanceLevel ].\x0a\x09\x0a\x09self isLevelOver ifTrue: [ self advanceLevel ]",
 messageSends: ["currentFrameGroup:", ",", "lastMove", "whileKeyPressed:do:", "inputHandler", "leftArrow", "go:", "rightArrow", "upArrow", "downArrow", "r", "restartLevel", "m", "stop", "soundNamed:", "n", "advanceLevel", "ifTrue:", "isLevelOver"],
 referencedClasses: ["Key"]
 }),
@@ -3491,7 +3471,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"walls",{},globals.Sokoban)})},
 args: [],
-source: "walls\x0a\x09^ walls ifNil: [walls := #()]",
+source: "walls\x0a\x09^ walls ifNil: [ walls := #() ]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),
