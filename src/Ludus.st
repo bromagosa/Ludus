@@ -498,7 +498,6 @@ currentFrameGroup
 
 currentFrameGroup: anIdentifier
 	currentFrameGroup := self frameGroupNamed: anIdentifier.
-	self toFirstFrame
 !
 
 frameGroupNamed: anIdentifier

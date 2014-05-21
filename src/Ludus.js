@@ -1,4 +1,4 @@
-define("HOS/Ludus", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core/Web"], function(smalltalk,nil,_st, globals){
+define("HOS/Ludus", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Web", "amber_core/Kernel-Objects"], function(smalltalk,nil,_st, globals){
 smalltalk.addPackage('Ludus');
 smalltalk.packages["Ludus"].transport = {"type":"amd","amdNamespace":"HOS"};
 
@@ -1411,11 +1411,10 @@ fn: function (anIdentifier){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 self["@currentFrameGroup"]=self._frameGroupNamed_(anIdentifier);
-self._toFirstFrame();
 return self}, function($ctx1) {$ctx1.fill(self,"currentFrameGroup:",{anIdentifier:anIdentifier},globals.Animation)})},
 args: ["anIdentifier"],
-source: "currentFrameGroup: anIdentifier\x0a\x09currentFrameGroup := self frameGroupNamed: anIdentifier.\x0a\x09self toFirstFrame",
-messageSends: ["frameGroupNamed:", "toFirstFrame"],
+source: "currentFrameGroup: anIdentifier\x0a\x09currentFrameGroup := self frameGroupNamed: anIdentifier.",
+messageSends: ["frameGroupNamed:"],
 referencedClasses: []
 }),
 globals.Animation);
