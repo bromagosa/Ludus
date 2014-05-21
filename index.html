@@ -47,7 +47,7 @@
 		    	function stopGames() {
 			    $('canvas').remove();
 			    $('audio').remove();
-			    require('amber/helpers').globals.Game._stop();
+			    require('amber/helpers').globals.Game._stopAll();
 		    	}
 		    </script>
 		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.OVGame._start()">OVNI</button>
