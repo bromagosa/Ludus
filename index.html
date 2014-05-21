@@ -28,11 +28,11 @@
                     'transport.defaultAmdNamespace': "HOS"
                 });
                 require('amber/helpers').globals.LudusDoc._new()._appendToJQuery_($('#docs'));
-		function stopGames() {
-			$('canvas').remove();
-			require('amber/helpers').globals.Game._stop();
-		}
             });
+	    function stopGames() {
+		$('canvas').remove();
+		require('amber/helpers').globals.Game._stop();
+	    }
         </script>
 
         <a id="github" href="https://github.com/bromagosa/Ludus" target="_blank"><img src="./ludusdoc/github.png"/></a>
