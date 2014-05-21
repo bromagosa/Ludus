@@ -104,7 +104,7 @@ _st($3)._animalName_(anAnimal);
 $4=$3;
 $5=_st("images/memory/".__comma(anAnimal)).__comma(".png");
 $ctx1.sendIdx[","]=1;
-_st($4)._spriteSheet_($5);
+_st($4)._imageSrc_($5);
 $6=$3;
 $7=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -118,8 +118,8 @@ $2=$8;
 _st($1)._add_($2);
 return self}, function($ctx1) {$ctx1.fill(self,"addCardForAnimal:inPosition:",{anAnimal:anAnimal,aPosition:aPosition},globals.MemoryGame)})},
 args: ["anAnimal", "aPosition"],
-source: "addCardForAnimal: anAnimal inPosition: aPosition\x0a\x0a\x09self cards add:\x0a\x09\x09(MemoryCard new\x0a\x09\x09\x09animalName: anAnimal;\x0a\x09\x09\x09spriteSheet: 'images/memory/' , anAnimal , '.png';\x0a\x09\x09\x09addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;\x0a\x09\x09\x09centre: aPosition;\x0a\x09\x09\x09frameRate: 25;\x0a\x09\x09\x09loop: false;\x0a\x09\x09\x09flip;\x0a\x09\x09\x09stopAnimation)",
-messageSends: ["add:", "cards", "animalName:", "new", "spriteSheet:", ",", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "frameRate:", "loop:", "flip", "stopAnimation"],
+source: "addCardForAnimal: anAnimal inPosition: aPosition\x0a\x0a\x09self cards add:\x0a\x09\x09(MemoryCard new\x0a\x09\x09\x09animalName: anAnimal;\x0a\x09\x09\x09imageSrc: 'images/memory/' , anAnimal , '.png';\x0a\x09\x09\x09addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;\x0a\x09\x09\x09centre: aPosition;\x0a\x09\x09\x09frameRate: 25;\x0a\x09\x09\x09loop: false;\x0a\x09\x09\x09flip;\x0a\x09\x09\x09stopAnimation)",
+messageSends: ["add:", "cards", "animalName:", "new", "imageSrc:", ",", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "frameRate:", "loop:", "flip", "stopAnimation"],
 referencedClasses: ["MemoryCard"]
 }),
 globals.MemoryGame);
@@ -264,7 +264,7 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$3,$2,$4,$5,$7,$6,$8,$receiver;
 clickedCard=_st(self["@cards"])._detect_ifNone_((function(which){
 return smalltalk.withContext(function($ctx2) {
-return _st(which)._touchingMousePointer_(self._mousePosition());
+return _st(which)._touchingMousePointer_(_st(self._inputHandler())._mousePosition());
 }, function($ctx2) {$ctx2.fillBlock({which:which},$ctx1,1)})}),(function(){
 return nil;
 }));
@@ -307,8 +307,8 @@ self["@lastSelectedCard"];
 };
 return self}, function($ctx1) {$ctx1.fill(self,"handleCardClick",{clickedCard:clickedCard},globals.MemoryGame)})},
 args: [],
-source: "handleCardClick\x0a\x0a\x09| clickedCard |\x0a\x09\x0a\x09clickedCard := cards detect: [ :which | which touchingMousePointer: self mousePosition ] ifNone: [ nil ].\x0a\x09\x0a\x09clickedCard ifNotNil: [\x0a\x09\x09(self soundNamed: clickedCard animalName) play.\x0a\x09\x09clickedCard showAnimal.\x0a\x09\x09lastSelectedCard \x0a\x09\x09\x09ifNil: [ lastSelectedCard := clickedCard ]\x0a\x09\x09\x09ifNotNil: [\x0a\x09\x09\x09\x09lastSelectedCard = clickedCard \x0a\x09\x09\x09\x09\x09ifTrue: [ clickedCard hideAnimal ]\x0a\x09\x09\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09\x09\x09lastSelectedCard animalName = clickedCard animalName \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [ Transcript show: 'yay :)'; cr ]\x0a\x09\x09\x09\x09\x09\x09\x09ifFalse: [ \x0a\x09\x09\x09\x09\x09\x09\x09\x09lastSelectedCard hideAnimal.\x0a\x09\x09\x09\x09\x09\x09\x09\x09clickedCard hideAnimal ]].\x0a\x09\x09\x09\x09lastSelectedCard := nil.\x0a\x09\x09\x09]\x0a\x09]",
-messageSends: ["detect:ifNone:", "touchingMousePointer:", "mousePosition", "ifNotNil:", "play", "soundNamed:", "animalName", "showAnimal", "ifNil:ifNotNil:", "ifTrue:ifFalse:", "=", "hideAnimal", "show:", "cr"],
+source: "handleCardClick\x0a\x0a\x09| clickedCard |\x0a\x09\x0a\x09clickedCard := \x0a\x09\x09cards \x0a\x09\x09\x09detect: [ :which | which touchingMousePointer: self inputHandler mousePosition ]\x0a\x09\x09\x09ifNone: [ nil ].\x0a\x09\x0a\x09clickedCard ifNotNil: [\x0a\x09\x09(self soundNamed: clickedCard animalName) play.\x0a\x09\x09clickedCard showAnimal.\x0a\x09\x09lastSelectedCard \x0a\x09\x09\x09ifNil: [ lastSelectedCard := clickedCard ]\x0a\x09\x09\x09ifNotNil: [\x0a\x09\x09\x09\x09lastSelectedCard = clickedCard \x0a\x09\x09\x09\x09\x09ifTrue: [ clickedCard hideAnimal ]\x0a\x09\x09\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09\x09\x09lastSelectedCard animalName = clickedCard animalName \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [ Transcript show: 'yay :)'; cr ]\x0a\x09\x09\x09\x09\x09\x09\x09ifFalse: [ \x0a\x09\x09\x09\x09\x09\x09\x09\x09lastSelectedCard hideAnimal.\x0a\x09\x09\x09\x09\x09\x09\x09\x09clickedCard hideAnimal ]].\x0a\x09\x09\x09\x09lastSelectedCard := nil.\x0a\x09\x09\x09]\x0a\x09]",
+messageSends: ["detect:ifNone:", "touchingMousePointer:", "mousePosition", "inputHandler", "ifNotNil:", "play", "soundNamed:", "animalName", "showAnimal", "ifNil:ifNotNil:", "ifTrue:ifFalse:", "=", "hideAnimal", "show:", "cr"],
 referencedClasses: ["Transcript"]
 }),
 globals.MemoryGame);
@@ -360,14 +360,14 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._onMouseClickDo_((function(){
+_st(self._inputHandler())._onMouseClickDo_((function(){
 return smalltalk.withContext(function($ctx2) {
 return self._handleCardClick();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.MemoryGame)})},
 args: [],
-source: "step\x0a\x09self onMouseClickDo: [\x0a\x09\x09self handleCardClick\x0a\x09]",
-messageSends: ["onMouseClickDo:", "handleCardClick"],
+source: "step\x0a\x09self inputHandler onMouseClickDo: [\x0a\x09\x09self handleCardClick\x0a\x09]",
+messageSends: ["onMouseClickDo:", "inputHandler", "handleCardClick"],
 referencedClasses: []
 }),
 globals.MemoryGame);
@@ -436,7 +436,7 @@ var offsetX,offsetY;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$6,$5;
-self["@ball"]=_st(_st($Sprite())._new())._spriteSheet_("images/ball.png");
+self["@ball"]=_st(_st($Sprite())._new())._imageSrc_("images/ball.png");
 $1=self["@ball"];
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -451,8 +451,8 @@ _st($4)._centre_($5);
 _st(self["@ball"])._frameRate_((5));
 return self}, function($ctx1) {$ctx1.fill(self,"createBall",{offsetX:offsetX,offsetY:offsetY},globals.Pong)})},
 args: [],
-source: "createBall\x0a\x09|offsetX offsetY|\x0a\x09ball := Sprite new spriteSheet: 'images/ball.png'.\x0a\x09ball addFrameGroupNamed: 'moving' origin: (0@0) size: (15@15) frameCount: 6.\x0a\x09ball centre:  ((self width / 2) @ (self height / 2)).\x0a\x09ball frameRate: 5.",
-messageSends: ["spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "/", "width", "height", "frameRate:"],
+source: "createBall\x0a\x09|offsetX offsetY|\x0a\x09ball := Sprite new imageSrc: 'images/ball.png'.\x0a\x09ball addFrameGroupNamed: 'moving' origin: (0@0) size: (15@15) frameCount: 6.\x0a\x09ball centre:  ((self width / 2) @ (self height / 2)).\x0a\x09ball frameRate: 5.",
+messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "/", "width", "height", "frameRate:"],
 referencedClasses: ["Sprite"]
 }),
 globals.Pong);
@@ -467,7 +467,7 @@ var verticalOffset;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$5,$6,$7,$8,$9;
-self["@paddle1"]=_st(_st($Sprite())._new())._spriteSheet_("images/paddle.png");
+self["@paddle1"]=_st(_st($Sprite())._new())._imageSrc_("images/paddle.png");
 $1=self["@paddle1"];
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -494,8 +494,8 @@ _st(self["@paddle1"])._x_((10));
 _st(self["@paddle1"])._y_(_st(_st(self._height()).__slash((2))).__minus(verticalOffset));
 return self}, function($ctx1) {$ctx1.fill(self,"createPaddle1",{verticalOffset:verticalOffset},globals.Pong)})},
 args: [],
-source: "createPaddle1\x0a\x09|verticalOffset|\x0a\x09paddle1 := Sprite new spriteSheet: 'images/paddle.png'.\x0a\x09paddle1 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.\x0a\x09paddle1 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.\x0a\x09paddle1 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.\x0a\x09verticalOffset := paddle1 height / 2.\x0a\x09paddle1 x: 10.\x0a\x09paddle1 y: ((self height / 2) - verticalOffset)",
-messageSends: ["spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "/", "height", "x:", "y:", "-"],
+source: "createPaddle1\x0a\x09|verticalOffset|\x0a\x09paddle1 := Sprite new imageSrc: 'images/paddle.png'.\x0a\x09paddle1 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.\x0a\x09paddle1 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.\x0a\x09paddle1 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.\x0a\x09verticalOffset := paddle1 height / 2.\x0a\x09paddle1 x: 10.\x0a\x09paddle1 y: ((self height / 2) - verticalOffset)",
+messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "/", "height", "x:", "y:", "-"],
 referencedClasses: ["Sprite"]
 }),
 globals.Pong);
@@ -509,7 +509,7 @@ var self=this;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$5,$6,$7,$8,$9,$12,$11,$10;
-self["@paddle2"]=_st(_st($Sprite())._new())._spriteSheet_("images/paddle.png");
+self["@paddle2"]=_st(_st($Sprite())._new())._imageSrc_("images/paddle.png");
 $1=self["@paddle2"];
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -538,8 +538,8 @@ _st($9)._x_($10);
 _st(self["@paddle2"])._y_(_st(self["@paddle1"])._y());
 return self}, function($ctx1) {$ctx1.fill(self,"createPaddle2",{},globals.Pong)})},
 args: [],
-source: "createPaddle2\x0a\x09paddle2 := Sprite new spriteSheet: 'images/paddle.png'.\x0a\x09paddle2 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 x: self width - paddle2 width - 10.\x0a\x09paddle2 y: paddle1 y",
-messageSends: ["spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "x:", "-", "width", "y:", "y"],
+source: "createPaddle2\x0a\x09paddle2 := Sprite new imageSrc: 'images/paddle.png'.\x0a\x09paddle2 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 x: self width - paddle2 width - 10.\x0a\x09paddle2 y: paddle1 y",
+messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "x:", "-", "width", "y:", "y"],
 referencedClasses: ["Sprite"]
 }),
 globals.Pong);
@@ -863,39 +863,42 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3;
+var $1,$2,$3,$4,$5;
 $1=self["@ai"];
 if(smalltalk.assert($1)){
 self._processAI();
 } else {
-self._whileKeyPressed_do_(_st($Key())._s(),(function(){
+$2=self._inputHandler();
+$ctx1.sendIdx["inputHandler"]=1;
+_st($2)._whileKeyPressed_do_(_st($Key())._s(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._goUp_(self["@paddle1"]);
 $ctx2.sendIdx["goUp:"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=1;
-$2=self._whileKeyPressed_do_(_st($Key())._x(),(function(){
+$3=_st($2)._whileKeyPressed_do_(_st($Key())._x(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._goDown_(self["@paddle1"]);
 $ctx2.sendIdx["goDown:"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=2;
-$2;
+$3;
 };
-self._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
+$4=self._inputHandler();
+_st($4)._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._goUp_(self["@paddle2"]);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=3;
-self._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
+$5=_st($4)._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._goDown_(self["@paddle2"]);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,6)})}));
-$3=self._processBallMovement();
+self._processBallMovement();
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.Pong)})},
 args: [],
-source: "step\x0a\x09ai\x0a\x09\x09ifFalse: [self whileKeyPressed: Key s do: [self goUp: paddle1];\x0a\x09\x09\x09whileKeyPressed: Key x do: [self goDown: paddle1]]\x0a\x09\x09ifTrue: [self processAI].\x0a\x09self whileKeyPressed: Key upArrow do: [self goUp: paddle2];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self goDown: paddle2];\x0a\x09\x09processBallMovement.",
-messageSends: ["ifFalse:ifTrue:", "whileKeyPressed:do:", "s", "goUp:", "x", "goDown:", "processAI", "upArrow", "downArrow", "processBallMovement"],
+source: "step\x0a\x09\x0a\x09ai\x0a\x09\x09ifFalse: \x0a\x09\x09\x09[self inputHandler \x0a\x09\x09\x09\x09whileKeyPressed: Key s do: [self goUp: paddle1];\x0a\x09\x09\x09\x09whileKeyPressed: Key x do: [self goDown: paddle1]]\x0a\x09\x09ifTrue: [self processAI].\x0a\x09\x0a\x09self inputHandler \x0a\x09\x09whileKeyPressed: Key upArrow do: [self goUp: paddle2];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self goDown: paddle2].\x0a\x09\x0a\x09self processBallMovement.",
+messageSends: ["ifFalse:ifTrue:", "whileKeyPressed:do:", "inputHandler", "s", "goUp:", "x", "goDown:", "processAI", "upArrow", "downArrow", "processBallMovement"],
 referencedClasses: ["Key"]
 }),
 globals.Pong);
@@ -984,14 +987,14 @@ return smalltalk.withContext(function($ctx1) {
 var $2,$1;
 ($ctx1.supercall = true, globals.Ship.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._spriteSheet_("images/trail.png");
+self._imageSrc_("images/trail.png");
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 $1=self._addFrameGroupNamed_origin_size_frameCount_("ship",$2,(10).__at((10)),(1));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.Ship)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09spriteSheet: 'images/trail.png';\x0a\x09\x09addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.",
-messageSends: ["initialize", "spriteSheet:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/trail.png';\x0a\x09\x09addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.",
+messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
 referencedClasses: []
 }),
 globals.Ship);
@@ -1046,40 +1049,41 @@ fn: function (){
 var self=this;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;
-self["@ghost"]=_st(_st($Sprite())._new())._spriteSheet_("images/ghost.png");
+var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14;
+self["@ghost"]=_st(_st($Sprite())._new())._imageSrc_("images/ghost.png");
 $1=self["@ghost"];
-$2=(0).__at((0));
+$2=$1;
+$3=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
-$3=(50).__at((55));
+$4=(50).__at((55));
 $ctx1.sendIdx["@"]=2;
-_st($1)._addFrameGroupNamed_origin_size_frameCount_("down",$2,$3,(2));
+_st($2)._addFrameGroupNamed_origin_size_frameCount_("down",$3,$4,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=1;
-$4=self["@ghost"];
-$5=(100).__at((0));
+$5=$1;
+$6=(100).__at((0));
 $ctx1.sendIdx["@"]=3;
-$6=(50).__at((55));
+$7=(50).__at((55));
 $ctx1.sendIdx["@"]=4;
-_st($4)._addFrameGroupNamed_origin_size_frameCount_("up",$5,$6,(2));
+_st($5)._addFrameGroupNamed_origin_size_frameCount_("up",$6,$7,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=2;
-$7=self["@ghost"];
-$8=(0).__at((55));
+$8=$1;
+$9=(0).__at((55));
 $ctx1.sendIdx["@"]=5;
-$9=(50).__at((55));
+$10=(50).__at((55));
 $ctx1.sendIdx["@"]=6;
-_st($7)._addFrameGroupNamed_origin_size_frameCount_("right",$8,$9,(2));
+_st($8)._addFrameGroupNamed_origin_size_frameCount_("right",$9,$10,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=3;
-$10=self["@ghost"];
-$11=(100).__at((55));
+$11=$1;
+$12=(100).__at((55));
 $ctx1.sendIdx["@"]=7;
-$12=(50).__at((55));
+$13=(50).__at((55));
 $ctx1.sendIdx["@"]=8;
-_st($10)._addFrameGroupNamed_origin_size_frameCount_("left",$11,$12,(2));
-_st(self["@ghost"])._centre_((500).__at((500)));
+_st($11)._addFrameGroupNamed_origin_size_frameCount_("left",$12,$13,(2));
+$14=_st($1)._centre_((500).__at((500)));
 return self}, function($ctx1) {$ctx1.fill(self,"createGhost",{},globals.SimplePacman)})},
 args: [],
-source: "createGhost\x0a\x09ghost := Sprite new spriteSheet: 'images/ghost.png'.\x0a\x09ghost addFrameGroupNamed: 'down' origin: (0@0) size: (50@55) frameCount: 2.\x0a\x09ghost addFrameGroupNamed: 'up' origin: (100@0) size: (50@55) frameCount: 2.\x0a\x09ghost addFrameGroupNamed: 'right' origin: (0@55) size: (50@55) frameCount: 2.\x0a\x09ghost addFrameGroupNamed: 'left' origin: (100@55) size: (50@55) frameCount: 2.\x0a\x09ghost centre: 500@500.",
-messageSends: ["spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:"],
+source: "createGhost\x0a\x09ghost := Sprite new imageSrc: 'images/ghost.png'.\x0a\x09ghost \x0a\x09\x09addFrameGroupNamed: 'down' origin: (0@0) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'up' origin: (100@0) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'right' origin: (0@55) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'left' origin: (100@55) size: (50@55) frameCount: 2;\x0a\x09\x09centre: 500@500.",
+messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:"],
 referencedClasses: ["Sprite"]
 }),
 globals.SimplePacman);
@@ -1092,40 +1096,41 @@ fn: function (){
 var self=this;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;
-self["@pacman"]=_st(_st($Sprite())._new())._spriteSheet_("images/pacman.png");
+var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14;
+self["@pacman"]=_st(_st($Sprite())._new())._imageSrc_("images/pacman.png");
 $1=self["@pacman"];
-$2=(0).__at((0));
+$2=$1;
+$3=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
-$3=(50).__at((50));
+$4=(50).__at((50));
 $ctx1.sendIdx["@"]=2;
-_st($1)._addFrameGroupNamed_origin_size_frameCount_("left",$2,$3,(2));
+_st($2)._addFrameGroupNamed_origin_size_frameCount_("left",$3,$4,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=1;
-$4=self["@pacman"];
-$5=(0).__at((50));
+$5=$1;
+$6=(0).__at((50));
 $ctx1.sendIdx["@"]=3;
-$6=(50).__at((50));
+$7=(50).__at((50));
 $ctx1.sendIdx["@"]=4;
-_st($4)._addFrameGroupNamed_origin_size_frameCount_("right",$5,$6,(2));
+_st($5)._addFrameGroupNamed_origin_size_frameCount_("right",$6,$7,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=2;
-$7=self["@pacman"];
-$8=(100).__at((0));
+$8=$1;
+$9=(100).__at((0));
 $ctx1.sendIdx["@"]=5;
-$9=(50).__at((50));
+$10=(50).__at((50));
 $ctx1.sendIdx["@"]=6;
-_st($7)._addFrameGroupNamed_origin_size_frameCount_("down",$8,$9,(2));
+_st($8)._addFrameGroupNamed_origin_size_frameCount_("down",$9,$10,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=3;
-$10=self["@pacman"];
-$11=(100).__at((50));
+$11=$1;
+$12=(100).__at((50));
 $ctx1.sendIdx["@"]=7;
-$12=(50).__at((50));
+$13=(50).__at((50));
 $ctx1.sendIdx["@"]=8;
-_st($10)._addFrameGroupNamed_origin_size_frameCount_("up",$11,$12,(2));
-_st(self["@pacman"])._centre_((100).__at((100)));
+_st($11)._addFrameGroupNamed_origin_size_frameCount_("up",$12,$13,(2));
+$14=_st($1)._centre_((100).__at((100)));
 return self}, function($ctx1) {$ctx1.fill(self,"createPacman",{},globals.SimplePacman)})},
 args: [],
-source: "createPacman\x0a\x09pacman := Sprite new spriteSheet: 'images/pacman.png'.\x0a\x09pacman addFrameGroupNamed: 'left' origin: (0@0) size: (50@50) frameCount: 2.\x0a\x09pacman addFrameGroupNamed: 'right' origin: (0@50) size: (50@50) frameCount: 2.\x0a\x09pacman addFrameGroupNamed: 'down' origin: (100@0) size: (50@50) frameCount: 2.\x0a\x09pacman addFrameGroupNamed: 'up' origin: (100@50) size: (50@50) frameCount: 2.\x0a\x09pacman centre: 100@100.",
-messageSends: ["spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:"],
+source: "createPacman\x0a\x09pacman := Sprite new imageSrc: 'images/pacman.png'.\x0a\x09pacman \x0a\x09\x09addFrameGroupNamed: 'left' origin: (0@0) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'right' origin: (0@50) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'down' origin: (100@0) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'up' origin: (100@50) size: (50@50) frameCount: 2;\x0a\x09\x09centre: 100@100.",
+messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:"],
 referencedClasses: ["Sprite"]
 }),
 globals.SimplePacman);
@@ -1137,13 +1142,14 @@ protocol: 'not yet classified',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+var $1;
 self._clearCanvas();
 self._drawSprite_(self["@ghost"]);
 $ctx1.sendIdx["drawSprite:"]=1;
-self._drawSprite_(self["@pacman"]);
+$1=self._drawSprite_(self["@pacman"]);
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.SimplePacman)})},
 args: [],
-source: "draw\x0a\x09self clearCanvas.\x0a\x09self drawSprite: ghost.\x0a\x09self drawSprite: pacman.",
+source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawSprite: ghost;\x0a\x09\x09drawSprite: pacman.",
 messageSends: ["clearCanvas", "drawSprite:"],
 referencedClasses: []
 }),
@@ -1164,7 +1170,7 @@ _st(self["@pacman"])._moveCentreBy_((0).__at((15)));
 _st(self["@pacman"])._currentFrameGroup_("down");
 return self}, function($ctx1) {$ctx1.fill(self,"moveDown",{},globals.SimplePacman)})},
 args: [],
-source: "moveDown\x0a\x09(pacman centre y + 25) >= self height \x0a\x09\x09ifFalse: \x0a\x09\x09\x09[pacman moveCentreBy: (0@ 15)].\x0a\x09pacman currentFrameGroup: 'down'",
+source: "moveDown\x0a\x09(pacman centre y + 25) >= self height \x0a\x09\x09ifFalse: \x0a\x09\x09\x09[pacman moveCentreBy: (0@15)].\x0a\x09pacman currentFrameGroup: 'down'",
 messageSends: ["ifFalse:", ">=", "+", "y", "centre", "height", "moveCentreBy:", "@", "currentFrameGroup:"],
 referencedClasses: []
 }),
@@ -1383,50 +1389,53 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$7,$6,$5,$4,$3,$8;
-self._whileKeyPressed_do_(_st($Key())._leftArrow(),(function(){
+var $1,$3,$9,$8,$7,$6,$5,$4,$2,$10;
+$1=self._inputHandler();
+$ctx1.sendIdx["inputHandler"]=1;
+_st($1)._whileKeyPressed_do_(_st($Key())._leftArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._moveLeft();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=1;
-self._whileKeyPressed_do_(_st($Key())._rightArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._rightArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._moveRight();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=2;
-self._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._moveUp();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=3;
-$1=self._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._moveDown();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
-self._onMouseClickDo_((function(){
+$2=_st($1)._onMouseClickDo_((function(){
 return smalltalk.withContext(function($ctx2) {
-$2=window;
-$7=self._mousePosition();
+$3=console;
+$9=self._inputHandler();
+$ctx2.sendIdx["inputHandler"]=2;
+$8=_st($9)._mousePosition();
 $ctx2.sendIdx["mousePosition"]=1;
-$6=_st($7)._x();
-$5=_st($6)._asString();
+$7=_st($8)._x();
+$6=_st($7)._asString();
 $ctx2.sendIdx["asString"]=1;
-$4=_st($5).__comma(",");
-$3=_st($4).__comma(_st(_st(self._mousePosition())._y())._asString());
+$5=_st($6).__comma(",");
+$4=_st($5).__comma(_st(_st(_st(self._inputHandler())._mousePosition())._y())._asString());
 $ctx2.sendIdx[","]=1;
-return _st($2)._alert_($3);
-$ctx2.sendIdx["alert:"]=1;
+return _st($3)._log_($4);
+$ctx2.sendIdx["log:"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
 self._moveGhost();
-$8=_st(self["@pacman"])._collidesWith_(self["@ghost"]);
-if(smalltalk.assert($8)){
-self._end();
-_st(window)._alert_("You lost!");
+$10=_st(self["@pacman"])._collidesWith_(self["@ghost"]);
+if(smalltalk.assert($10)){
+_st(console)._log_("Ouch!");
 };
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.SimplePacman)})},
 args: [],
-source: "step\x0a\x09self whileKeyPressed: Key leftArrow do: [self moveLeft];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [self moveRight];\x0a\x09\x09whileKeyPressed: Key upArrow do: [self moveUp];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self moveDown].\x0a\x09self onMouseClickDo: [ window alert: self mousePosition x asString , ',' , self mousePosition y asString ].\x0a\x09self moveGhost.\x0a\x09(pacman collidesWith: ghost) ifTrue: [ self end. window alert: 'You lost!' ]",
-messageSends: ["whileKeyPressed:do:", "leftArrow", "moveLeft", "rightArrow", "moveRight", "upArrow", "moveUp", "downArrow", "moveDown", "onMouseClickDo:", "alert:", ",", "asString", "x", "mousePosition", "y", "moveGhost", "ifTrue:", "collidesWith:", "end"],
+source: "step\x0a\x09self inputHandler \x0a\x09\x09whileKeyPressed: Key leftArrow do: [ self moveLeft ];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [ self moveRight ];\x0a\x09\x09whileKeyPressed: Key upArrow do: [ self moveUp ];\x0a\x09\x09whileKeyPressed: Key downArrow do: [ self moveDown ];\x0a\x09\x09onMouseClickDo: [ \x0a\x09\x09\x09console log:\x0a\x09\x09\x09\x09self inputHandler mousePosition x asString \x0a\x09\x09\x09\x09\x09, ','\x0a\x09\x09\x09\x09\x09, self inputHandler mousePosition y asString ].\x0a\x09\x09\x09\x09\x09\x0a\x09self moveGhost.\x0a\x09\x0a\x09(pacman collidesWith: ghost) ifTrue: [ console log: 'Ouch!' ]",
+messageSends: ["whileKeyPressed:do:", "inputHandler", "leftArrow", "moveLeft", "rightArrow", "moveRight", "upArrow", "moveUp", "downArrow", "moveDown", "onMouseClickDo:", "log:", ",", "asString", "x", "mousePosition", "y", "moveGhost", "ifTrue:", "collidesWith:"],
 referencedClasses: ["Key"]
 }),
 globals.SimplePacman);
@@ -1549,14 +1558,10 @@ return self._drawSprite_(each);
 } else {
 self._drawWelcomeScreen();
 };
-self._onMouseClickDo_((function(){
-self["@started"]=true;
-return self["@started"];
-}));
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.SmallCave)})},
 args: [],
-source: "draw\x0a\x09self started \x0a\x09\x09ifFalse: [self drawWelcomeScreen]\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09self clearCanvas;\x0a\x09\x09\x09\x09drawCeiling; \x0a\x09\x09\x09\x09drawFloor;\x0a\x09\x09\x09\x09drawObstacles;\x0a\x09\x09\x09\x09drawSprite: ship.\x0a\x09\x09\x09self trail allButLast do: [:each | self drawSprite: each ]].\x0a\x09self onMouseClickDo: [started := true].",
-messageSends: ["ifFalse:ifTrue:", "started", "drawWelcomeScreen", "clearCanvas", "drawCeiling", "drawFloor", "drawObstacles", "drawSprite:", "do:", "allButLast", "trail", "onMouseClickDo:"],
+source: "draw\x0a\x09self started \x0a\x09\x09ifFalse: [self drawWelcomeScreen]\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09self clearCanvas;\x0a\x09\x09\x09\x09drawCeiling; \x0a\x09\x09\x09\x09drawFloor;\x0a\x09\x09\x09\x09drawObstacles;\x0a\x09\x09\x09\x09drawSprite: ship.\x0a\x09\x09\x09self trail allButLast do: [:each | self drawSprite: each ]].",
+messageSends: ["ifFalse:ifTrue:", "started", "drawWelcomeScreen", "clearCanvas", "drawCeiling", "drawFloor", "drawObstacles", "drawSprite:", "do:", "allButLast", "trail"],
 referencedClasses: []
 }),
 globals.SmallCave);
@@ -1834,30 +1839,31 @@ protocol: 'not yet classified',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$6,$5,$4;
-self._whileMouseUpDo_((function(){
-return smalltalk.withContext(function($ctx2) {
-$1=self._ship();
-$ctx2.sendIdx["ship"]=1;
-return _st($1)._increaseSpeed();
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-self._whileMouseDownDo_((function(){
+var $1,$2,$4,$3,$5,$8,$7,$6;
+$1=self._inputHandler();
+_st($1)._whileMouseUpDo_((function(){
 return smalltalk.withContext(function($ctx2) {
 $2=self._ship();
+$ctx2.sendIdx["ship"]=1;
+return _st($2)._increaseSpeed();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$3=_st($1)._whileMouseDownDo_((function(){
+return smalltalk.withContext(function($ctx2) {
+$4=self._ship();
 $ctx2.sendIdx["ship"]=2;
-return _st($2)._decreaseSpeed();
+return _st($4)._decreaseSpeed();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
-$3=self._ship();
+$5=self._ship();
 $ctx1.sendIdx["ship"]=3;
-$6=self._ship();
+$8=self._ship();
 $ctx1.sendIdx["ship"]=4;
-$5=_st($6)._y();
-$4=_st($5).__plus(_st(_st(self._ship())._speed()).__star(self["@gravity"]));
-_st($3)._y_($4);
+$7=_st($8)._y();
+$6=_st($7).__plus(_st(_st(self._ship())._speed()).__star(self["@gravity"]));
+_st($5)._y_($6);
 return self}, function($ctx1) {$ctx1.fill(self,"moveShip",{},globals.SmallCave)})},
 args: [],
-source: "moveShip\x0a\x09self whileMouseUpDo: [self ship increaseSpeed].\x0a\x09self whileMouseDownDo: [self ship decreaseSpeed].\x0a\x09self ship y: (self ship y + (self ship speed * gravity))",
-messageSends: ["whileMouseUpDo:", "increaseSpeed", "ship", "whileMouseDownDo:", "decreaseSpeed", "y:", "+", "y", "*", "speed"],
+source: "moveShip\x0a\x09self inputHandler\x0a\x09\x09whileMouseUpDo: [self ship increaseSpeed];\x0a\x09\x09whileMouseDownDo: [self ship decreaseSpeed].\x0a\x09self ship y: (self ship y + (self ship speed * gravity))",
+messageSends: ["whileMouseUpDo:", "inputHandler", "increaseSpeed", "ship", "whileMouseDownDo:", "decreaseSpeed", "y:", "+", "y", "*", "speed"],
 referencedClasses: []
 }),
 globals.SmallCave);
@@ -2045,10 +2051,14 @@ self._updateDifficulty();
 $2=self._moveShip();
 $2;
 };
+_st(self._inputHandler())._onMouseClickDo_((function(){
+self["@started"]=true;
+return self["@started"];
+}));
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.SmallCave)})},
 args: [],
-source: "step\x0a\x09self started ifTrue: [self detectCollision; updateTrail; updateBumps; updateObstacles; updateDifficulty; moveShip]",
-messageSends: ["ifTrue:", "started", "detectCollision", "updateTrail", "updateBumps", "updateObstacles", "updateDifficulty", "moveShip"],
+source: "step\x0a\x09self started ifTrue: [\x0a\x09\x09self \x0a\x09\x09\x09detectCollision; \x0a\x09\x09\x09updateTrail; \x0a\x09\x09\x09updateBumps; \x0a\x09\x09\x09updateObstacles; \x0a\x09\x09\x09updateDifficulty; \x0a\x09\x09\x09moveShip ].\x0a\x09\x09\x09\x0a\x09self inputHandler onMouseClickDo: [ started := true ].",
+messageSends: ["ifTrue:", "started", "detectCollision", "updateTrail", "updateBumps", "updateObstacles", "updateDifficulty", "moveShip", "onMouseClickDo:", "inputHandler"],
 referencedClasses: []
 }),
 globals.SmallCave);
@@ -2069,7 +2079,7 @@ self["@trail"];
 (0)._to_do_((10),(function(i){
 var ghostBall;
 return smalltalk.withContext(function($ctx2) {
-ghostBall=_st(_st($Sprite())._new())._spriteSheet_("images/trail.png");
+ghostBall=_st(_st($Sprite())._new())._imageSrc_("images/trail.png");
 ghostBall;
 $3=ghostBall;
 $4=(0).__at((0));
@@ -2087,8 +2097,8 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"trail",{},globals.SmallCave)})},
 args: [],
-source: "trail\x0a\x09^ trail ifNil: [\x0a        \x09trail := #().\x0a          \x090 to: 10 do: [:i |\x0a                             |ghostBall|\x0a                              ghostBall := Sprite new spriteSheet: 'images/trail.png'.\x0a                              ghostBall addFrameGroupNamed: 'trail' origin: (0@0) size: (10@10) frameCount: 1.\x0a                              ghostBall position: (i * 10) @ (self height / 2).\x0a                              trail add: ghostBall.\x0a                             ].\x0a\x09\x09trail]",
-messageSends: ["ifNil:", "to:do:", "spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "position:", "*", "/", "height", "add:"],
+source: "trail\x0a\x09^ trail ifNil: [\x0a        \x09trail := #().\x0a          \x090 to: 10 do: [:i |\x0a                             |ghostBall|\x0a                              ghostBall := Sprite new imageSrc: 'images/trail.png'.\x0a                              ghostBall addFrameGroupNamed: 'trail' origin: (0@0) size: (10@10) frameCount: 1.\x0a                              ghostBall position: (i * 10) @ (self height / 2).\x0a                              trail add: ghostBall.\x0a                             ].\x0a\x09\x09trail]",
+messageSends: ["ifNil:", "to:do:", "imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "position:", "*", "/", "height", "add:"],
 referencedClasses: ["Sprite"]
 }),
 globals.SmallCave);
@@ -2318,7 +2328,7 @@ protocol: 'levels',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$5,$4,$3,$1,$receiver;
+var $2,$5,$4,$3,$1,$6,$receiver;
 _st(self._soundNamed_("applause"))._play();
 $2=self._class();
 $5=_st(self["@currentLevel"]).__plus((1));
@@ -2333,10 +2343,10 @@ self["@currentLevel"]=_st(self["@currentLevel"]).__plus((1));
 self["@currentLevel"];
 };
 self._clearLevel();
-self._createLevel();
+$6=self._createLevel();
 return self}, function($ctx1) {$ctx1.fill(self,"advanceLevel",{},globals.Sokoban)})},
 args: [],
-source: "advanceLevel\x0a\x09(self soundNamed: 'applause') play.\x0a\x09(self class methodAt: 'level' , (currentLevel + 1) asString) \x0a\x09\x09ifNil: [self end]\x0a\x09\x09ifNotNil:\x09[currentLevel := currentLevel + 1].\x0a\x09self clearLevel.\x0a\x09self createLevel.",
+source: "advanceLevel\x0a\x09(self soundNamed: 'applause') play.\x0a\x09(self class methodAt: 'level' , (currentLevel + 1) asString) \x0a\x09\x09ifNil: [ self end ]\x0a\x09\x09ifNotNil: [ currentLevel := currentLevel + 1 ].\x0a\x09self \x0a\x09\x09clearLevel;\x0a\x09\x09createLevel.",
 messageSends: ["play", "soundNamed:", "ifNil:ifNotNil:", "methodAt:", "class", ",", "asString", "+", "end", "clearLevel", "createLevel"],
 referencedClasses: []
 }),
@@ -2366,7 +2376,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"boxOffsetDictionary",{},globals.Sokoban)})},
 args: [],
-source: "boxOffsetDictionary\x0a\x09^ boxOffsetDictionary ifNil: [ boxOffsetDictionary := #{'Down' -> (0@5). 'Up' -> (0@ -5). 'Left' -> (-5@0). 'Right' -> (5@0)} ]",
+source: "boxOffsetDictionary\x0a\x09^ boxOffsetDictionary ifNil: [ boxOffsetDictionary := #{ 'Down' -> (0@5). 'Up' -> (0@ -5). 'Left' -> (-5@0). 'Right' -> (5@0) } ]",
 messageSends: ["ifNil:", "@"],
 referencedClasses: []
 }),
@@ -2390,7 +2400,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"boxes",{},globals.Sokoban)})},
 args: [],
-source: "boxes\x0a\x09^ boxes ifNil: [boxes := #()]",
+source: "boxes\x0a\x09^ boxes ifNil: [ boxes := #() ]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),
@@ -2432,7 +2442,7 @@ return _st(eachRow)._withIndexDo_((function(eachColumn,x){
 return smalltalk.withContext(function($ctx3) {
 $2=_st(eachColumn).__eq((7));
 if(smalltalk.assert($2)){
-box=_st(_st($Sprite())._new())._spriteSheet_("images/box.png");
+box=_st(_st($Sprite())._new())._imageSrc_("images/box.png");
 box;
 $3=box;
 $6=_st((6)._atRandom()).__minus((1));
@@ -2459,8 +2469,8 @@ return _st(self._boxes())._add_(box);
 $ctx1.sendIdx["withIndexDo:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"createBoxes",{box:box},globals.Sokoban)})},
 args: [],
-source: "createBoxes\x0a\x09|box|\x0a\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [:eachRow :y | \x0a\x09\x09\x09(eachRow includes: 7) \x0a                              \x09ifTrue: \x0a                              \x09\x09[eachRow withIndexDo: [:eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 7 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a                                                        \x09box := Sprite new spriteSheet: 'images/box.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09box addFrameGroupNamed: 'still' origin: (((6 atRandom - 1) * 28)@0) size: (28@28) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09box centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self boxes add: box ]]]].",
-messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "*", "-", "atRandom", "centre:", "add:", "boxes"],
+source: "createBoxes\x0a\x09| box |\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 7) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 7 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09box := Sprite new imageSrc: 'images/box.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09box addFrameGroupNamed: 'still' origin: (((6 atRandom - 1) * 28)@0) size: (28@28) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09box centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self boxes add: box ]]]].",
+messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "*", "-", "atRandom", "centre:", "add:", "boxes"],
 referencedClasses: ["Sprite"]
 }),
 globals.Sokoban);
@@ -2483,7 +2493,7 @@ return _st(eachRow)._withIndexDo_((function(eachColumn,x){
 return smalltalk.withContext(function($ctx3) {
 $2=_st(eachColumn).__eq((9));
 if(smalltalk.assert($2)){
-exit=_st(_st($Sprite())._new())._spriteSheet_("images/exit.png");
+exit=_st(_st($Sprite())._new())._imageSrc_("images/exit.png");
 exit;
 $3=exit;
 $4=(0).__at((0));
@@ -2506,8 +2516,8 @@ return _st(self._exits())._add_(exit);
 $ctx1.sendIdx["withIndexDo:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"createExits",{exit:exit},globals.Sokoban)})},
 args: [],
-source: "createExits\x0a\x09|exit|\x0a\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [:eachRow :y | \x0a\x09\x09\x09(eachRow includes: 9) \x0a                              \x09ifTrue: \x0a                              \x09\x09[eachRow withIndexDo: [:eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 9 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a                                                        \x09exit := Sprite new spriteSheet: 'images/exit.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09exit addFrameGroupNamed: 'exit' origin: (0@0) size: (28@28) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09exit centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self exits add: exit ]]]].",
-messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "-", "*", "add:", "exits"],
+source: "createExits\x0a\x09| exit |\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 9) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 9 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09exit := Sprite new imageSrc: 'images/exit.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09exit addFrameGroupNamed: 'exit' origin: (0@0) size: (28@28) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09exit centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self exits add: exit ]]]].",
+messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "-", "*", "add:", "exits"],
 referencedClasses: ["Sprite"]
 }),
 globals.Sokoban);
@@ -2530,7 +2540,7 @@ return _st(eachRow)._withIndexDo_((function(eachColumn,x){
 return smalltalk.withContext(function($ctx3) {
 $2=_st(eachColumn).__gt((1));
 if(smalltalk.assert($2)){
-tile=_st(_st($Sprite())._new())._spriteSheet_("images/floor.png");
+tile=_st(_st($Sprite())._new())._imageSrc_("images/floor.png");
 tile;
 $3=tile;
 $4=(0).__at((0));
@@ -2553,8 +2563,8 @@ return _st(self._floor())._add_(tile);
 $ctx1.sendIdx["withIndexDo:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"createFloor",{tile:tile},globals.Sokoban)})},
 args: [],
-source: "createFloor\x0a\x09|tile|\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [:eachRow :y | \x0a\x09\x09\x09(eachRow includes: 1) \x0a                              \x09ifTrue: \x0a                              \x09\x09[eachRow withIndexDo: [:eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn > 1\x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a                                                        \x09tile := Sprite new spriteSheet: 'images/floor.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile addFrameGroupNamed: 'tile' origin: (0@0) size: (30@30) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self floor add: tile]]]].",
-messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", ">", "spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "-", "*", "add:", "floor"],
+source: "createFloor\x0a\x09| tile |\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 1) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn > 1\x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile := Sprite new imageSrc: 'images/floor.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile addFrameGroupNamed: 'tile' origin: (0@0) size: (30@30) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self floor add: tile ]]]].",
+messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", ">", "imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "-", "*", "add:", "floor"],
 referencedClasses: ["Sprite"]
 }),
 globals.Sokoban);
@@ -2567,95 +2577,96 @@ fn: function (){
 var self=this;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35;
-self["@guy"]=_st(_st($Sprite())._new())._spriteSheet_("images/guy.png");
+var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35,$36,$37;
+self["@guy"]=_st(_st($Sprite())._new())._imageSrc_("images/guy.png");
 $1=self["@guy"];
-$2=(0).__at((0));
+$2=$1;
+$3=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
-$3=(25).__at((25));
+$4=(25).__at((25));
 $ctx1.sendIdx["@"]=2;
-_st($1)._addFrameGroupNamed_origin_size_frameCount_("walkDown",$2,$3,(2));
+_st($2)._addFrameGroupNamed_origin_size_frameCount_("walkDown",$3,$4,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=1;
-$4=self["@guy"];
-$5=(0).__at((25));
+$5=$1;
+$6=(0).__at((25));
 $ctx1.sendIdx["@"]=3;
-$6=(25).__at((25));
+$7=(25).__at((25));
 $ctx1.sendIdx["@"]=4;
-_st($4)._addFrameGroupNamed_origin_size_frameCount_("walkUp",$5,$6,(2));
+_st($5)._addFrameGroupNamed_origin_size_frameCount_("walkUp",$6,$7,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=2;
-$7=self["@guy"];
-$8=(0).__at((50));
+$8=$1;
+$9=(0).__at((50));
 $ctx1.sendIdx["@"]=5;
-$9=(25).__at((25));
+$10=(25).__at((25));
 $ctx1.sendIdx["@"]=6;
-_st($7)._addFrameGroupNamed_origin_size_frameCount_("walkLeft",$8,$9,(2));
+_st($8)._addFrameGroupNamed_origin_size_frameCount_("walkLeft",$9,$10,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=3;
-$10=self["@guy"];
-$11=(0).__at((75));
+$11=$1;
+$12=(0).__at((75));
 $ctx1.sendIdx["@"]=7;
-$12=(25).__at((25));
+$13=(25).__at((25));
 $ctx1.sendIdx["@"]=8;
-_st($10)._addFrameGroupNamed_origin_size_frameCount_("walkRight",$11,$12,(2));
+_st($11)._addFrameGroupNamed_origin_size_frameCount_("walkRight",$12,$13,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=4;
-$13=self["@guy"];
-$14=(50).__at((0));
+$14=$1;
+$15=(50).__at((0));
 $ctx1.sendIdx["@"]=9;
-$15=(25).__at((25));
+$16=(25).__at((25));
 $ctx1.sendIdx["@"]=10;
-_st($13)._addFrameGroupNamed_origin_size_frameCount_("stillDown",$14,$15,(1));
+_st($14)._addFrameGroupNamed_origin_size_frameCount_("stillDown",$15,$16,(1));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=5;
-$16=self["@guy"];
-$17=(50).__at((25));
+$17=$1;
+$18=(50).__at((25));
 $ctx1.sendIdx["@"]=11;
-$18=(25).__at((25));
+$19=(25).__at((25));
 $ctx1.sendIdx["@"]=12;
-_st($16)._addFrameGroupNamed_origin_size_frameCount_("stillUp",$17,$18,(1));
+_st($17)._addFrameGroupNamed_origin_size_frameCount_("stillUp",$18,$19,(1));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=6;
-$19=self["@guy"];
-$20=(50).__at((50));
+$20=$1;
+$21=(50).__at((50));
 $ctx1.sendIdx["@"]=13;
-$21=(25).__at((25));
+$22=(25).__at((25));
 $ctx1.sendIdx["@"]=14;
-_st($19)._addFrameGroupNamed_origin_size_frameCount_("stillLeft",$20,$21,(1));
+_st($20)._addFrameGroupNamed_origin_size_frameCount_("stillLeft",$21,$22,(1));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=7;
-$22=self["@guy"];
-$23=(50).__at((75));
+$23=$1;
+$24=(50).__at((75));
 $ctx1.sendIdx["@"]=15;
-$24=(25).__at((25));
+$25=(25).__at((25));
 $ctx1.sendIdx["@"]=16;
-_st($22)._addFrameGroupNamed_origin_size_frameCount_("stillRight",$23,$24,(1));
+_st($23)._addFrameGroupNamed_origin_size_frameCount_("stillRight",$24,$25,(1));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=8;
-$25=self["@guy"];
-$26=(75).__at((0));
+$26=$1;
+$27=(75).__at((0));
 $ctx1.sendIdx["@"]=17;
-$27=(25).__at((25));
+$28=(25).__at((25));
 $ctx1.sendIdx["@"]=18;
-_st($25)._addFrameGroupNamed_origin_size_frameCount_("pushDown",$26,$27,(2));
+_st($26)._addFrameGroupNamed_origin_size_frameCount_("pushDown",$27,$28,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=9;
-$28=self["@guy"];
-$29=(75).__at((25));
+$29=$1;
+$30=(75).__at((25));
 $ctx1.sendIdx["@"]=19;
-$30=(25).__at((25));
+$31=(25).__at((25));
 $ctx1.sendIdx["@"]=20;
-_st($28)._addFrameGroupNamed_origin_size_frameCount_("pushUp",$29,$30,(2));
+_st($29)._addFrameGroupNamed_origin_size_frameCount_("pushUp",$30,$31,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=10;
-$31=self["@guy"];
-$32=(75).__at((50));
+$32=$1;
+$33=(75).__at((50));
 $ctx1.sendIdx["@"]=21;
-$33=(25).__at((25));
+$34=(25).__at((25));
 $ctx1.sendIdx["@"]=22;
-_st($31)._addFrameGroupNamed_origin_size_frameCount_("pushLeft",$32,$33,(2));
+_st($32)._addFrameGroupNamed_origin_size_frameCount_("pushLeft",$33,$34,(2));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=11;
-$34=self["@guy"];
-$35=(75).__at((75));
+$35=$1;
+$36=(75).__at((75));
 $ctx1.sendIdx["@"]=23;
-_st($34)._addFrameGroupNamed_origin_size_frameCount_("pushRight",$35,(25).__at((25)),(2));
-_st(self["@guy"])._centre_(self._startPositionFor_(self._currentLevel()));
-_st(self["@guy"])._frameRate_((2));
+_st($35)._addFrameGroupNamed_origin_size_frameCount_("pushRight",$36,(25).__at((25)),(2));
+_st($1)._centre_(self._startPositionFor_(self._currentLevel()));
+$37=_st($1)._frameRate_((2));
 return self}, function($ctx1) {$ctx1.fill(self,"createGuy",{},globals.Sokoban)})},
 args: [],
-source: "createGuy\x0a\x09guy := Sprite new spriteSheet: 'images/guy.png'.\x0a\x09guy addFrameGroupNamed: 'walkDown' origin: (0@0) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'walkUp' origin: (0@25) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'walkLeft' origin: (0@50) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'walkRight' origin: (0@75) size: (25@25) frameCount: 2.\x0a\x0a\x09guy addFrameGroupNamed: 'stillDown' origin: (50@0) size: (25@25) frameCount: 1.\x0a\x09guy addFrameGroupNamed: 'stillUp' origin: (50@25) size: (25@25) frameCount: 1.\x0a\x09guy addFrameGroupNamed: 'stillLeft' origin: (50@50) size: (25@25) frameCount: 1.\x0a\x09guy addFrameGroupNamed: 'stillRight' origin: (50@75) size: (25@25) frameCount: 1.\x0a\x0a\x09guy addFrameGroupNamed: 'pushDown' origin: (75@0) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'pushUp' origin: (75@25) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'pushLeft' origin: (75@50) size: (25@25) frameCount: 2.\x0a\x09guy addFrameGroupNamed: 'pushRight' origin: (75@75) size: (25@25) frameCount: 2.\x0a\x0a\x09guy centre: (self startPositionFor: self currentLevel).\x0a\x0a\x09guy frameRate: 2.",
-messageSends: ["spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "startPositionFor:", "currentLevel", "frameRate:"],
+source: "createGuy\x0a\x09guy := Sprite new imageSrc: 'images/guy.png'.\x0a\x09guy\x0a\x09\x09addFrameGroupNamed: 'walkDown' origin: (0@0) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkUp' origin: (0@25) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkLeft' origin: (0@50) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkRight' origin: (0@75) size: (25@25) frameCount: 2;\x0a\x0a\x09\x09addFrameGroupNamed: 'stillDown' origin: (50@0) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillUp' origin: (50@25) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillLeft' origin: (50@50) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillRight' origin: (50@75) size: (25@25) frameCount: 1;\x0a\x0a\x09\x09addFrameGroupNamed: 'pushDown' origin: (75@0) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushUp' origin: (75@25) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushLeft' origin: (75@50) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushRight' origin: (75@75) size: (25@25) frameCount: 2;\x0a\x0a\x09\x09centre: (self startPositionFor: self currentLevel);\x0a\x0a\x09\x09frameRate: 2.",
+messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "startPositionFor:", "currentLevel", "frameRate:"],
 referencedClasses: ["Sprite"]
 }),
 globals.Sokoban);
@@ -2675,7 +2686,7 @@ self._createBoxes();
 $1=self._createWalls();
 return self}, function($ctx1) {$ctx1.fill(self,"createLevel",{},globals.Sokoban)})},
 args: [],
-source: "createLevel\x0a\x09self createFloor;\x0a\x09\x09createExits;\x0a\x09\x09createGuy;\x0a\x09\x09createBoxes;\x0a\x09\x09createWalls.",
+source: "createLevel\x0a\x09self \x0a\x09\x09createFloor;\x0a\x09\x09createExits;\x0a\x09\x09createGuy;\x0a\x09\x09createBoxes;\x0a\x09\x09createWalls.",
 messageSends: ["createFloor", "createExits", "createGuy", "createBoxes", "createWalls"],
 referencedClasses: []
 }),
@@ -2699,7 +2710,7 @@ return _st(eachRow)._withIndexDo_((function(eachColumn,x){
 return smalltalk.withContext(function($ctx3) {
 $2=_st(eachColumn).__eq((1));
 if(smalltalk.assert($2)){
-wall=_st(_st($Sprite())._new())._spriteSheet_("images/wall.png");
+wall=_st(_st($Sprite())._new())._imageSrc_("images/wall.png");
 wall;
 $3=wall;
 $4=(0).__at((0));
@@ -2722,8 +2733,8 @@ return _st(self._walls())._add_(wall);
 $ctx1.sendIdx["withIndexDo:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"createWalls",{wall:wall},globals.Sokoban)})},
 args: [],
-source: "createWalls\x0a\x09|wall|\x0a\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [:eachRow :y | \x0a\x09\x09\x09(eachRow includes: 1) \x0a                              \x09ifTrue: \x0a                              \x09\x09[eachRow withIndexDo: [:eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 1 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a                                                        \x09wall := Sprite new spriteSheet: 'images/wall.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09wall addFrameGroupNamed: 'wall' origin: (0@0) size: (30@30) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09wall x: ((x * 30) - 30); y: ((y * 30) - 30).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self walls add: wall ]]]].",
-messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "spriteSheet:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "x:", "-", "*", "y:", "add:", "walls"],
+source: "createWalls\x0a\x09|wall|\x0a\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 1) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 1 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09wall := Sprite new imageSrc: 'images/wall.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09wall addFrameGroupNamed: 'wall' origin: (0@0) size: (30@30) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09wall x: ((x * 30) - 30); y: ((y * 30) - 30).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self walls add: wall ]]]].",
+messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "x:", "-", "*", "y:", "add:", "walls"],
 referencedClasses: ["Sprite"]
 }),
 globals.Sokoban);
@@ -2747,7 +2758,7 @@ $2=self._perform_("level".__comma(_st(self["@currentLevel"])._asString()));
 return $2;
 }, function($ctx1) {$ctx1.fill(self,"currentLevel",{},globals.Sokoban)})},
 args: [],
-source: "currentLevel\x0a\x09currentLevel ifNil: [currentLevel := 1].\x0a\x09^ self perform: 'level' , currentLevel asString",
+source: "currentLevel\x0a\x09currentLevel ifNil: [ currentLevel := 1 ].\x0a\x09^ self perform: 'level' , currentLevel asString",
 messageSends: ["ifNil:", "perform:", ",", "asString"],
 referencedClasses: []
 }),
@@ -2771,7 +2782,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"directionDictionary",{},globals.Sokoban)})},
 args: [],
-source: "directionDictionary\x0a\x09^ directionDictionary ifNil: [ directionDictionary := #{'Down' -> 'bottom'. 'Up' -> 'top'. 'Left' -> 'left'. 'Right' -> 'right'} ]",
+source: "directionDictionary\x0a\x09^ directionDictionary ifNil: [ directionDictionary := #{ 'Down' -> 'bottom'. 'Up' -> 'top'. 'Left' -> 'left'. 'Right' -> 'right' } ]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),
@@ -2785,34 +2796,15 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 self._clearCanvas();
-_st(self._floor())._do_((function(each){
+_st([self._floor(),self._walls(),self._exits(),self._boxes()])._do_((function(eachCollection){
 return smalltalk.withContext(function($ctx2) {
-return self._drawSprite_(each);
-$ctx2.sendIdx["drawSprite:"]=1;
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
-$ctx1.sendIdx["do:"]=1;
-_st(self._walls())._do_((function(each){
-return smalltalk.withContext(function($ctx2) {
-return self._drawSprite_(each);
-$ctx2.sendIdx["drawSprite:"]=2;
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,2)})}));
-$ctx1.sendIdx["do:"]=2;
-_st(self._exits())._do_((function(each){
-return smalltalk.withContext(function($ctx2) {
-return self._drawSprite_(each);
-$ctx2.sendIdx["drawSprite:"]=3;
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,3)})}));
-$ctx1.sendIdx["do:"]=3;
+return self._drawSpriteCollection_(eachCollection);
+}, function($ctx2) {$ctx2.fillBlock({eachCollection:eachCollection},$ctx1,1)})}));
 self._drawSprite_(self["@guy"]);
-$ctx1.sendIdx["drawSprite:"]=4;
-_st(self._boxes())._do_((function(each){
-return smalltalk.withContext(function($ctx2) {
-return self._drawSprite_(each);
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,4)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.Sokoban)})},
 args: [],
-source: "draw\x0a\x09self clearCanvas.\x0a        self floor do: [:each | self drawSprite: each].\x0a\x09self walls do: [:each | self drawSprite: each].\x0a\x09self exits do: [:each | self drawSprite: each].\x0a\x09self drawSprite: guy.\x0a\x09self boxes do: [:each | self drawSprite: each].",
-messageSends: ["clearCanvas", "do:", "floor", "drawSprite:", "walls", "exits", "boxes"],
+source: "draw\x0a\x09self clearCanvas.\x0a    \x0a\x09{ self floor. self walls. self exits. self boxes } \x0a\x09\x09do: [ :eachCollection | self drawSpriteCollection: eachCollection ].\x0a\x0a\x09self drawSprite: guy.",
+messageSends: ["clearCanvas", "do:", "floor", "walls", "exits", "boxes", "drawSpriteCollection:", "drawSprite:"],
 referencedClasses: []
 }),
 globals.Sokoban);
@@ -2853,7 +2845,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"exits",{},globals.Sokoban)})},
 args: [],
-source: "exits\x0a\x09^ exits ifNil: [exits := #()]",
+source: "exits\x0a\x09^ exits ifNil: [ exits := #() ]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),
@@ -2877,7 +2869,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"floor",{},globals.Sokoban)})},
 args: [],
-source: "floor\x0a\x09^ floor ifNil: [floor := #()]",
+source: "floor\x0a\x09^ floor ifNil: [ floor := #() ]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),
@@ -2943,7 +2935,7 @@ $ctx1.sendIdx["currentFrameGroup:"]=2;
 self["@lastMove"]=aDirection;
 return self}, function($ctx1) {$ctx1.fill(self,"go:",{aDirection:aDirection,side:side,offset:offset},globals.Sokoban)})},
 args: ["aDirection"],
-source: "go: aDirection\x0a\x09|side offset|\x0a\x09side := self directionDictionary at: aDirection.\x0a\x09offset := self guyOffsetDictionary at: aDirection.\x0a\x0a\x09guy moveCentreBy: offset.\x0a\x09(guy perform: side , 'CollidesWithAnyOf:' withArguments: {walls})\x0a\x09\x09ifFalse:\x0a\x09\x09\x09[(guy perform: side , 'CollidesWithAnyOf:' withArguments: {boxes})\x0a                         \x09ifTrue: \x0a                         \x09\x09[self moveBox: (guy perform: side , 'CollidesWithWhichOf:' withArguments: {boxes}) direction: aDirection.\x0a                                        guy moveCentreBy: (offset * -1).\x0a                                        guy currentFrameGroup: 'push', aDirection]\x0a\x09                        ifFalse: \x0a                         \x09\x09[guy moveCentreBy: ((offset / 8) * (stepSize - 8)).\x0a        \x09                \x09guy currentFrameGroup: 'walk', aDirection]]\x0a\x09\x09ifTrue: \x0a\x09\x09\x09[guy moveCentreBy: (offset * -1).\x0a                        guy currentFrameGroup: 'push' , aDirection].\x0a\x0a\x09lastMove := aDirection.",
+source: "go: aDirection\x0a\x09| side offset |\x0a\x09side := self directionDictionary at: aDirection.\x0a\x09offset := self guyOffsetDictionary at: aDirection.\x0a\x0a\x09guy moveCentreBy: offset.\x0a\x09\x0a\x09(guy perform: side , 'CollidesWithAnyOf:' withArguments: { walls })\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09(guy perform: side , 'CollidesWithAnyOf:' withArguments: { boxes })\x0a\x09\x09\x09\x09ifTrue: [ \x0a\x09\x09\x09\x09\x09self moveBox: (guy perform: side , 'CollidesWithWhichOf:' withArguments: { boxes }) direction: aDirection.\x0a\x09\x09\x09\x09\x09guy moveCentreBy: (offset * -1).\x0a\x09\x09\x09\x09\x09guy currentFrameGroup: 'push', aDirection ]\x0a\x09\x09\x09\x09ifFalse: [ \x0a\x09\x09\x09\x09\x09guy moveCentreBy: ((offset / 8) * (stepSize - 8)).\x0a\x09\x09\x09\x09\x09guy currentFrameGroup: 'walk', aDirection ]]\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09guy moveCentreBy: (offset * -1).\x0a\x09\x09\x09guy currentFrameGroup: 'push' , aDirection ].\x0a\x0a\x09lastMove := aDirection.",
 messageSends: ["at:", "directionDictionary", "guyOffsetDictionary", "moveCentreBy:", "ifFalse:ifTrue:", "perform:withArguments:", ",", "ifTrue:ifFalse:", "moveBox:direction:", "*", "currentFrameGroup:", "/", "-"],
 referencedClasses: []
 }),
@@ -2973,7 +2965,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"guyOffsetDictionary",{},globals.Sokoban)})},
 args: [],
-source: "guyOffsetDictionary\x0a\x09^ guyOffsetDictionary ifNil: [ guyOffsetDictionary := #{'Down' -> (0@8). 'Up' -> (0@ -8). 'Left' -> (-8@0). 'Right' -> (8@0)} ]",
+source: "guyOffsetDictionary\x0a\x09^ guyOffsetDictionary ifNil: [ guyOffsetDictionary := #{ 'Down' -> (0@8). 'Up' -> (0@ -8). 'Left' -> (-8@0). 'Right' -> (8@0) } ]",
 messageSends: ["ifNil:", "@"],
 referencedClasses: []
 }),
@@ -3031,7 +3023,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"lastMove",{},globals.Sokoban)})},
 args: [],
-source: "lastMove\x0a\x09^ lastMove ifNil: [lastMove := 'Down']",
+source: "lastMove\x0a\x09^ lastMove ifNil: [ lastMove := 'Down' ]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),
@@ -3048,7 +3040,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level1\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 7 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 1 1 1 2 2 7 1 1 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 1 2 2 7 2 7 2 1 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 1 1 1 2 1 2 1 1 2 1 0 0 1 1 1 1 1 1 0 0 0)\x0a       #(0 0 0 1 2 2 2 1 2 1 1 2 1 1 1 1 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 1 2 7 2 2 7 2 2 2 2 2 2 2 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 1 1 1 1 1 2 1 1 1 2 1 8 1 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 2 2 2 2 2 1 1 1 1 1 1 1 1 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level1\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 7 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 1 1 1 2 2 7 1 1 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 1 2 2 7 2 7 2 1 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 1 1 1 2 1 2 1 1 2 1 0 0 1 1 1 1 1 1 0 0 0)\x0a       #(0 0 0 1 2 2 2 1 2 1 1 2 1 1 1 1 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 1 2 7 2 2 7 2 2 2 2 2 2 2 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 1 1 1 1 1 2 1 1 1 2 1 8 1 2 2 9 9 1 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 2 2 2 2 2 1 1 1 1 1 1 1 1 0 0 0)\x0a       #(0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3065,7 +3057,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level10\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 1 1 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 1 1 8 1 1 1 1 2 2 2 2 2 2 2 1 2 2 2 1 0 0 0) \x0a#(0 0 1 2 7 7 2 2 2 7 7 2 2 7 2 7 2 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 7 7 7 1 2 2 2 2 7 2 2 1 9 9 9 1 0 0 0) \x0a#(0 0 1 2 7 2 2 2 1 2 7 7 2 7 7 2 1 9 9 9 1 0 0 0) \x0a#(0 0 1 1 1 2 2 2 1 2 2 7 2 2 2 2 1 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 2 2 2 1 2 7 2 7 2 7 2 1 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 2 2 1 1 1 1 1 1 2 1 1 1 9 9 9 1 0 0 0) \x0a#(0 0 1 1 2 1 2 2 1 2 2 7 2 7 2 2 1 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 1 1 2 1 2 7 7 2 7 2 7 1 1 9 9 1 0 0 0) \x0a#(0 0 1 2 9 9 1 2 1 2 2 7 2 2 2 2 2 2 1 9 1 0 0 0) \x0a#(0 0 1 2 9 9 1 2 1 2 7 7 7 2 7 7 7 2 1 9 1 0 0 0) \x0a#(0 0 1 1 1 1 1 2 1 2 2 2 2 2 2 2 1 2 1 9 1 0 0 0) \x0a#(0 0 0 0 0 0 1 2 1 1 1 1 1 1 1 1 1 2 1 9 1 0 0 0) \x0a#(0 0 0 0 0 0 1 2 2 2 2 2 2 2 2 2 2 2 1 9 1 0 0 0) \x0a#(0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level10\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 1 1 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 1 1 8 1 1 1 1 2 2 2 2 2 2 2 1 2 2 2 1 0 0 0) \x0a       #(0 0 1 2 7 7 2 2 2 7 7 2 2 7 2 7 2 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 7 7 7 1 2 2 2 2 7 2 2 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 7 2 2 2 1 2 7 7 2 7 7 2 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 1 1 2 2 2 1 2 2 7 2 2 2 2 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 2 2 2 1 2 7 2 7 2 7 2 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 2 2 1 1 1 1 1 1 2 1 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 1 2 1 2 2 1 2 2 7 2 7 2 2 1 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 1 1 2 1 2 7 7 2 7 2 7 1 1 9 9 1 0 0 0) \x0a       #(0 0 1 2 9 9 1 2 1 2 2 7 2 2 2 2 2 2 1 9 1 0 0 0) \x0a       #(0 0 1 2 9 9 1 2 1 2 7 7 7 2 7 7 7 2 1 9 1 0 0 0) \x0a       #(0 0 1 1 1 1 1 2 1 2 2 2 2 2 2 2 1 2 1 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 1 2 1 1 1 1 1 1 1 1 1 2 1 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 1 2 2 2 2 2 2 2 2 2 2 2 1 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x09   \x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3082,7 +3074,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level11\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a#(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 1 1 1 1 0 1 2 2 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 1 2 8 1 1 1 7 2 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 1 1 2 2 2 2 2 2 7 2 2 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 1 2 2 7 2 7 7 1 1 2 1 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 1 7 1 1 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 1 2 7 2 7 7 2 1 2 1 1 1 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 2 7 2 1 2 2 1 2 7 2 1 1 1 1 1 0 0 0 0) \x0a#(0 1 1 1 1 2 2 2 2 1 2 2 7 7 2 1 2 2 2 1 0 0 0 0) \x0a#(0 1 1 1 1 2 1 1 2 7 2 2 2 2 2 2 2 2 2 1 0 0 0 0) \x0a#(0 1 9 2 2 2 2 1 1 1 2 2 1 1 1 1 1 1 1 1 0 0 0 0) \x0a#(0 1 9 9 2 9 9 1 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 1 9 9 9 1 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)  \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level11\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 1 1 1 1 0 1 2 2 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 1 2 8 1 1 1 7 2 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 1 1 2 2 2 2 2 2 7 2 2 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 1 2 2 7 2 7 7 1 1 2 1 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 1 7 1 1 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 1 2 7 2 7 7 2 1 2 1 1 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 2 7 2 1 2 2 1 2 7 2 1 1 1 1 1 0 0 0 0) \x0a       #(0 1 1 1 1 2 2 2 2 1 2 2 7 7 2 1 2 2 2 1 0 0 0 0) \x0a       #(0 1 1 1 1 2 1 1 2 7 2 2 2 2 2 2 2 2 2 1 0 0 0 0) \x0a       #(0 1 9 2 2 2 2 1 1 1 2 2 1 1 1 1 1 1 1 1 0 0 0 0) \x0a       #(0 1 9 9 2 9 9 1 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 1 9 9 9 1 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)  \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x09   \x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3099,7 +3091,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level12\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0) \x0a#(0 0 0 0 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 0 0 0 0) \x0a#(0 0 0 0 1 2 1 2 1 1 1 1 1 1 2 2 2 2 2 1 0 0 0 0) \x0a#(0 0 0 0 1 2 1 2 2 7 2 7 2 7 2 7 1 2 2 1 0 0 0 0) \x0a#(0 0 0 0 1 2 1 2 2 2 7 8 7 2 2 2 1 1 2 1 1 0 0 0) \x0a#(0 0 0 0 1 2 1 2 2 7 2 7 2 7 1 1 1 9 9 9 1 0 0 0) \x0a#(0 0 0 0 1 2 1 2 2 2 7 2 7 2 2 1 1 9 9 9 1 0 0 0) \x0a#(0 0 0 0 1 2 1 1 1 7 7 7 2 7 2 1 1 9 9 9 1 0 0 0) \x0a#(0 0 0 0 1 2 2 2 2 2 1 2 1 1 2 1 1 9 9 9 1 0 0 0) \x0a#(0 0 0 0 1 1 1 1 1 2 2 2 1 1 2 1 1 9 9 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 1 1 1 1 1 2 2 2 2 2 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 1 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level12\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0) \x0a       #(0 0 0 0 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 0 0 0 0) \x0a       #(0 0 0 0 1 2 1 2 1 1 1 1 1 1 2 2 2 2 2 1 0 0 0 0) \x0a       #(0 0 0 0 1 2 1 2 2 7 2 7 2 7 2 7 1 2 2 1 0 0 0 0) \x0a       #(0 0 0 0 1 2 1 2 2 2 7 8 7 2 2 2 1 1 2 1 1 0 0 0) \x0a       #(0 0 0 0 1 2 1 2 2 7 2 7 2 7 1 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 1 2 1 2 2 2 7 2 7 2 2 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 1 2 1 1 1 7 7 7 2 7 2 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 1 2 2 2 2 2 1 2 1 1 2 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 1 2 2 2 1 1 2 1 1 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 1 1 1 1 1 2 2 2 2 2 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x09   \x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3116,7 +3108,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level13\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 2 2 2 1 1 2 2 1 1 1 1 1 1 0 0 0 0 0) \x0a#(0 0 1 1 1 2 2 2 2 2 1 2 2 1 2 2 2 2 1 1 1 0 0 0) \x0a#(0 0 1 2 2 7 2 1 7 2 1 2 2 1 2 2 9 9 9 2 1 0 0 0) \x0a#(0 0 1 2 1 2 7 1 8 7 1 1 2 1 2 1 9 1 9 2 1 0 0 0) \x0a#(0 0 1 2 2 1 2 1 7 2 2 1 2 2 2 2 9 2 9 2 1 0 0 0) \x0a#(0 0 1 2 7 2 2 2 2 7 2 1 2 1 2 1 9 1 9 2 1 0 0 0) \x0a#(0 0 1 2 2 2 1 1 2 2 1 1 7 2 7 2 9 2 9 2 1 0 0 0) \x0a#(0 0 1 2 7 2 1 2 2 2 1 2 2 1 7 1 9 1 9 2 1 0 0 0) \x0a#(0 0 1 1 2 7 2 2 7 2 2 2 7 2 2 7 9 9 9 2 1 0 0 0) \x0a#(0 0 0 1 7 2 1 1 1 1 1 1 2 2 2 2 1 1 2 2 1 0 0 0) \x0a#(0 0 0 1 2 2 1 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level13\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 2 2 2 1 1 2 2 1 1 1 1 1 1 0 0 0 0 0) \x0a       #(0 0 1 1 1 2 2 2 2 2 1 2 2 1 2 2 2 2 1 1 1 0 0 0) \x0a       #(0 0 1 2 2 7 2 1 7 2 1 2 2 1 2 2 9 9 9 2 1 0 0 0) \x0a       #(0 0 1 2 1 2 7 1 8 7 1 1 2 1 2 1 9 1 9 2 1 0 0 0) \x0a       #(0 0 1 2 2 1 2 1 7 2 2 1 2 2 2 2 9 2 9 2 1 0 0 0) \x0a       #(0 0 1 2 7 2 2 2 2 7 2 1 2 1 2 1 9 1 9 2 1 0 0 0) \x0a       #(0 0 1 2 2 2 1 1 2 2 1 1 7 2 7 2 9 2 9 2 1 0 0 0) \x0a       #(0 0 1 2 7 2 1 2 2 2 1 2 2 1 7 1 9 1 9 2 1 0 0 0) \x0a       #(0 0 1 1 2 7 2 2 7 2 2 2 7 2 2 7 9 9 9 2 1 0 0 0) \x0a       #(0 0 0 1 7 2 1 1 1 1 1 1 2 2 2 2 1 1 2 2 1 0 0 0) \x0a       #(0 0 0 1 2 2 1 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3133,7 +3125,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level2\x0a\x09^  \x0a   #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 2 2 2 2 1 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 7 2 2 7 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 7 1 1 1 1 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 2 2 8 2 1 1 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 1 2 2 7 2 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 1 1 1 1 1 2 1 1 7 2 7 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 2 7 2 2 7 2 7 2 7 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 2 2 2 2 1 2 2 2 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level2\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 2 2 2 2 1 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 7 2 2 7 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 7 1 1 1 1 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 2 2 8 2 1 1 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 9 9 2 2 1 2 1 2 2 7 2 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 1 1 1 1 1 1 2 1 1 7 2 7 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 2 7 2 2 7 2 7 2 7 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 2 2 2 2 1 2 2 2 2 2 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3150,7 +3142,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level3\x0a\x09^\x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)  \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 8 1 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 2 7 1 7 2 1 1 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 2 7 2 2 7 1 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 1 7 2 7 2 1 0 0 0 0 0 0) \x0a#(0 0 0 1 1 1 1 1 1 1 1 1 2 7 2 1 2 1 1 1 0 0 0 0) \x0a#(0 0 0 1 9 9 9 9 2 2 1 1 2 7 2 2 7 2 2 1 0 0 0 0) \x0a#(0 0 0 1 1 9 9 9 2 2 2 2 7 2 2 7 2 2 2 1 0 0 0 0) \x0a#(0 0 0 1 9 9 9 9 2 2 1 1 1 1 1 1 1 1 1 1 0 0 0 0) \x0a#(0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level3\x0a\x09^\x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)  \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 8 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 2 7 1 7 2 1 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 2 7 2 2 7 1 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 1 7 2 7 2 1 0 0 0 0 0 0) \x0a       #(0 0 0 1 1 1 1 1 1 1 1 1 2 7 2 1 2 1 1 1 0 0 0 0) \x0a       #(0 0 0 1 9 9 9 9 2 2 1 1 2 7 2 2 7 2 2 1 0 0 0 0) \x0a       #(0 0 0 1 1 9 9 9 2 2 2 2 7 2 2 7 2 2 2 1 0 0 0 0) \x0a       #(0 0 0 1 9 9 9 9 2 2 1 1 1 1 1 1 1 1 1 1 0 0 0 0) \x0a       #(0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3167,7 +3159,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level4\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 9 9 9 9 1 0 0 0) \x0a#(0 0 1 1 1 1 1 1 1 1 1 1 1 1 2 2 9 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 2 2 1 2 2 7 2 7 2 2 2 9 9 9 9 1 0 0 0) \x0a#(0 0 1 2 7 7 7 1 7 2 2 7 2 1 2 2 9 9 9 9 1 0 0 0) \x0a#(0 0 1 2 2 7 2 2 2 2 2 7 2 1 2 2 9 9 9 9 1 0 0 0) \x0a#(0 0 1 2 7 7 2 1 7 2 7 2 7 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 1 2 2 7 2 1 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 1 2 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 2 2 1 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 2 2 2 7 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 7 7 1 7 7 2 2 8 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 2 2 2 2 1 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0)\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level4\x0a\x09^\x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 9 9 9 9 1 0 0 0) \x0a       #(0 0 1 1 1 1 1 1 1 1 1 1 1 1 2 2 9 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 2 2 1 2 2 7 2 7 2 2 2 9 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 7 7 7 1 7 2 2 7 2 1 2 2 9 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 2 7 2 2 2 2 2 7 2 1 2 2 9 9 9 9 1 0 0 0) \x0a       #(0 0 1 2 7 7 2 1 7 2 7 2 7 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 1 2 2 7 2 1 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 1 2 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 2 2 1 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 2 2 2 7 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 7 7 1 7 7 2 2 8 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 2 2 2 2 1 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0)\x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3184,7 +3176,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level5\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 2 1 7 1 1 2 2 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 7 2 1 0 0 0) \x0a#(0 0 0 0 1 1 1 1 1 1 1 1 1 2 1 1 1 2 2 2 1 0 0 0) \x0a#(0 0 0 0 1 9 9 9 9 2 2 1 1 2 7 2 2 7 1 1 1 0 0 0) \x0a#(0 0 0 0 1 9 9 9 9 2 2 2 2 7 2 7 7 2 1 1 0 0 0 0) \x0a#(0 0 0 0 1 9 9 9 9 2 2 1 1 7 2 2 7 2 8 1 0 0 0 0) \x0a#(0 0 0 0 1 1 1 1 1 1 1 1 1 2 2 7 2 2 1 1 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 2 7 2 7 2 2 1 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 2 1 1 2 1 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 1 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level5\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 2 1 7 1 1 2 2 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 7 2 1 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 1 1 1 1 1 2 1 1 1 2 2 2 1 0 0 0) \x0a       #(0 0 0 0 1 9 9 9 9 2 2 1 1 2 7 2 2 7 1 1 1 0 0 0) \x0a       #(0 0 0 0 1 9 9 9 9 2 2 2 2 7 2 7 7 2 1 1 0 0 0 0) \x0a       #(0 0 0 0 1 9 9 9 9 2 2 1 1 7 2 2 7 2 8 1 0 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 1 1 1 1 1 2 2 7 2 2 1 1 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 2 7 2 7 2 2 1 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 2 1 1 2 1 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 1 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x09   \x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3201,7 +3193,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level6\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 1 1 0 0 1 1 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 2 2 1 0 1 1 8 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 2 2 1 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 2 2 2 2 2 7 7 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 2 2 1 2 1 2 7 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 1 1 1 2 1 2 7 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 2 7 2 1 7 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 1 2 2 7 1 2 7 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 1 2 7 2 2 7 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 1 2 2 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level6\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 1 1 0 0 1 1 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 2 2 1 0 1 1 8 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 2 2 1 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 2 2 2 2 2 7 7 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 2 2 1 2 1 2 7 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 1 1 1 2 1 2 7 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 2 7 2 1 7 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 1 2 2 7 1 2 7 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 1 2 7 2 2 7 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 1 2 2 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3218,7 +3210,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level7\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 1 1 1 2 2 2 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 2 1 2 8 1 1 2 7 7 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 2 2 2 7 2 2 2 2 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 2 7 2 2 1 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 1 2 1 1 1 1 1 7 1 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 7 2 2 1 1 1 2 9 9 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 7 2 7 2 7 2 9 9 9 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 2 2 2 1 1 1 9 9 9 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 7 7 2 1 0 1 9 9 9 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 2 2 1 1 1 0 1 1 1 1 1 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level7\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 1 1 1 2 2 2 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 2 1 2 8 1 1 2 7 7 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 2 2 2 7 2 2 2 2 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 2 7 2 2 1 1 1 2 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 1 2 1 1 1 1 1 7 1 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 7 2 2 1 1 1 2 9 9 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 7 2 7 2 7 2 9 9 9 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 2 2 2 1 1 1 9 9 9 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 7 7 2 1 0 1 9 9 9 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 2 2 1 1 1 0 1 1 1 1 1 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x09   \x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3235,7 +3227,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level8\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 2 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 2 2 2 7 2 2 2 7 2 7 2 1 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 7 1 2 7 2 1 2 2 7 2 2 1 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 2 7 2 7 2 2 1 2 2 2 2 1 0 0 0 0 0) \x0a#(0 0 0 1 1 1 2 7 1 2 1 2 2 1 1 1 1 2 1 0 0 0 0 0) \x0a#(0 0 0 1 8 1 7 2 7 2 7 2 2 1 1 2 2 2 1 0 0 0 0 0) \x0a#(0 0 0 1 2 2 2 2 7 2 1 7 1 2 2 2 1 2 1 0 0 0 0 0) \x0a#(0 0 0 1 2 2 2 7 2 2 2 2 7 2 7 2 7 2 1 0 0 0 0 0) \x0a#(0 0 0 1 1 1 1 1 2 2 1 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level8\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 2 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 2 2 2 7 2 2 2 7 2 7 2 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 7 1 2 7 2 1 2 2 7 2 2 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 2 7 2 7 2 2 1 2 2 2 2 1 0 0 0 0 0) \x0a       #(0 0 0 1 1 1 2 7 1 2 1 2 2 1 1 1 1 2 1 0 0 0 0 0) \x0a       #(0 0 0 1 8 1 7 2 7 2 7 2 2 1 1 2 2 2 1 0 0 0 0 0) \x0a       #(0 0 0 1 2 2 2 2 7 2 1 7 1 2 2 2 1 2 1 0 0 0 0 0) \x0a       #(0 0 0 1 2 2 2 7 2 2 2 2 7 2 7 2 7 2 1 0 0 0 0 0) \x0a       #(0 0 0 1 1 1 1 1 2 2 1 1 1 1 1 1 1 1 1 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 9 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3252,7 +3244,7 @@ $1=[[(0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), (0), 
 return $1;
 },
 args: [],
-source: "level9\x0a\x09^  \x0a#(\x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 9 9 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 2 2 9 9 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 2 9 2 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 1 2 2 1 1 2 2 9 9 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 1 1 2 1 1 2 2 9 9 9 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 1 1 1 2 1 1 1 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 1 2 7 7 7 2 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 1 1 1 1 1 2 2 7 2 7 2 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 1 1 2 2 2 1 7 2 7 2 2 2 1 2 2 2 1 0 0 0) \x0a#(0 0 0 0 1 8 2 7 2 2 7 2 2 2 2 7 2 2 7 2 1 0 0 0) \x0a#(0 0 0 0 1 1 1 1 1 1 2 7 7 2 7 2 1 1 1 1 1 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22",
+source: "level9\x0a\x09^  \x0a     #(#(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 2 2 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 2 9 2 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 1 2 2 1 1 2 2 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 1 1 2 1 1 2 2 9 9 9 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 1 1 1 2 1 1 1 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 1 2 7 7 7 2 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 1 1 1 1 1 2 2 7 2 7 2 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 1 1 2 2 2 1 7 2 7 2 2 2 1 2 2 2 1 0 0 0) \x0a       #(0 0 0 0 1 8 2 7 2 2 7 2 2 2 2 7 2 2 7 2 1 0 0 0) \x0a       #(0 0 0 0 1 1 1 1 1 1 2 7 7 2 7 2 1 1 1 1 1 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0) \x0a       #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))\x0a\x0a\x22\x0a0 → empty\x0a1 → wall\x0a2 → floor\x0a7 → box\x0a8 → guy\x0a9 → exit\x0a\x22       ",
 messageSends: [],
 referencedClasses: []
 }),
@@ -3308,24 +3300,8 @@ return self._drawSprite_(each);
 };
 return self}, function($ctx1) {$ctx1.fill(self,"moveBox:direction:",{aBox:aBox,aDirection:aDirection,side:side,offset:offset},globals.Sokoban)})},
 args: ["aBox", "aDirection"],
-source: "moveBox: aBox direction: aDirection\x0a\x09|side offset|\x0a\x09side := self directionDictionary at: aDirection.\x0a\x09offset := self boxOffsetDictionary at: aDirection.\x0a\x0a\x09aBox centre: aBox centre + offset.\x0a\x09(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {walls})\x0a\x09\x09ifFalse:\x0a\x09\x09\x09[(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {boxes})\x0a                         \x09ifFalse: \x0a                         \x09\x09[ (self soundNamed: 'slide') play.\x0a                                          5 timesRepeat: \x0a                                         \x09[[aBox moveCentreBy: offset] valueWithTimeout: 100.\x0a                                         \x09self clearCanvas. \x0a                                         \x09self boxes do: [:each | self drawSprite: each]]]\x0a\x09                        ifTrue: \x0a                         \x09\x09[aBox centre: aBox centre - offset]]\x0a\x09\x09ifTrue: [aBox centre: aBox centre - offset]",
+source: "moveBox: aBox direction: aDirection\x0a\x09|side offset|\x0a\x09side := self directionDictionary at: aDirection.\x0a\x09offset := self boxOffsetDictionary at: aDirection.\x0a\x0a\x09aBox centre: aBox centre + offset.\x0a\x09(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {walls})\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {boxes})\x0a\x09\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09\x09(self soundNamed: 'slide') play.\x0a                    5 timesRepeat: [\x0a\x09\x09\x09\x09\x09\x09[ aBox moveCentreBy: offset ] valueWithTimeout: 100.\x0a\x09\x09\x09\x09\x09\x09self clearCanvas. \x0a\x09\x09\x09\x09\x09\x09self boxes do: [ :each | self drawSprite: each ]]]\x0a\x09\x09\x09\x09ifTrue: [ aBox centre: aBox centre - offset ]]\x0a\x09\x09ifTrue: [ aBox centre: aBox centre - offset ]",
 messageSends: ["at:", "directionDictionary", "boxOffsetDictionary", "centre:", "+", "centre", "ifFalse:ifTrue:", "perform:withArguments:", ",", "play", "soundNamed:", "timesRepeat:", "valueWithTimeout:", "moveCentreBy:", "clearCanvas", "do:", "boxes", "drawSprite:", "-"],
-referencedClasses: []
-}),
-globals.Sokoban);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "processMovement",
-protocol: 'movement',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-_st(self["@guy"])._currentFrameGroup_("still".__comma(self._lastMove()));
-return self}, function($ctx1) {$ctx1.fill(self,"processMovement",{},globals.Sokoban)})},
-args: [],
-source: "processMovement\x0a\x09guy currentFrameGroup: 'still' , self lastMove.",
-messageSends: ["currentFrameGroup:", ",", "lastMove"],
 referencedClasses: []
 }),
 globals.Sokoban);
@@ -3342,7 +3318,7 @@ self._clearLevel();
 $1=self._createLevel();
 return self}, function($ctx1) {$ctx1.fill(self,"restartLevel",{},globals.Sokoban)})},
 args: [],
-source: "restartLevel\x0a\x09self clearLevel;\x0a\x09\x09createLevel.",
+source: "restartLevel\x0a\x09self \x0a\x09\x09clearLevel;\x0a\x09\x09createLevel.",
 messageSends: ["clearLevel", "createLevel"],
 referencedClasses: []
 }),
@@ -3409,7 +3385,7 @@ return self}
 catch(e) {if(e===$early)return e[0]; throw e}
 }, function($ctx1) {$ctx1.fill(self,"startPositionFor:",{aLevel:aLevel},globals.Sokoban)})},
 args: ["aLevel"],
-source: "startPositionFor: aLevel\x0a\x09aLevel\x0a\x09\x09withIndexDo: [:eachRow :y | \x0a\x09\x09\x09(eachRow includes: 8) \x0a                              \x09ifTrue: \x0a                              \x09\x09[eachRow withIndexDo: [:eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 8 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [ ^ ((x * 30) - 15) @ ((y * 30) - 15) ]]]].",
+source: "startPositionFor: aLevel\x0a\x09aLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 8) \x0a\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 8\x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [ ^ ((x * 30) - 15) @ ((y * 30) - 15) ]]]].",
 messageSends: ["withIndexDo:", "ifTrue:", "includes:", "=", "@", "-", "*"],
 referencedClasses: []
 }),
@@ -3423,54 +3399,55 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2;
+var $1,$2,$3;
 _st(self["@guy"])._currentFrameGroup_("still".__comma(self._lastMove()));
-self._whileKeyPressed_do_(_st($Key())._leftArrow(),(function(){
+$1=self._inputHandler();
+_st($1)._whileKeyPressed_do_(_st($Key())._leftArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._go_("Left");
 $ctx2.sendIdx["go:"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=1;
-self._whileKeyPressed_do_(_st($Key())._rightArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._rightArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._go_("Right");
 $ctx2.sendIdx["go:"]=2;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=2;
-self._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._upArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._go_("Up");
 $ctx2.sendIdx["go:"]=3;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=3;
-self._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._downArrow(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._go_("Down");
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=4;
-self._whileKeyPressed_do_(_st($Key())._r(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._r(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._restartLevel();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=5;
-self._whileKeyPressed_do_(_st($Key())._m(),(function(){
+_st($1)._whileKeyPressed_do_(_st($Key())._m(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return _st(self._soundNamed_("factory"))._stop();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,6)})}));
 $ctx1.sendIdx["whileKeyPressed:do:"]=6;
-$1=self._whileKeyPressed_do_(_st($Key())._n(),(function(){
+$2=_st($1)._whileKeyPressed_do_(_st($Key())._n(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._advanceLevel();
 $ctx2.sendIdx["advanceLevel"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,7)})}));
-$2=self._isLevelOver();
-if(smalltalk.assert($2)){
+$3=self._isLevelOver();
+if(smalltalk.assert($3)){
 self._advanceLevel();
 };
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.Sokoban)})},
 args: [],
-source: "step\x0a\x09guy currentFrameGroup: 'still' , self lastMove.\x0a\x09self whileKeyPressed: Key leftArrow do: [self go: 'Left'];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [self go: 'Right'];\x0a\x09\x09whileKeyPressed: Key upArrow do: [self go: 'Up'];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self go: 'Down'];\x0a\x09\x09whileKeyPressed: Key r do: [self restartLevel];\x0a\x09\x09whileKeyPressed: Key m do: [(self soundNamed: 'factory') stop];\x0a\x09\x09whileKeyPressed: Key n do: [self advanceLevel].\x0a\x0a\x09self isLevelOver ifTrue: [self advanceLevel]",
-messageSends: ["currentFrameGroup:", ",", "lastMove", "whileKeyPressed:do:", "leftArrow", "go:", "rightArrow", "upArrow", "downArrow", "r", "restartLevel", "m", "stop", "soundNamed:", "n", "advanceLevel", "ifTrue:", "isLevelOver"],
+source: "step\x0a\x09guy currentFrameGroup: 'still' , self lastMove.\x0a\x09\x0a\x09self inputHandler\x0a\x09\x09whileKeyPressed: Key leftArrow do: [ self go: 'Left' ];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [ self go: 'Right' ];\x0a\x09\x09whileKeyPressed: Key upArrow do: [ self go: 'Up'];\x0a\x09\x09whileKeyPressed: Key downArrow do: [ self go: 'Down'];\x0a\x09\x09whileKeyPressed: Key r do: [ self restartLevel ];\x0a\x09\x09whileKeyPressed: Key m do: [ (self soundNamed: 'factory') stop ];\x0a\x09\x09whileKeyPressed: Key n do: [ self advanceLevel ].\x0a\x09\x0a\x09self isLevelOver ifTrue: [ self advanceLevel ]",
+messageSends: ["currentFrameGroup:", ",", "lastMove", "whileKeyPressed:do:", "inputHandler", "leftArrow", "go:", "rightArrow", "upArrow", "downArrow", "r", "restartLevel", "m", "stop", "soundNamed:", "n", "advanceLevel", "ifTrue:", "isLevelOver"],
 referencedClasses: ["Key"]
 }),
 globals.Sokoban);
@@ -3493,7 +3470,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"walls",{},globals.Sokoban)})},
 args: [],
-source: "walls\x0a\x09^ walls ifNil: [walls := #()]",
+source: "walls\x0a\x09^ walls ifNil: [ walls := #() ]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),

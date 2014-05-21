@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>OVNI</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Bernat Romagosa" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+    <script type='text/javascript' src='bower_components/amber/support/requirejs/require.min.js'></script>
+    <script type='text/javascript' src='bower_components/amber/support/amber.js'></script>
+  </head>
+
+  <body>
+    <script type='text/javascript'>
+      require.config({ paths: {
+          'HOS': 'src' //mapping compiled .js files and smalltalk source files
+      }});
+      require([
+          'amber/devel',
+          'HOS/AmberApplication',
+          'HOS/Ludus',
+          'HOS/Ludus-Examples',
+          'HOS/OVNI',
+          'HOS/AFI'
+      ], function (smalltalk) {
+          //used for all new packages in IDE
+          smalltalk.initialize({
+            'transport.defaultAmdNamespace': "HOS"
+          });
+//	  smalltalk.globals.OVGame._start();
+      });
+    </script>
+    <button onclick="require('amber/helpers').globals.Browser._open()">IDE</button>
+    <button onclick="require('amber/helpers').popupHelios()">Helios IDE</button> 
+    <div id="app">
+	<div id="main">
+	</div>
+	<div id="log">
+	</div>
+    </div>
+  </body>
+
+</html>
