@@ -574,23 +574,6 @@ globals.Game);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "kill",
-protocol: 'control',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-self._end();
-_st(self._class())._stop();
-return self}, function($ctx1) {$ctx1.fill(self,"kill",{},globals.Game)})},
-args: [],
-source: "kill\x0a\x09self end.\x0a\x09self class stop.",
-messageSends: ["end", "stop", "class"],
-referencedClasses: []
-}),
-globals.Game);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "restart",
 protocol: 'control',
 fn: function (){
@@ -734,6 +717,23 @@ globals.Game);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "stop",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._end();
+_st(self._class())._stop();
+return self}, function($ctx1) {$ctx1.fill(self,"stop",{},globals.Game)})},
+args: [],
+source: "stop\x0a\x09self end.\x0a\x09self class stop.",
+messageSends: ["end", "stop", "class"],
+referencedClasses: []
+}),
+globals.Game);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "switchToGame",
 protocol: 'screens',
 fn: function (){
@@ -780,6 +780,7 @@ referencedClasses: []
 globals.Game);
 
 
+globals.Game.klass.iVarNames = ['Instances'];
 smalltalk.addMethod(
 smalltalk.method({
 selector: "initialize",
@@ -791,6 +792,53 @@ args: [],
 source: "initialize\x0a\x09\x22uncomment if you want the game to start when loading the page\x22\x0a\x22\x09'self start\x22",
 messageSends: [],
 referencedClasses: []
+}),
+globals.Game.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "instances",
+protocol: 'instance treatment',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@Instances"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@Instances"]=[];
+$1=self["@Instances"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"instances",{},globals.Game.klass)})},
+args: [],
+source: "instances\x0a\x09^ Instances ifNil: [ Instances := #() ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Game.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "new",
+protocol: 'instance creation',
+fn: function (){
+var self=this;
+var instance;
+function $Game(){return globals.Game||(typeof Game=="undefined"?nil:Game)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+instance=($ctx1.supercall = true, globals.Game.klass.superclass.fn.prototype._new.apply(_st(self), []));
+$ctx1.supercall = false;
+_st(_st($Game())._instances())._add_(instance);
+$1=instance;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"new",{instance:instance},globals.Game.klass)})},
+args: [],
+source: "new\x0a\x09| instance |\x0a\x09instance := super new.\x0a\x09Game instances add: instance.\x0a\x09^ instance",
+messageSends: ["new", "add:", "instances"],
+referencedClasses: ["Game"]
 }),
 globals.Game.klass);
 
@@ -840,6 +888,25 @@ return self}, function($ctx1) {$ctx1.fill(self,"stop",{},globals.Game.klass)})},
 args: [],
 source: "stop\x0a\x09document asJQuery\x0a\x09\x09unbind: 'keydown';\x0a\x09\x09unbind: 'keyup'.\x0a\x09('canvas#' , self name) asJQuery remove.\x0a\x09('audio.' , self name) asJQuery remove.",
 messageSends: ["unbind:", "asJQuery", "remove", ",", "name"],
+referencedClasses: []
+}),
+globals.Game.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stopAll",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._instances())._do_((function(each){
+return smalltalk.withContext(function($ctx2) {
+return _st(each)._stop();
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"stopAll",{},globals.Game.klass)})},
+args: [],
+source: "stopAll\x0a\x09self instances do: [ :each | each stop ]",
+messageSends: ["do:", "instances", "stop"],
 referencedClasses: []
 }),
 globals.Game.klass);

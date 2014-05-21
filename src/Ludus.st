@@ -196,11 +196,6 @@ end
 	end := true
 !
 
-kill
-	self end.
-	self class stop.
-!
-
 restart
 	self
 		kill;
@@ -210,6 +205,11 @@ restart
 
 start
 	self appendToJQuery: ('body' asJQuery).
+!
+
+stop
+	self end.
+	self class stop.
 ! !
 
 !Game methodsFor: 'control - testing'!
@@ -249,6 +249,8 @@ switchToScreenNamed: aString
 	self switchToScreen: (self screenNamed: aString)
 ! !
 
+Game class instanceVariableNames: 'Instances'!
+
 !Game class methodsFor: 'control'!
 
 start
@@ -263,6 +265,10 @@ stop
 		unbind: 'keyup'.
 	('canvas#' , self name) asJQuery remove.
 	('audio.' , self name) asJQuery remove.
+!
+
+stopAll
+	self instances do: [ :each | each stop ]
 ! !
 
 !Game class methodsFor: 'initialization'!
@@ -270,6 +276,21 @@ stop
 initialize
 	"uncomment if you want the game to start when loading the page"
 "	'self start"
+! !
+
+!Game class methodsFor: 'instance creation'!
+
+new
+	| instance |
+	instance := super new.
+	Game instances add: instance.
+	^ instance
+! !
+
+!Game class methodsFor: 'instance treatment'!
+
+instances
+	^ Instances ifNil: [ Instances := #() ]
 ! !
 
 AbstractScreen subclass: #Screen
