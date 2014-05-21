@@ -1413,7 +1413,7 @@ return self._moveDown();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
 $2=_st($1)._onMouseClickDo_((function(){
 return smalltalk.withContext(function($ctx2) {
-$3=window;
+$3=console;
 $9=self._inputHandler();
 $ctx2.sendIdx["inputHandler"]=2;
 $8=_st($9)._mousePosition();
@@ -1424,19 +1424,18 @@ $ctx2.sendIdx["asString"]=1;
 $5=_st($6).__comma(",");
 $4=_st($5).__comma(_st(_st(_st(self._inputHandler())._mousePosition())._y())._asString());
 $ctx2.sendIdx[","]=1;
-return _st($3)._alert_($4);
-$ctx2.sendIdx["alert:"]=1;
+return _st($3)._log_($4);
+$ctx2.sendIdx["log:"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
 self._moveGhost();
 $10=_st(self["@pacman"])._collidesWith_(self["@ghost"]);
 if(smalltalk.assert($10)){
-self._end();
-_st(window)._alert_("You lost!");
+_st(console)._log_("Ouch!");
 };
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.SimplePacman)})},
 args: [],
-source: "step\x0a\x09self inputHandler \x0a\x09\x09whileKeyPressed: Key leftArrow do: [self moveLeft];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [self moveRight];\x0a\x09\x09whileKeyPressed: Key upArrow do: [self moveUp];\x0a\x09\x09whileKeyPressed: Key downArrow do: [self moveDown];\x0a\x09\x09onMouseClickDo: [ \x0a\x09\x09\x09window alert: \x0a\x09\x09\x09\x09self inputHandler mousePosition x asString \x0a\x09\x09\x09\x09\x09, ','\x0a\x09\x09\x09\x09\x09, self inputHandler mousePosition y asString ].\x0a\x09\x09\x09\x09\x09\x0a\x09self moveGhost.\x0a\x09\x0a\x09(pacman collidesWith: ghost) ifTrue: [ self end. window alert: 'You lost!' ]",
-messageSends: ["whileKeyPressed:do:", "inputHandler", "leftArrow", "moveLeft", "rightArrow", "moveRight", "upArrow", "moveUp", "downArrow", "moveDown", "onMouseClickDo:", "alert:", ",", "asString", "x", "mousePosition", "y", "moveGhost", "ifTrue:", "collidesWith:", "end"],
+source: "step\x0a\x09self inputHandler \x0a\x09\x09whileKeyPressed: Key leftArrow do: [ self moveLeft ];\x0a\x09\x09whileKeyPressed: Key rightArrow do: [ self moveRight ];\x0a\x09\x09whileKeyPressed: Key upArrow do: [ self moveUp ];\x0a\x09\x09whileKeyPressed: Key downArrow do: [ self moveDown ];\x0a\x09\x09onMouseClickDo: [ \x0a\x09\x09\x09console log:\x0a\x09\x09\x09\x09self inputHandler mousePosition x asString \x0a\x09\x09\x09\x09\x09, ','\x0a\x09\x09\x09\x09\x09, self inputHandler mousePosition y asString ].\x0a\x09\x09\x09\x09\x09\x0a\x09self moveGhost.\x0a\x09\x0a\x09(pacman collidesWith: ghost) ifTrue: [ console log: 'Ouch!' ]",
+messageSends: ["whileKeyPressed:do:", "inputHandler", "leftArrow", "moveLeft", "rightArrow", "moveRight", "upArrow", "moveUp", "downArrow", "moveDown", "onMouseClickDo:", "log:", ",", "asString", "x", "mousePosition", "y", "moveGhost", "ifTrue:", "collidesWith:"],
 referencedClasses: ["Key"]
 }),
 globals.SimplePacman);

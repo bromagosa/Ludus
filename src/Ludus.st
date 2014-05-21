@@ -1154,14 +1154,14 @@ mouseDown: evt
 !
 
 mouseMove: evt
-	| canvasPosition windowScrollTop windowScrollLeft canvasRelative |
+	"Will work unless we add some padding to the canvas, which I'm not sure anyone would ever do..."
 
-	windowScrollTop := self windowScrollTop.
-	windowScrollLeft := self windowScrollLeft.
-	canvasPosition := 'canvas' asJQuery position.
+	| canvasRect |
 
-	canvasRelative := (canvasPosition left - windowScrollLeft) @ (canvasPosition top - windowScrollTop).
-	mousePosition := (evt clientX - canvasRelative x) @ (evt clientY - canvasRelative y).
+	canvasRect := self canvas element getBoundingClientRect.
+	mousePosition := 
+		(evt clientX - canvasRect left - self canvas element clientLeft) 
+			@ (evt clientY - canvasRect top - self canvas element clientTop).
 !
 
 mouseUp: evt

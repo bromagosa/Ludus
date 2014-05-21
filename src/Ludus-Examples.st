@@ -495,19 +495,19 @@ startGame
 
 step
 	self inputHandler 
-		whileKeyPressed: Key leftArrow do: [self moveLeft];
-		whileKeyPressed: Key rightArrow do: [self moveRight];
-		whileKeyPressed: Key upArrow do: [self moveUp];
-		whileKeyPressed: Key downArrow do: [self moveDown];
+		whileKeyPressed: Key leftArrow do: [ self moveLeft ];
+		whileKeyPressed: Key rightArrow do: [ self moveRight ];
+		whileKeyPressed: Key upArrow do: [ self moveUp ];
+		whileKeyPressed: Key downArrow do: [ self moveDown ];
 		onMouseClickDo: [ 
-			window alert: 
+			console log:
 				self inputHandler mousePosition x asString 
 					, ','
 					, self inputHandler mousePosition y asString ].
 					
 	self moveGhost.
 	
-	(pacman collidesWith: ghost) ifTrue: [ self end. window alert: 'You lost!!' ]
+	(pacman collidesWith: ghost) ifTrue: [ console log: 'Ouch!!' ]
 ! !
 
 Game subclass: #SmallCave

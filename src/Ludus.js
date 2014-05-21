@@ -3917,25 +3917,30 @@ selector: "mouseMove:",
 protocol: 'events - private',
 fn: function (evt){
 var self=this;
-var canvasPosition,windowScrollTop,windowScrollLeft,canvasRelative;
+var canvasRect;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3;
-windowScrollTop=self._windowScrollTop();
-windowScrollLeft=self._windowScrollLeft();
-canvasPosition=_st("canvas"._asJQuery())._position();
-$1=_st(_st(canvasPosition)._left()).__minus(windowScrollLeft);
-$ctx1.sendIdx["-"]=1;
-$2=_st(_st(canvasPosition)._top()).__minus(windowScrollTop);
+var $2,$1,$4,$7,$6,$5,$3,$8;
+$2=self._canvas();
+$ctx1.sendIdx["canvas"]=1;
+$1=_st($2)._element();
+$ctx1.sendIdx["element"]=1;
+canvasRect=_st($1)._getBoundingClientRect();
+$4=_st(_st(evt)._clientX()).__minus(_st(canvasRect)._left());
 $ctx1.sendIdx["-"]=2;
-canvasRelative=_st($1).__at($2);
-$ctx1.sendIdx["@"]=1;
-$3=_st(_st(evt)._clientX()).__minus(_st(canvasRelative)._x());
+$7=self._canvas();
+$ctx1.sendIdx["canvas"]=2;
+$6=_st($7)._element();
+$ctx1.sendIdx["element"]=2;
+$5=_st($6)._clientLeft();
+$3=_st($4).__minus($5);
+$ctx1.sendIdx["-"]=1;
+$8=_st(_st(_st(evt)._clientY()).__minus(_st(canvasRect)._top())).__minus(_st(_st(self._canvas())._element())._clientTop());
 $ctx1.sendIdx["-"]=3;
-self["@mousePosition"]=_st($3).__at(_st(_st(evt)._clientY()).__minus(_st(canvasRelative)._y()));
-return self}, function($ctx1) {$ctx1.fill(self,"mouseMove:",{evt:evt,canvasPosition:canvasPosition,windowScrollTop:windowScrollTop,windowScrollLeft:windowScrollLeft,canvasRelative:canvasRelative},globals.InputHandler)})},
+self["@mousePosition"]=_st($3).__at($8);
+return self}, function($ctx1) {$ctx1.fill(self,"mouseMove:",{evt:evt,canvasRect:canvasRect},globals.InputHandler)})},
 args: ["evt"],
-source: "mouseMove: evt\x0a\x09| canvasPosition windowScrollTop windowScrollLeft canvasRelative |\x0a\x0a\x09windowScrollTop := self windowScrollTop.\x0a\x09windowScrollLeft := self windowScrollLeft.\x0a\x09canvasPosition := 'canvas' asJQuery position.\x0a\x0a\x09canvasRelative := (canvasPosition left - windowScrollLeft) @ (canvasPosition top - windowScrollTop).\x0a\x09mousePosition := (evt clientX - canvasRelative x) @ (evt clientY - canvasRelative y).",
-messageSends: ["windowScrollTop", "windowScrollLeft", "position", "asJQuery", "@", "-", "left", "top", "clientX", "x", "clientY", "y"],
+source: "mouseMove: evt\x0a\x09\x22Will work unless we add some padding to the canvas, which I'm not sure anyone would ever do...\x22\x0a\x0a\x09| canvasRect |\x0a\x0a\x09canvasRect := self canvas element getBoundingClientRect.\x0a\x09mousePosition := \x0a\x09\x09(evt clientX - canvasRect left - self canvas element clientLeft) \x0a\x09\x09\x09@ (evt clientY - canvasRect top - self canvas element clientTop).",
+messageSends: ["getBoundingClientRect", "element", "canvas", "@", "-", "clientX", "left", "clientLeft", "clientY", "top", "clientTop"],
 referencedClasses: []
 }),
 globals.InputHandler);
