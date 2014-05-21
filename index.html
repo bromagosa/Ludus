@@ -28,6 +28,10 @@
                     'transport.defaultAmdNamespace': "HOS"
                 });
                 require('amber/helpers').globals.LudusDoc._new()._appendToJQuery_($('#docs'));
+		function stopGames() {
+			$('canvas').remove();
+			require('amber/helpers').globals.Game._stop();
+		}
             });
         </script>
 
@@ -43,12 +47,12 @@
 		<div id="docs"></div>
 		<h3>Or try these examples:</h3>
 		<div id="examples">
-		    <button class="shadowed" onclick="$('canvas').remove(); require('amber/helpers').globals.OVGame._start()">OVNI</button>
-		    <button class="shadowed" onclick="$('canvas').remove(); require('amber/helpers').globals.Sokoban._start()">Sokoban</button>
-		    <button class="shadowed" onclick="$('canvas').remove(); require('amber/helpers').globals.SmallCave._start()">SmallCave</button>
-		    <button class="shadowed" onclick="$('canvas').remove(); require('amber/helpers').globals.Pong._start()">Pong</button>
-		    <button class="shadowed" onclick="$('canvas').remove(); require('amber/helpers').globals.MemoryGame._start()">Memory</button>
-		    <button class="shadowed" onclick="$('canvas').remove(); require('amber/helpers').globals.SimplePacman._start()">Simple Pacman</button>
+		    <button class="shadowed" onclick="require('amber/helpers').globals.OVGame._start()">OVNI</button>
+		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.Sokoban._start()">Sokoban</button>
+		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.SmallCave._start()">SmallCave</button>
+		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.Pong._start()">Pong</button>
+		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.MemoryGame._start()">Memory</button>
+		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.SimplePacman._start()">Simple Pacman</button>
 		</div>
             </div>
 	    <button style="position: fixed; left: 0px; top: 0px;" onclick="require('amber/helpers').globals.Browser._open()">Open IDE</button>
