@@ -58,7 +58,7 @@ initialize
 ! !
 
 Game subclass: #OVGame
-	instanceVariableNames: 'ship saucers scrollSpeed farBackground starField bullets enemyBullets difficulty soundIsMute musicIsMute'
+	instanceVariableNames: 'player ship saucers scrollSpeed farBackground starField bullets enemyBullets difficulty soundIsMute musicIsMute debugMode scoreText highScoreText'
 	package: 'OVNI'!
 
 !OVGame methodsFor: 'accessing'!
@@ -67,12 +67,17 @@ bullets
 	^ bullets ifNil: [ bullets := #() ]
 !
 
+debugMode
+	^ debugMode ifNil: [ debugMode := false ]
+!
+
 difficulty
-	^ difficulty ifNil: [ difficulty := 1 ]
+	^ difficulty ifNil: [ difficulty := 2 ]
 !
 
 difficulty: anInteger
-	difficulty := anInteger
+	difficulty := anInteger.
+	self saucers do: [ :each | each toughness: self difficulty ]
 !
 
 enemyBullets
@@ -87,6 +92,18 @@ farBackground
 				addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 1 ]
 !
 
+highScoreText
+	^ highScoreText ifNil: [ highScoreText := 
+		(Text new 
+			contents: self player highScore;
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 3;
+			fontName: 'ChangaOne';
+			fontSize: 20;
+			position: 10@20) ]
+!
+
 musicIsMute
 	^ musicIsMute ifNil: [ musicIsMute := false ]
 !
@@ -95,15 +112,33 @@ musicIsMute: aBoolean
 	musicIsMute := aBoolean
 !
 
+player
+	^ player ifNil: [ player := OVPlayer new ]
+!
+
 saucers
 	^ saucers ifNil: [ 
 		saucers := #().
 		5 timesRepeat: [ 
 			saucers add:
-				(OVSaucer new centre: self width atRandom @ self height atRandom)
+				(OVSaucer new 
+					centre: self width atRandom @ self height atRandom;
+					toughness: self difficulty)
 		].
 		saucers.
 	]
+!
+
+scoreText
+	^ scoreText ifNil: [ scoreText := 
+		(Text new 
+			contents: self player score;
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 3;
+			fontName: 'ChangaOne';
+			fontSize: 20;
+			position: 10@35) ]
 !
 
 ship
@@ -130,6 +165,7 @@ starField
 
 end
 	ship := nil.
+	self player score: 0.
 	self enemyBullets removeAll.
 	self bullets removeAll.
 	self switchToScreenNamed: 'end'.
@@ -164,6 +200,15 @@ step
 	self inputHandler 
 		onKeyPressed: Key space do: [ self shoot ];
 		onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].
+	self player updateHighScore.
+	self scoreText contents: self player score.
+	self highScoreText contents: self player highScore.
+!
+
+toggleDebugMode
+	debugMode := self debugMode not.
+	self saucers do: [ :each | each debugMode: self debugMode ].
+	self ship debugMode: self debugMode
 !
 
 toggleMuteMusic
@@ -187,7 +232,9 @@ draw
 		drawSpriteCollection: self bullets;
 		drawSpriteCollection: self enemyBullets;
 		drawSprite: self ship;
-		drawBackground: self starField.
+		drawBackground: self starField;
+		draw: self scoreText;
+		draw: self highScoreText.
 ! !
 
 !OVGame methodsFor: 'game actions'!
@@ -212,9 +259,10 @@ controlBullets
 
 controlSaucers
 	self saucers do: [ :eachSaucer | 
-		eachSaucer 
+		eachSaucer
 			checkCollisionWith: self bullets;
 			step.
+		eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].
 		eachSaucer shouldRespawn ifTrue: [
 			eachSaucer 
 				respawnAtX: self width + self width atRandom y: self height atRandom ].
@@ -373,10 +421,18 @@ startScreen
 ! !
 
 Menu subclass: #OVOptionsMenu
-	instanceVariableNames: 'goBackText difficultyText muteMusicText muteSoundsText'
+	instanceVariableNames: 'goBackText difficultyText muteMusicText muteSoundsText debugModeText'
 	package: 'OVNI'!
 
 !OVOptionsMenu methodsFor: 'accessing'!
+
+debugModeText
+	^ debugModeText
+!
+
+debugModeText: anObject
+	debugModeText := anObject
+!
 
 difficultyText
 	^ difficultyText
@@ -415,14 +471,19 @@ optionSeparation
 !
 
 options
-	^ options ifNil: [ options := #(#selectGoBack #selectDifficulty #selectMuteSounds #selectMuteMusic) ]
+	^ options ifNil: [ options := #(#selectGoBack #selectDifficulty #selectMuteSounds #selectMuteMusic #selectDebugMode) ]
 !
 
 pointerOriginY
-	^ pointerOriginY ifNil: [ pointerOriginY := 115 ]
+	^ pointerOriginY ifNil: [ pointerOriginY := 75 ]
 ! !
 
 !OVOptionsMenu methodsFor: 'control'!
+
+selectDebugMode
+	self game toggleDebugMode.
+	self debugModeText contents: 'DEBUG: ' , (self game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ])
+!
 
 selectDifficulty
 	self game difficulty: (self game difficulty \\ 4) + 1.
@@ -449,11 +510,12 @@ selectMuteSounds
 draw
 	self 
 		drawBackground: self game farBackground;
-		draw: goBackText;
-		draw: difficultyText;
-		draw: muteMusicText;
-		draw: muteSoundsText;
-		drawSprite: pointer
+		draw: self goBackText;
+		draw: self difficultyText;
+		draw: self muteMusicText;
+		draw: self muteSoundsText;
+		draw: self debugModeText;
+		drawSprite: self pointer
 ! !
 
 !OVOptionsMenu methodsFor: 'initialization'!
@@ -468,7 +530,7 @@ startScreen
 				outlineSize: 3;
 				fontName: 'ChangaOne';
 				fontSize: 80;
-				position: 150@160);
+				position: 150@120);
 		difficultyText:
 			(Text new 
 				contents: 'DIFFICULTY: ' , self game difficulty printString;
@@ -477,7 +539,7 @@ startScreen
 				outlineSize: 3;
 				fontName: 'ChangaOne';
 				fontSize: 80;
-				position: 150@240);
+				position: 150@200);
 		muteSoundsText:
 			(Text new 
 				contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);
@@ -486,7 +548,7 @@ startScreen
 				outlineSize: 3;
 				fontName: 'ChangaOne';
 				fontSize: 80;
-				position: 150@320); 
+				position: 150@280); 
 		muteMusicText:
 			(Text new 
 				contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);
@@ -495,12 +557,21 @@ startScreen
 				outlineSize: 3;
 				fontName: 'ChangaOne';
 				fontSize: 80;
-				position: 150@400);
+				position: 150@360);
+		debugModeText:
+			(Text new 
+				contents: 'DEBUG: ' , (self game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ]);
+				color: 'rgba(90,113,26,0.7)';
+				outlineColor: 'rgba(242,246,144,0.8)';
+				outlineSize: 3;
+				fontName: 'ChangaOne';
+				fontSize: 80;
+				position: 150@440);
 		pointer:
 			((Sprite new
 				imageSrc: 'images/ovni/pointer.png';
 				addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)
-					position: 75@115;
+					position: 75@75;
 					yourself).
 ! !
 
@@ -562,8 +633,56 @@ startScreen
 			position: 155@320)
 ! !
 
+Object subclass: #OVPlayer
+	instanceVariableNames: 'lives score highScore'
+	package: 'OVNI'!
+
+!OVPlayer methodsFor: 'accessing'!
+
+highScore
+	^ highScore ifNil: [ highScore := 0 ]
+!
+
+highScore: anObject
+	highScore := anObject
+!
+
+lives
+	^ lives ifNil: [ lives := 3 ]
+!
+
+lives: anObject
+	lives := anObject
+!
+
+score
+	^ score ifNil: [ score := 0 ]
+!
+
+score: anObject
+	score := anObject
+! !
+
+!OVPlayer methodsFor: 'life handling'!
+
+dieOnce
+	self lives: (self lives - 1) max: 0
+! !
+
+!OVPlayer methodsFor: 'score handling'!
+
+updateHighScore
+	self highScore: (self highScore max: self score)
+! !
+
+!OVPlayer methodsFor: 'testing'!
+
+isDead
+	^ self lives = 0
+! !
+
 Sprite subclass: #OVSaucer
-	instanceVariableNames: 'exploding dead shootProbability'
+	instanceVariableNames: 'exploding dead toughness'
 	package: 'OVNI'!
 
 !OVSaucer methodsFor: 'accessing'!
@@ -589,7 +708,15 @@ newBullet
 !
 
 shootProbability
-	^ shootProbability ifNil: [ shootProbability := 100 ]
+	^ 200 / self toughness
+!
+
+toughness
+	^ toughness ifNil: [ toughness := 1 ]
+!
+
+toughness: anInteger
+	toughness := anInteger
 ! !
 
 !OVSaucer methodsFor: 'actions'!
@@ -672,6 +799,12 @@ move
 
 wander
 	self moveCentreBy: (3 atRandom - 2) @ (3 atRandom - 2).
+! !
+
+!OVSaucer methodsFor: 'testing'!
+
+isDead
+	^ self dead
 ! !
 
 Sprite subclass: #OVSpaceShip

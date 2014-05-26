@@ -92,6 +92,10 @@ draw
 	self subclassResponsibility
 !
 
+draw: aDrawable
+	aDrawable drawOnContext: self context
+!
+
 drawBackground: aBackground
 	aBackground drawOnContext: self context step: step width: self canvas element width
 !
@@ -268,7 +272,8 @@ stop
 !
 
 stopAll
-	self instances do: [ :each | each stop ]
+	self instances do: [ :each | each stop ].
+	Instances := #().
 ! !
 
 !Game class methodsFor: 'initialization'!
@@ -328,12 +333,6 @@ name
 
 name: anObject
 	name := anObject
-! !
-
-!Screen methodsFor: 'drawing'!
-
-draw: aDrawable
-	aDrawable drawOnContext: self context
 ! !
 
 !Screen methodsFor: 'initialization'!
@@ -594,7 +593,7 @@ isParallax
 ! !
 
 Animation subclass: #Sprite
-	instanceVariableNames: 'speed position direction'
+	instanceVariableNames: 'speed position direction debugMode'
 	package: 'Ludus'!
 !Sprite commentStamp!
 I am a Sprite. I need to have a spritesheet, which is an image file that displays all possible frames I can paint organized in an ordered fashion.
@@ -602,6 +601,16 @@ You define different frame groups for this spritesheet, and you can cycle throug
 I have a direction, defined by a unit vector. This vector will always be a unit vector. If someone tries to force-set my direction to a vector that is not a unit one, I will just convert it.
 I handle collisions with other sprites and sprite collections.
 Of course, I also have a position, defined by cartesian coordinates.!
+
+!Sprite methodsFor: 'accessing'!
+
+debugMode
+	^ debugMode ifNil: [ debugMode := false ]
+!
+
+debugMode: aBoolean
+	debugMode := aBoolean
+! !
 
 !Sprite methodsFor: 'attributes'!
 
@@ -742,8 +751,19 @@ topCollidesWithWhichOf: aSpriteCollection
 
 !Sprite methodsFor: 'drawing'!
 
+drawBoundingBoxOnContext: aContext
+	
+	aContext 
+		beginPath;
+		rect: self x y: self y width: self width height: self height
+		strokeStyle: 'rgba(0,0,255,0.5)';
+		lineWidth: 1;
+		stroke.
+!
+
 drawOnContext: aContext
-	self currentFrameGroup drawFromSprite: self onContext: aContext
+	self currentFrameGroup drawFromSprite: self onContext: aContext.
+	self debugMode ifTrue: [ self drawBoundingBoxOnContext: aContext ]
 ! !
 
 !Sprite methodsFor: 'events'!

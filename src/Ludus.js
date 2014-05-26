@@ -137,6 +137,22 @@ globals.AbstractScreen);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "draw:",
+protocol: 'drawing',
+fn: function (aDrawable){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(aDrawable)._drawOnContext_(self._context());
+return self}, function($ctx1) {$ctx1.fill(self,"draw:",{aDrawable:aDrawable},globals.AbstractScreen)})},
+args: ["aDrawable"],
+source: "draw: aDrawable\x0a\x09aDrawable drawOnContext: self context",
+messageSends: ["drawOnContext:", "context"],
+referencedClasses: []
+}),
+globals.AbstractScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "drawBackground:",
 protocol: 'drawing',
 fn: function (aBackground){
@@ -903,9 +919,10 @@ _st(self._instances())._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
 return _st(each)._stop();
 }, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+self["@Instances"]=[];
 return self}, function($ctx1) {$ctx1.fill(self,"stopAll",{},globals.Game.klass)})},
 args: [],
-source: "stopAll\x0a\x09self instances do: [ :each | each stop ]",
+source: "stopAll\x0a\x09self instances do: [ :each | each stop ].\x0a\x09Instances := #().",
 messageSends: ["do:", "instances", "stop"],
 referencedClasses: []
 }),
@@ -946,22 +963,6 @@ return $1;
 args: [],
 source: "context\x0a\x09^ self game context",
 messageSends: ["context", "game"],
-referencedClasses: []
-}),
-globals.Screen);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "draw:",
-protocol: 'drawing',
-fn: function (aDrawable){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-_st(aDrawable)._drawOnContext_(self._context());
-return self}, function($ctx1) {$ctx1.fill(self,"draw:",{aDrawable:aDrawable},globals.Screen)})},
-args: ["aDrawable"],
-source: "draw: aDrawable\x0a\x09aDrawable drawOnContext: self context",
-messageSends: ["drawOnContext:", "context"],
 referencedClasses: []
 }),
 globals.Screen);
@@ -1940,7 +1941,7 @@ globals.Background);
 
 
 
-smalltalk.addClass('Sprite', globals.Animation, ['speed', 'position', 'direction'], 'Ludus');
+smalltalk.addClass('Sprite', globals.Animation, ['speed', 'position', 'direction', 'debugMode'], 'Ludus');
 globals.Sprite.comment="I am a Sprite. I need to have a spritesheet, which is an image file that displays all possible frames I can paint organized in an ordered fashion.\x0aYou define different frame groups for this spritesheet, and you can cycle through these framegroups and through the frames of each of them.\x0aI have a direction, defined by a unit vector. This vector will always be a unit vector. If someone tries to force-set my direction to a vector that is not a unit one, I will just convert it.\x0aI handle collisions with other sprites and sprite collections.\x0aOf course, I also have a position, defined by cartesian coordinates.";
 smalltalk.addMethod(
 smalltalk.method({
@@ -2201,6 +2202,45 @@ globals.Sprite);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "debugMode",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@debugMode"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@debugMode"]=false;
+$1=self["@debugMode"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"debugMode",{},globals.Sprite)})},
+args: [],
+source: "debugMode\x0a\x09^ debugMode ifNil: [ debugMode := false ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Sprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "debugMode:",
+protocol: 'accessing',
+fn: function (aBoolean){
+var self=this;
+self["@debugMode"]=aBoolean;
+return self},
+args: ["aBoolean"],
+source: "debugMode: aBoolean\x0a\x09debugMode := aBoolean",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Sprite);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "direction",
 protocol: 'attributes',
 fn: function (){
@@ -2322,16 +2362,41 @@ globals.Sprite);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "drawBoundingBoxOnContext:",
+protocol: 'drawing',
+fn: function (aContext){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+_st(aContext)._beginPath();
+_st(aContext)._rect_y_width_height_strokeStyle_(self._x(),self._y(),self._width(),self._height(),"rgba(0,0,255,0.5)");
+_st(aContext)._lineWidth_((1));
+$1=_st(aContext)._stroke();
+return self}, function($ctx1) {$ctx1.fill(self,"drawBoundingBoxOnContext:",{aContext:aContext},globals.Sprite)})},
+args: ["aContext"],
+source: "drawBoundingBoxOnContext: aContext\x0a\x09\x0a\x09aContext \x0a\x09\x09beginPath;\x0a\x09\x09rect: self x y: self y width: self width height: self height\x0a\x09\x09strokeStyle: 'rgba(0,0,255,0.5)';\x0a\x09\x09lineWidth: 1;\x0a\x09\x09stroke.",
+messageSends: ["beginPath", "rect:y:width:height:strokeStyle:", "x", "y", "width", "height", "lineWidth:", "stroke"],
+referencedClasses: []
+}),
+globals.Sprite);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "drawOnContext:",
 protocol: 'drawing',
 fn: function (aContext){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+var $1;
 _st(self._currentFrameGroup())._drawFromSprite_onContext_(self,aContext);
+$1=self._debugMode();
+if(smalltalk.assert($1)){
+self._drawBoundingBoxOnContext_(aContext);
+};
 return self}, function($ctx1) {$ctx1.fill(self,"drawOnContext:",{aContext:aContext},globals.Sprite)})},
 args: ["aContext"],
-source: "drawOnContext: aContext\x0a\x09self currentFrameGroup drawFromSprite: self onContext: aContext",
-messageSends: ["drawFromSprite:onContext:", "currentFrameGroup"],
+source: "drawOnContext: aContext\x0a\x09self currentFrameGroup drawFromSprite: self onContext: aContext.\x0a\x09self debugMode ifTrue: [ self drawBoundingBoxOnContext: aContext ]",
+messageSends: ["drawFromSprite:onContext:", "currentFrameGroup", "ifTrue:", "debugMode", "drawBoundingBoxOnContext:"],
 referencedClasses: []
 }),
 globals.Sprite);

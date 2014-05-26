@@ -1,4 +1,4 @@
-define("HOS/OVNI", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "HOS/Ludus"], function(smalltalk,nil,_st, globals){
+define("HOS/OVNI", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "HOS/Ludus", "amber_core/Kernel-Objects"], function(smalltalk,nil,_st, globals){
 smalltalk.addPackage('OVNI');
 smalltalk.packages["OVNI"].transport = {"type":"amd","amdNamespace":"HOS"};
 
@@ -182,7 +182,7 @@ globals.OVEnemyBullet);
 
 
 
-smalltalk.addClass('OVGame', globals.Game, ['ship', 'saucers', 'scrollSpeed', 'farBackground', 'starField', 'bullets', 'enemyBullets', 'difficulty', 'soundIsMute', 'musicIsMute'], 'OVNI');
+smalltalk.addClass('OVGame', globals.Game, ['player', 'ship', 'saucers', 'scrollSpeed', 'farBackground', 'starField', 'bullets', 'enemyBullets', 'difficulty', 'soundIsMute', 'musicIsMute', 'debugMode', 'scoreText', 'highScoreText'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "bullets",
@@ -252,30 +252,38 @@ protocol: 'sprite processing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$4,$5,$3,$6;
+var $1,$2,$3,$4,$5,$7,$8,$6,$9;
 _st(self._saucers())._do_((function(eachSaucer){
 return smalltalk.withContext(function($ctx2) {
 _st(eachSaucer)._checkCollisionWith_(self._bullets());
 $1=_st(eachSaucer)._step();
 $1;
-$2=_st(eachSaucer)._shouldRespawn();
+$2=_st(eachSaucer)._isDead();
 if(smalltalk.assert($2)){
-$4=self._width();
-$ctx2.sendIdx["width"]=1;
-$5=_st(self._width())._atRandom();
-$ctx2.sendIdx["atRandom"]=1;
-$3=_st($4).__plus($5);
-_st(eachSaucer)._respawnAtX_y_($3,_st(self._height())._atRandom());
+$3=self._player();
+$ctx2.sendIdx["player"]=1;
+$4=_st(_st(self._player())._score()).__plus((5).__star(self._difficulty()));
+$ctx2.sendIdx["+"]=1;
+_st($3)._score_($4);
 };
-$6=_st(eachSaucer)._shouldShoot();
-if(smalltalk.assert($6)){
+$5=_st(eachSaucer)._shouldRespawn();
+if(smalltalk.assert($5)){
+$7=self._width();
+$ctx2.sendIdx["width"]=1;
+$8=_st(self._width())._atRandom();
+$ctx2.sendIdx["atRandom"]=1;
+$6=_st($7).__plus($8);
+_st(eachSaucer)._respawnAtX_y_($6,_st(self._height())._atRandom());
+};
+$9=_st(eachSaucer)._shouldShoot();
+if(smalltalk.assert($9)){
 return _st(self._enemyBullets())._add_(_st(eachSaucer)._newBullet());
 };
 }, function($ctx2) {$ctx2.fillBlock({eachSaucer:eachSaucer},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"controlSaucers",{},globals.OVGame)})},
 args: [],
-source: "controlSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer \x0a\x09\x09\x09checkCollisionWith: self bullets;\x0a\x09\x09\x09step.\x0a\x09\x09eachSaucer shouldRespawn ifTrue: [\x0a\x09\x09\x09eachSaucer \x0a\x09\x09\x09\x09respawnAtX: self width + self width atRandom y: self height atRandom ].\x0a\x09\x09eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].",
-messageSends: ["do:", "saucers", "checkCollisionWith:", "bullets", "step", "ifTrue:", "shouldRespawn", "respawnAtX:y:", "+", "width", "atRandom", "height", "shouldShoot", "add:", "enemyBullets", "newBullet"],
+source: "controlSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer\x0a\x09\x09\x09checkCollisionWith: self bullets;\x0a\x09\x09\x09step.\x0a\x09\x09eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].\x0a\x09\x09eachSaucer shouldRespawn ifTrue: [\x0a\x09\x09\x09eachSaucer \x0a\x09\x09\x09\x09respawnAtX: self width + self width atRandom y: self height atRandom ].\x0a\x09\x09eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].",
+messageSends: ["do:", "saucers", "checkCollisionWith:", "bullets", "step", "ifTrue:", "isDead", "score:", "player", "+", "score", "*", "difficulty", "shouldRespawn", "respawnAtX:y:", "width", "atRandom", "height", "shouldShoot", "add:", "enemyBullets", "newBullet"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -312,6 +320,30 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "debugMode",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@debugMode"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@debugMode"]=false;
+$1=self["@debugMode"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"debugMode",{},globals.OVGame)})},
+args: [],
+source: "debugMode\x0a\x09^ debugMode ifNil: [ debugMode := false ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "difficulty",
 protocol: 'accessing',
 fn: function (){
@@ -320,7 +352,7 @@ return smalltalk.withContext(function($ctx1) {
 var $2,$1,$receiver;
 $2=self["@difficulty"];
 if(($receiver = $2) == null || $receiver.isNil){
-self["@difficulty"]=(1);
+self["@difficulty"]=(2);
 $1=self["@difficulty"];
 } else {
 $1=$2;
@@ -328,7 +360,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"difficulty",{},globals.OVGame)})},
 args: [],
-source: "difficulty\x0a\x09^ difficulty ifNil: [ difficulty := 1 ]",
+source: "difficulty\x0a\x09^ difficulty ifNil: [ difficulty := 2 ]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),
@@ -340,11 +372,16 @@ selector: "difficulty:",
 protocol: 'accessing',
 fn: function (anInteger){
 var self=this;
+return smalltalk.withContext(function($ctx1) { 
 self["@difficulty"]=anInteger;
-return self},
+_st(self._saucers())._do_((function(each){
+return smalltalk.withContext(function($ctx2) {
+return _st(each)._toughness_(self._difficulty());
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"difficulty:",{anInteger:anInteger},globals.OVGame)})},
 args: ["anInteger"],
-source: "difficulty: anInteger\x0a\x09difficulty := anInteger",
-messageSends: [],
+source: "difficulty: anInteger\x0a\x09difficulty := anInteger.\x0a\x09self saucers do: [ :each | each toughness: self difficulty ]",
+messageSends: ["do:", "saucers", "toughness:", "difficulty"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -366,11 +403,14 @@ self._drawSpriteCollection_(self._bullets());
 $ctx1.sendIdx["drawSpriteCollection:"]=2;
 self._drawSpriteCollection_(self._enemyBullets());
 self._drawSprite_(self._ship());
-$1=self._drawBackground_(self._starField());
+self._drawBackground_(self._starField());
+self._draw_(self._scoreText());
+$ctx1.sendIdx["draw:"]=1;
+$1=self._draw_(self._highScoreText());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVGame)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawSpriteCollection: self bullets;\x0a\x09\x09drawSpriteCollection: self enemyBullets;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawBackground: self starField.",
-messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSpriteCollection:", "saucers", "bullets", "enemyBullets", "drawSprite:", "ship", "starField"],
+source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawSpriteCollection: self bullets;\x0a\x09\x09drawSpriteCollection: self enemyBullets;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawBackground: self starField;\x0a\x09\x09draw: self scoreText;\x0a\x09\x09draw: self highScoreText.",
+messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSpriteCollection:", "saucers", "bullets", "enemyBullets", "drawSprite:", "ship", "starField", "draw:", "scoreText", "highScoreText"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -383,14 +423,15 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 self["@ship"]=nil;
+_st(self._player())._score_((0));
 _st(self._enemyBullets())._removeAll();
 $ctx1.sendIdx["removeAll"]=1;
 _st(self._bullets())._removeAll();
 self._switchToScreenNamed_("end");
 return self}, function($ctx1) {$ctx1.fill(self,"end",{},globals.OVGame)})},
 args: [],
-source: "end\x0a\x09ship := nil.\x0a\x09self enemyBullets removeAll.\x0a\x09self bullets removeAll.\x0a\x09self switchToScreenNamed: 'end'.",
-messageSends: ["removeAll", "enemyBullets", "bullets", "switchToScreenNamed:"],
+source: "end\x0a\x09ship := nil.\x0a\x09self player score: 0.\x0a\x09self enemyBullets removeAll.\x0a\x09self bullets removeAll.\x0a\x09self switchToScreenNamed: 'end'.",
+messageSends: ["score:", "player", "removeAll", "enemyBullets", "bullets", "switchToScreenNamed:"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -452,6 +493,39 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "highScoreText",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$4,$1,$receiver;
+$2=self["@highScoreText"];
+if(($receiver = $2) == null || $receiver.isNil){
+$3=_st($Text())._new();
+_st($3)._contents_(_st(self._player())._highScore());
+_st($3)._color_("rgba(90,113,26,0.7)");
+_st($3)._outlineColor_("rgba(242,246,144,0.8)");
+_st($3)._outlineSize_((3));
+_st($3)._fontName_("ChangaOne");
+_st($3)._fontSize_((20));
+$4=_st($3)._position_((10).__at((20)));
+self["@highScoreText"]=$4;
+$1=self["@highScoreText"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"highScoreText",{},globals.OVGame)})},
+args: [],
+source: "highScoreText\x0a\x09^ highScoreText ifNil: [ highScoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player highScore;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@20) ]",
+messageSends: ["ifNil:", "contents:", "new", "highScore", "player", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
+referencedClasses: ["Text"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "musicIsMute",
 protocol: 'accessing',
 fn: function (){
@@ -491,13 +565,38 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "player",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $OVPlayer(){return globals.OVPlayer||(typeof OVPlayer=="undefined"?nil:OVPlayer)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@player"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@player"]=_st($OVPlayer())._new();
+$1=self["@player"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"player",{},globals.OVGame)})},
+args: [],
+source: "player\x0a\x09^ player ifNil: [ player := OVPlayer new ]",
+messageSends: ["ifNil:", "new"],
+referencedClasses: ["OVPlayer"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "saucers",
 protocol: 'accessing',
 fn: function (){
 var self=this;
 function $OVSaucer(){return globals.OVSaucer||(typeof OVSaucer=="undefined"?nil:OVSaucer)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$5,$7,$6,$4,$1,$receiver;
+var $2,$3,$5,$6,$8,$7,$9,$4,$1,$receiver;
 $2=self["@saucers"];
 if(($receiver = $2) == null || $receiver.isNil){
 self["@saucers"]=[];
@@ -506,10 +605,13 @@ self["@saucers"];
 return smalltalk.withContext(function($ctx2) {
 $3=self["@saucers"];
 $5=_st($OVSaucer())._new();
-$7=_st(self._width())._atRandom();
+$6=$5;
+$8=_st(self._width())._atRandom();
 $ctx2.sendIdx["atRandom"]=1;
-$6=_st($7).__at(_st(self._height())._atRandom());
-$4=_st($5)._centre_($6);
+$7=_st($8).__at(_st(self._height())._atRandom());
+_st($6)._centre_($7);
+$9=_st($5)._toughness_(self._difficulty());
+$4=$9;
 return _st($3)._add_($4);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 $1=self["@saucers"];
@@ -519,9 +621,42 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"saucers",{},globals.OVGame)})},
 args: [],
-source: "saucers\x0a\x09^ saucers ifNil: [ \x0a\x09\x09saucers := #().\x0a\x09\x095 timesRepeat: [ \x0a\x09\x09\x09saucers add:\x0a\x09\x09\x09\x09(OVSaucer new centre: self width atRandom @ self height atRandom)\x0a\x09\x09].\x0a\x09\x09saucers.\x0a\x09]",
-messageSends: ["ifNil:", "timesRepeat:", "add:", "centre:", "new", "@", "atRandom", "width", "height"],
+source: "saucers\x0a\x09^ saucers ifNil: [ \x0a\x09\x09saucers := #().\x0a\x09\x095 timesRepeat: [ \x0a\x09\x09\x09saucers add:\x0a\x09\x09\x09\x09(OVSaucer new \x0a\x09\x09\x09\x09\x09centre: self width atRandom @ self height atRandom;\x0a\x09\x09\x09\x09\x09toughness: self difficulty)\x0a\x09\x09].\x0a\x09\x09saucers.\x0a\x09]",
+messageSends: ["ifNil:", "timesRepeat:", "add:", "centre:", "new", "@", "atRandom", "width", "height", "toughness:", "difficulty"],
 referencedClasses: ["OVSaucer"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "scoreText",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$4,$1,$receiver;
+$2=self["@scoreText"];
+if(($receiver = $2) == null || $receiver.isNil){
+$3=_st($Text())._new();
+_st($3)._contents_(_st(self._player())._score());
+_st($3)._color_("rgba(90,113,26,0.7)");
+_st($3)._outlineColor_("rgba(242,246,144,0.8)");
+_st($3)._outlineSize_((3));
+_st($3)._fontName_("ChangaOne");
+_st($3)._fontSize_((20));
+$4=_st($3)._position_((10).__at((35)));
+self["@scoreText"]=$4;
+$1=self["@scoreText"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"scoreText",{},globals.OVGame)})},
+args: [],
+source: "scoreText\x0a\x09^ scoreText ifNil: [ scoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player score;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@35) ]",
+messageSends: ["ifNil:", "contents:", "new", "score", "player", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
+referencedClasses: ["Text"]
 }),
 globals.OVGame);
 
@@ -697,7 +832,7 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3;
+var $1,$2,$3,$4,$5,$7,$6;
 self._controlShip();
 self._controlSaucers();
 $1=self._controlBullets();
@@ -711,11 +846,48 @@ $3=_st($2)._onKeyPressed_do_(_st($Key())._p(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._switchToScreenNamed_("pause");
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+$4=self._player();
+$ctx1.sendIdx["player"]=1;
+_st($4)._updateHighScore();
+$5=self._scoreText();
+$7=self._player();
+$ctx1.sendIdx["player"]=2;
+$6=_st($7)._score();
+_st($5)._contents_($6);
+$ctx1.sendIdx["contents:"]=1;
+_st(self._highScoreText())._contents_(_st(self._player())._highScore());
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVGame)})},
 args: [],
-source: "step\x0a\x09self \x0a\x09\x09controlShip;\x0a\x09\x09controlSaucers;\x0a\x09\x09controlBullets.\x0a\x09self inputHandler \x0a\x09\x09onKeyPressed: Key space do: [ self shoot ];\x0a\x09\x09onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].",
-messageSends: ["controlShip", "controlSaucers", "controlBullets", "onKeyPressed:do:", "inputHandler", "space", "shoot", "p", "switchToScreenNamed:"],
+source: "step\x0a\x09self \x0a\x09\x09controlShip;\x0a\x09\x09controlSaucers;\x0a\x09\x09controlBullets.\x0a\x09self inputHandler \x0a\x09\x09onKeyPressed: Key space do: [ self shoot ];\x0a\x09\x09onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].\x0a\x09self player updateHighScore.\x0a\x09self scoreText contents: self player score.\x0a\x09self highScoreText contents: self player highScore.",
+messageSends: ["controlShip", "controlSaucers", "controlBullets", "onKeyPressed:do:", "inputHandler", "space", "shoot", "p", "switchToScreenNamed:", "updateHighScore", "player", "contents:", "scoreText", "score", "highScoreText", "highScore"],
 referencedClasses: ["Key"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "toggleDebugMode",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+$1=self._debugMode();
+$ctx1.sendIdx["debugMode"]=1;
+self["@debugMode"]=_st($1)._not();
+_st(self._saucers())._do_((function(each){
+return smalltalk.withContext(function($ctx2) {
+$2=self._debugMode();
+$ctx2.sendIdx["debugMode"]=2;
+return _st(each)._debugMode_($2);
+$ctx2.sendIdx["debugMode:"]=1;
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+_st(self._ship())._debugMode_(self._debugMode());
+return self}, function($ctx1) {$ctx1.fill(self,"toggleDebugMode",{},globals.OVGame)})},
+args: [],
+source: "toggleDebugMode\x0a\x09debugMode := self debugMode not.\x0a\x09self saucers do: [ :each | each debugMode: self debugMode ].\x0a\x09self ship debugMode: self debugMode",
+messageSends: ["not", "debugMode", "do:", "saucers", "debugMode:", "ship"],
+referencedClasses: []
 }),
 globals.OVGame);
 
@@ -1180,7 +1352,39 @@ globals.OVMainMenu);
 
 
 
-smalltalk.addClass('OVOptionsMenu', globals.Menu, ['goBackText', 'difficultyText', 'muteMusicText', 'muteSoundsText'], 'OVNI');
+smalltalk.addClass('OVOptionsMenu', globals.Menu, ['goBackText', 'difficultyText', 'muteMusicText', 'muteSoundsText', 'debugModeText'], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "debugModeText",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@debugModeText"];
+return $1;
+},
+args: [],
+source: "debugModeText\x0a\x09^ debugModeText",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVOptionsMenu);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "debugModeText:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@debugModeText"]=anObject;
+return self},
+args: ["anObject"],
+source: "debugModeText: anObject\x0a\x09debugModeText := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVOptionsMenu);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "difficultyText",
@@ -1222,18 +1426,20 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 self._drawBackground_(_st(self._game())._farBackground());
-self._draw_(self["@goBackText"]);
+self._draw_(self._goBackText());
 $ctx1.sendIdx["draw:"]=1;
-self._draw_(self["@difficultyText"]);
+self._draw_(self._difficultyText());
 $ctx1.sendIdx["draw:"]=2;
-self._draw_(self["@muteMusicText"]);
+self._draw_(self._muteMusicText());
 $ctx1.sendIdx["draw:"]=3;
-self._draw_(self["@muteSoundsText"]);
-$1=self._drawSprite_(self["@pointer"]);
+self._draw_(self._muteSoundsText());
+$ctx1.sendIdx["draw:"]=4;
+self._draw_(self._debugModeText());
+$1=self._drawSprite_(self._pointer());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVOptionsMenu)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09drawBackground: self game farBackground;\x0a\x09\x09draw: goBackText;\x0a\x09\x09draw: difficultyText;\x0a\x09\x09draw: muteMusicText;\x0a\x09\x09draw: muteSoundsText;\x0a\x09\x09drawSprite: pointer",
-messageSends: ["drawBackground:", "farBackground", "game", "draw:", "drawSprite:"],
+source: "draw\x0a\x09self \x0a\x09\x09drawBackground: self game farBackground;\x0a\x09\x09draw: self goBackText;\x0a\x09\x09draw: self difficultyText;\x0a\x09\x09draw: self muteMusicText;\x0a\x09\x09draw: self muteSoundsText;\x0a\x09\x09draw: self debugModeText;\x0a\x09\x09drawSprite: self pointer",
+messageSends: ["drawBackground:", "farBackground", "game", "draw:", "goBackText", "difficultyText", "muteMusicText", "muteSoundsText", "debugModeText", "drawSprite:", "pointer"],
 referencedClasses: []
 }),
 globals.OVOptionsMenu);
@@ -1368,7 +1574,7 @@ return smalltalk.withContext(function($ctx1) {
 var $2,$1,$receiver;
 $2=self["@options"];
 if(($receiver = $2) == null || $receiver.isNil){
-self["@options"]=["selectGoBack", "selectDifficulty", "selectMuteSounds", "selectMuteMusic"];
+self["@options"]=["selectGoBack", "selectDifficulty", "selectMuteSounds", "selectMuteMusic", "selectDebugMode"];
 $1=self["@options"];
 } else {
 $1=$2;
@@ -1376,7 +1582,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"options",{},globals.OVOptionsMenu)})},
 args: [],
-source: "options\x0a\x09^ options ifNil: [ options := #(#selectGoBack #selectDifficulty #selectMuteSounds #selectMuteMusic) ]",
+source: "options\x0a\x09^ options ifNil: [ options := #(#selectGoBack #selectDifficulty #selectMuteSounds #selectMuteMusic #selectDebugMode) ]",
 messageSends: ["ifNil:"],
 referencedClasses: []
 }),
@@ -1392,7 +1598,7 @@ return smalltalk.withContext(function($ctx1) {
 var $2,$1,$receiver;
 $2=self["@pointerOriginY"];
 if(($receiver = $2) == null || $receiver.isNil){
-self["@pointerOriginY"]=(115);
+self["@pointerOriginY"]=(75);
 $1=self["@pointerOriginY"];
 } else {
 $1=$2;
@@ -1400,8 +1606,36 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"pointerOriginY",{},globals.OVOptionsMenu)})},
 args: [],
-source: "pointerOriginY\x0a\x09^ pointerOriginY ifNil: [ pointerOriginY := 115 ]",
+source: "pointerOriginY\x0a\x09^ pointerOriginY ifNil: [ pointerOriginY := 75 ]",
 messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVOptionsMenu);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "selectDebugMode",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$5,$4,$3;
+$1=self._game();
+$ctx1.sendIdx["game"]=1;
+_st($1)._toggleDebugMode();
+$2=self._debugModeText();
+$5=_st(self._game())._debugMode();
+if(smalltalk.assert($5)){
+$4="ON";
+} else {
+$4="OFF";
+};
+$3="DEBUG: ".__comma($4);
+_st($2)._contents_($3);
+return self}, function($ctx1) {$ctx1.fill(self,"selectDebugMode",{},globals.OVOptionsMenu)})},
+args: [],
+source: "selectDebugMode\x0a\x09self game toggleDebugMode.\x0a\x09self debugModeText contents: 'DEBUG: ' , (self game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ])",
+messageSends: ["toggleDebugMode", "game", "contents:", "debugModeText", ",", "ifTrue:ifFalse:", "debugMode"],
 referencedClasses: []
 }),
 globals.OVOptionsMenu);
@@ -1517,7 +1751,7 @@ var self=this;
 function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$4,$5,$3,$1,$7,$8,$12,$11,$10,$9,$14,$15,$13,$6,$17,$18,$22,$21,$20,$19,$24,$25,$23,$16,$27,$28,$31,$30,$29,$33,$34,$32,$26,$38,$40,$41,$42,$39,$37,$43,$36,$35;
+var $2,$4,$5,$3,$1,$7,$8,$12,$11,$10,$9,$14,$15,$13,$6,$17,$18,$22,$21,$20,$19,$24,$25,$23,$16,$27,$28,$32,$31,$30,$29,$34,$35,$33,$26,$37,$38,$41,$40,$39,$43,$44,$42,$36,$48,$50,$51,$52,$49,$47,$53,$46,$45;
 $2=_st($Text())._new();
 $ctx1.sendIdx["new"]=1;
 _st($2)._contents_("BACK");
@@ -1533,7 +1767,7 @@ $ctx1.sendIdx["fontName:"]=1;
 _st($2)._fontSize_((80));
 $ctx1.sendIdx["fontSize:"]=1;
 $4=$2;
-$5=(150).__at((160));
+$5=(150).__at((120));
 $ctx1.sendIdx["@"]=1;
 $3=_st($4)._position_($5);
 $ctx1.sendIdx["position:"]=1;
@@ -1561,7 +1795,7 @@ $ctx1.sendIdx["fontName:"]=2;
 _st($7)._fontSize_((80));
 $ctx1.sendIdx["fontSize:"]=2;
 $14=$7;
-$15=(150).__at((240));
+$15=(150).__at((200));
 $ctx1.sendIdx["@"]=2;
 $13=_st($14)._position_($15);
 $ctx1.sendIdx["position:"]=2;
@@ -1593,7 +1827,7 @@ $ctx1.sendIdx["fontName:"]=3;
 _st($17)._fontSize_((80));
 $ctx1.sendIdx["fontSize:"]=3;
 $24=$17;
-$25=(150).__at((320));
+$25=(150).__at((280));
 $ctx1.sendIdx["@"]=3;
 $23=_st($24)._position_($25);
 $ctx1.sendIdx["position:"]=3;
@@ -1602,43 +1836,75 @@ self._muteSoundsText_($16);
 $27=_st($Text())._new();
 $ctx1.sendIdx["new"]=4;
 $28=$27;
-$31=_st(self._game())._musicIsMute();
+$32=self._game();
+$ctx1.sendIdx["game"]=3;
+$31=_st($32)._musicIsMute();
 if(smalltalk.assert($31)){
 $30="OFF";
 } else {
 $30="ON";
 };
 $29="MUSIC: ".__comma($30);
+$ctx1.sendIdx[","]=3;
 _st($28)._contents_($29);
+$ctx1.sendIdx["contents:"]=4;
 _st($27)._color_("rgba(90,113,26,0.7)");
+$ctx1.sendIdx["color:"]=4;
 _st($27)._outlineColor_("rgba(242,246,144,0.8)");
+$ctx1.sendIdx["outlineColor:"]=4;
 _st($27)._outlineSize_((3));
+$ctx1.sendIdx["outlineSize:"]=4;
 _st($27)._fontName_("ChangaOne");
+$ctx1.sendIdx["fontName:"]=4;
 _st($27)._fontSize_((80));
-$33=$27;
-$34=(150).__at((400));
+$ctx1.sendIdx["fontSize:"]=4;
+$34=$27;
+$35=(150).__at((360));
 $ctx1.sendIdx["@"]=4;
-$32=_st($33)._position_($34);
+$33=_st($34)._position_($35);
 $ctx1.sendIdx["position:"]=4;
-$26=$32;
+$26=$33;
 self._muteMusicText_($26);
-$38=_st($Sprite())._new();
-_st($38)._imageSrc_("images/ovni/pointer.png");
-$40=$38;
-$41=(0).__at((0));
+$37=_st($Text())._new();
+$ctx1.sendIdx["new"]=5;
+$38=$37;
+$41=_st(self._game())._debugMode();
+if(smalltalk.assert($41)){
+$40="ON";
+} else {
+$40="OFF";
+};
+$39="DEBUG: ".__comma($40);
+_st($38)._contents_($39);
+_st($37)._color_("rgba(90,113,26,0.7)");
+_st($37)._outlineColor_("rgba(242,246,144,0.8)");
+_st($37)._outlineSize_((3));
+_st($37)._fontName_("ChangaOne");
+_st($37)._fontSize_((80));
+$43=$37;
+$44=(150).__at((440));
 $ctx1.sendIdx["@"]=5;
-$42=(65).__at((40));
+$42=_st($43)._position_($44);
+$ctx1.sendIdx["position:"]=5;
+$36=$42;
+self._debugModeText_($36);
+$48=_st($Sprite())._new();
+_st($48)._imageSrc_("images/ovni/pointer.png");
+$50=$48;
+$51=(0).__at((0));
 $ctx1.sendIdx["@"]=6;
-$39=_st($40)._addFrameGroupNamed_origin_size_frameCount_("pointing",$41,$42,(1));
-$37=$39;
-_st($37)._position_((75).__at((115)));
-$43=_st($37)._yourself();
-$36=$43;
-$35=self._pointer_($36);
+$52=(65).__at((40));
+$ctx1.sendIdx["@"]=7;
+$49=_st($50)._addFrameGroupNamed_origin_size_frameCount_("pointing",$51,$52,(1));
+$47=$49;
+_st($47)._position_((75).__at((75)));
+$53=_st($47)._yourself();
+$46=$53;
+$45=self._pointer_($46);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVOptionsMenu)})},
 args: [],
-source: "startScreen\x0a\x09self \x0a\x09\x09goBackText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'BACK';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@160);\x0a\x09\x09difficultyText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DIFFICULTY: ' , self game difficulty printString;\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@240);\x0a\x09\x09muteSoundsText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@320); \x0a\x09\x09muteMusicText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@400);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09imageSrc: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@115;\x0a\x09\x09\x09\x09\x09yourself).",
-messageSends: ["goBackText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "difficultyText:", ",", "printString", "difficulty", "game", "muteSoundsText:", "ifTrue:ifFalse:", "soundIsMute", "muteMusicText:", "musicIsMute", "pointer:", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "yourself"],
+source: "startScreen\x0a\x09self \x0a\x09\x09goBackText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'BACK';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@120);\x0a\x09\x09difficultyText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DIFFICULTY: ' , self game difficulty printString;\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@200);\x0a\x09\x09muteSoundsText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@280); \x0a\x09\x09muteMusicText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@360);\x0a\x09\x09debugModeText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DEBUG: ' , (self game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@440);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09imageSrc: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@75;\x0a\x09\x09\x09\x09\x09yourself).",
+messageSends: ["goBackText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "difficultyText:", ",", "printString", "difficulty", "game", "muteSoundsText:", "ifTrue:ifFalse:", "soundIsMute", "muteMusicText:", "musicIsMute", "debugModeText:", "debugMode", "pointer:", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "yourself"],
 referencedClasses: ["Text", "Sprite"]
 }),
 globals.OVOptionsMenu);
@@ -1799,7 +2065,177 @@ globals.OVPauseScreen);
 
 
 
-smalltalk.addClass('OVSaucer', globals.Sprite, ['exploding', 'dead', 'shootProbability'], 'OVNI');
+smalltalk.addClass('OVPlayer', globals.Object, ['lives', 'score', 'highScore'], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "dieOnce",
+protocol: 'life handling',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._lives_max_(_st(self._lives()).__minus((1)),(0));
+return self}, function($ctx1) {$ctx1.fill(self,"dieOnce",{},globals.OVPlayer)})},
+args: [],
+source: "dieOnce\x0a\x09self lives: (self lives - 1) max: 0",
+messageSends: ["lives:max:", "-", "lives"],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "highScore",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@highScore"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@highScore"]=(0);
+$1=self["@highScore"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"highScore",{},globals.OVPlayer)})},
+args: [],
+source: "highScore\x0a\x09^ highScore ifNil: [ highScore := 0 ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "highScore:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@highScore"]=anObject;
+return self},
+args: ["anObject"],
+source: "highScore: anObject\x0a\x09highScore := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isDead",
+protocol: 'testing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._lives()).__eq((0));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"isDead",{},globals.OVPlayer)})},
+args: [],
+source: "isDead\x0a\x09^ self lives = 0",
+messageSends: ["=", "lives"],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "lives",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@lives"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@lives"]=(3);
+$1=self["@lives"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"lives",{},globals.OVPlayer)})},
+args: [],
+source: "lives\x0a\x09^ lives ifNil: [ lives := 3 ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "lives:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@lives"]=anObject;
+return self},
+args: ["anObject"],
+source: "lives: anObject\x0a\x09lives := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "score",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@score"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@score"]=(0);
+$1=self["@score"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"score",{},globals.OVPlayer)})},
+args: [],
+source: "score\x0a\x09^ score ifNil: [ score := 0 ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "score:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@score"]=anObject;
+return self},
+args: ["anObject"],
+source: "score: anObject\x0a\x09score := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "updateHighScore",
+protocol: 'score handling',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._highScore_(_st(self._highScore())._max_(self._score()));
+return self}, function($ctx1) {$ctx1.fill(self,"updateHighScore",{},globals.OVPlayer)})},
+args: [],
+source: "updateHighScore\x0a\x09self highScore: (self highScore max: self score)",
+messageSends: ["highScore:", "max:", "highScore", "score"],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
+
+
+smalltalk.addClass('OVSaucer', globals.Sprite, ['exploding', 'dead', 'toughness'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "checkCollisionWith:",
@@ -1993,6 +2429,24 @@ globals.OVSaucer);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "isDead",
+protocol: 'testing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=self._dead();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"isDead",{},globals.OVSaucer)})},
+args: [],
+source: "isDead\x0a\x09^ self dead",
+messageSends: ["dead"],
+referencedClasses: []
+}),
+globals.OVSaucer);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "move",
 protocol: 'movement',
 fn: function (){
@@ -2052,19 +2506,13 @@ protocol: 'accessing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$receiver;
-$2=self["@shootProbability"];
-if(($receiver = $2) == null || $receiver.isNil){
-self["@shootProbability"]=(100);
-$1=self["@shootProbability"];
-} else {
-$1=$2;
-};
+var $1;
+$1=(200).__slash(self._toughness());
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"shootProbability",{},globals.OVSaucer)})},
 args: [],
-source: "shootProbability\x0a\x09^ shootProbability ifNil: [ shootProbability := 100 ]",
-messageSends: ["ifNil:"],
+source: "shootProbability\x0a\x09^ 200 / self toughness",
+messageSends: ["/", "toughness"],
 referencedClasses: []
 }),
 globals.OVSaucer);
@@ -2119,6 +2567,45 @@ return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVSaucer)})},
 args: [],
 source: "step\x0a\x09self \x0a\x09\x09move;\x0a\x09\x09checkShouldDie",
 messageSends: ["move", "checkShouldDie"],
+referencedClasses: []
+}),
+globals.OVSaucer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "toughness",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@toughness"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@toughness"]=(1);
+$1=self["@toughness"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"toughness",{},globals.OVSaucer)})},
+args: [],
+source: "toughness\x0a\x09^ toughness ifNil: [ toughness := 1 ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVSaucer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "toughness:",
+protocol: 'accessing',
+fn: function (anInteger){
+var self=this;
+self["@toughness"]=anInteger;
+return self},
+args: ["anInteger"],
+source: "toughness: anInteger\x0a\x09toughness := anInteger",
+messageSends: [],
 referencedClasses: []
 }),
 globals.OVSaucer);
