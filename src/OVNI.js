@@ -182,7 +182,7 @@ globals.OVEnemyBullet);
 
 
 
-smalltalk.addClass('OVGame', globals.Game, ['player', 'ship', 'saucers', 'scrollSpeed', 'farBackground', 'starField', 'bullets', 'enemyBullets', 'difficulty', 'soundIsMute', 'musicIsMute', 'debugMode', 'scoreText', 'highScoreText'], 'OVNI');
+smalltalk.addClass('OVGame', globals.Game, ['player', 'ship', 'saucers', 'scrollSpeed', 'farBackground', 'starField', 'bullets', 'enemyBullets', 'difficulty', 'soundIsMute', 'musicIsMute', 'debugMode', 'scoreText', 'highScoreText', 'playTimeText'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "bullets",
@@ -406,11 +406,13 @@ self._drawSprite_(self._ship());
 self._drawBackground_(self._starField());
 self._draw_(self._scoreText());
 $ctx1.sendIdx["draw:"]=1;
-$1=self._draw_(self._highScoreText());
+self._draw_(self._highScoreText());
+$ctx1.sendIdx["draw:"]=2;
+$1=self._draw_(self._playTimeText());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVGame)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawSpriteCollection: self bullets;\x0a\x09\x09drawSpriteCollection: self enemyBullets;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawBackground: self starField;\x0a\x09\x09draw: self scoreText;\x0a\x09\x09draw: self highScoreText.",
-messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSpriteCollection:", "saucers", "bullets", "enemyBullets", "drawSprite:", "ship", "starField", "draw:", "scoreText", "highScoreText"],
+source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawSpriteCollection: self bullets;\x0a\x09\x09drawSpriteCollection: self enemyBullets;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawBackground: self starField;\x0a\x09\x09draw: self scoreText;\x0a\x09\x09draw: self highScoreText;\x0a\x09\x09draw: self playTimeText",
+messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSpriteCollection:", "saucers", "bullets", "enemyBullets", "drawSprite:", "ship", "starField", "draw:", "scoreText", "highScoreText", "playTimeText"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -423,15 +425,14 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 self["@ship"]=nil;
-_st(self._player())._score_((0));
 _st(self._enemyBullets())._removeAll();
 $ctx1.sendIdx["removeAll"]=1;
 _st(self._bullets())._removeAll();
 self._switchToScreenNamed_("end");
 return self}, function($ctx1) {$ctx1.fill(self,"end",{},globals.OVGame)})},
 args: [],
-source: "end\x0a\x09ship := nil.\x0a\x09self player score: 0.\x0a\x09self enemyBullets removeAll.\x0a\x09self bullets removeAll.\x0a\x09self switchToScreenNamed: 'end'.",
-messageSends: ["score:", "player", "removeAll", "enemyBullets", "bullets", "switchToScreenNamed:"],
+source: "end\x0a\x09ship := nil.\x0a\x09self enemyBullets removeAll.\x0a\x09self bullets removeAll.\x0a\x09self switchToScreenNamed: 'end'.",
+messageSends: ["removeAll", "enemyBullets", "bullets", "switchToScreenNamed:"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -506,7 +507,7 @@ $3=_st($Text())._new();
 _st($3)._contents_(_st(self._player())._highScore());
 _st($3)._color_("rgba(90,113,26,0.7)");
 _st($3)._outlineColor_("rgba(242,246,144,0.8)");
-_st($3)._outlineSize_((3));
+_st($3)._outlineSize_((1));
 _st($3)._fontName_("ChangaOne");
 _st($3)._fontSize_((20));
 $4=_st($3)._position_((10).__at((20)));
@@ -518,7 +519,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"highScoreText",{},globals.OVGame)})},
 args: [],
-source: "highScoreText\x0a\x09^ highScoreText ifNil: [ highScoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player highScore;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@20) ]",
+source: "highScoreText\x0a\x09^ highScoreText ifNil: [ highScoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player highScore;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@20) ]",
 messageSends: ["ifNil:", "contents:", "new", "highScore", "player", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
 referencedClasses: ["Text"]
 }),
@@ -560,6 +561,58 @@ args: ["aBoolean"],
 source: "musicIsMute: aBoolean\x0a\x09musicIsMute := aBoolean",
 messageSends: [],
 referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "newGame",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+$1=self._player();
+_st($1)._score_((0));
+$2=_st($1)._resetStartTime();
+return self}, function($ctx1) {$ctx1.fill(self,"newGame",{},globals.OVGame)})},
+args: [],
+source: "newGame\x0a\x09self player \x0a\x09\x09score: 0;\x0a\x09\x09resetStartTime",
+messageSends: ["score:", "player", "resetStartTime"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "playTimeText",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$4,$1,$receiver;
+$2=self["@playTimeText"];
+if(($receiver = $2) == null || $receiver.isNil){
+$3=_st($Text())._new();
+_st($3)._contents_(_st(self._player())._playTimeString());
+_st($3)._color_("rgba(90,113,26,0.7)");
+_st($3)._outlineColor_("rgba(242,246,144,0.8)");
+_st($3)._outlineSize_((1));
+_st($3)._fontName_("ChangaOne");
+_st($3)._fontSize_((20));
+$4=_st($3)._position_((660).__at((20)));
+self["@playTimeText"]=$4;
+$1=self["@playTimeText"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"playTimeText",{},globals.OVGame)})},
+args: [],
+source: "playTimeText\x0a\x09^ playTimeText ifNil: [ playTimeText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player playTimeString;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 660@20) ]",
+messageSends: ["ifNil:", "contents:", "new", "playTimeString", "player", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
+referencedClasses: ["Text"]
 }),
 globals.OVGame);
 
@@ -642,7 +695,7 @@ $3=_st($Text())._new();
 _st($3)._contents_(_st(self._player())._score());
 _st($3)._color_("rgba(90,113,26,0.7)");
 _st($3)._outlineColor_("rgba(242,246,144,0.8)");
-_st($3)._outlineSize_((3));
+_st($3)._outlineSize_((1));
 _st($3)._fontName_("ChangaOne");
 _st($3)._fontSize_((20));
 $4=_st($3)._position_((10).__at((35)));
@@ -654,7 +707,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"scoreText",{},globals.OVGame)})},
 args: [],
-source: "scoreText\x0a\x09^ scoreText ifNil: [ scoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player score;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@35) ]",
+source: "scoreText\x0a\x09^ scoreText ifNil: [ scoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player score;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@35) ]",
 messageSends: ["ifNil:", "contents:", "new", "score", "player", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
 referencedClasses: ["Text"]
 }),
@@ -832,7 +885,7 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$7,$6;
+var $1,$2,$3,$4,$5,$7,$6,$8,$10,$9;
 self._controlShip();
 self._controlSaucers();
 $1=self._controlBullets();
@@ -855,11 +908,17 @@ $ctx1.sendIdx["player"]=2;
 $6=_st($7)._score();
 _st($5)._contents_($6);
 $ctx1.sendIdx["contents:"]=1;
-_st(self._highScoreText())._contents_(_st(self._player())._highScore());
+$8=self._highScoreText();
+$10=self._player();
+$ctx1.sendIdx["player"]=3;
+$9=_st($10)._highScore();
+_st($8)._contents_($9);
+$ctx1.sendIdx["contents:"]=2;
+_st(self._playTimeText())._contents_(_st(self._player())._playTimeString());
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVGame)})},
 args: [],
-source: "step\x0a\x09self \x0a\x09\x09controlShip;\x0a\x09\x09controlSaucers;\x0a\x09\x09controlBullets.\x0a\x09self inputHandler \x0a\x09\x09onKeyPressed: Key space do: [ self shoot ];\x0a\x09\x09onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].\x0a\x09self player updateHighScore.\x0a\x09self scoreText contents: self player score.\x0a\x09self highScoreText contents: self player highScore.",
-messageSends: ["controlShip", "controlSaucers", "controlBullets", "onKeyPressed:do:", "inputHandler", "space", "shoot", "p", "switchToScreenNamed:", "updateHighScore", "player", "contents:", "scoreText", "score", "highScoreText", "highScore"],
+source: "step\x0a\x09self \x0a\x09\x09controlShip;\x0a\x09\x09controlSaucers;\x0a\x09\x09controlBullets.\x0a\x09self inputHandler \x0a\x09\x09onKeyPressed: Key space do: [ self shoot ];\x0a\x09\x09onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].\x0a\x09self player updateHighScore.\x0a\x09self scoreText contents: self player score.\x0a\x09self highScoreText contents: self player highScore.\x0a\x09self playTimeText contents: self player playTimeString.",
+messageSends: ["controlShip", "controlSaucers", "controlBullets", "onKeyPressed:do:", "inputHandler", "space", "shoot", "p", "switchToScreenNamed:", "updateHighScore", "player", "contents:", "scoreText", "score", "highScoreText", "highScore", "playTimeText", "playTimeString"],
 referencedClasses: ["Key"]
 }),
 globals.OVGame);
@@ -1240,13 +1299,16 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self._game())._switchToGame();
+var $2,$3,$1;
+$2=self._game();
+_st($2)._switchToGame();
+$3=_st($2)._newGame();
+$1=$3;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"selectStartGame",{},globals.OVMainMenu)})},
 args: [],
-source: "selectStartGame\x0a\x09^ self game switchToGame",
-messageSends: ["switchToGame", "game"],
+source: "selectStartGame\x0a\x09^ self game \x0a\x09\x09switchToGame; \x0a\x09\x09newGame",
+messageSends: ["switchToGame", "game", "newGame"],
 referencedClasses: []
 }),
 globals.OVMainMenu);
@@ -2065,7 +2127,7 @@ globals.OVPauseScreen);
 
 
 
-smalltalk.addClass('OVPlayer', globals.Object, ['lives', 'score', 'highScore'], 'OVNI');
+smalltalk.addClass('OVPlayer', globals.Object, ['lives', 'score', 'highScore', 'gameStartTime'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "dieOnce",
@@ -2078,6 +2140,30 @@ return self}, function($ctx1) {$ctx1.fill(self,"dieOnce",{},globals.OVPlayer)})}
 args: [],
 source: "dieOnce\x0a\x09self lives: (self lives - 1) max: 0",
 messageSends: ["lives:max:", "-", "lives"],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "gameStartTime",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@gameStartTime"];
+if(($receiver = $2) == null || $receiver.isNil){
+self._resetStartTime();
+$1=self["@gameStartTime"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"gameStartTime",{},globals.OVPlayer)})},
+args: [],
+source: "gameStartTime\x0a\x09^ gameStartTime ifNil: [ self resetStartTime. gameStartTime ]",
+messageSends: ["ifNil:", "resetStartTime"],
 referencedClasses: []
 }),
 globals.OVPlayer);
@@ -2175,6 +2261,93 @@ args: ["anObject"],
 source: "lives: anObject\x0a\x09lives := anObject",
 messageSends: [],
 referencedClasses: []
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "playTime",
+protocol: 'time handling',
+fn: function (){
+var self=this;
+function $Date(){return globals.Date||(typeof Date=="undefined"?nil:Date)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(_st($Date())._now()).__minus(self._gameStartTime());
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"playTime",{},globals.OVPlayer)})},
+args: [],
+source: "playTime\x0a\x09^ Date now - self gameStartTime",
+messageSends: ["-", "now", "gameStartTime"],
+referencedClasses: ["Date"]
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "playTimeString",
+protocol: 'time handling',
+fn: function (){
+var self=this;
+var date;
+function $Date(){return globals.Date||(typeof Date=="undefined"?nil:Date)}
+return smalltalk.withContext(function($ctx1) { 
+var $5,$4,$7,$6,$3,$2,$10,$9,$12,$11,$8,$1;
+date=_st($Date())._new_(self._playTime());
+$5=_st(date)._minutes();
+$ctx1.sendIdx["minutes"]=1;
+$4=_st($5).__lt((10));
+$ctx1.sendIdx["<"]=1;
+if(smalltalk.assert($4)){
+$7=_st(date)._minutes();
+$ctx1.sendIdx["minutes"]=2;
+$6=_st($7)._asString();
+$ctx1.sendIdx["asString"]=1;
+$3="0".__comma($6);
+$ctx1.sendIdx[","]=3;
+} else {
+$3=_st(_st(date)._minutes())._asString();
+$ctx1.sendIdx["asString"]=2;
+};
+$2=_st($3).__comma(":");
+$ctx1.sendIdx[","]=2;
+$10=_st(date)._seconds();
+$ctx1.sendIdx["seconds"]=1;
+$9=_st($10).__lt((10));
+if(smalltalk.assert($9)){
+$12=_st(date)._seconds();
+$ctx1.sendIdx["seconds"]=2;
+$11=_st($12)._asString();
+$ctx1.sendIdx["asString"]=3;
+$8="0".__comma($11);
+} else {
+$8=_st(_st(date)._seconds())._asString();
+};
+$1=_st($2).__comma($8);
+$ctx1.sendIdx[","]=1;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"playTimeString",{date:date},globals.OVPlayer)})},
+args: [],
+source: "playTimeString\x0a \x09| date |\x0a\x09date := Date new: self playTime.\x0a\x09^ (date minutes < 10 ifTrue: [ '0' , date minutes asString ] ifFalse: [ date minutes asString ])\x0a\x09\x09, ':' , (date seconds < 10 ifTrue: [ '0' , date seconds asString ] ifFalse: [ date seconds asString ]) ",
+messageSends: ["new:", "playTime", ",", "ifTrue:ifFalse:", "<", "minutes", "asString", "seconds"],
+referencedClasses: ["Date"]
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "resetStartTime",
+protocol: 'time handling',
+fn: function (){
+var self=this;
+function $Date(){return globals.Date||(typeof Date=="undefined"?nil:Date)}
+return smalltalk.withContext(function($ctx1) { 
+self["@gameStartTime"]=_st($Date())._now();
+return self}, function($ctx1) {$ctx1.fill(self,"resetStartTime",{},globals.OVPlayer)})},
+args: [],
+source: "resetStartTime\x0a\x09gameStartTime := Date now",
+messageSends: ["now"],
+referencedClasses: ["Date"]
 }),
 globals.OVPlayer);
 

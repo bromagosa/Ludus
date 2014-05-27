@@ -58,7 +58,7 @@ initialize
 ! !
 
 Game subclass: #OVGame
-	instanceVariableNames: 'player ship saucers scrollSpeed farBackground starField bullets enemyBullets difficulty soundIsMute musicIsMute debugMode scoreText highScoreText'
+	instanceVariableNames: 'player ship saucers scrollSpeed farBackground starField bullets enemyBullets difficulty soundIsMute musicIsMute debugMode scoreText highScoreText playTimeText'
 	package: 'OVNI'!
 
 !OVGame methodsFor: 'accessing'!
@@ -98,7 +98,7 @@ highScoreText
 			contents: self player highScore;
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 3;
+			outlineSize: 1;
 			fontName: 'ChangaOne';
 			fontSize: 20;
 			position: 10@20) ]
@@ -110,6 +110,18 @@ musicIsMute
 
 musicIsMute: aBoolean
 	musicIsMute := aBoolean
+!
+
+playTimeText
+	^ playTimeText ifNil: [ playTimeText := 
+		(Text new 
+			contents: self player playTimeString;
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 1;
+			fontName: 'ChangaOne';
+			fontSize: 20;
+			position: 660@20) ]
 !
 
 player
@@ -135,7 +147,7 @@ scoreText
 			contents: self player score;
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 3;
+			outlineSize: 1;
 			fontName: 'ChangaOne';
 			fontSize: 20;
 			position: 10@35) ]
@@ -165,10 +177,15 @@ starField
 
 end
 	ship := nil.
-	self player score: 0.
 	self enemyBullets removeAll.
 	self bullets removeAll.
 	self switchToScreenNamed: 'end'.
+!
+
+newGame
+	self player 
+		score: 0;
+		resetStartTime
 !
 
 startGame
@@ -203,6 +220,7 @@ step
 	self player updateHighScore.
 	self scoreText contents: self player score.
 	self highScoreText contents: self player highScore.
+	self playTimeText contents: self player playTimeString.
 !
 
 toggleDebugMode
@@ -234,7 +252,8 @@ draw
 		drawSprite: self ship;
 		drawBackground: self starField;
 		draw: self scoreText;
-		draw: self highScoreText.
+		draw: self highScoreText;
+		draw: self playTimeText
 ! !
 
 !OVGame methodsFor: 'game actions'!
@@ -377,7 +396,9 @@ selectOptions
 !
 
 selectStartGame
-	^ self game switchToGame
+	^ self game 
+		switchToGame; 
+		newGame
 ! !
 
 !OVMainMenu methodsFor: 'drawing'!
@@ -634,10 +655,14 @@ startScreen
 ! !
 
 Object subclass: #OVPlayer
-	instanceVariableNames: 'lives score highScore'
+	instanceVariableNames: 'lives score highScore gameStartTime'
 	package: 'OVNI'!
 
 !OVPlayer methodsFor: 'accessing'!
+
+gameStartTime
+	^ gameStartTime ifNil: [ self resetStartTime. gameStartTime ]
+!
 
 highScore
 	^ highScore ifNil: [ highScore := 0 ]
@@ -679,6 +704,23 @@ updateHighScore
 
 isDead
 	^ self lives = 0
+! !
+
+!OVPlayer methodsFor: 'time handling'!
+
+playTime
+	^ Date now - self gameStartTime
+!
+
+playTimeString
+ 	| date |
+	date := Date new: self playTime.
+	^ (date minutes < 10 ifTrue: [ '0' , date minutes asString ] ifFalse: [ date minutes asString ])
+		, ':' , (date seconds < 10 ifTrue: [ '0' , date seconds asString ] ifFalse: [ date seconds asString ])
+!
+
+resetStartTime
+	gameStartTime := Date now
 ! !
 
 Sprite subclass: #OVSaucer
