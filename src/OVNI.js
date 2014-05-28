@@ -182,7 +182,7 @@ globals.OVEnemyBullet);
 
 
 
-smalltalk.addClass('OVGame', globals.Game, ['player', 'ship', 'saucers', 'scrollSpeed', 'farBackground', 'starField', 'bullets', 'enemyBullets', 'difficulty', 'soundIsMute', 'musicIsMute', 'debugMode', 'scoreText', 'highScoreText', 'playTimeText'], 'OVNI');
+smalltalk.addClass('OVGame', globals.Game, ['player', 'ship', 'saucers', 'scrollSpeed', 'farBackground', 'starField', 'bullets', 'enemyBullets', 'difficulty', 'soundIsMute', 'musicIsMute', 'scoreText', 'highScoreText', 'playTimeText', 'livesText', 'lifeItem'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "bullets",
@@ -247,43 +247,77 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "controlItems",
+protocol: 'sprite processing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$2;
+$1=self._lifeItem();
+$ctx1.sendIdx["lifeItem"]=1;
+_st($1)._move();
+$3=self._lifeItem();
+$ctx1.sendIdx["lifeItem"]=2;
+$2=_st($3)._collidesWith_(self._ship());
+if(smalltalk.assert($2)){
+_st(self._soundNamed_("life"))._play();
+_st(self._player())._addLife();
+_st(self._lifeItem())._x_((-20));
+};
+return self}, function($ctx1) {$ctx1.fill(self,"controlItems",{},globals.OVGame)})},
+args: [],
+source: "controlItems\x0a\x09self lifeItem move.\x0a\x09(self lifeItem collidesWith: self ship) ifTrue: [\x0a\x09\x09(self soundNamed: 'life') play.\x0a\x09\x09self player addLife.\x0a\x09\x09self lifeItem x: -20 ]",
+messageSends: ["move", "lifeItem", "ifTrue:", "collidesWith:", "ship", "play", "soundNamed:", "addLife", "player", "x:"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "controlSaucers",
 protocol: 'sprite processing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$7,$8,$6,$9;
+var $1,$2,$3,$4,$5,$6,$8,$9,$7,$10;
 _st(self._saucers())._do_((function(eachSaucer){
 return smalltalk.withContext(function($ctx2) {
 _st(eachSaucer)._checkCollisionWith_(self._bullets());
 $1=_st(eachSaucer)._step();
 $1;
-$2=_st(eachSaucer)._isDead();
+$2=_st(_st(eachSaucer)._exploding())._and_((function(){
+return smalltalk.withContext(function($ctx3) {
+return _st(eachSaucer)._atFirstFrame();
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
 if(smalltalk.assert($2)){
-$3=self._player();
+_st(self._soundNamed_("explosion-1"))._play();
+};
+$3=_st(eachSaucer)._isDead();
+if(smalltalk.assert($3)){
+$4=self._player();
 $ctx2.sendIdx["player"]=1;
-$4=_st(_st(self._player())._score()).__plus((5).__star(self._difficulty()));
+$5=_st(_st(self._player())._score()).__plus((5).__star(self._difficulty()));
 $ctx2.sendIdx["+"]=1;
-_st($3)._score_($4);
+_st($4)._score_($5);
 };
-$5=_st(eachSaucer)._shouldRespawn();
-if(smalltalk.assert($5)){
-$7=self._width();
+$6=_st(eachSaucer)._shouldRespawn();
+if(smalltalk.assert($6)){
+$8=self._width();
 $ctx2.sendIdx["width"]=1;
-$8=_st(self._width())._atRandom();
+$9=_st(self._width())._atRandom();
 $ctx2.sendIdx["atRandom"]=1;
-$6=_st($7).__plus($8);
-_st(eachSaucer)._respawnAtX_y_($6,_st(self._height())._atRandom());
+$7=_st($8).__plus($9);
+_st(eachSaucer)._respawnAtX_y_($7,_st(self._height())._atRandom());
 };
-$9=_st(eachSaucer)._shouldShoot();
-if(smalltalk.assert($9)){
+$10=_st(eachSaucer)._shouldShoot();
+if(smalltalk.assert($10)){
 return _st(self._enemyBullets())._add_(_st(eachSaucer)._newBullet());
 };
 }, function($ctx2) {$ctx2.fillBlock({eachSaucer:eachSaucer},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"controlSaucers",{},globals.OVGame)})},
 args: [],
-source: "controlSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer\x0a\x09\x09\x09checkCollisionWith: self bullets;\x0a\x09\x09\x09step.\x0a\x09\x09eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].\x0a\x09\x09eachSaucer shouldRespawn ifTrue: [\x0a\x09\x09\x09eachSaucer \x0a\x09\x09\x09\x09respawnAtX: self width + self width atRandom y: self height atRandom ].\x0a\x09\x09eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].",
-messageSends: ["do:", "saucers", "checkCollisionWith:", "bullets", "step", "ifTrue:", "isDead", "score:", "player", "+", "score", "*", "difficulty", "shouldRespawn", "respawnAtX:y:", "width", "atRandom", "height", "shouldShoot", "add:", "enemyBullets", "newBullet"],
+source: "controlSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer\x0a\x09\x09\x09checkCollisionWith: self bullets;\x0a\x09\x09\x09step.\x0a\x09\x09(eachSaucer exploding and: [ eachSaucer atFirstFrame ]) ifTrue: [ (self soundNamed: 'explosion-1') play ].\x0a\x09\x09eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].\x0a\x09\x09eachSaucer shouldRespawn ifTrue: [\x0a\x09\x09\x09eachSaucer \x0a\x09\x09\x09\x09respawnAtX: self width + self width atRandom y: self height atRandom ].\x0a\x09\x09eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].",
+messageSends: ["do:", "saucers", "checkCollisionWith:", "bullets", "step", "ifTrue:", "and:", "exploding", "atFirstFrame", "play", "soundNamed:", "isDead", "score:", "player", "+", "score", "*", "difficulty", "shouldRespawn", "respawnAtX:y:", "width", "atRandom", "height", "shouldShoot", "add:", "enemyBullets", "newBullet"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -295,50 +329,83 @@ protocol: 'sprite processing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $3,$2,$4,$1;
+var $3,$2,$4,$1,$5,$8,$7,$6,$9,$13,$12,$14,$11,$16,$15,$10,$17;
 $3=self._ship();
 $ctx1.sendIdx["ship"]=1;
-$2=_st($3)._collidesWithAnyOf_(self._enemyBullets());
-$ctx1.sendIdx["collidesWithAnyOf:"]=1;
-$1=_st($2)._or_((function(){
+$2=_st($3)._exploding();
+$ctx1.sendIdx["exploding"]=1;
+$1=_st($2)._and_((function(){
 return smalltalk.withContext(function($ctx2) {
 $4=self._ship();
 $ctx2.sendIdx["ship"]=2;
-return _st($4)._collidesWithAnyOf_(self._saucers());
+return _st($4)._atLastFrame();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["and:"]=1;
 if(smalltalk.assert($1)){
+self._resetSprites();
+$5=self._player();
+$ctx1.sendIdx["player"]=1;
+$8=self._player();
+$ctx1.sendIdx["player"]=2;
+$7=_st($8)._lives();
+$ctx1.sendIdx["lives"]=1;
+$6=_st($7).__minus((1));
+_st($5)._lives_($6);
+$9=_st(_st(self._player())._lives()).__lt((0));
+if(smalltalk.assert($9)){
 self._end();
+};
+};
+$13=self._ship();
+$ctx1.sendIdx["ship"]=3;
+$12=_st($13)._collidesWithAnyOf_(self._enemyBullets());
+$ctx1.sendIdx["collidesWithAnyOf:"]=1;
+$11=_st($12)._or_((function(){
+return smalltalk.withContext(function($ctx2) {
+$14=self._ship();
+$ctx2.sendIdx["ship"]=4;
+return _st($14)._collidesWithAnyOf_(self._saucers());
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
+$10=_st($11)._and_((function(){
+return smalltalk.withContext(function($ctx2) {
+$16=self._ship();
+$ctx2.sendIdx["ship"]=5;
+$15=_st($16)._exploding();
+return _st($15)._not();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
+if(smalltalk.assert($10)){
+_st(self._soundNamed_("explosion-2"))._play();
+$17=self._ship();
+$ctx1.sendIdx["ship"]=6;
+_st($17)._explode();
 };
 _st(self._ship())._moveWithHandler_inCanvas_(self._inputHandler(),self._canvas());
 return self}, function($ctx1) {$ctx1.fill(self,"controlShip",{},globals.OVGame)})},
 args: [],
-source: "controlShip\x0a\x09((self ship collidesWithAnyOf: self enemyBullets)\x0a\x09\x09or: [ (self ship collidesWithAnyOf: self saucers) ])\x0a\x09\x09\x09ifTrue: [ self end ].\x0a\x09self ship moveWithHandler: self inputHandler inCanvas: self canvas.",
-messageSends: ["ifTrue:", "or:", "collidesWithAnyOf:", "ship", "enemyBullets", "saucers", "end", "moveWithHandler:inCanvas:", "inputHandler", "canvas"],
+source: "controlShip\x0a\x09(self ship exploding and: [ self ship atLastFrame ])\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09self resetSprites.\x0a\x09\x09\x09self player lives: self player lives - 1.\x0a\x09\x09\x09self player lives < 0 ifTrue: [ self end ]].\x0a\x09(((self ship collidesWithAnyOf: self enemyBullets)\x0a\x09\x09or: [ (self ship collidesWithAnyOf: self saucers) ]) \x0a\x09\x09\x09and: [ self ship exploding not])\x0a\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09(self soundNamed: 'explosion-2') play.\x0a\x09\x09\x09\x09\x09self ship explode ].\x0a\x09self ship moveWithHandler: self inputHandler inCanvas: self canvas.",
+messageSends: ["ifTrue:", "and:", "exploding", "ship", "atLastFrame", "resetSprites", "lives:", "player", "-", "lives", "<", "end", "or:", "collidesWithAnyOf:", "enemyBullets", "saucers", "not", "play", "soundNamed:", "explode", "moveWithHandler:inCanvas:", "inputHandler", "canvas"],
 referencedClasses: []
 }),
 globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "debugMode",
-protocol: 'accessing',
-fn: function (){
+selector: "debug:",
+protocol: 'debug',
+fn: function (aString){
 var self=this;
+function $Game(){return globals.Game||(typeof Game=="undefined"?nil:Game)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$receiver;
-$2=self["@debugMode"];
-if(($receiver = $2) == null || $receiver.isNil){
-self["@debugMode"]=false;
-$1=self["@debugMode"];
-} else {
-$1=$2;
+var $1;
+$1=_st($Game())._debugMode();
+if(smalltalk.assert($1)){
+_st(console)._log_("debug: ".__comma(aString));
 };
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"debugMode",{},globals.OVGame)})},
-args: [],
-source: "debugMode\x0a\x09^ debugMode ifNil: [ debugMode := false ]",
-messageSends: ["ifNil:"],
-referencedClasses: []
+return self}, function($ctx1) {$ctx1.fill(self,"debug:",{aString:aString},globals.OVGame)})},
+args: ["aString"],
+source: "debug: aString\x0a\x09Game debugMode ifTrue: [ console log: 'debug: ' , aString ]",
+messageSends: ["ifTrue:", "debugMode", "log:", ","],
+referencedClasses: ["Game"]
 }),
 globals.OVGame);
 
@@ -373,6 +440,7 @@ protocol: 'accessing',
 fn: function (anInteger){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+self._debug_("setting difficulty to ".__comma(_st(anInteger)._asString()));
 self["@difficulty"]=anInteger;
 _st(self._saucers())._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
@@ -380,8 +448,8 @@ return _st(each)._toughness_(self._difficulty());
 }, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"difficulty:",{anInteger:anInteger},globals.OVGame)})},
 args: ["anInteger"],
-source: "difficulty: anInteger\x0a\x09difficulty := anInteger.\x0a\x09self saucers do: [ :each | each toughness: self difficulty ]",
-messageSends: ["do:", "saucers", "toughness:", "difficulty"],
+source: "difficulty: anInteger\x0a\x09self debug: 'setting difficulty to ' , anInteger asString.\x0a\x09difficulty := anInteger.\x0a\x09self saucers do: [ :each | each toughness: self difficulty ]",
+messageSends: ["debug:", ",", "asString", "do:", "saucers", "toughness:", "difficulty"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -403,16 +471,20 @@ self._drawSpriteCollection_(self._bullets());
 $ctx1.sendIdx["drawSpriteCollection:"]=2;
 self._drawSpriteCollection_(self._enemyBullets());
 self._drawSprite_(self._ship());
+$ctx1.sendIdx["drawSprite:"]=1;
+self._drawSprite_(self._lifeItem());
 self._drawBackground_(self._starField());
-self._draw_(self._scoreText());
+self._draw_(self._livesText());
 $ctx1.sendIdx["draw:"]=1;
-self._draw_(self._highScoreText());
+self._draw_(self._scoreText());
 $ctx1.sendIdx["draw:"]=2;
+self._draw_(self._highScoreText());
+$ctx1.sendIdx["draw:"]=3;
 $1=self._draw_(self._playTimeText());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVGame)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawSpriteCollection: self bullets;\x0a\x09\x09drawSpriteCollection: self enemyBullets;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawBackground: self starField;\x0a\x09\x09draw: self scoreText;\x0a\x09\x09draw: self highScoreText;\x0a\x09\x09draw: self playTimeText",
-messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSpriteCollection:", "saucers", "bullets", "enemyBullets", "drawSprite:", "ship", "starField", "draw:", "scoreText", "highScoreText", "playTimeText"],
+source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawSpriteCollection: self bullets;\x0a\x09\x09drawSpriteCollection: self enemyBullets;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawSprite: self lifeItem;\x0a\x09\x09drawBackground: self starField;\x0a\x09\x09draw: self livesText;\x0a\x09\x09draw: self scoreText;\x0a\x09\x09draw: self highScoreText;\x0a\x09\x09draw: self playTimeText",
+messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSpriteCollection:", "saucers", "bullets", "enemyBullets", "drawSprite:", "ship", "lifeItem", "starField", "draw:", "livesText", "scoreText", "highScoreText", "playTimeText"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -424,15 +496,13 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self["@ship"]=nil;
-_st(self._enemyBullets())._removeAll();
-$ctx1.sendIdx["removeAll"]=1;
-_st(self._bullets())._removeAll();
+self._debug_("game over");
+_st(self._soundNamed_("gameover"))._play();
 self._switchToScreenNamed_("end");
 return self}, function($ctx1) {$ctx1.fill(self,"end",{},globals.OVGame)})},
 args: [],
-source: "end\x0a\x09ship := nil.\x0a\x09self enemyBullets removeAll.\x0a\x09self bullets removeAll.\x0a\x09self switchToScreenNamed: 'end'.",
-messageSends: ["removeAll", "enemyBullets", "bullets", "switchToScreenNamed:"],
+source: "end\x0a\x09self debug: 'game over'.\x0a\x09(self soundNamed: 'gameover') play.\x0a\x09self switchToScreenNamed: 'end'.",
+messageSends: ["debug:", "play", "soundNamed:", "switchToScreenNamed:"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -510,7 +580,7 @@ _st($3)._outlineColor_("rgba(242,246,144,0.8)");
 _st($3)._outlineSize_((1));
 _st($3)._fontName_("ChangaOne");
 _st($3)._fontSize_((20));
-$4=_st($3)._position_((10).__at((20)));
+$4=_st($3)._position_((10).__at((40)));
 self["@highScoreText"]=$4;
 $1=self["@highScoreText"];
 } else {
@@ -519,9 +589,92 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"highScoreText",{},globals.OVGame)})},
 args: [],
-source: "highScoreText\x0a\x09^ highScoreText ifNil: [ highScoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player highScore;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@20) ]",
+source: "highScoreText\x0a\x09^ highScoreText ifNil: [ highScoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player highScore;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@40) ]",
 messageSends: ["ifNil:", "contents:", "new", "highScore", "player", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
 referencedClasses: ["Text"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "lifeItem",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $OVLifeItem(){return globals.OVLifeItem||(typeof OVLifeItem=="undefined"?nil:OVLifeItem)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@lifeItem"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@lifeItem"]=_st(_st($OVLifeItem())._new())._centre_((3000).__at(_st(self._height()).__slash((2))));
+$1=self["@lifeItem"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"lifeItem",{},globals.OVGame)})},
+args: [],
+source: "lifeItem\x0a\x09^ lifeItem ifNil: [ lifeItem := OVLifeItem new centre: 3000 @ (self height / 2) ]",
+messageSends: ["ifNil:", "centre:", "new", "@", "/", "height"],
+referencedClasses: ["OVLifeItem"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "livesText",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$4,$1,$receiver;
+$2=self["@livesText"];
+if(($receiver = $2) == null || $receiver.isNil){
+$3=_st($Text())._new();
+_st($3)._contents_(self._livesTextContents());
+_st($3)._color_("rgba(90,113,26,0.7)");
+_st($3)._outlineColor_("rgba(242,246,144,0.8)");
+_st($3)._outlineSize_((1));
+_st($3)._fontName_("ChangaOne");
+_st($3)._fontSize_((20));
+$4=_st($3)._position_((7).__at((22)));
+self["@livesText"]=$4;
+$1=self["@livesText"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"livesText",{},globals.OVGame)})},
+args: [],
+source: "livesText\x0a\x09^ livesText ifNil: [ livesText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self livesTextContents;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 7@22) ]",
+messageSends: ["ifNil:", "contents:", "new", "livesTextContents", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
+referencedClasses: ["Text"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "livesTextContents",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $String(){return globals.String||(typeof String=="undefined"?nil:String)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st($String())._streamContents_((function(s){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st(self._player())._lives())._timesRepeat_((function(){
+return smalltalk.withContext(function($ctx3) {
+return _st(s)._nextPut_("♥");
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
+}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,1)})}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"livesTextContents",{},globals.OVGame)})},
+args: [],
+source: "livesTextContents\x0a\x09^ String streamContents: [ :s |\x0a\x09\x09self player lives timesRepeat: [ s nextPut: '♥' ]]",
+messageSends: ["streamContents:", "timesRepeat:", "lives", "player", "nextPut:"],
+referencedClasses: ["String"]
 }),
 globals.OVGame);
 
@@ -572,13 +725,15 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2;
+self._debug_("new game started");
 $1=self._player();
+_st($1)._lives_((3));
 _st($1)._score_((0));
 $2=_st($1)._resetStartTime();
 return self}, function($ctx1) {$ctx1.fill(self,"newGame",{},globals.OVGame)})},
 args: [],
-source: "newGame\x0a\x09self player \x0a\x09\x09score: 0;\x0a\x09\x09resetStartTime",
-messageSends: ["score:", "player", "resetStartTime"],
+source: "newGame\x0a\x09self debug: 'new game started'.\x0a\x09self player\x0a\x09\x09lives: 3;\x0a\x09\x09score: 0;\x0a\x09\x09resetStartTime",
+messageSends: ["debug:", "lives:", "player", "score:", "resetStartTime"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -643,6 +798,31 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "resetSprites",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._debug_("resetting sprites");
+self["@ship"]=nil;
+self["@lifeItem"]=nil;
+_st(self._saucers())._do_((function(each){
+return smalltalk.withContext(function($ctx2) {
+return _st(each)._position_((-100).__at((0)));
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+_st(self._enemyBullets())._removeAll();
+$ctx1.sendIdx["removeAll"]=1;
+_st(self._bullets())._removeAll();
+return self}, function($ctx1) {$ctx1.fill(self,"resetSprites",{},globals.OVGame)})},
+args: [],
+source: "resetSprites\x0a\x09self debug: 'resetting sprites'.\x0a\x09ship := nil.\x0a\x09lifeItem := nil.\x0a\x09self saucers do: [ :each | each position: -100@0 ].\x0a\x09self enemyBullets removeAll.\x0a\x09self bullets removeAll.",
+messageSends: ["debug:", "do:", "saucers", "position:", "@", "removeAll", "enemyBullets", "bullets"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "saucers",
 protocol: 'accessing',
 fn: function (){
@@ -674,7 +854,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"saucers",{},globals.OVGame)})},
 args: [],
-source: "saucers\x0a\x09^ saucers ifNil: [ \x0a\x09\x09saucers := #().\x0a\x09\x095 timesRepeat: [ \x0a\x09\x09\x09saucers add:\x0a\x09\x09\x09\x09(OVSaucer new \x0a\x09\x09\x09\x09\x09centre: self width atRandom @ self height atRandom;\x0a\x09\x09\x09\x09\x09toughness: self difficulty)\x0a\x09\x09].\x0a\x09\x09saucers.\x0a\x09]",
+source: "saucers\x0a\x09^ saucers ifNil: [ \x0a\x09\x09saucers := #().\x0a\x09\x095 timesRepeat: [ \x0a\x09\x09\x09saucers add:\x0a\x09\x09\x09\x09(OVSaucer new \x0a\x09\x09\x09\x09\x09centre: self width atRandom @ self height atRandom;\x0a\x09\x09\x09\x09\x09toughness: self difficulty) ].\x0a\x09\x09saucers ]",
 messageSends: ["ifNil:", "timesRepeat:", "add:", "centre:", "new", "@", "atRandom", "width", "height", "toughness:", "difficulty"],
 referencedClasses: ["OVSaucer"]
 }),
@@ -698,7 +878,7 @@ _st($3)._outlineColor_("rgba(242,246,144,0.8)");
 _st($3)._outlineSize_((1));
 _st($3)._fontName_("ChangaOne");
 _st($3)._fontSize_((20));
-$4=_st($3)._position_((10).__at((35)));
+$4=_st($3)._position_((10).__at((55)));
 self["@scoreText"]=$4;
 $1=self["@scoreText"];
 } else {
@@ -707,7 +887,7 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"scoreText",{},globals.OVGame)})},
 args: [],
-source: "scoreText\x0a\x09^ scoreText ifNil: [ scoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player score;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@35) ]",
+source: "scoreText\x0a\x09^ scoreText ifNil: [ scoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player score;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@55) ]",
 messageSends: ["ifNil:", "contents:", "new", "score", "player", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
 referencedClasses: ["Text"]
 }),
@@ -745,16 +925,13 @@ protocol: 'game actions',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=self._soundIsMute();
-if(! smalltalk.assert($1)){
+self._debug_("shooting bullet");
 _st(self._soundNamed_("laser"))._play();
-};
 _st(self._bullets())._add_(_st(self._ship())._newBullet());
 return self}, function($ctx1) {$ctx1.fill(self,"shoot",{},globals.OVGame)})},
 args: [],
-source: "shoot\x0a\x09self soundIsMute ifFalse: [ (self soundNamed: 'laser') play ].\x0a\x09self bullets add: self ship newBullet",
-messageSends: ["ifFalse:", "soundIsMute", "play", "soundNamed:", "add:", "bullets", "newBullet", "ship"],
+source: "shoot\x0a\x09self debug: 'shooting bullet'.\x0a\x09(self soundNamed: 'laser') play.\x0a\x09self bullets add: self ship newBullet.",
+messageSends: ["debug:", "play", "soundNamed:", "add:", "bullets", "newBullet", "ship"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -795,6 +972,31 @@ args: ["aBoolean"],
 source: "soundIsMute: aBoolean\x0a\x09soundIsMute := aBoolean",
 messageSends: [],
 referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "soundNamed:",
+protocol: 'audio',
+fn: function (aString){
+var self=this;
+function $OVNullSound(){return globals.OVNullSound||(typeof OVNullSound=="undefined"?nil:OVNullSound)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+$2=self._soundIsMute();
+if(smalltalk.assert($2)){
+$1=_st($OVNullSound())._new();
+} else {
+$1=($ctx1.supercall = true, globals.OVGame.superclass.fn.prototype._soundNamed_.apply(_st(self), [aString]));
+$ctx1.supercall = false;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"soundNamed:",{aString:aString},globals.OVGame)})},
+args: ["aString"],
+source: "soundNamed: aString\x0a\x09^ self soundIsMute\x0a\x09\x09ifTrue: [ OVNullSound new ]\x0a\x09\x09ifFalse: [ super soundNamed: aString ].",
+messageSends: ["ifTrue:ifFalse:", "soundIsMute", "new", "soundNamed:"],
+referencedClasses: ["OVNullSound"]
 }),
 globals.OVGame);
 
@@ -842,6 +1044,7 @@ function $OVPauseScreen(){return globals.OVPauseScreen||(typeof OVPauseScreen=="
 function $OVGameOverScreen(){return globals.OVGameOverScreen||(typeof OVGameOverScreen=="undefined"?nil:OVGameOverScreen)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$5;
+self._debug_("initializing game");
 self["@fps"]=(30);
 self._width_((720));
 self._height_((540));
@@ -849,6 +1052,18 @@ self._backgroundColor_("black");
 self._addSound_("sounds/ovni/background.ogg");
 $ctx1.sendIdx["addSound:"]=1;
 self._addSound_("sounds/ovni/laser.ogg");
+$ctx1.sendIdx["addSound:"]=2;
+self._addSound_("sounds/ovni/select.ogg");
+$ctx1.sendIdx["addSound:"]=3;
+self._addSound_("sounds/ovni/menu.ogg");
+$ctx1.sendIdx["addSound:"]=4;
+self._addSound_("sounds/ovni/gameover.ogg");
+$ctx1.sendIdx["addSound:"]=5;
+self._addSound_("sounds/ovni/explosion-1.ogg");
+$ctx1.sendIdx["addSound:"]=6;
+self._addSound_("sounds/ovni/explosion-2.ogg");
+$ctx1.sendIdx["addSound:"]=7;
+self._addSound_("sounds/ovni/life.ogg");
 $1=_st($OVStartScreen())._new();
 $ctx1.sendIdx["new"]=1;
 self._addScreen_named_($1,"start");
@@ -871,8 +1086,8 @@ self._switchToScreenNamed_("start");
 _st(self._soundNamed_("background"))._loop();
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.OVGame)})},
 args: [],
-source: "startGame\x0a\x09fps := 30.\x0a\x09\x0a\x09self\x0a\x09\x09width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09backgroundColor: 'black';\x0a\x09\x09addSound: 'sounds/ovni/background.ogg';\x0a\x09\x09addSound: 'sounds/ovni/laser.ogg';\x0a\x09\x09addScreen: OVStartScreen new named: 'start';\x0a\x09\x09addScreen: OVMainMenu new named: 'mainMenu';\x0a\x09\x09addScreen: OVOptionsMenu new named: 'optionsMenu';\x0a\x09\x09addScreen: OVPauseScreen new named: 'pause';\x0a\x09\x09addScreen: OVGameOverScreen new named: 'end';\x0a\x09\x09addFont: 'fonts/ChangaOne-Regular.ttf' named: 'ChangaOne'.\x0a\x09\x0a\x09self switchToScreenNamed: 'start'.\x0a\x09\x0a\x09(self soundNamed: 'background') loop.",
-messageSends: ["width:", "height:", "backgroundColor:", "addSound:", "addScreen:named:", "new", "addFont:named:", "switchToScreenNamed:", "loop", "soundNamed:"],
+source: "startGame\x0a\x09self debug: 'initializing game'.\x0a\x0a\x09fps := 30.\x0a\x09\x0a\x09self\x0a\x09\x09width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09backgroundColor: 'black';\x0a\x09\x09addSound: 'sounds/ovni/background.ogg';\x0a\x09\x09addSound: 'sounds/ovni/laser.ogg';\x0a\x09\x09addSound: 'sounds/ovni/select.ogg';\x0a\x09\x09addSound: 'sounds/ovni/menu.ogg';\x0a\x09\x09addSound: 'sounds/ovni/gameover.ogg';\x0a\x09\x09addSound: 'sounds/ovni/explosion-1.ogg';\x0a\x09\x09addSound: 'sounds/ovni/explosion-2.ogg';\x0a\x09\x09addSound: 'sounds/ovni/life.ogg';\x0a\x09\x09addScreen: OVStartScreen new named: 'start';\x0a\x09\x09addScreen: OVMainMenu new named: 'mainMenu';\x0a\x09\x09addScreen: OVOptionsMenu new named: 'optionsMenu';\x0a\x09\x09addScreen: OVPauseScreen new named: 'pause';\x0a\x09\x09addScreen: OVGameOverScreen new named: 'end';\x0a\x09\x09addFont: 'fonts/ChangaOne-Regular.ttf' named: 'ChangaOne'.\x0a\x09\x0a\x09self switchToScreenNamed: 'start'.\x0a\x09\x0a\x09(self soundNamed: 'background') loop.",
+messageSends: ["debug:", "width:", "height:", "backgroundColor:", "addSound:", "addScreen:named:", "new", "addFont:named:", "switchToScreenNamed:", "loop", "soundNamed:"],
 referencedClasses: ["OVStartScreen", "OVMainMenu", "OVOptionsMenu", "OVPauseScreen", "OVGameOverScreen"]
 }),
 globals.OVGame);
@@ -888,7 +1103,8 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$2,$3,$4,$5,$7,$6,$8,$10,$9;
 self._controlShip();
 self._controlSaucers();
-$1=self._controlBullets();
+self._controlBullets();
+$1=self._controlItems();
 $2=self._inputHandler();
 _st($2)._onKeyPressed_do_(_st($Key())._space(),(function(){
 return smalltalk.withContext(function($ctx2) {
@@ -908,45 +1124,20 @@ $ctx1.sendIdx["player"]=2;
 $6=_st($7)._score();
 _st($5)._contents_($6);
 $ctx1.sendIdx["contents:"]=1;
+_st(self._livesText())._contents_(self._livesTextContents());
+$ctx1.sendIdx["contents:"]=2;
 $8=self._highScoreText();
 $10=self._player();
 $ctx1.sendIdx["player"]=3;
 $9=_st($10)._highScore();
 _st($8)._contents_($9);
-$ctx1.sendIdx["contents:"]=2;
+$ctx1.sendIdx["contents:"]=3;
 _st(self._playTimeText())._contents_(_st(self._player())._playTimeString());
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVGame)})},
 args: [],
-source: "step\x0a\x09self \x0a\x09\x09controlShip;\x0a\x09\x09controlSaucers;\x0a\x09\x09controlBullets.\x0a\x09self inputHandler \x0a\x09\x09onKeyPressed: Key space do: [ self shoot ];\x0a\x09\x09onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].\x0a\x09self player updateHighScore.\x0a\x09self scoreText contents: self player score.\x0a\x09self highScoreText contents: self player highScore.\x0a\x09self playTimeText contents: self player playTimeString.",
-messageSends: ["controlShip", "controlSaucers", "controlBullets", "onKeyPressed:do:", "inputHandler", "space", "shoot", "p", "switchToScreenNamed:", "updateHighScore", "player", "contents:", "scoreText", "score", "highScoreText", "highScore", "playTimeText", "playTimeString"],
+source: "step\x0a\x09self \x0a\x09\x09controlShip;\x0a\x09\x09controlSaucers;\x0a\x09\x09controlBullets;\x0a\x09\x09controlItems.\x0a\x09self inputHandler \x0a\x09\x09onKeyPressed: Key space do: [ self shoot ];\x0a\x09\x09onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].\x0a\x09self player updateHighScore.\x0a\x09self scoreText contents: self player score.\x0a\x09self livesText contents: self livesTextContents.\x0a\x09self highScoreText contents: self player highScore.\x0a\x09self playTimeText contents: self player playTimeString.",
+messageSends: ["controlShip", "controlSaucers", "controlBullets", "controlItems", "onKeyPressed:do:", "inputHandler", "space", "shoot", "p", "switchToScreenNamed:", "updateHighScore", "player", "contents:", "scoreText", "score", "livesText", "livesTextContents", "highScoreText", "highScore", "playTimeText", "playTimeString"],
 referencedClasses: ["Key"]
-}),
-globals.OVGame);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "toggleDebugMode",
-protocol: 'control',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$2;
-$1=self._debugMode();
-$ctx1.sendIdx["debugMode"]=1;
-self["@debugMode"]=_st($1)._not();
-_st(self._saucers())._do_((function(each){
-return smalltalk.withContext(function($ctx2) {
-$2=self._debugMode();
-$ctx2.sendIdx["debugMode"]=2;
-return _st(each)._debugMode_($2);
-$ctx2.sendIdx["debugMode:"]=1;
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
-_st(self._ship())._debugMode_(self._debugMode());
-return self}, function($ctx1) {$ctx1.fill(self,"toggleDebugMode",{},globals.OVGame)})},
-args: [],
-source: "toggleDebugMode\x0a\x09debugMode := self debugMode not.\x0a\x09self saucers do: [ :each | each debugMode: self debugMode ].\x0a\x09self ship debugMode: self debugMode",
-messageSends: ["not", "debugMode", "do:", "saucers", "debugMode:", "ship"],
-referencedClasses: []
 }),
 globals.OVGame);
 
@@ -957,23 +1148,32 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$3,$4;
-$2=self._musicIsMute();
-$ctx1.sendIdx["musicIsMute"]=1;
-$1=_st($2)._not();
-self._musicIsMute_($1);
+var $3,$2,$1,$5,$4,$6,$7;
 $3=self._musicIsMute();
+$ctx1.sendIdx["musicIsMute"]=1;
 if(smalltalk.assert($3)){
-$4=self._soundNamed_("background");
+$2="activatig";
+} else {
+$2="muting";
+};
+$1=_st($2).__comma(" music");
+self._debug_($1);
+$5=self._musicIsMute();
+$ctx1.sendIdx["musicIsMute"]=2;
+$4=_st($5)._not();
+self._musicIsMute_($4);
+$6=self._musicIsMute();
+if(smalltalk.assert($6)){
+$7=self._soundNamed_("background");
 $ctx1.sendIdx["soundNamed:"]=1;
-_st($4)._stop();
+_st($7)._stop();
 } else {
 _st(self._soundNamed_("background"))._loop();
 };
 return self}, function($ctx1) {$ctx1.fill(self,"toggleMuteMusic",{},globals.OVGame)})},
 args: [],
-source: "toggleMuteMusic\x0a\x09self musicIsMute: self musicIsMute not.\x0a\x09self musicIsMute \x0a\x09\x09ifTrue: [ (self soundNamed: 'background') stop ]\x0a\x09\x09ifFalse: [ (self soundNamed: 'background') loop ]",
-messageSends: ["musicIsMute:", "not", "musicIsMute", "ifTrue:ifFalse:", "stop", "soundNamed:", "loop"],
+source: "toggleMuteMusic\x0a\x09self debug: (self musicIsMute ifFalse: [ 'muting' ] ifTrue: [ 'activatig' ]), ' music'.\x0a\x09self musicIsMute: self musicIsMute not.\x0a\x09self musicIsMute \x0a\x09\x09ifTrue: [ (self soundNamed: 'background') stop ]\x0a\x09\x09ifFalse: [ (self soundNamed: 'background') loop ]",
+messageSends: ["debug:", ",", "ifFalse:ifTrue:", "musicIsMute", "musicIsMute:", "not", "ifTrue:ifFalse:", "stop", "soundNamed:", "loop"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -985,11 +1185,21 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+var $3,$2,$1;
+$3=self._soundIsMute();
+$ctx1.sendIdx["soundIsMute"]=1;
+if(smalltalk.assert($3)){
+$2="activatig";
+} else {
+$2="muting";
+};
+$1=_st($2).__comma(" sounds");
+self._debug_($1);
 self._soundIsMute_(_st(self._soundIsMute())._not());
 return self}, function($ctx1) {$ctx1.fill(self,"toggleMuteSounds",{},globals.OVGame)})},
 args: [],
-source: "toggleMuteSounds\x0a\x09self soundIsMute: self soundIsMute not",
-messageSends: ["soundIsMute:", "not", "soundIsMute"],
+source: "toggleMuteSounds\x0a\x09self debug: (self soundIsMute ifFalse: [ 'muting' ] ifTrue: [ 'activatig' ]), ' sounds'.\x0a\x09self soundIsMute: self soundIsMute not",
+messageSends: ["debug:", ",", "ifFalse:ifTrue:", "soundIsMute", "soundIsMute:", "not"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -1150,7 +1360,159 @@ globals.OVGameOverScreen);
 
 
 
-smalltalk.addClass('OVMainMenu', globals.Menu, ['startGameText', 'optionsMenuText', 'pointer'], 'OVNI');
+smalltalk.addClass('OVLifeItem', globals.Sprite, [], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "initialize",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+($ctx1.supercall = true, globals.OVLifeItem.superclass.fn.prototype._initialize.apply(_st(self), []));
+$ctx1.supercall = false;
+self._imageSrc_("images/ovni/life.png");
+$1=(0).__at((0));
+$ctx1.sendIdx["@"]=1;
+self._addFrameGroupNamed_origin_size_frameCount_("life",$1,(20).__at((20)),(4));
+$2=self._frameRate_((3));
+return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVLifeItem)})},
+args: [],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/life.png';\x0a\x09\x09addFrameGroupNamed: 'life' origin: 0@0 size: 20@20 frameCount: 4;\x0a\x09\x09frameRate: 3.",
+messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:"],
+referencedClasses: []
+}),
+globals.OVLifeItem);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "move",
+protocol: 'movement',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._x()).__lt((20));
+if(smalltalk.assert($1)){
+self._x_((3000));
+};
+self._moveCentreBy_((-2).__at(_st((5)._atRandom()).__minus((3))));
+return self}, function($ctx1) {$ctx1.fill(self,"move",{},globals.OVLifeItem)})},
+args: [],
+source: "move\x0a\x09self x < 20 ifTrue: [ self x: 3000 ].\x0a\x09self moveCentreBy: -2 @ (5 atRandom - 3).",
+messageSends: ["ifTrue:", "<", "x", "x:", "moveCentreBy:", "@", "-", "atRandom"],
+referencedClasses: []
+}),
+globals.OVLifeItem);
+
+
+
+smalltalk.addClass('OVMenu', globals.Menu, ['pointer'], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "currentOption",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var option;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+_st(_st(self._game())._soundNamed_("menu"))._play();
+$1=($ctx1.supercall = true, globals.OVMenu.superclass.fn.prototype._currentOption.apply(_st(self), []));
+$ctx1.supercall = false;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"currentOption",{option:option},globals.OVMenu)})},
+args: [],
+source: "currentOption\x0a\x09| option |\x0a\x09(self game soundNamed: 'menu') play.\x0a\x09^ super currentOption.",
+messageSends: ["play", "soundNamed:", "game", "currentOption"],
+referencedClasses: []
+}),
+globals.OVMenu);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "placePointer",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(_st(self._game())._soundNamed_("menu"))._play();
+($ctx1.supercall = true, globals.OVMenu.superclass.fn.prototype._placePointer.apply(_st(self), []));
+$ctx1.supercall = false;
+return self}, function($ctx1) {$ctx1.fill(self,"placePointer",{},globals.OVMenu)})},
+args: [],
+source: "placePointer\x0a\x09(self game soundNamed: 'menu') play.\x0a\x09super placePointer",
+messageSends: ["play", "soundNamed:", "game", "placePointer"],
+referencedClasses: []
+}),
+globals.OVMenu);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "step",
+protocol: 'control',
+fn: function (){
+var self=this;
+function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$2,$4,$6,$5,$7,$10,$9,$11,$13,$12,$8;
+$1=self._inputHandler();
+_st($1)._onKeyPressed_do_(_st($Key())._downArrow(),(function(){
+return smalltalk.withContext(function($ctx2) {
+return self._nextOption();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["onKeyPressed:do:"]=1;
+_st($1)._onKeyPressed_do_(_st($Key())._upArrow(),(function(){
+return smalltalk.withContext(function($ctx2) {
+return self._previousOption();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+$ctx1.sendIdx["onKeyPressed:do:"]=2;
+_st($1)._onKeyPressed_do_(_st($Key())._enter(),(function(){
+return smalltalk.withContext(function($ctx2) {
+$3=self._game();
+$ctx2.sendIdx["game"]=1;
+$2=_st($3)._soundNamed_("select");
+$ctx2.sendIdx["soundNamed:"]=1;
+_st($2)._play();
+$ctx2.sendIdx["play"]=1;
+$4=self._game();
+$ctx2.sendIdx["game"]=2;
+$6=self._currentOption();
+$ctx2.sendIdx["currentOption"]=1;
+$5="option selected: ".__comma($6);
+$ctx2.sendIdx[","]=1;
+_st($4)._debug_($5);
+$ctx2.sendIdx["debug:"]=1;
+$7=self._currentOption();
+$ctx2.sendIdx["currentOption"]=2;
+return self._perform_($7);
+$ctx2.sendIdx["perform:"]=1;
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
+$ctx1.sendIdx["onKeyPressed:do:"]=3;
+$8=_st($1)._onKeyPressed_do_(_st($Key())._space(),(function(){
+return smalltalk.withContext(function($ctx2) {
+$10=self._game();
+$ctx2.sendIdx["game"]=3;
+$9=_st($10)._soundNamed_("select");
+_st($9)._play();
+$11=self._game();
+$13=self._currentOption();
+$ctx2.sendIdx["currentOption"]=3;
+$12="option selected: ".__comma($13);
+_st($11)._debug_($12);
+return self._perform_(self._currentOption());
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVMenu)})},
+args: [],
+source: "step\x0a\x09self inputHandler \x0a\x09\x09onKeyPressed: Key downArrow do: [ self nextOption ];\x0a\x09\x09onKeyPressed: Key upArrow do: [ self previousOption ];\x0a\x09\x09onKeyPressed: Key enter do: [ \x0a\x09\x09\x09(self game soundNamed: 'select') play.\x0a\x09\x09\x09self game debug: 'option selected: ' , self currentOption.\x0a\x09\x09\x09self perform: self currentOption ];\x0a\x09\x09onKeyPressed: Key space do: [ \x0a\x09\x09\x09(self game soundNamed: 'select') play.\x0a\x09\x09\x09self game debug: 'option selected: ' , self currentOption.\x0a\x09\x09\x09self perform: self currentOption ]",
+messageSends: ["onKeyPressed:do:", "inputHandler", "downArrow", "nextOption", "upArrow", "previousOption", "enter", "play", "soundNamed:", "game", "debug:", ",", "currentOption", "perform:", "space"],
+referencedClasses: ["Key"]
+}),
+globals.OVMenu);
+
+
+
+smalltalk.addClass('OVMainMenu', globals.OVMenu, ['startGameText', 'optionsMenuText'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "draw",
@@ -1414,7 +1776,7 @@ globals.OVMainMenu);
 
 
 
-smalltalk.addClass('OVOptionsMenu', globals.Menu, ['goBackText', 'difficultyText', 'muteMusicText', 'muteSoundsText', 'debugModeText'], 'OVNI');
+smalltalk.addClass('OVOptionsMenu', globals.OVMenu, ['goBackText', 'difficultyText', 'muteMusicText', 'muteSoundsText', 'debugModeText'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "debugModeText",
@@ -1680,25 +2042,24 @@ selector: "selectDebugMode",
 protocol: 'control',
 fn: function (){
 var self=this;
+function $Game(){return globals.Game||(typeof Game=="undefined"?nil:Game)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$5,$4,$3;
-$1=self._game();
-$ctx1.sendIdx["game"]=1;
-_st($1)._toggleDebugMode();
-$2=self._debugModeText();
-$5=_st(self._game())._debugMode();
-if(smalltalk.assert($5)){
-$4="ON";
+var $1,$4,$3,$2;
+_st($Game())._toggleDebugMode();
+$1=self._debugModeText();
+$4=_st($Game())._debugMode();
+if(smalltalk.assert($4)){
+$3="ON";
 } else {
-$4="OFF";
+$3="OFF";
 };
-$3="DEBUG: ".__comma($4);
-_st($2)._contents_($3);
+$2="DEBUG: ".__comma($3);
+_st($1)._contents_($2);
 return self}, function($ctx1) {$ctx1.fill(self,"selectDebugMode",{},globals.OVOptionsMenu)})},
 args: [],
-source: "selectDebugMode\x0a\x09self game toggleDebugMode.\x0a\x09self debugModeText contents: 'DEBUG: ' , (self game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ])",
-messageSends: ["toggleDebugMode", "game", "contents:", "debugModeText", ",", "ifTrue:ifFalse:", "debugMode"],
-referencedClasses: []
+source: "selectDebugMode\x0a\x09Game toggleDebugMode.\x0a\x09self debugModeText contents: 'DEBUG: ' , (Game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ])",
+messageSends: ["toggleDebugMode", "contents:", "debugModeText", ",", "ifTrue:ifFalse:", "debugMode"],
+referencedClasses: ["Game"]
 }),
 globals.OVOptionsMenu);
 
@@ -1811,9 +2172,10 @@ protocol: 'initialization',
 fn: function (){
 var self=this;
 function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
+function $Game(){return globals.Game||(typeof Game=="undefined"?nil:Game)}
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$4,$5,$3,$1,$7,$8,$12,$11,$10,$9,$14,$15,$13,$6,$17,$18,$22,$21,$20,$19,$24,$25,$23,$16,$27,$28,$32,$31,$30,$29,$34,$35,$33,$26,$37,$38,$41,$40,$39,$43,$44,$42,$36,$48,$50,$51,$52,$49,$47,$53,$46,$45;
+var $2,$4,$5,$3,$1,$7,$8,$12,$11,$10,$9,$14,$15,$13,$6,$17,$18,$22,$21,$20,$19,$24,$25,$23,$16,$27,$28,$31,$30,$29,$33,$34,$32,$26,$36,$37,$40,$39,$38,$42,$43,$41,$35,$47,$49,$50,$51,$48,$46,$52,$45,$44;
 $2=_st($Text())._new();
 $ctx1.sendIdx["new"]=1;
 _st($2)._contents_("BACK");
@@ -1898,9 +2260,7 @@ self._muteSoundsText_($16);
 $27=_st($Text())._new();
 $ctx1.sendIdx["new"]=4;
 $28=$27;
-$32=self._game();
-$ctx1.sendIdx["game"]=3;
-$31=_st($32)._musicIsMute();
+$31=_st(self._game())._musicIsMute();
 if(smalltalk.assert($31)){
 $30="OFF";
 } else {
@@ -1920,56 +2280,73 @@ _st($27)._fontName_("ChangaOne");
 $ctx1.sendIdx["fontName:"]=4;
 _st($27)._fontSize_((80));
 $ctx1.sendIdx["fontSize:"]=4;
-$34=$27;
-$35=(150).__at((360));
+$33=$27;
+$34=(150).__at((360));
 $ctx1.sendIdx["@"]=4;
-$33=_st($34)._position_($35);
+$32=_st($33)._position_($34);
 $ctx1.sendIdx["position:"]=4;
-$26=$33;
+$26=$32;
 self._muteMusicText_($26);
-$37=_st($Text())._new();
+$36=_st($Text())._new();
 $ctx1.sendIdx["new"]=5;
-$38=$37;
-$41=_st(self._game())._debugMode();
-if(smalltalk.assert($41)){
-$40="ON";
+$37=$36;
+$40=_st($Game())._debugMode();
+if(smalltalk.assert($40)){
+$39="ON";
 } else {
-$40="OFF";
+$39="OFF";
 };
-$39="DEBUG: ".__comma($40);
-_st($38)._contents_($39);
-_st($37)._color_("rgba(90,113,26,0.7)");
-_st($37)._outlineColor_("rgba(242,246,144,0.8)");
-_st($37)._outlineSize_((3));
-_st($37)._fontName_("ChangaOne");
-_st($37)._fontSize_((80));
-$43=$37;
-$44=(150).__at((440));
+$38="DEBUG: ".__comma($39);
+_st($37)._contents_($38);
+_st($36)._color_("rgba(90,113,26,0.7)");
+_st($36)._outlineColor_("rgba(242,246,144,0.8)");
+_st($36)._outlineSize_((3));
+_st($36)._fontName_("ChangaOne");
+_st($36)._fontSize_((80));
+$42=$36;
+$43=(150).__at((440));
 $ctx1.sendIdx["@"]=5;
-$42=_st($43)._position_($44);
+$41=_st($42)._position_($43);
 $ctx1.sendIdx["position:"]=5;
-$36=$42;
-self._debugModeText_($36);
-$48=_st($Sprite())._new();
-_st($48)._imageSrc_("images/ovni/pointer.png");
-$50=$48;
-$51=(0).__at((0));
+$35=$41;
+self._debugModeText_($35);
+$47=_st($Sprite())._new();
+_st($47)._imageSrc_("images/ovni/pointer.png");
+$49=$47;
+$50=(0).__at((0));
 $ctx1.sendIdx["@"]=6;
-$52=(65).__at((40));
+$51=(65).__at((40));
 $ctx1.sendIdx["@"]=7;
-$49=_st($50)._addFrameGroupNamed_origin_size_frameCount_("pointing",$51,$52,(1));
-$47=$49;
-_st($47)._position_((75).__at((75)));
-$53=_st($47)._yourself();
-$46=$53;
-$45=self._pointer_($46);
+$48=_st($49)._addFrameGroupNamed_origin_size_frameCount_("pointing",$50,$51,(1));
+$46=$48;
+_st($46)._position_((75).__at((75)));
+$52=_st($46)._yourself();
+$45=$52;
+$44=self._pointer_($45);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVOptionsMenu)})},
 args: [],
-source: "startScreen\x0a\x09self \x0a\x09\x09goBackText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'BACK';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@120);\x0a\x09\x09difficultyText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DIFFICULTY: ' , self game difficulty printString;\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@200);\x0a\x09\x09muteSoundsText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@280); \x0a\x09\x09muteMusicText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@360);\x0a\x09\x09debugModeText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DEBUG: ' , (self game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@440);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09imageSrc: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@75;\x0a\x09\x09\x09\x09\x09yourself).",
+source: "startScreen\x0a\x09self \x0a\x09\x09goBackText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'BACK';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@120);\x0a\x09\x09difficultyText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DIFFICULTY: ' , self game difficulty printString;\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@200);\x0a\x09\x09muteSoundsText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@280); \x0a\x09\x09muteMusicText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@360);\x0a\x09\x09debugModeText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DEBUG: ' , (Game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@440);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09imageSrc: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@75;\x0a\x09\x09\x09\x09\x09yourself).",
 messageSends: ["goBackText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "difficultyText:", ",", "printString", "difficulty", "game", "muteSoundsText:", "ifTrue:ifFalse:", "soundIsMute", "muteMusicText:", "musicIsMute", "debugModeText:", "debugMode", "pointer:", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "yourself"],
-referencedClasses: ["Text", "Sprite"]
+referencedClasses: ["Text", "Game", "Sprite"]
 }),
 globals.OVOptionsMenu);
+
+
+
+smalltalk.addClass('OVNullSound', globals.Object, [], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "play",
+protocol: 'sound playing',
+fn: function (){
+var self=this;
+return self},
+args: [],
+source: "play\x0a\x09\x22self doNothing\x22",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVNullSound);
 
 
 
@@ -2128,6 +2505,22 @@ globals.OVPauseScreen);
 
 
 smalltalk.addClass('OVPlayer', globals.Object, ['lives', 'score', 'highScore', 'gameStartTime'], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addLife",
+protocol: 'life handling',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._lives_(_st(_st(self._lives()).__plus((1)))._min_((3)));
+return self}, function($ctx1) {$ctx1.fill(self,"addLife",{},globals.OVPlayer)})},
+args: [],
+source: "addLife\x0a\x09self lives: ((self lives + 1) min: 3)",
+messageSends: ["lives:", "min:", "+", "lives"],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "dieOnce",
@@ -2520,13 +2913,13 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2;
-self._currentFrameGroup_("explosion");
+self._currentFrameGroup_("exploding");
 $1=self._toFirstFrame();
 self._loop_(false);
 $2=self._exploding_(true);
 return self}, function($ctx1) {$ctx1.fill(self,"explode",{},globals.OVSaucer)})},
 args: [],
-source: "explode\x0a\x09self \x0a\x09\x09currentFrameGroup: 'explosion'; \x0a\x09\x09toFirstFrame.\x0a\x09self\x0a\x09\x09loop: false; \x0a\x09\x09exploding: true.",
+source: "explode\x0a\x09self \x0a\x09\x09currentFrameGroup: 'exploding'; \x0a\x09\x09toFirstFrame.\x0a\x09self\x0a\x09\x09loop: false; \x0a\x09\x09exploding: true.",
 messageSends: ["currentFrameGroup:", "toFirstFrame", "loop:", "exploding:"],
 referencedClasses: []
 }),
@@ -2590,11 +2983,11 @@ self._addFrameGroupNamed_origin_size_frameCount_("flying",$1,$2,(6));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=1;
 $4=(0).__at((40));
 $ctx1.sendIdx["@"]=3;
-$3=self._addFrameGroupNamed_origin_size_frameCount_("explosion",$4,(40).__at((40)),(10));
-_st(self._frameGroupNamed_("explosion"))._frameRate_((2));
+$3=self._addFrameGroupNamed_origin_size_frameCount_("exploding",$4,(40).__at((40)),(10));
+_st(self._frameGroupNamed_("exploding"))._frameRate_((2));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVSaucer)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/saucer.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;\x0a\x09\x09addFrameGroupNamed: 'explosion' origin: 0@40 size: 40@40 frameCount: 10.\x0a\x09\x0a\x09(self frameGroupNamed: 'explosion') frameRate: 2.",
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/saucer.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10.\x0a\x09\x0a\x09(self frameGroupNamed: 'exploding') frameRate: 2.",
 messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:", "frameGroupNamed:"],
 referencedClasses: []
 }),
@@ -2807,7 +3200,66 @@ globals.OVSaucer);
 
 
 
-smalltalk.addClass('OVSpaceShip', globals.Sprite, ['speed'], 'OVNI');
+smalltalk.addClass('OVSpaceShip', globals.Sprite, ['speed', 'exploding'], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "explode",
+protocol: 'actions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._currentFrameGroup_("exploding");
+self._toFirstFrame();
+self._loop_(false);
+$1=self._exploding_(true);
+return self}, function($ctx1) {$ctx1.fill(self,"explode",{},globals.OVSpaceShip)})},
+args: [],
+source: "explode\x0a\x09self \x0a\x09\x09currentFrameGroup: 'exploding'; \x0a\x09\x09toFirstFrame;\x0a\x09\x09loop: false; \x0a\x09\x09exploding: true.",
+messageSends: ["currentFrameGroup:", "toFirstFrame", "loop:", "exploding:"],
+referencedClasses: []
+}),
+globals.OVSpaceShip);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "exploding",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@exploding"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@exploding"]=false;
+$1=self["@exploding"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"exploding",{},globals.OVSpaceShip)})},
+args: [],
+source: "exploding\x0a\x09^ exploding ifNil: [ exploding := false ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVSpaceShip);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "exploding:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@exploding"]=anObject;
+return self},
+args: ["anObject"],
+source: "exploding: anObject\x0a\x09exploding := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVSpaceShip);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "goDown",
@@ -2879,17 +3331,24 @@ protocol: 'initialization',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1;
+var $1,$2,$4,$3;
 ($ctx1.supercall = true, globals.OVSpaceShip.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
 self._imageSrc_("images/ovni/ship.png");
-$2=(0).__at((0));
+$1=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
-$1=self._addFrameGroupNamed_origin_size_frameCount_("flying",$2,(64).__at((29)),(4));
+$2=(64).__at((29));
+$ctx1.sendIdx["@"]=2;
+self._addFrameGroupNamed_origin_size_frameCount_("flying",$1,$2,(4));
+$ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=1;
+$4=(0).__at((29));
+$ctx1.sendIdx["@"]=3;
+$3=self._addFrameGroupNamed_origin_size_frameCount_("exploding",$4,(64).__at((29)),(8));
+_st(self._frameGroupNamed_("exploding"))._frameRate_((2));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVSpaceShip)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/ship.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4.",
-messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/ship.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@29 size: 64@29 frameCount: 8.\x0a\x09\x0a\x09(self frameGroupNamed: 'exploding') frameRate: 2.",
+messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:", "frameGroupNamed:"],
 referencedClasses: []
 }),
 globals.OVSpaceShip);
@@ -2981,6 +3440,21 @@ return $1;
 args: [],
 source: "speed\x0a\x09^ speed ifNil: [ speed := 5 ]",
 messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVSpaceShip);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "speed:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@speed"]=anObject;
+return self},
+args: ["anObject"],
+source: "speed: anObject\x0a\x09speed := anObject",
+messageSends: [],
 referencedClasses: []
 }),
 globals.OVSpaceShip);
@@ -3201,7 +3675,7 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $3,$2,$1,$4,$5;
+var $3,$2,$1,$4,$5,$7,$6;
 $3=self._title();
 $ctx1.sendIdx["title"]=1;
 $2=_st($3)._y();
@@ -3225,12 +3699,16 @@ _st(self._saucers())._do_((function(each){
 return smalltalk.withContext(function($ctx3) {
 return _st(each)._x_((-100));
 }, function($ctx3) {$ctx3.fillBlock({each:each},$ctx2,4)})}));
+$7=self._game();
+$ctx2.sendIdx["game"]=1;
+$6=_st($7)._soundNamed_("select");
+_st($6)._play();
 return _st(self._game())._switchToScreenNamed_("mainMenu");
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVStartScreen)})},
 args: [],
-source: "step\x0a\x09self title y > 40 ifTrue: [ self title y: self title y - 4 ].\x0a\x09self saucers do: [ :each | each wander ].\x0a\x09self inputHandler onKeyPressed: Key space do: [ \x0a\x09\x09self saucers do: [ :each | each x: -100 ].\x0a\x09\x09self game switchToScreenNamed: 'mainMenu' ]",
-messageSends: ["ifTrue:", ">", "y", "title", "y:", "-", "do:", "saucers", "wander", "onKeyPressed:do:", "inputHandler", "space", "x:", "switchToScreenNamed:", "game"],
+source: "step\x0a\x09self title y > 40 ifTrue: [ self title y: self title y - 4 ].\x0a\x09self saucers do: [ :each | each wander ].\x0a\x09self inputHandler onKeyPressed: Key space do: [ \x0a\x09\x09self saucers do: [ :each | each x: -100 ].\x0a\x09\x09(self game soundNamed: 'select') play.\x0a\x09\x09self game switchToScreenNamed: 'mainMenu' ]",
+messageSends: ["ifTrue:", ">", "y", "title", "y:", "-", "do:", "saucers", "wander", "onKeyPressed:do:", "inputHandler", "space", "x:", "play", "soundNamed:", "game", "switchToScreenNamed:"],
 referencedClasses: ["Key"]
 }),
 globals.OVStartScreen);

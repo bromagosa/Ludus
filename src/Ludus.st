@@ -148,7 +148,7 @@ renderOn: html
 ! !
 
 AbstractScreen subclass: #Game
-	instanceVariableNames: 'end sounds screens currentScreen'
+	instanceVariableNames: 'end sounds screens currentScreen debugMode'
 	package: 'Ludus'!
 !Game commentStamp!
 I am a game. You need to override a couple of my methods to make me usable:
@@ -253,7 +253,7 @@ switchToScreenNamed: aString
 	self switchToScreen: (self screenNamed: aString)
 ! !
 
-Game class instanceVariableNames: 'Instances'!
+Game class instanceVariableNames: 'Instances DebugMode'!
 
 !Game class methodsFor: 'control'!
 
@@ -274,6 +274,28 @@ stop
 stopAll
 	self instances do: [ :each | each stop ].
 	Instances := #().
+! !
+
+!Game class methodsFor: 'debug'!
+
+debugMode
+ 	^ DebugMode ifNil: [ DebugMode := false ]
+!
+
+debugMode: aBoolean
+ 	DebugMode := aBoolean
+!
+
+setToggleDebug
+	self debugMode: true
+!
+
+toggleDebugMode
+	^ self debugMode: self debugMode not
+!
+
+unsetToggleDebug
+	self debugMode: false
 ! !
 
 !Game class methodsFor: 'initialization'!
@@ -508,6 +530,10 @@ addFrameGroupNamed: aString origin: anOriginPoint size: aSizePoint frameCount: a
 				frameCount: anInteger)
 !
 
+atFirstFrame
+	^ self currentFrameGroup atFirstFrame
+!
+
 atLastFrame
 	^ self currentFrameGroup atLastFrame
 !
@@ -601,16 +627,6 @@ You define different frame groups for this spritesheet, and you can cycle throug
 I have a direction, defined by a unit vector. This vector will always be a unit vector. If someone tries to force-set my direction to a vector that is not a unit one, I will just convert it.
 I handle collisions with other sprites and sprite collections.
 Of course, I also have a position, defined by cartesian coordinates.!
-
-!Sprite methodsFor: 'accessing'!
-
-debugMode
-	^ debugMode ifNil: [ debugMode := false ]
-!
-
-debugMode: aBoolean
-	debugMode := aBoolean
-! !
 
 !Sprite methodsFor: 'attributes'!
 
@@ -752,18 +768,17 @@ topCollidesWithWhichOf: aSpriteCollection
 !Sprite methodsFor: 'drawing'!
 
 drawBoundingBoxOnContext: aContext
-	
 	aContext 
 		beginPath;
-		rect: self x y: self y width: self width height: self height
-		strokeStyle: 'rgba(0,0,255,0.5)';
+		strokeStyle: 'rgba(255,0,0,0.5)';
 		lineWidth: 1;
+		rect: self x y: self y width: self width height: self height;
 		stroke.
 !
 
 drawOnContext: aContext
 	self currentFrameGroup drawFromSprite: self onContext: aContext.
-	self debugMode ifTrue: [ self drawBoundingBoxOnContext: aContext ]
+	Game debugMode ifTrue: [ self drawBoundingBoxOnContext: aContext ]
 ! !
 
 !Sprite methodsFor: 'events'!
@@ -1014,6 +1029,10 @@ toFirstFrame
 ! !
 
 !FrameGroup methodsFor: 'frames - testing'!
+
+atFirstFrame
+	^ self currentFrameNumber = 1
+!
 
 atLastFrame
 	^ self currentFrameNumber = (self frameCount - 1)
@@ -1306,6 +1325,16 @@ upArrow
 	^ 38
 ! !
 
+Object subclass: #NullSound
+	instanceVariableNames: ''
+	package: 'Ludus'!
+
+!NullSound methodsFor: 'sound playing'!
+
+play
+	"self doNothing"
+! !
+
 Widget subclass: #Sound
 	instanceVariableNames: 'src cssClass'
 	package: 'Ludus'!
@@ -1378,6 +1407,11 @@ resume
 stop
 	self pause.
 	(document getElementById: self id) src: self src.
+! !
+
+!Sound methodsFor: 'xxxDoIt'!
+
+xxxDoIt ^ [ self at: #play put: [] ] value
 ! !
 
 !Sound class methodsFor: 'instance creation'!

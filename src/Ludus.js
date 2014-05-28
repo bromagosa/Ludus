@@ -455,7 +455,7 @@ globals.AbstractScreen);
 
 
 
-smalltalk.addClass('Game', globals.AbstractScreen, ['end', 'sounds', 'screens', 'currentScreen'], 'Ludus');
+smalltalk.addClass('Game', globals.AbstractScreen, ['end', 'sounds', 'screens', 'currentScreen', 'debugMode'], 'Ludus');
 globals.Game.comment="I am a game. You need to override a couple of my methods to make me usable:\x0a\x0a**#startGame** Here you can define my intial conditions, such as the size of the canvas, my sounds, the background properties, the FPS, etc.\x0a\x0a**#step**  Here you can define what has to be done at each game cycle, or step. This method should control posititions, collisions, mouse and keyboard events, etc. This method should not deal with any graphic properties, these should be dealt with by:\x0a\x0a**#draw**  This is the method that controls my view. Here you should define the drawing of sprites and other graphic elements. Don't forget to clear the canvas before re-drawing sprites, if your game requires so.";
 smalltalk.addMethod(
 smalltalk.method({
@@ -796,7 +796,46 @@ referencedClasses: []
 globals.Game);
 
 
-globals.Game.klass.iVarNames = ['Instances'];
+globals.Game.klass.iVarNames = ['Instances','DebugMode'];
+smalltalk.addMethod(
+smalltalk.method({
+selector: "debugMode",
+protocol: 'debug',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@DebugMode"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@DebugMode"]=false;
+$1=self["@DebugMode"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"debugMode",{},globals.Game.klass)})},
+args: [],
+source: "debugMode\x0a \x09^ DebugMode ifNil: [ DebugMode := false ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Game.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "debugMode:",
+protocol: 'debug',
+fn: function (aBoolean){
+var self=this;
+self["@DebugMode"]=aBoolean;
+return self},
+args: ["aBoolean"],
+source: "debugMode: aBoolean\x0a \x09DebugMode := aBoolean",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Game.klass);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "initialize",
@@ -855,6 +894,22 @@ args: [],
 source: "new\x0a\x09| instance |\x0a\x09instance := super new.\x0a\x09Game instances add: instance.\x0a\x09^ instance",
 messageSends: ["new", "add:", "instances"],
 referencedClasses: ["Game"]
+}),
+globals.Game.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "setToggleDebug",
+protocol: 'debug',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._debugMode_(true);
+return self}, function($ctx1) {$ctx1.fill(self,"setToggleDebug",{},globals.Game.klass)})},
+args: [],
+source: "setToggleDebug\x0a\x09self debugMode: true",
+messageSends: ["debugMode:"],
+referencedClasses: []
 }),
 globals.Game.klass);
 
@@ -924,6 +979,40 @@ return self}, function($ctx1) {$ctx1.fill(self,"stopAll",{},globals.Game.klass)}
 args: [],
 source: "stopAll\x0a\x09self instances do: [ :each | each stop ].\x0a\x09Instances := #().",
 messageSends: ["do:", "instances", "stop"],
+referencedClasses: []
+}),
+globals.Game.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "toggleDebugMode",
+protocol: 'debug',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=self._debugMode_(_st(self._debugMode())._not());
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"toggleDebugMode",{},globals.Game.klass)})},
+args: [],
+source: "toggleDebugMode\x0a\x09^ self debugMode: self debugMode not",
+messageSends: ["debugMode:", "not", "debugMode"],
+referencedClasses: []
+}),
+globals.Game.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "unsetToggleDebug",
+protocol: 'debug',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._debugMode_(false);
+return self}, function($ctx1) {$ctx1.fill(self,"unsetToggleDebug",{},globals.Game.klass)})},
+args: [],
+source: "unsetToggleDebug\x0a\x09self debugMode: false",
+messageSends: ["debugMode:"],
 referencedClasses: []
 }),
 globals.Game.klass);
@@ -1426,6 +1515,24 @@ return $2;
 args: [],
 source: "animating\x0a\x09animating ifNil: [ animating := true ].\x0a\x09\x0a\x09^ (animating & (self loop | self atLastFrame not))",
 messageSends: ["ifNil:", "&", "|", "loop", "not", "atLastFrame"],
+referencedClasses: []
+}),
+globals.Animation);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "atFirstFrame",
+protocol: 'frames',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._currentFrameGroup())._atFirstFrame();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"atFirstFrame",{},globals.Animation)})},
+args: [],
+source: "atFirstFrame\x0a\x09^ self currentFrameGroup atFirstFrame",
+messageSends: ["atFirstFrame", "currentFrameGroup"],
 referencedClasses: []
 }),
 globals.Animation);
@@ -2202,45 +2309,6 @@ globals.Sprite);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "debugMode",
-protocol: 'accessing',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$receiver;
-$2=self["@debugMode"];
-if(($receiver = $2) == null || $receiver.isNil){
-self["@debugMode"]=false;
-$1=self["@debugMode"];
-} else {
-$1=$2;
-};
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"debugMode",{},globals.Sprite)})},
-args: [],
-source: "debugMode\x0a\x09^ debugMode ifNil: [ debugMode := false ]",
-messageSends: ["ifNil:"],
-referencedClasses: []
-}),
-globals.Sprite);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "debugMode:",
-protocol: 'accessing',
-fn: function (aBoolean){
-var self=this;
-self["@debugMode"]=aBoolean;
-return self},
-args: ["aBoolean"],
-source: "debugMode: aBoolean\x0a\x09debugMode := aBoolean",
-messageSends: [],
-referencedClasses: []
-}),
-globals.Sprite);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "direction",
 protocol: 'attributes',
 fn: function (){
@@ -2369,13 +2437,14 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 _st(aContext)._beginPath();
-_st(aContext)._rect_y_width_height_strokeStyle_(self._x(),self._y(),self._width(),self._height(),"rgba(0,0,255,0.5)");
+_st(aContext)._strokeStyle_("rgba(255,0,0,0.5)");
 _st(aContext)._lineWidth_((1));
+_st(aContext)._rect_y_width_height_(self._x(),self._y(),self._width(),self._height());
 $1=_st(aContext)._stroke();
 return self}, function($ctx1) {$ctx1.fill(self,"drawBoundingBoxOnContext:",{aContext:aContext},globals.Sprite)})},
 args: ["aContext"],
-source: "drawBoundingBoxOnContext: aContext\x0a\x09\x0a\x09aContext \x0a\x09\x09beginPath;\x0a\x09\x09rect: self x y: self y width: self width height: self height\x0a\x09\x09strokeStyle: 'rgba(0,0,255,0.5)';\x0a\x09\x09lineWidth: 1;\x0a\x09\x09stroke.",
-messageSends: ["beginPath", "rect:y:width:height:strokeStyle:", "x", "y", "width", "height", "lineWidth:", "stroke"],
+source: "drawBoundingBoxOnContext: aContext\x0a\x09aContext \x0a\x09\x09beginPath;\x0a\x09\x09strokeStyle: 'rgba(255,0,0,0.5)';\x0a\x09\x09lineWidth: 1;\x0a\x09\x09rect: self x y: self y width: self width height: self height;\x0a\x09\x09stroke.",
+messageSends: ["beginPath", "strokeStyle:", "lineWidth:", "rect:y:width:height:", "x", "y", "width", "height", "stroke"],
 referencedClasses: []
 }),
 globals.Sprite);
@@ -2386,18 +2455,19 @@ selector: "drawOnContext:",
 protocol: 'drawing',
 fn: function (aContext){
 var self=this;
+function $Game(){return globals.Game||(typeof Game=="undefined"?nil:Game)}
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 _st(self._currentFrameGroup())._drawFromSprite_onContext_(self,aContext);
-$1=self._debugMode();
+$1=_st($Game())._debugMode();
 if(smalltalk.assert($1)){
 self._drawBoundingBoxOnContext_(aContext);
 };
 return self}, function($ctx1) {$ctx1.fill(self,"drawOnContext:",{aContext:aContext},globals.Sprite)})},
 args: ["aContext"],
-source: "drawOnContext: aContext\x0a\x09self currentFrameGroup drawFromSprite: self onContext: aContext.\x0a\x09self debugMode ifTrue: [ self drawBoundingBoxOnContext: aContext ]",
+source: "drawOnContext: aContext\x0a\x09self currentFrameGroup drawFromSprite: self onContext: aContext.\x0a\x09Game debugMode ifTrue: [ self drawBoundingBoxOnContext: aContext ]",
 messageSends: ["drawFromSprite:onContext:", "currentFrameGroup", "ifTrue:", "debugMode", "drawBoundingBoxOnContext:"],
-referencedClasses: []
+referencedClasses: ["Game"]
 }),
 globals.Sprite);
 
@@ -3327,6 +3397,24 @@ globals.Drawable);
 
 smalltalk.addClass('FrameGroup', globals.Drawable, ['identifier', 'frameCount', 'currentFrameNumber', 'frameRate'], 'Ludus');
 globals.FrameGroup.comment="I represent a group of ordered frames. Each frame is a clip rectangle that a Sprite can retrieve from me to paint itself.";
+smalltalk.addMethod(
+smalltalk.method({
+selector: "atFirstFrame",
+protocol: 'frames - testing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._currentFrameNumber()).__eq((1));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"atFirstFrame",{},globals.FrameGroup)})},
+args: [],
+source: "atFirstFrame\x0a\x09^ self currentFrameNumber = 1",
+messageSends: ["=", "currentFrameNumber"],
+referencedClasses: []
+}),
+globals.FrameGroup);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "atLastFrame",
@@ -4528,6 +4616,23 @@ referencedClasses: []
 globals.Key.klass);
 
 
+smalltalk.addClass('NullSound', globals.Object, [], 'Ludus');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "play",
+protocol: 'sound playing',
+fn: function (){
+var self=this;
+return self},
+args: [],
+source: "play\x0a\x09\x22self doNothing\x22",
+messageSends: [],
+referencedClasses: []
+}),
+globals.NullSound);
+
+
+
 smalltalk.addClass('Sound', globals.Widget, ['src', 'cssClass'], 'Ludus');
 globals.Sound.comment="I am a sound. I have a source audio file.\x0aI can be played, paused, stopped or looped.";
 smalltalk.addMethod(
@@ -4743,6 +4848,28 @@ return self}, function($ctx1) {$ctx1.fill(self,"stop",{},globals.Sound)})},
 args: [],
 source: "stop\x0a\x09self pause.\x0a\x09(document getElementById: self id) src: self src.",
 messageSends: ["pause", "src:", "getElementById:", "id", "src"],
+referencedClasses: []
+}),
+globals.Sound);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "xxxDoIt",
+protocol: 'xxxDoIt',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st((function(){
+return smalltalk.withContext(function($ctx2) {
+return self._at_put_("play",(function(){
+}));
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}))._value();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"xxxDoIt",{},globals.Sound)})},
+args: [],
+source: "xxxDoIt ^ [ self at: #play put: [] ] value",
+messageSends: ["value", "at:put:"],
 referencedClasses: []
 }),
 globals.Sound);

@@ -58,7 +58,7 @@ initialize
 ! !
 
 Game subclass: #OVGame
-	instanceVariableNames: 'player ship saucers scrollSpeed farBackground starField bullets enemyBullets difficulty soundIsMute musicIsMute debugMode scoreText highScoreText playTimeText'
+	instanceVariableNames: 'player ship saucers scrollSpeed farBackground starField bullets enemyBullets difficulty soundIsMute musicIsMute scoreText highScoreText playTimeText livesText lifeItem'
 	package: 'OVNI'!
 
 !OVGame methodsFor: 'accessing'!
@@ -67,15 +67,12 @@ bullets
 	^ bullets ifNil: [ bullets := #() ]
 !
 
-debugMode
-	^ debugMode ifNil: [ debugMode := false ]
-!
-
 difficulty
 	^ difficulty ifNil: [ difficulty := 2 ]
 !
 
 difficulty: anInteger
+	self debug: 'setting difficulty to ' , anInteger asString.
 	difficulty := anInteger.
 	self saucers do: [ :each | each toughness: self difficulty ]
 !
@@ -101,7 +98,28 @@ highScoreText
 			outlineSize: 1;
 			fontName: 'ChangaOne';
 			fontSize: 20;
-			position: 10@20) ]
+			position: 10@40) ]
+!
+
+lifeItem
+	^ lifeItem ifNil: [ lifeItem := OVLifeItem new centre: 3000 @ (self height / 2) ]
+!
+
+livesText
+	^ livesText ifNil: [ livesText := 
+		(Text new 
+			contents: self livesTextContents;
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 1;
+			fontName: 'ChangaOne';
+			fontSize: 20;
+			position: 7@22) ]
+!
+
+livesTextContents
+	^ String streamContents: [ :s |
+		self player lives timesRepeat: [ s nextPut: '♥' ]]
 !
 
 musicIsMute
@@ -135,10 +153,8 @@ saucers
 			saucers add:
 				(OVSaucer new 
 					centre: self width atRandom @ self height atRandom;
-					toughness: self difficulty)
-		].
-		saucers.
-	]
+					toughness: self difficulty) ].
+		saucers ]
 !
 
 scoreText
@@ -150,7 +166,7 @@ scoreText
 			outlineSize: 1;
 			fontName: 'ChangaOne';
 			fontSize: 20;
-			position: 10@35) ]
+			position: 10@55) ]
 !
 
 ship
@@ -173,22 +189,42 @@ starField
 				addParallaxNamed: 'background' origin: 0@0 size: 800@600 speed: 6 ]
 ! !
 
+!OVGame methodsFor: 'audio'!
+
+soundNamed: aString
+	^ self soundIsMute
+		ifTrue: [ OVNullSound new ]
+		ifFalse: [ super soundNamed: aString ].
+! !
+
 !OVGame methodsFor: 'control'!
 
 end
-	ship := nil.
-	self enemyBullets removeAll.
-	self bullets removeAll.
+	self debug: 'game over'.
+	(self soundNamed: 'gameover') play.
 	self switchToScreenNamed: 'end'.
 !
 
 newGame
-	self player 
+	self debug: 'new game started'.
+	self player
+		lives: 3;
 		score: 0;
 		resetStartTime
 !
 
+resetSprites
+	self debug: 'resetting sprites'.
+	ship := nil.
+	lifeItem := nil.
+	self saucers do: [ :each | each position: -100@0 ].
+	self enemyBullets removeAll.
+	self bullets removeAll.
+!
+
 startGame
+	self debug: 'initializing game'.
+
 	fps := 30.
 	
 	self
@@ -197,6 +233,12 @@ startGame
 		backgroundColor: 'black';
 		addSound: 'sounds/ovni/background.ogg';
 		addSound: 'sounds/ovni/laser.ogg';
+		addSound: 'sounds/ovni/select.ogg';
+		addSound: 'sounds/ovni/menu.ogg';
+		addSound: 'sounds/ovni/gameover.ogg';
+		addSound: 'sounds/ovni/explosion-1.ogg';
+		addSound: 'sounds/ovni/explosion-2.ogg';
+		addSound: 'sounds/ovni/life.ogg';
 		addScreen: OVStartScreen new named: 'start';
 		addScreen: OVMainMenu new named: 'mainMenu';
 		addScreen: OVOptionsMenu new named: 'optionsMenu';
@@ -213,23 +255,20 @@ step
 	self 
 		controlShip;
 		controlSaucers;
-		controlBullets.
+		controlBullets;
+		controlItems.
 	self inputHandler 
 		onKeyPressed: Key space do: [ self shoot ];
 		onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].
 	self player updateHighScore.
 	self scoreText contents: self player score.
+	self livesText contents: self livesTextContents.
 	self highScoreText contents: self player highScore.
 	self playTimeText contents: self player playTimeString.
 !
 
-toggleDebugMode
-	debugMode := self debugMode not.
-	self saucers do: [ :each | each debugMode: self debugMode ].
-	self ship debugMode: self debugMode
-!
-
 toggleMuteMusic
+	self debug: (self musicIsMute ifFalse: [ 'muting' ] ifTrue: [ 'activatig' ]), ' music'.
 	self musicIsMute: self musicIsMute not.
 	self musicIsMute 
 		ifTrue: [ (self soundNamed: 'background') stop ]
@@ -237,7 +276,14 @@ toggleMuteMusic
 !
 
 toggleMuteSounds
+	self debug: (self soundIsMute ifFalse: [ 'muting' ] ifTrue: [ 'activatig' ]), ' sounds'.
 	self soundIsMute: self soundIsMute not
+! !
+
+!OVGame methodsFor: 'debug'!
+
+debug: aString
+	Game debugMode ifTrue: [ console log: 'debug: ' , aString ]
 ! !
 
 !OVGame methodsFor: 'drawing'!
@@ -250,7 +296,9 @@ draw
 		drawSpriteCollection: self bullets;
 		drawSpriteCollection: self enemyBullets;
 		drawSprite: self ship;
+		drawSprite: self lifeItem;
 		drawBackground: self starField;
+		draw: self livesText;
 		draw: self scoreText;
 		draw: self highScoreText;
 		draw: self playTimeText
@@ -259,8 +307,9 @@ draw
 !OVGame methodsFor: 'game actions'!
 
 shoot
-	self soundIsMute ifFalse: [ (self soundNamed: 'laser') play ].
-	self bullets add: self ship newBullet
+	self debug: 'shooting bullet'.
+	(self soundNamed: 'laser') play.
+	self bullets add: self ship newBullet.
 ! !
 
 !OVGame methodsFor: 'sprite processing'!
@@ -276,11 +325,20 @@ controlBullets
 			ifFalse: [ enemyBullets remove: eachBullet ]]
 !
 
+controlItems
+	self lifeItem move.
+	(self lifeItem collidesWith: self ship) ifTrue: [
+		(self soundNamed: 'life') play.
+		self player addLife.
+		self lifeItem x: -20 ]
+!
+
 controlSaucers
 	self saucers do: [ :eachSaucer | 
 		eachSaucer
 			checkCollisionWith: self bullets;
 			step.
+		(eachSaucer exploding and: [ eachSaucer atFirstFrame ]) ifTrue: [ (self soundNamed: 'explosion-1') play ].
 		eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].
 		eachSaucer shouldRespawn ifTrue: [
 			eachSaucer 
@@ -289,9 +347,17 @@ controlSaucers
 !
 
 controlShip
-	((self ship collidesWithAnyOf: self enemyBullets)
-		or: [ (self ship collidesWithAnyOf: self saucers) ])
-			ifTrue: [ self end ].
+	(self ship exploding and: [ self ship atLastFrame ])
+		ifTrue: [
+			self resetSprites.
+			self player lives: self player lives - 1.
+			self player lives < 0 ifTrue: [ self end ]].
+	(((self ship collidesWithAnyOf: self enemyBullets)
+		or: [ (self ship collidesWithAnyOf: self saucers) ]) 
+			and: [ self ship exploding not])
+				ifTrue: [
+					(self soundNamed: 'explosion-2') play.
+					self ship explode ].
 	self ship moveWithHandler: self inputHandler inCanvas: self canvas.
 ! !
 
@@ -355,8 +421,62 @@ startScreen
 			position: 170@320)
 ! !
 
-Menu subclass: #OVMainMenu
-	instanceVariableNames: 'startGameText optionsMenuText pointer'
+Sprite subclass: #OVLifeItem
+	instanceVariableNames: ''
+	package: 'OVNI'!
+
+!OVLifeItem methodsFor: 'initialization'!
+
+initialize
+	super initialize.
+	self 
+		imageSrc: 'images/ovni/life.png';
+		addFrameGroupNamed: 'life' origin: 0@0 size: 20@20 frameCount: 4;
+		frameRate: 3.
+! !
+
+!OVLifeItem methodsFor: 'movement'!
+
+move
+	self x < 20 ifTrue: [ self x: 3000 ].
+	self moveCentreBy: -2 @ (5 atRandom - 3).
+! !
+
+Menu subclass: #OVMenu
+	instanceVariableNames: 'pointer'
+	package: 'OVNI'!
+
+!OVMenu methodsFor: 'accessing'!
+
+currentOption
+	| option |
+	(self game soundNamed: 'menu') play.
+	^ super currentOption.
+! !
+
+!OVMenu methodsFor: 'control'!
+
+placePointer
+	(self game soundNamed: 'menu') play.
+	super placePointer
+!
+
+step
+	self inputHandler 
+		onKeyPressed: Key downArrow do: [ self nextOption ];
+		onKeyPressed: Key upArrow do: [ self previousOption ];
+		onKeyPressed: Key enter do: [ 
+			(self game soundNamed: 'select') play.
+			self game debug: 'option selected: ' , self currentOption.
+			self perform: self currentOption ];
+		onKeyPressed: Key space do: [ 
+			(self game soundNamed: 'select') play.
+			self game debug: 'option selected: ' , self currentOption.
+			self perform: self currentOption ]
+! !
+
+OVMenu subclass: #OVMainMenu
+	instanceVariableNames: 'startGameText optionsMenuText'
 	package: 'OVNI'!
 
 !OVMainMenu methodsFor: 'accessing'!
@@ -441,7 +561,7 @@ startScreen
 					yourself).
 ! !
 
-Menu subclass: #OVOptionsMenu
+OVMenu subclass: #OVOptionsMenu
 	instanceVariableNames: 'goBackText difficultyText muteMusicText muteSoundsText debugModeText'
 	package: 'OVNI'!
 
@@ -502,8 +622,8 @@ pointerOriginY
 !OVOptionsMenu methodsFor: 'control'!
 
 selectDebugMode
-	self game toggleDebugMode.
-	self debugModeText contents: 'DEBUG: ' , (self game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ])
+	Game toggleDebugMode.
+	self debugModeText contents: 'DEBUG: ' , (Game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ])
 !
 
 selectDifficulty
@@ -581,7 +701,7 @@ startScreen
 				position: 150@360);
 		debugModeText:
 			(Text new 
-				contents: 'DEBUG: ' , (self game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ]);
+				contents: 'DEBUG: ' , (Game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ]);
 				color: 'rgba(90,113,26,0.7)';
 				outlineColor: 'rgba(242,246,144,0.8)';
 				outlineSize: 3;
@@ -594,6 +714,16 @@ startScreen
 				addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)
 					position: 75@75;
 					yourself).
+! !
+
+Object subclass: #OVNullSound
+	instanceVariableNames: ''
+	package: 'OVNI'!
+
+!OVNullSound methodsFor: 'sound playing'!
+
+play
+	"self doNothing"
 ! !
 
 Screen subclass: #OVPauseScreen
@@ -690,6 +820,10 @@ score: anObject
 
 !OVPlayer methodsFor: 'life handling'!
 
+addLife
+	self lives: ((self lives + 1) min: 3)
+!
+
 dieOnce
 	self lives: (self lives - 1) max: 0
 ! !
@@ -772,7 +906,7 @@ die
 
 explode
 	self 
-		currentFrameGroup: 'explosion'; 
+		currentFrameGroup: 'exploding'; 
 		toFirstFrame.
 	self
 		loop: false; 
@@ -828,9 +962,9 @@ initialize
 	self 
 		imageSrc: 'images/ovni/saucer.png';
 		addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;
-		addFrameGroupNamed: 'explosion' origin: 0@40 size: 40@40 frameCount: 10.
+		addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10.
 	
-	(self frameGroupNamed: 'explosion') frameRate: 2.
+	(self frameGroupNamed: 'exploding') frameRate: 2.
 ! !
 
 !OVSaucer methodsFor: 'movement'!
@@ -850,10 +984,18 @@ isDead
 ! !
 
 Sprite subclass: #OVSpaceShip
-	instanceVariableNames: 'speed'
+	instanceVariableNames: 'speed exploding'
 	package: 'OVNI'!
 
 !OVSpaceShip methodsFor: 'accessing'!
+
+exploding
+	^ exploding ifNil: [ exploding := false ]
+!
+
+exploding: anObject
+	exploding := anObject
+!
 
 newBullet
 	^ OVBullet new centre: (self centre + ((self width / 2) @ 0))
@@ -861,6 +1003,20 @@ newBullet
 
 speed
 	^ speed ifNil: [ speed := 5 ]
+!
+
+speed: anObject
+	speed := anObject
+! !
+
+!OVSpaceShip methodsFor: 'actions'!
+
+explode
+	self 
+		currentFrameGroup: 'exploding'; 
+		toFirstFrame;
+		loop: false; 
+		exploding: true.
 ! !
 
 !OVSpaceShip methodsFor: 'initialization'!
@@ -869,7 +1025,10 @@ initialize
 	super initialize.
 	self 
 		imageSrc: 'images/ovni/ship.png';
-		addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4.
+		addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4;
+		addFrameGroupNamed: 'exploding' origin: 0@29 size: 64@29 frameCount: 8.
+	
+	(self frameGroupNamed: 'exploding') frameRate: 2.
 ! !
 
 !OVSpaceShip methodsFor: 'movement'!
@@ -984,6 +1143,7 @@ step
 	self saucers do: [ :each | each wander ].
 	self inputHandler onKeyPressed: Key space do: [ 
 		self saucers do: [ :each | each x: -100 ].
+		(self game soundNamed: 'select') play.
 		self game switchToScreenNamed: 'mainMenu' ]
 ! !
 
