@@ -81,6 +81,10 @@ farBackground
 				addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 1 ]
 !
 
+farBackground: aBackground
+	farBackground := aBackground
+!
+
 musicIsMute
 	^ musicIsMute ifNil: [ musicIsMute := false ]
 !
@@ -115,6 +119,10 @@ starField
 			Background new 
 				source: 'images/ovni/starfield.png';
 				addParallaxNamed: 'background' origin: 0@0 size: 800@600 speed: 6 ]
+!
+
+starField: aBackground
+	starField := aBackground
 ! !
 
 !OVGame methodsFor: 'accessing - sprites'!
@@ -131,15 +139,21 @@ lifeItem
 	^ lifeItem ifNil: [ lifeItem := OVLifeItem new centre: 3000 @ (self height / 2) ]
 !
 
+newSaucer
+	^ (OVSaucer new 
+		centre: self width atRandom @ self height atRandom;
+		toughness: self difficulty)
+!
+
 saucers
 	^ saucers ifNil: [ 
 		saucers := #().
-		5 timesRepeat: [ 
-			saucers add:
-				(OVSaucer new 
-					centre: self width atRandom @ self height atRandom;
-					toughness: self difficulty) ].
+		5 timesRepeat: [ saucers add: self newSaucer ].
 		saucers ]
+!
+
+saucers: aCollection
+	saucers := aCollection
 !
 
 ship
@@ -263,6 +277,8 @@ controlSaucers
 			self phase saucerKilled ].
 			
 		eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].
+		eachSaucer escaped ifTrue: [ self player score: ((self player score - self difficulty) max: 0) ].
+		
 		eachSaucer shouldRespawn ifTrue: [
 			eachSaucer 
 				respawnAtX: self width + self width atRandom y: self height atRandom ].
@@ -292,25 +308,29 @@ end
 
 newGame
 	self debug: 'new game started'.
+	self saucers: nil.
 	self phase: nil.
-	self player
-		lives: 3;
-		score: 0;
-		resetStartTime
+	self farBackground: nil.
+	self starField: nil.
+	self resetSprites.
+	self player reset.
 !
 
 nextPhase
 	(self soundNamed: 'nextphase') play.
+	(self soundNamed: 'explosion-1') play.
 	self phase: self phase next.
-	self saucers do: [ :each | each toughness: self difficulty * self phase number ].
+	self saucers add: self newSaucer.
+	self saucers do: [ :each | 
+		each explode.
+		each toughness: self difficulty * self phase number ].
 	self starField speed: self starField speed + 1.
-	self farBackground speed: self farBackground speed + 0.5.
+	self farBackground speed: self farBackground speed + 0.75.
 !
 
 resetSprites
 	self debug: 'resetting sprites'.
 	ship := nil.
-	lifeItem := nil.
 	self saucers do: [ :each | each position: -100@0 ].
 	self enemyBullets removeAll.
 	self bullets removeAll.
@@ -1024,6 +1044,15 @@ score: anObject
 	score := anObject
 ! !
 
+!OVPlayer methodsFor: 'control'!
+
+reset
+	self 
+		lives: 3;
+		score: 0;
+		resetStartTime
+! !
+
 !OVPlayer methodsFor: 'life handling'!
 
 addLife
@@ -1147,10 +1176,6 @@ checkShouldDie
 				die ]
 !
 
-shouldRespawn
-	^ ((self x + self width) < 0) | self dead
-!
-
 shouldShoot
 	^ self shootProbability atRandom = 1
 !
@@ -1185,12 +1210,20 @@ wander
 
 !OVSaucer methodsFor: 'testing'!
 
+escaped
+	^ ((self x + self width) < 0)
+!
+
 isDead
 	^ self dead
 !
 
 isHit
 	^ self exploding and: [ self atFirstFrame ]
+!
+
+shouldRespawn
+	^ self escaped | self dead
 ! !
 
 Sprite subclass: #OVSpaceShip
@@ -1318,7 +1351,8 @@ title: anObject
 startScreen
 	self saucers: self game saucers.
 	self saucers do: [ :each | 
-		each 
+		each
+			currentFrameGroup: 'flying';
 			x: (self game width - 100) atRandom + 50;
 			y: (self game height - 100) atRandom + 50 ].
 			

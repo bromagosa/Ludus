@@ -1,4 +1,4 @@
-define("HOS/Ludus", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Web", "amber_core/Kernel-Objects"], function(smalltalk,nil,_st, globals){
+define("HOS/Ludus", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core/Web"], function(smalltalk,nil,_st, globals){
 smalltalk.addPackage('Ludus');
 smalltalk.packages["Ludus"].transport = {"type":"amd","amdNamespace":"HOS"};
 
@@ -1148,7 +1148,7 @@ fn: function (aCanvas){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2;
-$1=_st(aCanvas)._getContext_("2d");
+$1=_st(_st(aCanvas)._element())._getContext_("2d");
 _st($1)._beginPath();
 _st($1)._strokeStyle_("rgba(255,0,0,0.5)");
 _st($1)._lineWidth_((1));
@@ -1156,8 +1156,8 @@ _st($1)._rect_y_width_height_(self._x(),self._y(),self._width(),self._height());
 $2=_st($1)._stroke();
 return self}, function($ctx1) {$ctx1.fill(self,"drawBoundingBoxOnCanvas:",{aCanvas:aCanvas},globals.Sprite)})},
 args: ["aCanvas"],
-source: "drawBoundingBoxOnCanvas: aCanvas\x0a\x09(aCanvas getContext: '2d')\x0a\x09\x09beginPath;\x0a\x09\x09strokeStyle: 'rgba(255,0,0,0.5)';\x0a\x09\x09lineWidth: 1;\x0a\x09\x09rect: self x y: self y width: self width height: self height;\x0a\x09\x09stroke.",
-messageSends: ["beginPath", "getContext:", "strokeStyle:", "lineWidth:", "rect:y:width:height:", "x", "y", "width", "height", "stroke"],
+source: "drawBoundingBoxOnCanvas: aCanvas\x0a\x09(aCanvas element getContext: '2d')\x0a\x09\x09beginPath;\x0a\x09\x09strokeStyle: 'rgba(255,0,0,0.5)';\x0a\x09\x09lineWidth: 1;\x0a\x09\x09rect: self x y: self y width: self width height: self height;\x0a\x09\x09stroke.",
+messageSends: ["beginPath", "getContext:", "element", "strokeStyle:", "lineWidth:", "rect:y:width:height:", "x", "y", "width", "height", "stroke"],
 referencedClasses: []
 }),
 globals.Sprite);

@@ -350,7 +350,7 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6,$8,$9,$7,$10;
+var $1,$2,$3,$4,$7,$6,$9,$8,$5,$10,$11,$12,$14,$15,$13,$16;
 _st(self._saucers())._do_((function(eachSaucer){
 return smalltalk.withContext(function($ctx2) {
 _st(eachSaucer)._checkCollisionWith_(self._bullets());
@@ -365,28 +365,42 @@ $3=_st(eachSaucer)._isDead();
 if(smalltalk.assert($3)){
 $4=self._player();
 $ctx2.sendIdx["player"]=1;
-$5=_st(_st(self._player())._score()).__plus((5).__star(self._difficulty()));
+$7=self._player();
+$ctx2.sendIdx["player"]=2;
+$6=_st($7)._score();
+$ctx2.sendIdx["score"]=1;
+$9=self._difficulty();
+$ctx2.sendIdx["difficulty"]=1;
+$8=(5).__star($9);
+$5=_st($6).__plus($8);
 $ctx2.sendIdx["+"]=1;
 _st($4)._score_($5);
+$ctx2.sendIdx["score:"]=1;
 };
-$6=_st(eachSaucer)._shouldRespawn();
-if(smalltalk.assert($6)){
-$8=self._width();
-$ctx2.sendIdx["width"]=1;
-$9=_st(self._width())._atRandom();
-$ctx2.sendIdx["atRandom"]=1;
-$7=_st($8).__plus($9);
-_st(eachSaucer)._respawnAtX_y_($7,_st(self._height())._atRandom());
-};
-$10=_st(eachSaucer)._shouldShoot();
+$10=_st(eachSaucer)._escaped();
 if(smalltalk.assert($10)){
+$11=self._player();
+$ctx2.sendIdx["player"]=3;
+_st($11)._score_(_st(_st(_st(self._player())._score()).__minus(self._difficulty()))._max_((0)));
+};
+$12=_st(eachSaucer)._shouldRespawn();
+if(smalltalk.assert($12)){
+$14=self._width();
+$ctx2.sendIdx["width"]=1;
+$15=_st(self._width())._atRandom();
+$ctx2.sendIdx["atRandom"]=1;
+$13=_st($14).__plus($15);
+_st(eachSaucer)._respawnAtX_y_($13,_st(self._height())._atRandom());
+};
+$16=_st(eachSaucer)._shouldShoot();
+if(smalltalk.assert($16)){
 return _st(self._enemyBullets())._add_(_st(eachSaucer)._newBullet());
 };
 }, function($ctx2) {$ctx2.fillBlock({eachSaucer:eachSaucer},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"controlSaucers",{},globals.OVGame)})},
 args: [],
-source: "controlSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer\x0a\x09\x09\x09checkCollisionWith: self bullets;\x0a\x09\x09\x09step.\x0a\x09\x09\x09\x0a\x09\x09eachSaucer isHit ifTrue: [ \x0a\x09\x09\x09(self soundNamed: 'explosion-1') play. \x0a\x09\x09\x09self phase saucerKilled ].\x0a\x09\x09\x09\x0a\x09\x09eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].\x0a\x09\x09eachSaucer shouldRespawn ifTrue: [\x0a\x09\x09\x09eachSaucer \x0a\x09\x09\x09\x09respawnAtX: self width + self width atRandom y: self height atRandom ].\x0a\x09\x09eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].",
-messageSends: ["do:", "saucers", "checkCollisionWith:", "bullets", "step", "ifTrue:", "isHit", "play", "soundNamed:", "saucerKilled", "phase", "isDead", "score:", "player", "+", "score", "*", "difficulty", "shouldRespawn", "respawnAtX:y:", "width", "atRandom", "height", "shouldShoot", "add:", "enemyBullets", "newBullet"],
+source: "controlSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer\x0a\x09\x09\x09checkCollisionWith: self bullets;\x0a\x09\x09\x09step.\x0a\x09\x09\x09\x0a\x09\x09eachSaucer isHit ifTrue: [ \x0a\x09\x09\x09(self soundNamed: 'explosion-1') play. \x0a\x09\x09\x09self phase saucerKilled ].\x0a\x09\x09\x09\x0a\x09\x09eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].\x0a\x09\x09eachSaucer escaped ifTrue: [ self player score: ((self player score - self difficulty) max: 0) ].\x0a\x09\x09\x0a\x09\x09eachSaucer shouldRespawn ifTrue: [\x0a\x09\x09\x09eachSaucer \x0a\x09\x09\x09\x09respawnAtX: self width + self width atRandom y: self height atRandom ].\x0a\x09\x09eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].",
+messageSends: ["do:", "saucers", "checkCollisionWith:", "bullets", "step", "ifTrue:", "isHit", "play", "soundNamed:", "saucerKilled", "phase", "isDead", "score:", "player", "+", "score", "*", "difficulty", "escaped", "max:", "-", "shouldRespawn", "respawnAtX:y:", "width", "atRandom", "height", "shouldShoot", "add:", "enemyBullets", "newBullet"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -637,6 +651,21 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "farBackground:",
+protocol: 'accessing',
+fn: function (aBackground){
+var self=this;
+self["@farBackground"]=aBackground;
+return self},
+args: ["aBackground"],
+source: "farBackground: aBackground\x0a\x09farBackground := aBackground",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "highScoreText",
 protocol: 'accessing - texts',
 fn: function (){
@@ -832,18 +861,44 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2;
 self._debug_("new game started");
+self._saucers_(nil);
 self._phase_(nil);
-$1=self._player();
-_st($1)._lives_((3));
-_st($1)._score_((0));
-$2=_st($1)._resetStartTime();
+self._farBackground_(nil);
+self._starField_(nil);
+self._resetSprites();
+_st(self._player())._reset();
 return self}, function($ctx1) {$ctx1.fill(self,"newGame",{},globals.OVGame)})},
 args: [],
-source: "newGame\x0a\x09self debug: 'new game started'.\x0a\x09self phase: nil.\x0a\x09self player\x0a\x09\x09lives: 3;\x0a\x09\x09score: 0;\x0a\x09\x09resetStartTime",
-messageSends: ["debug:", "phase:", "lives:", "player", "score:", "resetStartTime"],
+source: "newGame\x0a\x09self debug: 'new game started'.\x0a\x09self saucers: nil.\x0a\x09self phase: nil.\x0a\x09self farBackground: nil.\x0a\x09self starField: nil.\x0a\x09self resetSprites.\x0a\x09self player reset.",
+messageSends: ["debug:", "saucers:", "phase:", "farBackground:", "starField:", "resetSprites", "reset", "player"],
 referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "newSaucer",
+protocol: 'accessing - sprites',
+fn: function (){
+var self=this;
+function $OVSaucer(){return globals.OVSaucer||(typeof OVSaucer=="undefined"?nil:OVSaucer)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$5,$4,$6,$1;
+$2=_st($OVSaucer())._new();
+$3=$2;
+$5=_st(self._width())._atRandom();
+$ctx1.sendIdx["atRandom"]=1;
+$4=_st($5).__at(_st(self._height())._atRandom());
+_st($3)._centre_($4);
+$6=_st($2)._toughness_(self._difficulty());
+$1=$6;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"newSaucer",{},globals.OVGame)})},
+args: [],
+source: "newSaucer\x0a\x09^ (OVSaucer new \x0a\x09\x09centre: self width atRandom @ self height atRandom;\x0a\x09\x09toughness: self difficulty)",
+messageSends: ["centre:", "new", "@", "atRandom", "width", "height", "toughness:", "difficulty"],
+referencedClasses: ["OVSaucer"]
 }),
 globals.OVGame);
 
@@ -854,31 +909,39 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$3,$5,$4,$6;
-_st(self._soundNamed_("nextphase"))._play();
-$2=self._phase();
+var $1,$3,$2,$4,$5,$7,$6,$8;
+$1=self._soundNamed_("nextphase");
+$ctx1.sendIdx["soundNamed:"]=1;
+_st($1)._play();
+$ctx1.sendIdx["play"]=1;
+_st(self._soundNamed_("explosion-1"))._play();
+$3=self._phase();
 $ctx1.sendIdx["phase"]=1;
-$1=_st($2)._next();
-self._phase_($1);
+$2=_st($3)._next();
+self._phase_($2);
+$4=self._saucers();
+$ctx1.sendIdx["saucers"]=1;
+_st($4)._add_(self._newSaucer());
 _st(self._saucers())._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
+_st(each)._explode();
 return _st(each)._toughness_(_st(self._difficulty()).__star(_st(self._phase())._number()));
 }, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
-$3=self._starField();
+$5=self._starField();
 $ctx1.sendIdx["starField"]=1;
-$5=_st(self._starField())._speed();
+$7=_st(self._starField())._speed();
 $ctx1.sendIdx["speed"]=1;
-$4=_st($5).__plus((1));
+$6=_st($7).__plus((1));
 $ctx1.sendIdx["+"]=1;
-_st($3)._speed_($4);
+_st($5)._speed_($6);
 $ctx1.sendIdx["speed:"]=1;
-$6=self._farBackground();
+$8=self._farBackground();
 $ctx1.sendIdx["farBackground"]=1;
-_st($6)._speed_(_st(_st(self._farBackground())._speed()).__plus((0.5)));
+_st($8)._speed_(_st(_st(self._farBackground())._speed()).__plus((0.75)));
 return self}, function($ctx1) {$ctx1.fill(self,"nextPhase",{},globals.OVGame)})},
 args: [],
-source: "nextPhase\x0a\x09(self soundNamed: 'nextphase') play.\x0a\x09self phase: self phase next.\x0a\x09self saucers do: [ :each | each toughness: self difficulty * self phase number ].\x0a\x09self starField speed: self starField speed + 1.\x0a\x09self farBackground speed: self farBackground speed + 0.5.",
-messageSends: ["play", "soundNamed:", "phase:", "next", "phase", "do:", "saucers", "toughness:", "*", "difficulty", "number", "speed:", "starField", "+", "speed", "farBackground"],
+source: "nextPhase\x0a\x09(self soundNamed: 'nextphase') play.\x0a\x09(self soundNamed: 'explosion-1') play.\x0a\x09self phase: self phase next.\x0a\x09self saucers add: self newSaucer.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each explode.\x0a\x09\x09each toughness: self difficulty * self phase number ].\x0a\x09self starField speed: self starField speed + 1.\x0a\x09self farBackground speed: self farBackground speed + 0.75.",
+messageSends: ["play", "soundNamed:", "phase:", "next", "phase", "add:", "saucers", "newSaucer", "do:", "explode", "toughness:", "*", "difficulty", "number", "speed:", "starField", "+", "speed", "farBackground"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -1045,7 +1108,6 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 self._debug_("resetting sprites");
 self["@ship"]=nil;
-self["@lifeItem"]=nil;
 _st(self._saucers())._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
 return _st(each)._position_((-100).__at((0)));
@@ -1055,7 +1117,7 @@ $ctx1.sendIdx["removeAll"]=1;
 _st(self._bullets())._removeAll();
 return self}, function($ctx1) {$ctx1.fill(self,"resetSprites",{},globals.OVGame)})},
 args: [],
-source: "resetSprites\x0a\x09self debug: 'resetting sprites'.\x0a\x09ship := nil.\x0a\x09lifeItem := nil.\x0a\x09self saucers do: [ :each | each position: -100@0 ].\x0a\x09self enemyBullets removeAll.\x0a\x09self bullets removeAll.",
+source: "resetSprites\x0a\x09self debug: 'resetting sprites'.\x0a\x09ship := nil.\x0a\x09self saucers do: [ :each | each position: -100@0 ].\x0a\x09self enemyBullets removeAll.\x0a\x09self bullets removeAll.",
 messageSends: ["debug:", "do:", "saucers", "position:", "@", "removeAll", "enemyBullets", "bullets"],
 referencedClasses: []
 }),
@@ -1067,25 +1129,15 @@ selector: "saucers",
 protocol: 'accessing - sprites',
 fn: function (){
 var self=this;
-function $OVSaucer(){return globals.OVSaucer||(typeof OVSaucer=="undefined"?nil:OVSaucer)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$5,$6,$8,$7,$9,$4,$1,$receiver;
+var $2,$1,$receiver;
 $2=self["@saucers"];
 if(($receiver = $2) == null || $receiver.isNil){
 self["@saucers"]=[];
 self["@saucers"];
 (5)._timesRepeat_((function(){
 return smalltalk.withContext(function($ctx2) {
-$3=self["@saucers"];
-$5=_st($OVSaucer())._new();
-$6=$5;
-$8=_st(self._width())._atRandom();
-$ctx2.sendIdx["atRandom"]=1;
-$7=_st($8).__at(_st(self._height())._atRandom());
-_st($6)._centre_($7);
-$9=_st($5)._toughness_(self._difficulty());
-$4=$9;
-return _st($3)._add_($4);
+return _st(self["@saucers"])._add_(self._newSaucer());
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 $1=self["@saucers"];
 } else {
@@ -1094,9 +1146,24 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"saucers",{},globals.OVGame)})},
 args: [],
-source: "saucers\x0a\x09^ saucers ifNil: [ \x0a\x09\x09saucers := #().\x0a\x09\x095 timesRepeat: [ \x0a\x09\x09\x09saucers add:\x0a\x09\x09\x09\x09(OVSaucer new \x0a\x09\x09\x09\x09\x09centre: self width atRandom @ self height atRandom;\x0a\x09\x09\x09\x09\x09toughness: self difficulty) ].\x0a\x09\x09saucers ]",
-messageSends: ["ifNil:", "timesRepeat:", "add:", "centre:", "new", "@", "atRandom", "width", "height", "toughness:", "difficulty"],
-referencedClasses: ["OVSaucer"]
+source: "saucers\x0a\x09^ saucers ifNil: [ \x0a\x09\x09saucers := #().\x0a\x09\x095 timesRepeat: [ saucers add: self newSaucer ].\x0a\x09\x09saucers ]",
+messageSends: ["ifNil:", "timesRepeat:", "add:", "newSaucer"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "saucers:",
+protocol: 'accessing - sprites',
+fn: function (aCollection){
+var self=this;
+self["@saucers"]=aCollection;
+return self},
+args: ["aCollection"],
+source: "saucers: aCollection\x0a\x09saucers := aCollection",
+messageSends: [],
+referencedClasses: []
 }),
 globals.OVGame);
 
@@ -1268,6 +1335,21 @@ args: [],
 source: "starField\x0a\x09^ starField ifNil: [ \x0a\x09\x09starField := \x0a\x09\x09\x09Background new \x0a\x09\x09\x09\x09source: 'images/ovni/starfield.png';\x0a\x09\x09\x09\x09addParallaxNamed: 'background' origin: 0@0 size: 800@600 speed: 6 ]",
 messageSends: ["ifNil:", "source:", "new", "addParallaxNamed:origin:size:speed:", "@"],
 referencedClasses: ["Background"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "starField:",
+protocol: 'accessing',
+fn: function (aBackground){
+var self=this;
+self["@starField"]=aBackground;
+return self},
+args: ["aBackground"],
+source: "starField: aBackground\x0a\x09starField := aBackground",
+messageSends: [],
+referencedClasses: []
 }),
 globals.OVGame);
 
@@ -3332,6 +3414,25 @@ globals.OVPlayer);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "reset",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._lives_((3));
+self._score_((0));
+$1=self._resetStartTime();
+return self}, function($ctx1) {$ctx1.fill(self,"reset",{},globals.OVPlayer)})},
+args: [],
+source: "reset\x0a\x09self \x0a\x09\x09lives: 3;\x0a\x09\x09score: 0;\x0a\x09\x09resetStartTime",
+messageSends: ["lives:", "score:", "resetStartTime"],
+referencedClasses: []
+}),
+globals.OVPlayer);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "resetStartTime",
 protocol: 'time handling',
 fn: function (){
@@ -3504,6 +3605,24 @@ return self}, function($ctx1) {$ctx1.fill(self,"die",{},globals.OVSaucer)})},
 args: [],
 source: "die\x0a\x09self \x0a\x09\x09currentFrameGroup: 'flying';\x0a\x09\x09loop: true;\x0a\x09\x09dead: true.",
 messageSends: ["currentFrameGroup:", "loop:", "dead:"],
+referencedClasses: []
+}),
+globals.OVSaucer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "escaped",
+protocol: 'testing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(_st(self._x()).__plus(self._width())).__lt((0));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"escaped",{},globals.OVSaucer)})},
+args: [],
+source: "escaped\x0a\x09^ ((self x + self width) < 0)",
+messageSends: ["<", "+", "x", "width"],
 referencedClasses: []
 }),
 globals.OVSaucer);
@@ -3710,17 +3829,17 @@ globals.OVSaucer);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "shouldRespawn",
-protocol: 'control',
+protocol: 'testing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(_st(_st(self._x()).__plus(self._width())).__lt((0))).__or(self._dead());
+$1=_st(self._escaped()).__or(self._dead());
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"shouldRespawn",{},globals.OVSaucer)})},
 args: [],
-source: "shouldRespawn\x0a\x09^ ((self x + self width) < 0) | self dead",
-messageSends: ["|", "<", "+", "x", "width", "dead"],
+source: "shouldRespawn\x0a\x09^ self escaped | self dead",
+messageSends: ["|", "escaped", "dead"],
 referencedClasses: []
 }),
 globals.OVSaucer);
@@ -4228,6 +4347,7 @@ $ctx1.sendIdx["saucers"]=1;
 self._saucers_($1);
 _st(self._saucers())._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
+_st(each)._currentFrameGroup_("flying");
 $7=self._game();
 $ctx2.sendIdx["game"]=2;
 $6=_st($7)._width();
@@ -4286,8 +4406,8 @@ $25=_st($24)._position_((580).__at((530)));
 self._authorText_($25);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVStartScreen)})},
 args: [],
-source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each \x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Image new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height).\x0a\x09\x09\x09\x0a\x09self startGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to start';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 180@320).\x0a\x09\x09\x09\x0a\x09self authorText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Bernat Romagosa 2014';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 12;\x0a\x09\x09\x09position: 580@530)",
-messageSends: ["saucers:", "saucers", "game", "do:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "source:origin:size:position:", "new", "@", "startGameText:", "contents:", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "authorText:"],
+source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each\x0a\x09\x09\x09currentFrameGroup: 'flying';\x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Image new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height).\x0a\x09\x09\x09\x0a\x09self startGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to start';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 180@320).\x0a\x09\x09\x09\x0a\x09self authorText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Bernat Romagosa 2014';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 12;\x0a\x09\x09\x09position: 580@530)",
+messageSends: ["saucers:", "saucers", "game", "do:", "currentFrameGroup:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "source:origin:size:position:", "new", "@", "startGameText:", "contents:", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "authorText:"],
 referencedClasses: ["Image", "Text"]
 }),
 globals.OVStartScreen);

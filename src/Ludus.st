@@ -381,7 +381,7 @@ topCollidesWithWhichOf: aSpriteCollection
 !Sprite methodsFor: 'drawing'!
 
 drawBoundingBoxOnCanvas: aCanvas
-	(aCanvas getContext: '2d')
+	(aCanvas element getContext: '2d')
 		beginPath;
 		strokeStyle: 'rgba(255,0,0,0.5)';
 		lineWidth: 1;
