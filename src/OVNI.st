@@ -222,35 +222,6 @@ resetSprites
 	self bullets removeAll.
 !
 
-startGame
-	self debug: 'initializing game'.
-
-	fps := 30.
-	
-	self
-		width: 720; 
-		height: 540;
-		backgroundColor: 'black';
-		addSound: 'sounds/ovni/background.ogg';
-		addSound: 'sounds/ovni/laser.ogg';
-		addSound: 'sounds/ovni/select.ogg';
-		addSound: 'sounds/ovni/menu.ogg';
-		addSound: 'sounds/ovni/gameover.ogg';
-		addSound: 'sounds/ovni/explosion-1.ogg';
-		addSound: 'sounds/ovni/explosion-2.ogg';
-		addSound: 'sounds/ovni/life.ogg';
-		addScreen: OVStartScreen new named: 'start';
-		addScreen: OVMainMenu new named: 'mainMenu';
-		addScreen: OVOptionsMenu new named: 'optionsMenu';
-		addScreen: OVPauseScreen new named: 'pause';
-		addScreen: OVGameOverScreen new named: 'end';
-		addFont: 'fonts/ChangaOne-Regular.ttf' named: 'ChangaOne'.
-	
-	self switchToScreenNamed: 'start'.
-	
-	(self soundNamed: 'background') loop.
-!
-
 step
 	self 
 		controlShip;
@@ -310,6 +281,56 @@ shoot
 	self debug: 'shooting bullet'.
 	(self soundNamed: 'laser') play.
 	self bullets add: self ship newBullet.
+! !
+
+!OVGame methodsFor: 'game initialization'!
+
+addScreens
+	self
+		addScreen: OVStartScreen new named: 'start';
+		addScreen: OVMainMenu new named: 'mainMenu';
+		addScreen: OVOptionsMenu new named: 'optionsMenu';
+		addScreen: OVPauseScreen new named: 'pause';
+		addScreen: OVGameOverScreen new named: 'end'.
+!
+
+loadSounds
+
+	self
+		loadSound: 'sounds/ovni/background.ogg';
+		loadSound: 'sounds/ovni/laser.ogg';
+		loadSound: 'sounds/ovni/select.ogg';
+		loadSound: 'sounds/ovni/menu.ogg';
+		loadSound: 'sounds/ovni/gameover.ogg';
+		loadSound: 'sounds/ovni/explosion-1.ogg';
+		loadSound: 'sounds/ovni/explosion-2.ogg';
+		loadSound: 'sounds/ovni/life.ogg'
+!
+
+preloadImages
+	self
+		preloadBackground: self farBackground;
+		preloadBackground: self starField;
+		preloadSprite: self ship;
+		preloadSprite: self saucers first.
+!
+
+startGame
+	self debug: 'initializing game'.
+
+	fps := 30.
+	
+	self
+		width: 720; 
+		height: 540;
+		addScreens;
+		loadSounds;
+		preloadImages;
+		addFont: 'fonts/ChangaOne-Regular.ttf' named: 'ChangaOne'.
+	
+	self switchToScreenNamed: 'start'.
+	
+	(self soundNamed: 'background') loop.
 ! !
 
 !OVGame methodsFor: 'sprite processing'!

@@ -47,12 +47,37 @@ height: anInteger
 	self canvas at: 'height' put: anInteger.
 !
 
+hiddenStyle
+	^ 'visibility: hidden; width: 0px; height: 0px; position: absolute; left: 0px; top: 0px;'
+!
+
 width
 	^ self canvas element width
 !
 
 width: anInteger
 	self canvas at: 'width' put: anInteger.
+! !
+
+!AbstractScreen methodsFor: 'audio'!
+
+hasSound: aSoundUrl
+	^ self sounds anySatisfy: [ :any | any src = aSoundUrl ]
+!
+
+loadSound: aSoundUrl
+	(self hasSound: aSoundUrl) ifFalse: [
+		| sound |
+		sound := (Sound src: aSoundUrl).
+		sound 
+			cssClass: self class name;
+			appendToJQuery: 'div.preloader' asJQuery.
+		self sounds add: sound.
+	]
+!
+
+soundNamed: aName
+	^ self sounds detect: [ :each | each id = aName ] ifNone: [ nil ]
 ! !
 
 !AbstractScreen methodsFor: 'control'!
@@ -92,16 +117,16 @@ draw
 	self subclassResponsibility
 !
 
-draw: aDrawable
-	aDrawable drawOnContext: self context
+draw: somethingDrawable
+	somethingDrawable drawOnCanvas: self canvas
 !
 
 drawBackground: aBackground
-	aBackground drawOnContext: self context step: step width: self canvas element width
+	aBackground drawOnCanvas: self canvas step: step
 !
 
 drawSprite: aSprite
-	aSprite drawOnContext: self context step: step
+	aSprite drawOnCanvas: self canvas step: step
 !
 
 drawSpriteCollection: aSpriteCollection
@@ -121,6 +146,25 @@ addFont: aFontSrc named: aFontName
 			,''') format(''opentype'');}</style>'
 ! !
 
+!AbstractScreen methodsFor: 'image preloading'!
+
+preloadAnimation: anAnimation
+	|image|
+	image := anAnimation image.
+	image 
+		width: 1; 
+		height: 1.
+	'div.preloader' asJQuery append: image asJQuery.
+!
+
+preloadBackground: aBackground
+	self preloadAnimation: aBackground
+!
+
+preloadSprite: aSprite
+	self preloadAnimation: aSprite
+! !
+
 !AbstractScreen methodsFor: 'initialization'!
 
 initialize
@@ -129,26 +173,8 @@ initialize
 	step := 1.
 ! !
 
-!AbstractScreen methodsFor: 'rendering'!
-
-renderOn: html
-	"Do not override me, use #startGame instead"
-	canvas := html canvas.
-	self canvas 
-		at: 'width' put: 250;
-		at: 'height' put: 250;
-		id: self class name.
-	context := canvas element getContext: '2d'.
-
-	self inputHandler bindEvents.
-
-	self 
-		startGame;
-		gameLoop.
-! !
-
 AbstractScreen subclass: #Game
-	instanceVariableNames: 'end sounds screens currentScreen debugMode'
+	instanceVariableNames: 'end sounds screens currentScreen debugMode preloader'
 	package: 'Ludus'!
 !Game commentStamp!
 I am a game. You need to override a couple of my methods to make me usable:
@@ -171,27 +197,6 @@ screens
 
 sounds
 	^ sounds ifNil: [ sounds := #() ]
-! !
-
-!Game methodsFor: 'audio'!
-
-addSound: aSoundUrl
-	(self hasSound: aSoundUrl) ifFalse: [
-		| sound |
-		sound := (Sound src: aSoundUrl).
-		sound 
-			cssClass: self class name;
-			appendToJQuery: 'body' asJQuery.
-		self sounds add: sound.
-	]
-!
-
-hasSound: aSoundUrl
-	^ self sounds anySatisfy: [ :any | any src = aSoundUrl ]
-!
-
-soundNamed: aName
-	^ self sounds detect: [ :each | each id = aName ]
 ! !
 
 !Game methodsFor: 'control'!
@@ -226,6 +231,29 @@ isGameOver
 
 startGame
 	self subclassResponsibility
+! !
+
+!Game methodsFor: 'rendering'!
+
+renderOn: html
+	"Do not override me, use #startGame instead"
+	preloader := html div 
+		class: 'preloader'; 
+		style: self hiddenStyle.
+		
+	canvas := html canvas.
+	
+	self canvas
+		at: 'width' put: 250;
+		at: 'height' put: 250;
+		id: self class name.
+	context := canvas element getContext: '2d'.
+
+	self inputHandler bindEvents.
+
+	self
+		startGame;
+		gameLoop
 ! !
 
 !Game methodsFor: 'screens'!
@@ -268,7 +296,7 @@ stop
 		unbind: 'keydown';
 		unbind: 'keyup'.
 	('canvas#' , self name) asJQuery remove.
-	('audio.' , self name) asJQuery remove.
+	'div.preloader' asJQuery remove.
 !
 
 stopAll
@@ -508,13 +536,13 @@ imageSrc: anImageUrl
 
 !Animation methodsFor: 'drawing'!
 
-drawOnContext: aContext
+drawOnCanvas: aCanvas
 	self subclassResponsibility
 !
 
-drawOnContext: aContext step: aStep
+drawOnCanvas: aCanvas step: aStep
 	self 
-		drawOnContext: aContext;
+		drawOnCanvas: aCanvas;
 		nextFrameWithStep: aStep.
 ! !
 
@@ -591,12 +619,12 @@ Animation subclass: #Background
 
 !Background methodsFor: 'drawing'!
 
-drawOnContext: aContext step: aStep width: aWidth
+drawOnCanvas: aCanvas step: aStep
 	self isParallax 
-		ifFalse: [ super drawOnContext: aContext step: aStep ]
+		ifFalse: [ super drawOnCanvas: aCanvas step: aStep ]
 		ifTrue: [ 
 			self currentFrameGroup 
-				drawFromBackground: self onContext: aContext;
+				drawFromBackground: self onCanvas: aCanvas;
 				move ]
 ! !
 
@@ -767,8 +795,8 @@ topCollidesWithWhichOf: aSpriteCollection
 
 !Sprite methodsFor: 'drawing'!
 
-drawBoundingBoxOnContext: aContext
-	aContext 
+drawBoundingBoxOnCanvas: aCanvas
+	(aCanvas getContext: '2d')
 		beginPath;
 		strokeStyle: 'rgba(255,0,0,0.5)';
 		lineWidth: 1;
@@ -776,9 +804,9 @@ drawBoundingBoxOnContext: aContext
 		stroke.
 !
 
-drawOnContext: aContext
-	self currentFrameGroup drawFromSprite: self onContext: aContext.
-	Game debugMode ifTrue: [ self drawBoundingBoxOnContext: aContext ]
+drawOnCanvas: aCanvas
+	self currentFrameGroup drawFromSprite: self onCanvas: aCanvas.
+	Game debugMode ifTrue: [ self drawBoundingBoxOnCanvas: aCanvas ]
 ! !
 
 !Sprite methodsFor: 'events'!
@@ -928,8 +956,8 @@ y: anInteger
 
 !Drawable methodsFor: 'drawing'!
 
-drawOnContext: aContext
-	aContext
+drawOnCanvas: aCanvas
+	(aCanvas element getContext: '2d')
 		drawImage: self image
 		originX: self origin x
 		originY: self origin y
@@ -987,8 +1015,8 @@ identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anIn
 
 !FrameGroup methodsFor: 'drawing'!
 
-drawFromSprite: aSprite onContext: aContext
-	aContext
+drawFromSprite: aSprite onCanvas: aCanvas
+	(aCanvas element getContext: '2d')
 		drawImage: aSprite image
 		originX: self origin x + self offset
 		originY: self origin y
@@ -1072,8 +1100,8 @@ identifier: aString origin: anOriginPoint size: aSizePoint speed: anInteger
 
 !ParallaxImage methodsFor: 'drawing'!
 
-drawFromBackground: aBackground onContext: aContext
-	aContext
+drawFromBackground: aBackground onCanvas: aCanvas
+	(aCanvas element getContext: '2d')
 		drawImage: aBackground image
 		originX: self origin x + self offset
 		originY: self origin y
@@ -1500,6 +1528,10 @@ beNormal
 	fontStyle := ''
 !
 
+fontDefinition
+	^ self fontStyle  , ' ' , self fontSize printString , 'px ' , self fontName
+!
+
 removeOutline
 	outlineColor := nil.
 	outlineSize := nil.
@@ -1507,23 +1539,19 @@ removeOutline
 
 !Text methodsFor: 'drawing'!
 
-drawOnContext: aContext
-	aContext
+drawOnCanvas: aCanvas
+	(aCanvas element getContext: '2d')
 		font: self fontDefinition;
 		fillStyle: self color;
 		fillText: self contents
 			x: self position x
 			y: self position y.
 	(self outlineSize notNil & self outlineColor notNil) ifTrue: [
-		aContext
+		(aCanvas element getContext: '2d')
 			lineWidth: self outlineSize;
 			strokeStyle: self outlineColor;
 			strokeText: self contents
 				x: self position x
 				y: self position y ]
-!
-
-fontDefinition
-	^ self fontStyle  , ' ' , self fontSize printString , 'px ' , self fontName
 ! !
 

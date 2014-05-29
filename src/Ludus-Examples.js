@@ -154,7 +154,7 @@ _st(self._animalNames())._do_((function(eachAnimal){
 return smalltalk.withContext(function($ctx2) {
 $6=_st("sounds/".__comma(eachAnimal)).__comma(".ogg");
 $ctx2.sendIdx[","]=1;
-self._addSound_($6);
+self._loadSound_($6);
 return (2)._timesRepeat_((function(){
 var position;
 return smalltalk.withContext(function($ctx3) {
@@ -166,8 +166,8 @@ return self._addCardForAnimal_inPosition_(eachAnimal,position);
 }, function($ctx2) {$ctx2.fillBlock({eachAnimal:eachAnimal},$ctx1,3)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"addCards",{positions:positions},globals.MemoryGame)})},
 args: [],
-source: "addCards\x0a\x09| positions |\x0a\x09positions :=#().\x0a\x09\x0a\x090 to: self rows - 1 do: [ :r |\x0a\x09\x090 to: self columns - 1 do: [ :c |\x0a\x09\x09\x09positions add: ((100*c) + 50)@((100*r) + 50) ]].\x0a\x0a\x09self animalNames do: [ :eachAnimal |\x0a\x09\x09self addSound: 'sounds/' , eachAnimal , '.ogg'.\x0a\x09\x092 timesRepeat: [\x0a\x09\x09\x09| position |\x0a\x09\x09\x09position := positions atRandom.\x0a\x09\x09\x09positions remove: position.\x0a\x09\x09\x09self addCardForAnimal: eachAnimal inPosition: position.\x0a\x09\x09]\x0a\x09]",
-messageSends: ["to:do:", "-", "rows", "columns", "add:", "@", "+", "*", "do:", "animalNames", "addSound:", ",", "timesRepeat:", "atRandom", "remove:", "addCardForAnimal:inPosition:"],
+source: "addCards\x0a\x09| positions |\x0a\x09positions :=#().\x0a\x09\x0a\x090 to: self rows - 1 do: [ :r |\x0a\x09\x090 to: self columns - 1 do: [ :c |\x0a\x09\x09\x09positions add: ((100*c) + 50)@((100*r) + 50) ]].\x0a\x0a\x09self animalNames do: [ :eachAnimal |\x0a\x09\x09self loadSound: 'sounds/' , eachAnimal , '.ogg'.\x0a\x09\x092 timesRepeat: [\x0a\x09\x09\x09| position |\x0a\x09\x09\x09position := positions atRandom.\x0a\x09\x09\x09positions remove: position.\x0a\x09\x09\x09self addCardForAnimal: eachAnimal inPosition: position.\x0a\x09\x09]\x0a\x09]",
+messageSends: ["to:do:", "-", "rows", "columns", "add:", "@", "+", "*", "do:", "animalNames", "loadSound:", ",", "timesRepeat:", "atRandom", "remove:", "addCardForAnimal:inPosition:"],
 referencedClasses: []
 }),
 globals.MemoryGame);
@@ -833,9 +833,9 @@ self._width_((640));
 $1=self._height_((360));
 self["@speed"]=(10);
 _st(self["@canvas"])._style_("background-color: blue");
-self._addSound_("sounds/applause.ogg");
-$ctx1.sendIdx["addSound:"]=1;
-self._addSound_("sounds/click.ogg");
+self._loadSound_("sounds/applause.ogg");
+$ctx1.sendIdx["loadSound:"]=1;
+self._loadSound_("sounds/click.ogg");
 self._createPaddle1();
 self._createPaddle2();
 $2=self._createBall();
@@ -849,8 +849,8 @@ _st($3)._direction_($4);
 _st(window)._alert_("Left Player: s - up x - down / Right Player: up/down arrows");
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.Pong)})},
 args: [],
-source: "startGame\x0a\x09self width: 640; \x0a\x09\x09height: 360.\x0a\x0a\x09speed := 10.\x0a\x0a\x09canvas style: 'background-color: blue'.\x0a\x0a\x09self addSound: 'sounds/applause.ogg'.\x0a\x09self addSound: 'sounds/click.ogg'.\x0a\x0a\x09self createPaddle1;\x0a\x09\x09createPaddle2;\x0a\x09\x09createBall.\x0a\x0a\x09ball direction: (#(-1 1) at: (2 atRandom)) @ ((20 atRandom - 10)/10).\x0a\x09window alert: 'Left Player: s - up x - down / Right Player: up/down arrows'",
-messageSends: ["width:", "height:", "style:", "addSound:", "createPaddle1", "createPaddle2", "createBall", "direction:", "@", "at:", "atRandom", "/", "-", "alert:"],
+source: "startGame\x0a\x09self width: 640; \x0a\x09\x09height: 360.\x0a\x0a\x09speed := 10.\x0a\x0a\x09canvas style: 'background-color: blue'.\x0a\x0a\x09self\x0a\x09\x09loadSound: 'sounds/applause.ogg';\x0a\x09\x09loadSound: 'sounds/click.ogg';\x0a\x09\x09createPaddle1;\x0a\x09\x09createPaddle2;\x0a\x09\x09createBall.\x0a\x0a\x09ball direction: (#(-1 1) at: (2 atRandom)) @ ((20 atRandom - 10)/10).\x0a\x09window alert: 'Left Player: s - up x - down / Right Player: up/down arrows'",
+messageSends: ["width:", "height:", "style:", "loadSound:", "createPaddle1", "createPaddle2", "createBall", "direction:", "@", "at:", "atRandom", "/", "-", "alert:"],
 referencedClasses: []
 }),
 globals.Pong);
@@ -3337,17 +3337,17 @@ self["@stepSize"]=(10);
 self._width_((720));
 $1=self._height_((540));
 _st(self["@canvas"])._style_("border: 1px solid; background-image: url(\x22images/background.png\x22)");
-self._addSound_("sounds/slide.ogg");
-$ctx1.sendIdx["addSound:"]=1;
-self._addSound_("sounds/factory.ogg");
-$ctx1.sendIdx["addSound:"]=2;
-$2=self._addSound_("sounds/applause.ogg");
+self._loadSound_("sounds/slide.ogg");
+$ctx1.sendIdx["loadSound:"]=1;
+self._loadSound_("sounds/factory.ogg");
+$ctx1.sendIdx["loadSound:"]=2;
+$2=self._loadSound_("sounds/applause.ogg");
 _st(self._soundNamed_("factory"))._loop();
 self._createLevel();
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.Sokoban)})},
 args: [],
-source: "startGame\x0a\x09fps := 20.\x09\x0a\x09stepSize := 10.\x0a\x0a\x09self\x0a\x09\x09width: 720; \x0a\x09\x09height: 540.\x0a\x0a\x09canvas style: 'border: 1px solid; background-image: url(\x22images/background.png\x22)'.\x0a\x0a\x09self\x0a\x09\x09addSound: 'sounds/slide.ogg';\x0a\x09\x09addSound: 'sounds/factory.ogg';\x0a\x09\x09addSound: 'sounds/applause.ogg'.\x0a\x0a\x09(self soundNamed: 'factory') loop.\x0a\x0a\x09self createLevel.",
-messageSends: ["width:", "height:", "style:", "addSound:", "loop", "soundNamed:", "createLevel"],
+source: "startGame\x0a\x09fps := 20.\x09\x0a\x09stepSize := 10.\x0a\x0a\x09self\x0a\x09\x09width: 720; \x0a\x09\x09height: 540.\x0a\x0a\x09canvas style: 'border: 1px solid; background-image: url(\x22images/background.png\x22)'.\x0a\x0a\x09self\x0a\x09\x09loadSound: 'sounds/slide.ogg';\x0a\x09\x09loadSound: 'sounds/factory.ogg';\x0a\x09\x09loadSound: 'sounds/applause.ogg'.\x0a\x0a\x09(self soundNamed: 'factory') loop.\x0a\x0a\x09self createLevel.",
+messageSends: ["width:", "height:", "style:", "loadSound:", "loop", "soundNamed:", "createLevel"],
 referencedClasses: []
 }),
 globals.Sokoban);

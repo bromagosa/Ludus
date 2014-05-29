@@ -162,7 +162,7 @@ addCards
 			positions add: ((100*c) + 50)@((100*r) + 50) ]].
 
 	self animalNames do: [ :eachAnimal |
-		self addSound: 'sounds/' , eachAnimal , '.ogg'.
+		self loadSound: 'sounds/' , eachAnimal , '.ogg'.
 		2 timesRepeat: [
 			| position |
 			position := positions atRandom.
@@ -320,10 +320,10 @@ startGame
 
 	canvas style: 'background-color: blue'.
 
-	self addSound: 'sounds/applause.ogg'.
-	self addSound: 'sounds/click.ogg'.
-
-	self createPaddle1;
+	self
+		loadSound: 'sounds/applause.ogg';
+		loadSound: 'sounds/click.ogg';
+		createPaddle1;
 		createPaddle2;
 		createBall.
 
@@ -748,9 +748,9 @@ startGame
 	canvas style: 'border: 1px solid; background-image: url("images/background.png")'.
 
 	self
-		addSound: 'sounds/slide.ogg';
-		addSound: 'sounds/factory.ogg';
-		addSound: 'sounds/applause.ogg'.
+		loadSound: 'sounds/slide.ogg';
+		loadSound: 'sounds/factory.ogg';
+		loadSound: 'sounds/applause.ogg'.
 
 	(self soundNamed: 'factory') loop.
 

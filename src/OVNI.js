@@ -185,6 +185,44 @@ globals.OVEnemyBullet);
 smalltalk.addClass('OVGame', globals.Game, ['player', 'ship', 'saucers', 'scrollSpeed', 'farBackground', 'starField', 'bullets', 'enemyBullets', 'difficulty', 'soundIsMute', 'musicIsMute', 'scoreText', 'highScoreText', 'playTimeText', 'livesText', 'lifeItem'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
+selector: "addScreens",
+protocol: 'game initialization',
+fn: function (){
+var self=this;
+function $OVStartScreen(){return globals.OVStartScreen||(typeof OVStartScreen=="undefined"?nil:OVStartScreen)}
+function $OVMainMenu(){return globals.OVMainMenu||(typeof OVMainMenu=="undefined"?nil:OVMainMenu)}
+function $OVOptionsMenu(){return globals.OVOptionsMenu||(typeof OVOptionsMenu=="undefined"?nil:OVOptionsMenu)}
+function $OVPauseScreen(){return globals.OVPauseScreen||(typeof OVPauseScreen=="undefined"?nil:OVPauseScreen)}
+function $OVGameOverScreen(){return globals.OVGameOverScreen||(typeof OVGameOverScreen=="undefined"?nil:OVGameOverScreen)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3,$4,$5;
+$1=_st($OVStartScreen())._new();
+$ctx1.sendIdx["new"]=1;
+self._addScreen_named_($1,"start");
+$ctx1.sendIdx["addScreen:named:"]=1;
+$2=_st($OVMainMenu())._new();
+$ctx1.sendIdx["new"]=2;
+self._addScreen_named_($2,"mainMenu");
+$ctx1.sendIdx["addScreen:named:"]=2;
+$3=_st($OVOptionsMenu())._new();
+$ctx1.sendIdx["new"]=3;
+self._addScreen_named_($3,"optionsMenu");
+$ctx1.sendIdx["addScreen:named:"]=3;
+$4=_st($OVPauseScreen())._new();
+$ctx1.sendIdx["new"]=4;
+self._addScreen_named_($4,"pause");
+$ctx1.sendIdx["addScreen:named:"]=4;
+$5=self._addScreen_named_(_st($OVGameOverScreen())._new(),"end");
+return self}, function($ctx1) {$ctx1.fill(self,"addScreens",{},globals.OVGame)})},
+args: [],
+source: "addScreens\x0a\x09self\x0a\x09\x09addScreen: OVStartScreen new named: 'start';\x0a\x09\x09addScreen: OVMainMenu new named: 'mainMenu';\x0a\x09\x09addScreen: OVOptionsMenu new named: 'optionsMenu';\x0a\x09\x09addScreen: OVPauseScreen new named: 'pause';\x0a\x09\x09addScreen: OVGameOverScreen new named: 'end'.",
+messageSends: ["addScreen:named:", "new"],
+referencedClasses: ["OVStartScreen", "OVMainMenu", "OVOptionsMenu", "OVPauseScreen", "OVGameOverScreen"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "bullets",
 protocol: 'accessing',
 fn: function (){
@@ -680,6 +718,37 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "loadSounds",
+protocol: 'game initialization',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._loadSound_("sounds/ovni/background.ogg");
+$ctx1.sendIdx["loadSound:"]=1;
+self._loadSound_("sounds/ovni/laser.ogg");
+$ctx1.sendIdx["loadSound:"]=2;
+self._loadSound_("sounds/ovni/select.ogg");
+$ctx1.sendIdx["loadSound:"]=3;
+self._loadSound_("sounds/ovni/menu.ogg");
+$ctx1.sendIdx["loadSound:"]=4;
+self._loadSound_("sounds/ovni/gameover.ogg");
+$ctx1.sendIdx["loadSound:"]=5;
+self._loadSound_("sounds/ovni/explosion-1.ogg");
+$ctx1.sendIdx["loadSound:"]=6;
+self._loadSound_("sounds/ovni/explosion-2.ogg");
+$ctx1.sendIdx["loadSound:"]=7;
+$1=self._loadSound_("sounds/ovni/life.ogg");
+return self}, function($ctx1) {$ctx1.fill(self,"loadSounds",{},globals.OVGame)})},
+args: [],
+source: "loadSounds\x0a\x0a\x09self\x0a\x09\x09loadSound: 'sounds/ovni/background.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/laser.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/select.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/menu.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/gameover.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/explosion-1.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/explosion-2.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/life.ogg'",
+messageSends: ["loadSound:"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "musicIsMute",
 protocol: 'accessing',
 fn: function (){
@@ -793,6 +862,28 @@ args: [],
 source: "player\x0a\x09^ player ifNil: [ player := OVPlayer new ]",
 messageSends: ["ifNil:", "new"],
 referencedClasses: ["OVPlayer"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "preloadImages",
+protocol: 'game initialization',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._preloadBackground_(self._farBackground());
+$ctx1.sendIdx["preloadBackground:"]=1;
+self._preloadBackground_(self._starField());
+self._preloadSprite_(self._ship());
+$ctx1.sendIdx["preloadSprite:"]=1;
+$1=self._preloadSprite_(_st(self._saucers())._first());
+return self}, function($ctx1) {$ctx1.fill(self,"preloadImages",{},globals.OVGame)})},
+args: [],
+source: "preloadImages\x0a\x09self\x0a\x09\x09preloadBackground: self farBackground;\x0a\x09\x09preloadBackground: self starField;\x0a\x09\x09preloadSprite: self ship;\x0a\x09\x09preloadSprite: self saucers first.",
+messageSends: ["preloadBackground:", "farBackground", "starField", "preloadSprite:", "ship", "first", "saucers"],
+referencedClasses: []
 }),
 globals.OVGame);
 
@@ -1034,61 +1125,26 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "startGame",
-protocol: 'control',
+protocol: 'game initialization',
 fn: function (){
 var self=this;
-function $OVStartScreen(){return globals.OVStartScreen||(typeof OVStartScreen=="undefined"?nil:OVStartScreen)}
-function $OVMainMenu(){return globals.OVMainMenu||(typeof OVMainMenu=="undefined"?nil:OVMainMenu)}
-function $OVOptionsMenu(){return globals.OVOptionsMenu||(typeof OVOptionsMenu=="undefined"?nil:OVOptionsMenu)}
-function $OVPauseScreen(){return globals.OVPauseScreen||(typeof OVPauseScreen=="undefined"?nil:OVPauseScreen)}
-function $OVGameOverScreen(){return globals.OVGameOverScreen||(typeof OVGameOverScreen=="undefined"?nil:OVGameOverScreen)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5;
+var $1;
 self._debug_("initializing game");
 self["@fps"]=(30);
 self._width_((720));
 self._height_((540));
-self._backgroundColor_("black");
-self._addSound_("sounds/ovni/background.ogg");
-$ctx1.sendIdx["addSound:"]=1;
-self._addSound_("sounds/ovni/laser.ogg");
-$ctx1.sendIdx["addSound:"]=2;
-self._addSound_("sounds/ovni/select.ogg");
-$ctx1.sendIdx["addSound:"]=3;
-self._addSound_("sounds/ovni/menu.ogg");
-$ctx1.sendIdx["addSound:"]=4;
-self._addSound_("sounds/ovni/gameover.ogg");
-$ctx1.sendIdx["addSound:"]=5;
-self._addSound_("sounds/ovni/explosion-1.ogg");
-$ctx1.sendIdx["addSound:"]=6;
-self._addSound_("sounds/ovni/explosion-2.ogg");
-$ctx1.sendIdx["addSound:"]=7;
-self._addSound_("sounds/ovni/life.ogg");
-$1=_st($OVStartScreen())._new();
-$ctx1.sendIdx["new"]=1;
-self._addScreen_named_($1,"start");
-$ctx1.sendIdx["addScreen:named:"]=1;
-$2=_st($OVMainMenu())._new();
-$ctx1.sendIdx["new"]=2;
-self._addScreen_named_($2,"mainMenu");
-$ctx1.sendIdx["addScreen:named:"]=2;
-$3=_st($OVOptionsMenu())._new();
-$ctx1.sendIdx["new"]=3;
-self._addScreen_named_($3,"optionsMenu");
-$ctx1.sendIdx["addScreen:named:"]=3;
-$4=_st($OVPauseScreen())._new();
-$ctx1.sendIdx["new"]=4;
-self._addScreen_named_($4,"pause");
-$ctx1.sendIdx["addScreen:named:"]=4;
-self._addScreen_named_(_st($OVGameOverScreen())._new(),"end");
-$5=self._addFont_named_("fonts/ChangaOne-Regular.ttf","ChangaOne");
+self._addScreens();
+self._loadSounds();
+self._preloadImages();
+$1=self._addFont_named_("fonts/ChangaOne-Regular.ttf","ChangaOne");
 self._switchToScreenNamed_("start");
 _st(self._soundNamed_("background"))._loop();
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.OVGame)})},
 args: [],
-source: "startGame\x0a\x09self debug: 'initializing game'.\x0a\x0a\x09fps := 30.\x0a\x09\x0a\x09self\x0a\x09\x09width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09backgroundColor: 'black';\x0a\x09\x09addSound: 'sounds/ovni/background.ogg';\x0a\x09\x09addSound: 'sounds/ovni/laser.ogg';\x0a\x09\x09addSound: 'sounds/ovni/select.ogg';\x0a\x09\x09addSound: 'sounds/ovni/menu.ogg';\x0a\x09\x09addSound: 'sounds/ovni/gameover.ogg';\x0a\x09\x09addSound: 'sounds/ovni/explosion-1.ogg';\x0a\x09\x09addSound: 'sounds/ovni/explosion-2.ogg';\x0a\x09\x09addSound: 'sounds/ovni/life.ogg';\x0a\x09\x09addScreen: OVStartScreen new named: 'start';\x0a\x09\x09addScreen: OVMainMenu new named: 'mainMenu';\x0a\x09\x09addScreen: OVOptionsMenu new named: 'optionsMenu';\x0a\x09\x09addScreen: OVPauseScreen new named: 'pause';\x0a\x09\x09addScreen: OVGameOverScreen new named: 'end';\x0a\x09\x09addFont: 'fonts/ChangaOne-Regular.ttf' named: 'ChangaOne'.\x0a\x09\x0a\x09self switchToScreenNamed: 'start'.\x0a\x09\x0a\x09(self soundNamed: 'background') loop.",
-messageSends: ["debug:", "width:", "height:", "backgroundColor:", "addSound:", "addScreen:named:", "new", "addFont:named:", "switchToScreenNamed:", "loop", "soundNamed:"],
-referencedClasses: ["OVStartScreen", "OVMainMenu", "OVOptionsMenu", "OVPauseScreen", "OVGameOverScreen"]
+source: "startGame\x0a\x09self debug: 'initializing game'.\x0a\x0a\x09fps := 30.\x0a\x09\x0a\x09self\x0a\x09\x09width: 720; \x0a\x09\x09height: 540;\x0a\x09\x09addScreens;\x0a\x09\x09loadSounds;\x0a\x09\x09preloadImages;\x0a\x09\x09addFont: 'fonts/ChangaOne-Regular.ttf' named: 'ChangaOne'.\x0a\x09\x0a\x09self switchToScreenNamed: 'start'.\x0a\x09\x0a\x09(self soundNamed: 'background') loop.",
+messageSends: ["debug:", "width:", "height:", "addScreens", "loadSounds", "preloadImages", "addFont:named:", "switchToScreenNamed:", "loop", "soundNamed:"],
+referencedClasses: []
 }),
 globals.OVGame);
 
