@@ -53,14 +53,14 @@ return smalltalk.withContext(function($ctx1) {
 var $2,$1;
 ($ctx1.supercall = true, globals.OVBullet.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._imageSrc_("images/ovni/bullet.png");
+self._source_("images/ovni/bullet.png");
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 $1=self._addFrameGroupNamed_origin_size_frameCount_("shooting",$2,(9).__at((9)),(1));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVBullet)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/bullet.png';\x0a\x09\x09addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.",
-messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/bullet.png';\x0a\x09\x09addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.",
+messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
 referencedClasses: []
 }),
 globals.OVBullet);
@@ -144,14 +144,14 @@ return smalltalk.withContext(function($ctx1) {
 var $2,$1;
 ($ctx1.supercall = true, globals.OVEnemyBullet.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._imageSrc_("images/ovni/enemybullet.png");
+self._source_("images/ovni/enemybullet.png");
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 $1=self._addFrameGroupNamed_origin_size_frameCount_("shooting",$2,(9).__at((9)),(1));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVEnemyBullet)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/enemybullet.png';\x0a\x09\x09addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.",
-messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/enemybullet.png';\x0a\x09\x09addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.",
+messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
 referencedClasses: []
 }),
 globals.OVEnemyBullet);
@@ -182,7 +182,7 @@ globals.OVEnemyBullet);
 
 
 
-smalltalk.addClass('OVGame', globals.Game, ['player', 'ship', 'saucers', 'scrollSpeed', 'farBackground', 'starField', 'bullets', 'enemyBullets', 'difficulty', 'soundIsMute', 'musicIsMute', 'scoreText', 'highScoreText', 'playTimeText', 'livesText', 'lifeItem'], 'OVNI');
+smalltalk.addClass('OVGame', globals.Game, ['player', 'phase', 'difficulty', 'ship', 'lifeItem', 'saucers', 'bullets', 'enemyBullets', 'scoreText', 'highScoreText', 'playTimeText', 'livesText', 'phaseNumberText', 'farBackground', 'starField', 'soundIsMute', 'musicIsMute'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "addScreens",
@@ -193,9 +193,10 @@ function $OVStartScreen(){return globals.OVStartScreen||(typeof OVStartScreen=="
 function $OVMainMenu(){return globals.OVMainMenu||(typeof OVMainMenu=="undefined"?nil:OVMainMenu)}
 function $OVOptionsMenu(){return globals.OVOptionsMenu||(typeof OVOptionsMenu=="undefined"?nil:OVOptionsMenu)}
 function $OVPauseScreen(){return globals.OVPauseScreen||(typeof OVPauseScreen=="undefined"?nil:OVPauseScreen)}
+function $OVGameWonScreen(){return globals.OVGameWonScreen||(typeof OVGameWonScreen=="undefined"?nil:OVGameWonScreen)}
 function $OVGameOverScreen(){return globals.OVGameOverScreen||(typeof OVGameOverScreen=="undefined"?nil:OVGameOverScreen)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5;
+var $1,$2,$3,$4,$5,$6;
 $1=_st($OVStartScreen())._new();
 $ctx1.sendIdx["new"]=1;
 self._addScreen_named_($1,"start");
@@ -212,19 +213,23 @@ $4=_st($OVPauseScreen())._new();
 $ctx1.sendIdx["new"]=4;
 self._addScreen_named_($4,"pause");
 $ctx1.sendIdx["addScreen:named:"]=4;
-$5=self._addScreen_named_(_st($OVGameOverScreen())._new(),"end");
+$5=_st($OVGameWonScreen())._new();
+$ctx1.sendIdx["new"]=5;
+self._addScreen_named_($5,"gameWon");
+$ctx1.sendIdx["addScreen:named:"]=5;
+$6=self._addScreen_named_(_st($OVGameOverScreen())._new(),"end");
 return self}, function($ctx1) {$ctx1.fill(self,"addScreens",{},globals.OVGame)})},
 args: [],
-source: "addScreens\x0a\x09self\x0a\x09\x09addScreen: OVStartScreen new named: 'start';\x0a\x09\x09addScreen: OVMainMenu new named: 'mainMenu';\x0a\x09\x09addScreen: OVOptionsMenu new named: 'optionsMenu';\x0a\x09\x09addScreen: OVPauseScreen new named: 'pause';\x0a\x09\x09addScreen: OVGameOverScreen new named: 'end'.",
+source: "addScreens\x0a\x09self\x0a\x09\x09addScreen: OVStartScreen new named: 'start';\x0a\x09\x09addScreen: OVMainMenu new named: 'mainMenu';\x0a\x09\x09addScreen: OVOptionsMenu new named: 'optionsMenu';\x0a\x09\x09addScreen: OVPauseScreen new named: 'pause';\x0a\x09\x09addScreen: OVGameWonScreen new named: 'gameWon';\x0a\x09\x09addScreen: OVGameOverScreen new named: 'end'.",
 messageSends: ["addScreen:named:", "new"],
-referencedClasses: ["OVStartScreen", "OVMainMenu", "OVOptionsMenu", "OVPauseScreen", "OVGameOverScreen"]
+referencedClasses: ["OVStartScreen", "OVMainMenu", "OVOptionsMenu", "OVPauseScreen", "OVGameWonScreen", "OVGameOverScreen"]
 }),
 globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
 selector: "bullets",
-protocol: 'accessing',
+protocol: 'accessing - sprites',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -248,7 +253,7 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "controlBullets",
-protocol: 'sprite processing',
+protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -286,7 +291,7 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "controlItems",
-protocol: 'sprite processing',
+protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -312,8 +317,36 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "controlPhase",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$3;
+$2=self._phase();
+$ctx1.sendIdx["phase"]=1;
+$1=_st($2)._shouldAdvance();
+if(smalltalk.assert($1)){
+$3=_st(self._phase())._isLast();
+if(smalltalk.assert($3)){
+_st(self._soundNamed_("gamewon"))._play();
+self._switchToScreenNamed_("gameWon");
+} else {
+self._nextPhase();
+};
+};
+return self}, function($ctx1) {$ctx1.fill(self,"controlPhase",{},globals.OVGame)})},
+args: [],
+source: "controlPhase\x0a\x09self phase shouldAdvance \x0a\x09\x09ifTrue: [ \x0a\x09\x09\x09self phase isLast \x0a\x09\x09\x09\x09ifTrue: [ \x0a\x09\x09\x09\x09\x09(self soundNamed: 'gamewon') play.\x0a\x09\x09\x09\x09\x09self switchToScreenNamed: 'gameWon' ]\x0a\x09\x09\x09\x09ifFalse: [ self nextPhase ]]",
+messageSends: ["ifTrue:", "shouldAdvance", "phase", "ifTrue:ifFalse:", "isLast", "play", "soundNamed:", "switchToScreenNamed:", "nextPhase"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "controlSaucers",
-protocol: 'sprite processing',
+protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -323,12 +356,10 @@ return smalltalk.withContext(function($ctx2) {
 _st(eachSaucer)._checkCollisionWith_(self._bullets());
 $1=_st(eachSaucer)._step();
 $1;
-$2=_st(_st(eachSaucer)._exploding())._and_((function(){
-return smalltalk.withContext(function($ctx3) {
-return _st(eachSaucer)._atFirstFrame();
-}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
+$2=_st(eachSaucer)._isHit();
 if(smalltalk.assert($2)){
 _st(self._soundNamed_("explosion-1"))._play();
+_st(self._phase())._saucerKilled();
 };
 $3=_st(eachSaucer)._isDead();
 if(smalltalk.assert($3)){
@@ -354,8 +385,8 @@ return _st(self._enemyBullets())._add_(_st(eachSaucer)._newBullet());
 }, function($ctx2) {$ctx2.fillBlock({eachSaucer:eachSaucer},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"controlSaucers",{},globals.OVGame)})},
 args: [],
-source: "controlSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer\x0a\x09\x09\x09checkCollisionWith: self bullets;\x0a\x09\x09\x09step.\x0a\x09\x09(eachSaucer exploding and: [ eachSaucer atFirstFrame ]) ifTrue: [ (self soundNamed: 'explosion-1') play ].\x0a\x09\x09eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].\x0a\x09\x09eachSaucer shouldRespawn ifTrue: [\x0a\x09\x09\x09eachSaucer \x0a\x09\x09\x09\x09respawnAtX: self width + self width atRandom y: self height atRandom ].\x0a\x09\x09eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].",
-messageSends: ["do:", "saucers", "checkCollisionWith:", "bullets", "step", "ifTrue:", "and:", "exploding", "atFirstFrame", "play", "soundNamed:", "isDead", "score:", "player", "+", "score", "*", "difficulty", "shouldRespawn", "respawnAtX:y:", "width", "atRandom", "height", "shouldShoot", "add:", "enemyBullets", "newBullet"],
+source: "controlSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer\x0a\x09\x09\x09checkCollisionWith: self bullets;\x0a\x09\x09\x09step.\x0a\x09\x09\x09\x0a\x09\x09eachSaucer isHit ifTrue: [ \x0a\x09\x09\x09(self soundNamed: 'explosion-1') play. \x0a\x09\x09\x09self phase saucerKilled ].\x0a\x09\x09\x09\x0a\x09\x09eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].\x0a\x09\x09eachSaucer shouldRespawn ifTrue: [\x0a\x09\x09\x09eachSaucer \x0a\x09\x09\x09\x09respawnAtX: self width + self width atRandom y: self height atRandom ].\x0a\x09\x09eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].",
+messageSends: ["do:", "saucers", "checkCollisionWith:", "bullets", "step", "ifTrue:", "isHit", "play", "soundNamed:", "saucerKilled", "phase", "isDead", "score:", "player", "+", "score", "*", "difficulty", "shouldRespawn", "respawnAtX:y:", "width", "atRandom", "height", "shouldShoot", "add:", "enemyBullets", "newBullet"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -363,7 +394,7 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "controlShip",
-protocol: 'sprite processing',
+protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -501,28 +532,32 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 self._clearCanvas();
-self._drawBackground_(self._farBackground());
-$ctx1.sendIdx["drawBackground:"]=1;
-self._drawSpriteCollection_(self._saucers());
-$ctx1.sendIdx["drawSpriteCollection:"]=1;
-self._drawSpriteCollection_(self._bullets());
-$ctx1.sendIdx["drawSpriteCollection:"]=2;
-self._drawSpriteCollection_(self._enemyBullets());
-self._drawSprite_(self._ship());
-$ctx1.sendIdx["drawSprite:"]=1;
-self._drawSprite_(self._lifeItem());
-self._drawBackground_(self._starField());
-self._draw_(self._livesText());
+self._draw_(self._farBackground());
 $ctx1.sendIdx["draw:"]=1;
-self._draw_(self._scoreText());
+self._drawAll_(self._saucers());
+$ctx1.sendIdx["drawAll:"]=1;
+self._drawAll_(self._bullets());
+$ctx1.sendIdx["drawAll:"]=2;
+self._drawAll_(self._enemyBullets());
+self._draw_(self._ship());
 $ctx1.sendIdx["draw:"]=2;
-self._draw_(self._highScoreText());
+self._draw_(self._lifeItem());
 $ctx1.sendIdx["draw:"]=3;
-$1=self._draw_(self._playTimeText());
+self._draw_(self._starField());
+$ctx1.sendIdx["draw:"]=4;
+self._draw_(self._livesText());
+$ctx1.sendIdx["draw:"]=5;
+self._draw_(self._scoreText());
+$ctx1.sendIdx["draw:"]=6;
+self._draw_(self._highScoreText());
+$ctx1.sendIdx["draw:"]=7;
+self._draw_(self._playTimeText());
+$ctx1.sendIdx["draw:"]=8;
+$1=self._draw_(self._phaseNumberText());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVGame)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawBackground: self farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09drawSpriteCollection: self bullets;\x0a\x09\x09drawSpriteCollection: self enemyBullets;\x0a\x09\x09drawSprite: self ship;\x0a\x09\x09drawSprite: self lifeItem;\x0a\x09\x09drawBackground: self starField;\x0a\x09\x09draw: self livesText;\x0a\x09\x09draw: self scoreText;\x0a\x09\x09draw: self highScoreText;\x0a\x09\x09draw: self playTimeText",
-messageSends: ["clearCanvas", "drawBackground:", "farBackground", "drawSpriteCollection:", "saucers", "bullets", "enemyBullets", "drawSprite:", "ship", "lifeItem", "starField", "draw:", "livesText", "scoreText", "highScoreText", "playTimeText"],
+source: "draw\x0a\x09self\x0a\x09\x09clearCanvas;\x0a\x09\x09draw: self farBackground;\x0a\x09\x09drawAll: self saucers;\x0a\x09\x09drawAll: self bullets;\x0a\x09\x09drawAll: self enemyBullets;\x0a\x09\x09draw: self ship;\x0a\x09\x09draw: self lifeItem;\x0a\x09\x09draw: self starField;\x0a\x09\x09draw: self livesText;\x0a\x09\x09draw: self scoreText;\x0a\x09\x09draw: self highScoreText;\x0a\x09\x09draw: self playTimeText;\x0a\x09\x09draw: self phaseNumberText",
+messageSends: ["clearCanvas", "draw:", "farBackground", "drawAll:", "saucers", "bullets", "enemyBullets", "ship", "lifeItem", "starField", "livesText", "scoreText", "highScoreText", "playTimeText", "phaseNumberText"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -548,7 +583,7 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "enemyBullets",
-protocol: 'accessing',
+protocol: 'accessing - sprites',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -581,7 +616,7 @@ var $2,$3,$5,$6,$4,$1,$receiver;
 $2=self["@farBackground"];
 if(($receiver = $2) == null || $receiver.isNil){
 $3=_st($Background())._new();
-_st($3)._imageSrc_("images/ovni/farback.gif");
+_st($3)._source_("images/ovni/farback.gif");
 $5=$3;
 $6=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -594,8 +629,8 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"farBackground",{},globals.OVGame)})},
 args: [],
-source: "farBackground\x0a\x09^ farBackground ifNil: [ \x0a\x09\x09farBackground := \x0a\x09\x09\x09Background new \x0a\x09\x09\x09\x09imageSrc: 'images/ovni/farback.gif';\x0a\x09\x09\x09\x09addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 1 ]",
-messageSends: ["ifNil:", "imageSrc:", "new", "addParallaxNamed:origin:size:speed:", "@"],
+source: "farBackground\x0a\x09^ farBackground ifNil: [ \x0a\x09\x09farBackground := \x0a\x09\x09\x09Background new \x0a\x09\x09\x09\x09source: 'images/ovni/farback.gif';\x0a\x09\x09\x09\x09addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 1 ]",
+messageSends: ["ifNil:", "source:", "new", "addParallaxNamed:origin:size:speed:", "@"],
 referencedClasses: ["Background"]
 }),
 globals.OVGame);
@@ -603,7 +638,7 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "highScoreText",
-protocol: 'accessing',
+protocol: 'accessing - texts',
 fn: function (){
 var self=this;
 function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
@@ -636,7 +671,7 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "lifeItem",
-protocol: 'accessing',
+protocol: 'accessing - sprites',
 fn: function (){
 var self=this;
 function $OVLifeItem(){return globals.OVLifeItem||(typeof OVLifeItem=="undefined"?nil:OVLifeItem)}
@@ -661,7 +696,7 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "livesText",
-protocol: 'accessing',
+protocol: 'accessing - texts',
 fn: function (){
 var self=this;
 function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
@@ -694,7 +729,7 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "livesTextContents",
-protocol: 'accessing',
+protocol: 'accessing - texts',
 fn: function (){
 var self=this;
 function $String(){return globals.String||(typeof String=="undefined"?nil:String)}
@@ -738,10 +773,14 @@ self._loadSound_("sounds/ovni/explosion-1.ogg");
 $ctx1.sendIdx["loadSound:"]=6;
 self._loadSound_("sounds/ovni/explosion-2.ogg");
 $ctx1.sendIdx["loadSound:"]=7;
-$1=self._loadSound_("sounds/ovni/life.ogg");
+self._loadSound_("sounds/ovni/life.ogg");
+$ctx1.sendIdx["loadSound:"]=8;
+self._loadSound_("sounds/ovni/nextphase.ogg");
+$ctx1.sendIdx["loadSound:"]=9;
+$1=self._loadSound_("sounds/ovni/gamewon.ogg");
 return self}, function($ctx1) {$ctx1.fill(self,"loadSounds",{},globals.OVGame)})},
 args: [],
-source: "loadSounds\x0a\x0a\x09self\x0a\x09\x09loadSound: 'sounds/ovni/background.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/laser.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/select.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/menu.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/gameover.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/explosion-1.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/explosion-2.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/life.ogg'",
+source: "loadSounds\x0a\x0a\x09self\x0a\x09\x09loadSound: 'sounds/ovni/background.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/laser.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/select.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/menu.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/gameover.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/explosion-1.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/explosion-2.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/life.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/nextphase.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/gamewon.ogg'",
 messageSends: ["loadSound:"],
 referencedClasses: []
 }),
@@ -795,22 +834,132 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2;
 self._debug_("new game started");
+self._phase_(nil);
 $1=self._player();
 _st($1)._lives_((3));
 _st($1)._score_((0));
 $2=_st($1)._resetStartTime();
 return self}, function($ctx1) {$ctx1.fill(self,"newGame",{},globals.OVGame)})},
 args: [],
-source: "newGame\x0a\x09self debug: 'new game started'.\x0a\x09self player\x0a\x09\x09lives: 3;\x0a\x09\x09score: 0;\x0a\x09\x09resetStartTime",
-messageSends: ["debug:", "lives:", "player", "score:", "resetStartTime"],
+source: "newGame\x0a\x09self debug: 'new game started'.\x0a\x09self phase: nil.\x0a\x09self player\x0a\x09\x09lives: 3;\x0a\x09\x09score: 0;\x0a\x09\x09resetStartTime",
+messageSends: ["debug:", "phase:", "lives:", "player", "score:", "resetStartTime"],
 referencedClasses: []
 }),
 globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "playTimeText",
+selector: "nextPhase",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$3,$5,$4,$6;
+_st(self._soundNamed_("nextphase"))._play();
+$2=self._phase();
+$ctx1.sendIdx["phase"]=1;
+$1=_st($2)._next();
+self._phase_($1);
+_st(self._saucers())._do_((function(each){
+return smalltalk.withContext(function($ctx2) {
+return _st(each)._toughness_(_st(self._difficulty()).__star(_st(self._phase())._number()));
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+$3=self._starField();
+$ctx1.sendIdx["starField"]=1;
+$5=_st(self._starField())._speed();
+$ctx1.sendIdx["speed"]=1;
+$4=_st($5).__plus((1));
+$ctx1.sendIdx["+"]=1;
+_st($3)._speed_($4);
+$ctx1.sendIdx["speed:"]=1;
+$6=self._farBackground();
+$ctx1.sendIdx["farBackground"]=1;
+_st($6)._speed_(_st(_st(self._farBackground())._speed()).__plus((0.5)));
+return self}, function($ctx1) {$ctx1.fill(self,"nextPhase",{},globals.OVGame)})},
+args: [],
+source: "nextPhase\x0a\x09(self soundNamed: 'nextphase') play.\x0a\x09self phase: self phase next.\x0a\x09self saucers do: [ :each | each toughness: self difficulty * self phase number ].\x0a\x09self starField speed: self starField speed + 1.\x0a\x09self farBackground speed: self farBackground speed + 0.5.",
+messageSends: ["play", "soundNamed:", "phase:", "next", "phase", "do:", "saucers", "toughness:", "*", "difficulty", "number", "speed:", "starField", "+", "speed", "farBackground"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "phase",
 protocol: 'accessing',
+fn: function (){
+var self=this;
+function $OVPhase(){return globals.OVPhase||(typeof OVPhase=="undefined"?nil:OVPhase)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@phase"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@phase"]=_st($OVPhase())._number_((1));
+$1=self["@phase"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"phase",{},globals.OVGame)})},
+args: [],
+source: "phase\x0a\x09^ phase ifNil: [ phase := OVPhase number: 1 ]",
+messageSends: ["ifNil:", "number:"],
+referencedClasses: ["OVPhase"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "phase:",
+protocol: 'accessing',
+fn: function (aPhase){
+var self=this;
+self["@phase"]=aPhase;
+return self},
+args: ["aPhase"],
+source: "phase: aPhase\x0a\x09phase := aPhase",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "phaseNumberText",
+protocol: 'accessing - texts',
+fn: function (){
+var self=this;
+function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$4,$1,$receiver;
+$2=self["@phaseNumberText"];
+if(($receiver = $2) == null || $receiver.isNil){
+$3=_st($Text())._new();
+_st($3)._contents_("PHASE ".__comma(_st(_st(self._phase())._number())._asString()));
+_st($3)._color_("rgba(90,113,26,0.7)");
+_st($3)._outlineColor_("rgba(242,246,144,0.8)");
+_st($3)._outlineSize_((1));
+_st($3)._fontName_("ChangaOne");
+_st($3)._fontSize_((20));
+$4=_st($3)._position_((325).__at((20)));
+self["@phaseNumberText"]=$4;
+$1=self["@phaseNumberText"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"phaseNumberText",{},globals.OVGame)})},
+args: [],
+source: "phaseNumberText\x0a\x09^ phaseNumberText ifNil: [ phaseNumberText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'PHASE ' , self phase number asString;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 325@20) ]",
+messageSends: ["ifNil:", "contents:", "new", ",", "asString", "number", "phase", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
+referencedClasses: ["Text"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "playTimeText",
+protocol: 'accessing - texts',
 fn: function (){
 var self=this;
 function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
@@ -915,7 +1064,7 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "saucers",
-protocol: 'accessing',
+protocol: 'accessing - sprites',
 fn: function (){
 var self=this;
 function $OVSaucer(){return globals.OVSaucer||(typeof OVSaucer=="undefined"?nil:OVSaucer)}
@@ -954,7 +1103,7 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "scoreText",
-protocol: 'accessing',
+protocol: 'accessing - texts',
 fn: function (){
 var self=this;
 function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
@@ -987,7 +1136,7 @@ globals.OVGame);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "ship",
-protocol: 'accessing',
+protocol: 'accessing - sprites',
 fn: function (){
 var self=this;
 function $OVSpaceShip(){return globals.OVSpaceShip||(typeof OVSpaceShip=="undefined"?nil:OVSpaceShip)}
@@ -1103,7 +1252,7 @@ var $2,$3,$5,$6,$4,$1,$receiver;
 $2=self["@starField"];
 if(($receiver = $2) == null || $receiver.isNil){
 $3=_st($Background())._new();
-_st($3)._imageSrc_("images/ovni/starfield.png");
+_st($3)._source_("images/ovni/starfield.png");
 $5=$3;
 $6=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -1116,8 +1265,8 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"starField",{},globals.OVGame)})},
 args: [],
-source: "starField\x0a\x09^ starField ifNil: [ \x0a\x09\x09starField := \x0a\x09\x09\x09Background new \x0a\x09\x09\x09\x09imageSrc: 'images/ovni/starfield.png';\x0a\x09\x09\x09\x09addParallaxNamed: 'background' origin: 0@0 size: 800@600 speed: 6 ]",
-messageSends: ["ifNil:", "imageSrc:", "new", "addParallaxNamed:origin:size:speed:", "@"],
+source: "starField\x0a\x09^ starField ifNil: [ \x0a\x09\x09starField := \x0a\x09\x09\x09Background new \x0a\x09\x09\x09\x09source: 'images/ovni/starfield.png';\x0a\x09\x09\x09\x09addParallaxNamed: 'background' origin: 0@0 size: 800@600 speed: 6 ]",
+messageSends: ["ifNil:", "source:", "new", "addParallaxNamed:origin:size:speed:", "@"],
 referencedClasses: ["Background"]
 }),
 globals.OVGame);
@@ -1156,11 +1305,12 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$7,$6,$8,$10,$9;
+var $1,$2,$3;
 self._controlShip();
 self._controlSaucers();
 self._controlBullets();
-$1=self._controlItems();
+self._controlItems();
+$1=self._controlPhase();
 $2=self._inputHandler();
 _st($2)._onKeyPressed_do_(_st($Key())._space(),(function(){
 return smalltalk.withContext(function($ctx2) {
@@ -1171,28 +1321,12 @@ $3=_st($2)._onKeyPressed_do_(_st($Key())._p(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._switchToScreenNamed_("pause");
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
-$4=self._player();
-$ctx1.sendIdx["player"]=1;
-_st($4)._updateHighScore();
-$5=self._scoreText();
-$7=self._player();
-$ctx1.sendIdx["player"]=2;
-$6=_st($7)._score();
-_st($5)._contents_($6);
-$ctx1.sendIdx["contents:"]=1;
-_st(self._livesText())._contents_(self._livesTextContents());
-$ctx1.sendIdx["contents:"]=2;
-$8=self._highScoreText();
-$10=self._player();
-$ctx1.sendIdx["player"]=3;
-$9=_st($10)._highScore();
-_st($8)._contents_($9);
-$ctx1.sendIdx["contents:"]=3;
-_st(self._playTimeText())._contents_(_st(self._player())._playTimeString());
+_st(self._player())._updateHighScore();
+self._updateTexts();
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVGame)})},
 args: [],
-source: "step\x0a\x09self \x0a\x09\x09controlShip;\x0a\x09\x09controlSaucers;\x0a\x09\x09controlBullets;\x0a\x09\x09controlItems.\x0a\x09self inputHandler \x0a\x09\x09onKeyPressed: Key space do: [ self shoot ];\x0a\x09\x09onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].\x0a\x09self player updateHighScore.\x0a\x09self scoreText contents: self player score.\x0a\x09self livesText contents: self livesTextContents.\x0a\x09self highScoreText contents: self player highScore.\x0a\x09self playTimeText contents: self player playTimeString.",
-messageSends: ["controlShip", "controlSaucers", "controlBullets", "controlItems", "onKeyPressed:do:", "inputHandler", "space", "shoot", "p", "switchToScreenNamed:", "updateHighScore", "player", "contents:", "scoreText", "score", "livesText", "livesTextContents", "highScoreText", "highScore", "playTimeText", "playTimeString"],
+source: "step\x0a\x09self \x0a\x09\x09controlShip;\x0a\x09\x09controlSaucers;\x0a\x09\x09controlBullets;\x0a\x09\x09controlItems;\x0a\x09\x09controlPhase.\x0a\x0a\x09self inputHandler \x0a\x09\x09onKeyPressed: Key space do: [ self shoot ];\x0a\x09\x09onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].\x0a\x0a\x09self player updateHighScore.\x0a\x09self updateTexts.",
+messageSends: ["controlShip", "controlSaucers", "controlBullets", "controlItems", "controlPhase", "onKeyPressed:do:", "inputHandler", "space", "shoot", "p", "switchToScreenNamed:", "updateHighScore", "player", "updateTexts"],
 referencedClasses: ["Key"]
 }),
 globals.OVGame);
@@ -1260,6 +1394,39 @@ referencedClasses: []
 }),
 globals.OVGame);
 
+smalltalk.addMethod(
+smalltalk.method({
+selector: "updateTexts",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$2,$4,$6,$5;
+$1=self._scoreText();
+$3=self._player();
+$ctx1.sendIdx["player"]=1;
+$2=_st($3)._score();
+_st($1)._contents_($2);
+$ctx1.sendIdx["contents:"]=1;
+_st(self._livesText())._contents_(self._livesTextContents());
+$ctx1.sendIdx["contents:"]=2;
+$4=self._highScoreText();
+$6=self._player();
+$ctx1.sendIdx["player"]=2;
+$5=_st($6)._highScore();
+_st($4)._contents_($5);
+$ctx1.sendIdx["contents:"]=3;
+_st(self._playTimeText())._contents_(_st(self._player())._playTimeString());
+$ctx1.sendIdx["contents:"]=4;
+_st(self._phaseNumberText())._contents_("PHASE ".__comma(_st(_st(self._phase())._number())._asString()));
+return self}, function($ctx1) {$ctx1.fill(self,"updateTexts",{},globals.OVGame)})},
+args: [],
+source: "updateTexts\x0a\x09self scoreText contents: self player score.\x0a\x09self livesText contents: self livesTextContents.\x0a\x09self highScoreText contents: self player highScore.\x0a\x09self playTimeText contents: self player playTimeString.\x0a\x09self phaseNumberText contents: 'PHASE ' , self phase number asString.",
+messageSends: ["contents:", "scoreText", "score", "player", "livesText", "livesTextContents", "highScoreText", "highScore", "playTimeText", "playTimeString", "phaseNumberText", ",", "asString", "number", "phase"],
+referencedClasses: []
+}),
+globals.OVGame);
+
 
 
 smalltalk.addClass('OVGameOverScreen', globals.Screen, ['gameOverText', 'restartGameText'], 'OVNI');
@@ -1271,14 +1438,15 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-self._drawBackground_(_st(self._game())._farBackground());
-self._draw_(self._gameOverText());
+self._draw_(_st(self._game())._farBackground());
 $ctx1.sendIdx["draw:"]=1;
+self._draw_(self._gameOverText());
+$ctx1.sendIdx["draw:"]=2;
 $1=self._draw_(self._restartGameText());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVGameOverScreen)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09drawBackground: self game farBackground;\x0a\x09\x09draw: self gameOverText;\x0a\x09\x09draw: self restartGameText",
-messageSends: ["drawBackground:", "farBackground", "game", "draw:", "gameOverText", "restartGameText"],
+source: "draw\x0a\x09self \x0a\x09\x09draw: self game farBackground;\x0a\x09\x09draw: self gameOverText;\x0a\x09\x09draw: self restartGameText",
+messageSends: ["draw:", "farBackground", "game", "gameOverText", "restartGameText"],
 referencedClasses: []
 }),
 globals.OVGameOverScreen);
@@ -1416,6 +1584,177 @@ globals.OVGameOverScreen);
 
 
 
+smalltalk.addClass('OVGameWonScreen', globals.Screen, ['gameWonText', 'restartGameText'], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "draw",
+protocol: 'drawing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$4,$3,$5;
+self._clearCanvas();
+$2=self._game();
+$ctx1.sendIdx["game"]=1;
+$1=_st($2)._farBackground();
+self._draw_($1);
+$ctx1.sendIdx["draw:"]=1;
+self._draw_(self._gameWonText());
+$ctx1.sendIdx["draw:"]=2;
+self._draw_(self._restartGameText());
+$ctx1.sendIdx["draw:"]=3;
+$4=self._game();
+$ctx1.sendIdx["game"]=2;
+$3=_st($4)._ship();
+self._draw_($3);
+$ctx1.sendIdx["draw:"]=4;
+$5=self._draw_(_st(self._game())._starField());
+return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVGameWonScreen)})},
+args: [],
+source: "draw\x0a\x09self clearCanvas.\x0a\x09self \x0a\x09\x09draw: self game farBackground;\x0a\x09\x09draw: self gameWonText;\x0a\x09\x09draw: self restartGameText;\x0a\x09\x09draw: self game ship;\x0a\x09\x09draw: self game starField.",
+messageSends: ["clearCanvas", "draw:", "farBackground", "game", "gameWonText", "restartGameText", "ship", "starField"],
+referencedClasses: []
+}),
+globals.OVGameWonScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "gameWonText",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@gameWonText"];
+return $1;
+},
+args: [],
+source: "gameWonText\x0a\x09^ gameWonText",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVGameWonScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "gameWonText:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@gameWonText"]=anObject;
+return self},
+args: ["anObject"],
+source: "gameWonText: anObject\x0a\x09gameWonText := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVGameWonScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "restartGameText",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@restartGameText"];
+return $1;
+},
+args: [],
+source: "restartGameText\x0a\x09^ restartGameText",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVGameWonScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "restartGameText:",
+protocol: 'accessing',
+fn: function (aText){
+var self=this;
+self["@restartGameText"]=aText;
+return self},
+args: ["aText"],
+source: "restartGameText: aText\x0a\x09restartGameText := aText",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVGameWonScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "startScreen",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$4,$5,$3,$1,$6,$7;
+$2=_st($Text())._new();
+$ctx1.sendIdx["new"]=1;
+_st($2)._contents_("YOU WON!");
+$ctx1.sendIdx["contents:"]=1;
+_st($2)._color_("rgba(90,113,26,0.7)");
+$ctx1.sendIdx["color:"]=1;
+_st($2)._outlineColor_("rgba(242,246,144,0.8)");
+$ctx1.sendIdx["outlineColor:"]=1;
+_st($2)._outlineSize_((3));
+$ctx1.sendIdx["outlineSize:"]=1;
+_st($2)._fontName_("ChangaOne");
+$ctx1.sendIdx["fontName:"]=1;
+_st($2)._fontSize_((92));
+$ctx1.sendIdx["fontSize:"]=1;
+$4=$2;
+$5=(170).__at((280));
+$ctx1.sendIdx["@"]=1;
+$3=_st($4)._position_($5);
+$ctx1.sendIdx["position:"]=1;
+$1=$3;
+self._gameWonText_($1);
+$6=_st($Text())._new();
+_st($6)._contents_("Press SPACE to restart");
+_st($6)._color_("rgba(90,113,26,0.7)");
+_st($6)._outlineColor_("rgba(242,246,144,0.8)");
+_st($6)._outlineSize_((2));
+_st($6)._fontName_("ChangaOne");
+_st($6)._fontSize_((40));
+$7=_st($6)._position_((170).__at((320)));
+self._restartGameText_($7);
+return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVGameWonScreen)})},
+args: [],
+source: "startScreen\x0a\x09self gameWonText:\x0a\x09\x09(Text new\x0a\x09\x09\x09contents: 'YOU WON!';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 92;\x0a\x09\x09\x09position: 170@280).\x0a\x09self restartGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to restart';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 2;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 170@320)",
+messageSends: ["gameWonText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "restartGameText:"],
+referencedClasses: ["Text"]
+}),
+globals.OVGameWonScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "step",
+protocol: 'control',
+fn: function (){
+var self=this;
+function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+$2=self._game();
+$ctx1.sendIdx["game"]=1;
+$1=_st($2)._ship();
+_st($1)._moveCentreBy_((5).__at((0)));
+_st(self._inputHandler())._onKeyPressed_do_(_st($Key())._space(),(function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(self._game())._switchToScreenNamed_("start");
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVGameWonScreen)})},
+args: [],
+source: "step\x0a\x09self game ship moveCentreBy: 5@0.\x0a\x09self inputHandler onKeyPressed: Key space do: [ self game switchToScreenNamed: 'start' ].",
+messageSends: ["moveCentreBy:", "ship", "game", "@", "onKeyPressed:do:", "inputHandler", "space", "switchToScreenNamed:"],
+referencedClasses: ["Key"]
+}),
+globals.OVGameWonScreen);
+
+
+
 smalltalk.addClass('OVLifeItem', globals.Sprite, [], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
@@ -1427,15 +1766,15 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$2;
 ($ctx1.supercall = true, globals.OVLifeItem.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._imageSrc_("images/ovni/life.png");
+self._source_("images/ovni/life.png");
 $1=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 self._addFrameGroupNamed_origin_size_frameCount_("life",$1,(20).__at((20)),(4));
 $2=self._frameRate_((3));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVLifeItem)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/life.png';\x0a\x09\x09addFrameGroupNamed: 'life' origin: 0@0 size: 20@20 frameCount: 4;\x0a\x09\x09frameRate: 3.",
-messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/life.png';\x0a\x09\x09addFrameGroupNamed: 'life' origin: 0@0 size: 20@20 frameCount: 4;\x0a\x09\x09frameRate: 3.",
+messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:"],
 referencedClasses: []
 }),
 globals.OVLifeItem);
@@ -1577,15 +1916,17 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-self._drawBackground_(_st(self._game())._farBackground());
-self._draw_(self["@startGameText"]);
+self._draw_(_st(self._game())._farBackground());
 $ctx1.sendIdx["draw:"]=1;
+self._draw_(self["@startGameText"]);
+$ctx1.sendIdx["draw:"]=2;
 self._draw_(self["@optionsMenuText"]);
-$1=self._drawSprite_(self["@pointer"]);
+$ctx1.sendIdx["draw:"]=3;
+$1=self._draw_(self["@pointer"]);
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVMainMenu)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09drawBackground: self game farBackground;\x0a\x09\x09draw: startGameText;\x0a\x09\x09draw: optionsMenuText;\x0a\x09\x09drawSprite: pointer",
-messageSends: ["drawBackground:", "farBackground", "game", "draw:", "drawSprite:"],
+source: "draw\x0a\x09self \x0a\x09\x09draw: self game farBackground;\x0a\x09\x09draw: startGameText;\x0a\x09\x09draw: optionsMenuText;\x0a\x09\x09draw: pointer",
+messageSends: ["draw:", "farBackground", "game"],
 referencedClasses: []
 }),
 globals.OVMainMenu);
@@ -1810,7 +2151,7 @@ $ctx1.sendIdx["position:"]=2;
 $6=$8;
 self._optionsMenuText_($6);
 $14=_st($Sprite())._new();
-_st($14)._imageSrc_("images/ovni/pointer.png");
+_st($14)._source_("images/ovni/pointer.png");
 $16=$14;
 $17=(0).__at((0));
 $ctx1.sendIdx["@"]=3;
@@ -1824,8 +2165,8 @@ $12=$19;
 $11=self._pointer_($12);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVMainMenu)})},
 args: [],
-source: "startScreen\x0a\x09self \x0a\x09\x09startGameText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'START';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@250);\x0a\x09\x09optionsMenuText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'OPTIONS';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@330);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09imageSrc: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@205;\x0a\x09\x09\x09\x09\x09yourself).",
-messageSends: ["startGameText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "optionsMenuText:", "pointer:", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "yourself"],
+source: "startScreen\x0a\x09self \x0a\x09\x09startGameText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'START';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@250);\x0a\x09\x09optionsMenuText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'OPTIONS';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@330);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09source: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@205;\x0a\x09\x09\x09\x09\x09yourself).",
+messageSends: ["startGameText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "optionsMenuText:", "pointer:", "source:", "addFrameGroupNamed:origin:size:frameCount:", "yourself"],
 referencedClasses: ["Text", "Sprite"]
 }),
 globals.OVMainMenu);
@@ -1905,21 +2246,23 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-self._drawBackground_(_st(self._game())._farBackground());
-self._draw_(self._goBackText());
+self._draw_(_st(self._game())._farBackground());
 $ctx1.sendIdx["draw:"]=1;
-self._draw_(self._difficultyText());
+self._draw_(self._goBackText());
 $ctx1.sendIdx["draw:"]=2;
-self._draw_(self._muteMusicText());
+self._draw_(self._difficultyText());
 $ctx1.sendIdx["draw:"]=3;
-self._draw_(self._muteSoundsText());
+self._draw_(self._muteMusicText());
 $ctx1.sendIdx["draw:"]=4;
+self._draw_(self._muteSoundsText());
+$ctx1.sendIdx["draw:"]=5;
 self._draw_(self._debugModeText());
-$1=self._drawSprite_(self._pointer());
+$ctx1.sendIdx["draw:"]=6;
+$1=self._draw_(self._pointer());
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVOptionsMenu)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09drawBackground: self game farBackground;\x0a\x09\x09draw: self goBackText;\x0a\x09\x09draw: self difficultyText;\x0a\x09\x09draw: self muteMusicText;\x0a\x09\x09draw: self muteSoundsText;\x0a\x09\x09draw: self debugModeText;\x0a\x09\x09drawSprite: self pointer",
-messageSends: ["drawBackground:", "farBackground", "game", "draw:", "goBackText", "difficultyText", "muteMusicText", "muteSoundsText", "debugModeText", "drawSprite:", "pointer"],
+source: "draw\x0a\x09self \x0a\x09\x09draw: self game farBackground;\x0a\x09\x09draw: self goBackText;\x0a\x09\x09draw: self difficultyText;\x0a\x09\x09draw: self muteMusicText;\x0a\x09\x09draw: self muteSoundsText;\x0a\x09\x09draw: self debugModeText;\x0a\x09\x09draw: self pointer",
+messageSends: ["draw:", "farBackground", "game", "goBackText", "difficultyText", "muteMusicText", "muteSoundsText", "debugModeText", "pointer"],
 referencedClasses: []
 }),
 globals.OVOptionsMenu);
@@ -2367,7 +2710,7 @@ $ctx1.sendIdx["position:"]=5;
 $35=$41;
 self._debugModeText_($35);
 $47=_st($Sprite())._new();
-_st($47)._imageSrc_("images/ovni/pointer.png");
+_st($47)._source_("images/ovni/pointer.png");
 $49=$47;
 $50=(0).__at((0));
 $ctx1.sendIdx["@"]=6;
@@ -2381,8 +2724,8 @@ $45=$52;
 $44=self._pointer_($45);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVOptionsMenu)})},
 args: [],
-source: "startScreen\x0a\x09self \x0a\x09\x09goBackText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'BACK';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@120);\x0a\x09\x09difficultyText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DIFFICULTY: ' , self game difficulty printString;\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@200);\x0a\x09\x09muteSoundsText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@280); \x0a\x09\x09muteMusicText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@360);\x0a\x09\x09debugModeText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DEBUG: ' , (Game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@440);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09imageSrc: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@75;\x0a\x09\x09\x09\x09\x09yourself).",
-messageSends: ["goBackText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "difficultyText:", ",", "printString", "difficulty", "game", "muteSoundsText:", "ifTrue:ifFalse:", "soundIsMute", "muteMusicText:", "musicIsMute", "debugModeText:", "debugMode", "pointer:", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "yourself"],
+source: "startScreen\x0a\x09self \x0a\x09\x09goBackText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'BACK';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@120);\x0a\x09\x09difficultyText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DIFFICULTY: ' , self game difficulty printString;\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@200);\x0a\x09\x09muteSoundsText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@280); \x0a\x09\x09muteMusicText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@360);\x0a\x09\x09debugModeText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DEBUG: ' , (Game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@440);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09source: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@75;\x0a\x09\x09\x09\x09\x09yourself).",
+messageSends: ["goBackText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "difficultyText:", ",", "printString", "difficulty", "game", "muteSoundsText:", "ifTrue:ifFalse:", "soundIsMute", "muteMusicText:", "musicIsMute", "debugModeText:", "debugMode", "pointer:", "source:", "addFrameGroupNamed:origin:size:frameCount:", "yourself"],
 referencedClasses: ["Text", "Game", "Sprite"]
 }),
 globals.OVOptionsMenu);
@@ -2558,6 +2901,210 @@ referencedClasses: ["Key"]
 }),
 globals.OVPauseScreen);
 
+
+
+smalltalk.addClass('OVPhase', globals.Game, ['number', 'saucersToGo', 'shouldAdvance'], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isLast",
+protocol: 'testing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._number()).__eq(_st(self._class())._lastPhaseNumber());
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"isLast",{},globals.OVPhase)})},
+args: [],
+source: "isLast\x0a\x09^ self number = self class lastPhaseNumber",
+messageSends: ["=", "number", "lastPhaseNumber", "class"],
+referencedClasses: []
+}),
+globals.OVPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "next",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._class())._number_(_st(self._number()).__plus((1)));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"next",{},globals.OVPhase)})},
+args: [],
+source: "next\x0a\x09^ self class number: self number + 1",
+messageSends: ["number:", "class", "+", "number"],
+referencedClasses: []
+}),
+globals.OVPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "number",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@number"];
+return $1;
+},
+args: [],
+source: "number\x0a\x09^ number",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "number:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@number"]=anObject;
+return self},
+args: ["anObject"],
+source: "number: anObject\x0a\x09number := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "saucerKilled",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$3;
+$2=self._saucersToGo();
+$ctx1.sendIdx["saucersToGo"]=1;
+$1=_st($2).__minus((1));
+self._saucersToGo_($1);
+$3=_st(self._saucersToGo()).__eq((0));
+if(smalltalk.assert($3)){
+self._shouldAdvance_(true);
+};
+return self}, function($ctx1) {$ctx1.fill(self,"saucerKilled",{},globals.OVPhase)})},
+args: [],
+source: "saucerKilled\x0a\x09self saucersToGo: self saucersToGo - 1.\x0a\x09self saucersToGo = 0 ifTrue: [ self shouldAdvance: true ]",
+messageSends: ["saucersToGo:", "-", "saucersToGo", "ifTrue:", "=", "shouldAdvance:"],
+referencedClasses: []
+}),
+globals.OVPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "saucersToGo",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@saucersToGo"];
+return $1;
+},
+args: [],
+source: "saucersToGo\x0a\x09^ saucersToGo",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "saucersToGo:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@saucersToGo"]=anObject;
+return self},
+args: ["anObject"],
+source: "saucersToGo: anObject\x0a\x09saucersToGo := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "shouldAdvance",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@shouldAdvance"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@shouldAdvance"]=false;
+$1=self["@shouldAdvance"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"shouldAdvance",{},globals.OVPhase)})},
+args: [],
+source: "shouldAdvance\x0a\x09^ shouldAdvance ifNil: [ shouldAdvance := false ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "shouldAdvance:",
+protocol: 'accessing',
+fn: function (aBoolean){
+var self=this;
+self["@shouldAdvance"]=aBoolean;
+return self},
+args: ["aBoolean"],
+source: "shouldAdvance: aBoolean\x0a\x09shouldAdvance := aBoolean",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVPhase);
+
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "lastPhaseNumber",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return (4);
+},
+args: [],
+source: "lastPhaseNumber\x0a\x09^ 4",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVPhase.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "number:",
+protocol: 'instance creation',
+fn: function (aNumber){
+var self=this;
+var instance;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3;
+instance=self._new();
+$1=instance;
+_st($1)._number_(aNumber);
+$2=_st($1)._saucersToGo_(_st((20)._to_by_(_st(_st(self._lastPhaseNumber()).__star((5))).__plus((15)),(5)))._at_(aNumber));
+$3=instance;
+return $3;
+}, function($ctx1) {$ctx1.fill(self,"number:",{aNumber:aNumber,instance:instance},globals.OVPhase.klass)})},
+args: ["aNumber"],
+source: "number: aNumber\x0a\x09| instance |\x0a\x09instance := self new.\x0a\x09instance \x0a\x09\x09number: aNumber;\x0a\x09\x09saucersToGo: ((20 to: (self lastPhaseNumber * 5) + 15 by: 5) at: aNumber).\x0a\x09^ instance",
+messageSends: ["new", "number:", "saucersToGo:", "at:", "to:by:", "+", "*", "lastPhaseNumber"],
+referencedClasses: []
+}),
+globals.OVPhase.klass);
 
 
 smalltalk.addClass('OVPlayer', globals.Object, ['lives', 'score', 'highScore', 'gameStartTime'], 'OVNI');
@@ -3030,7 +3577,7 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$2,$4,$3;
 ($ctx1.supercall = true, globals.OVSaucer.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._imageSrc_("images/ovni/saucer.png");
+self._source_("images/ovni/saucer.png");
 $1=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 $2=(40).__at((40));
@@ -3043,8 +3590,8 @@ $3=self._addFrameGroupNamed_origin_size_frameCount_("exploding",$4,(40).__at((40
 _st(self._frameGroupNamed_("exploding"))._frameRate_((2));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVSaucer)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/saucer.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10.\x0a\x09\x0a\x09(self frameGroupNamed: 'exploding') frameRate: 2.",
-messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:", "frameGroupNamed:"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/saucer.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10.\x0a\x09\x0a\x09(self frameGroupNamed: 'exploding') frameRate: 2.",
+messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:", "frameGroupNamed:"],
 referencedClasses: []
 }),
 globals.OVSaucer);
@@ -3063,6 +3610,27 @@ return $1;
 args: [],
 source: "isDead\x0a\x09^ self dead",
 messageSends: ["dead"],
+referencedClasses: []
+}),
+globals.OVSaucer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "isHit",
+protocol: 'testing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._exploding())._and_((function(){
+return smalltalk.withContext(function($ctx2) {
+return self._atFirstFrame();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"isHit",{},globals.OVSaucer)})},
+args: [],
+source: "isHit\x0a\x09^ self exploding and: [ self atFirstFrame ]",
+messageSends: ["and:", "exploding", "atFirstFrame"],
 referencedClasses: []
 }),
 globals.OVSaucer);
@@ -3390,7 +3958,7 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$2,$4,$3;
 ($ctx1.supercall = true, globals.OVSpaceShip.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._imageSrc_("images/ovni/ship.png");
+self._source_("images/ovni/ship.png");
 $1=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 $2=(64).__at((29));
@@ -3403,8 +3971,8 @@ $3=self._addFrameGroupNamed_origin_size_frameCount_("exploding",$4,(64).__at((29
 _st(self._frameGroupNamed_("exploding"))._frameRate_((2));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVSpaceShip)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/ovni/ship.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@29 size: 64@29 frameCount: 8.\x0a\x09\x0a\x09(self frameGroupNamed: 'exploding') frameRate: 2.",
-messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:", "frameGroupNamed:"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/ship.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@29 size: 64@29 frameCount: 8.\x0a\x09\x0a\x09(self frameGroupNamed: 'exploding') frameRate: 2.",
+messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:", "frameGroupNamed:"],
 referencedClasses: []
 }),
 globals.OVSpaceShip);
@@ -3558,22 +4126,23 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3;
-self._drawBackground_(_st(self._game())._farBackground());
-self._drawSpriteCollection_(self._saucers());
+self._draw_(_st(self._game())._farBackground());
+$ctx1.sendIdx["draw:"]=1;
+self._drawAll_(self._saucers());
 $1=self._title();
 $ctx1.sendIdx["title"]=1;
 self._draw_($1);
-$ctx1.sendIdx["draw:"]=1;
-$2=self._draw_(self._authorText());
 $ctx1.sendIdx["draw:"]=2;
+$2=self._draw_(self._authorText());
+$ctx1.sendIdx["draw:"]=3;
 $3=_st(_st(self._title())._y()).__lt((75));
 if(smalltalk.assert($3)){
 self._draw_(self._startGameText());
 };
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVStartScreen)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09drawBackground: self game farBackground;\x0a\x09\x09drawSpriteCollection: self saucers;\x0a\x09\x09draw: self title;\x0a\x09\x09draw: self authorText.\x0a\x09\x09\x0a\x09self title y < 75 ifTrue: [ self draw: self startGameText ]",
-messageSends: ["drawBackground:", "farBackground", "game", "drawSpriteCollection:", "saucers", "draw:", "title", "authorText", "ifTrue:", "<", "y", "startGameText"],
+source: "draw\x0a\x09self \x0a\x09\x09draw: self game farBackground;\x0a\x09\x09drawAll: self saucers;\x0a\x09\x09draw: self title;\x0a\x09\x09draw: self authorText.\x0a\x09\x09\x0a\x09self title y < 75 ifTrue: [ self draw: self startGameText ]",
+messageSends: ["draw:", "farBackground", "game", "drawAll:", "saucers", "title", "authorText", "ifTrue:", "<", "y", "startGameText"],
 referencedClasses: []
 }),
 globals.OVStartScreen);
@@ -3648,7 +4217,7 @@ selector: "startScreen",
 protocol: 'control',
 fn: function (){
 var self=this;
-function $Drawable(){return globals.Drawable||(typeof Drawable=="undefined"?nil:Drawable)}
+function $Image(){return globals.Image||(typeof Image=="undefined"?nil:Image)}
 function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
 return smalltalk.withContext(function($ctx1) { 
 var $2,$1,$7,$6,$5,$4,$3,$13,$12,$11,$10,$9,$8,$15,$16,$17,$18,$14,$20,$22,$23,$21,$19,$24,$25;
@@ -3679,7 +4248,7 @@ $9=_st($10).__plus((50));
 $8=_st(each)._y_($9);
 return $8;
 }, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
-$15=_st($Drawable())._new();
+$15=_st($Image())._new();
 $ctx1.sendIdx["new"]=1;
 $16=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -3717,9 +4286,9 @@ $25=_st($24)._position_((580).__at((530)));
 self._authorText_($25);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVStartScreen)})},
 args: [],
-source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each \x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Drawable new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height).\x0a\x09\x09\x09\x0a\x09self startGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to start';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 180@320).\x0a\x09\x09\x09\x0a\x09self authorText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Bernat Romagosa 2014';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 12;\x0a\x09\x09\x09position: 580@530)",
+source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each \x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Image new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height).\x0a\x09\x09\x09\x0a\x09self startGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to start';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 180@320).\x0a\x09\x09\x09\x0a\x09self authorText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Bernat Romagosa 2014';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 12;\x0a\x09\x09\x09position: 580@530)",
 messageSends: ["saucers:", "saucers", "game", "do:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "source:origin:size:position:", "new", "@", "startGameText:", "contents:", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "authorText:"],
-referencedClasses: ["Drawable", "Text"]
+referencedClasses: ["Image", "Text"]
 }),
 globals.OVStartScreen);
 

@@ -18,7 +18,7 @@ speed
 initialize
 	super initialize.
 	self 
-		imageSrc: 'images/ovni/bullet.png';
+		source: 'images/ovni/bullet.png';
 		addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.
 ! !
 
@@ -53,19 +53,15 @@ speed
 initialize
 	super initialize.
 	self 
-		imageSrc: 'images/ovni/enemybullet.png';
+		source: 'images/ovni/enemybullet.png';
 		addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.
 ! !
 
 Game subclass: #OVGame
-	instanceVariableNames: 'player ship saucers scrollSpeed farBackground starField bullets enemyBullets difficulty soundIsMute musicIsMute scoreText highScoreText playTimeText livesText lifeItem'
+	instanceVariableNames: 'player phase difficulty ship lifeItem saucers bullets enemyBullets scoreText highScoreText playTimeText livesText phaseNumberText farBackground starField soundIsMute musicIsMute'
 	package: 'OVNI'!
 
 !OVGame methodsFor: 'accessing'!
-
-bullets
-	^ bullets ifNil: [ bullets := #() ]
-!
 
 difficulty
 	^ difficulty ifNil: [ difficulty := 2 ]
@@ -77,17 +73,80 @@ difficulty: anInteger
 	self saucers do: [ :each | each toughness: self difficulty ]
 !
 
-enemyBullets
-	^ enemyBullets ifNil: [ enemyBullets := #() ]
-!
-
 farBackground
 	^ farBackground ifNil: [ 
 		farBackground := 
 			Background new 
-				imageSrc: 'images/ovni/farback.gif';
+				source: 'images/ovni/farback.gif';
 				addParallaxNamed: 'background' origin: 0@0 size: 1782@600 speed: 1 ]
 !
+
+musicIsMute
+	^ musicIsMute ifNil: [ musicIsMute := false ]
+!
+
+musicIsMute: aBoolean
+	musicIsMute := aBoolean
+!
+
+phase
+	^ phase ifNil: [ phase := OVPhase number: 1 ]
+!
+
+phase: aPhase
+	phase := aPhase
+!
+
+player
+	^ player ifNil: [ player := OVPlayer new ]
+!
+
+soundIsMute
+	^ soundIsMute ifNil: [ soundIsMute := false ]
+!
+
+soundIsMute: aBoolean
+	soundIsMute := aBoolean
+!
+
+starField
+	^ starField ifNil: [ 
+		starField := 
+			Background new 
+				source: 'images/ovni/starfield.png';
+				addParallaxNamed: 'background' origin: 0@0 size: 800@600 speed: 6 ]
+! !
+
+!OVGame methodsFor: 'accessing - sprites'!
+
+bullets
+	^ bullets ifNil: [ bullets := #() ]
+!
+
+enemyBullets
+	^ enemyBullets ifNil: [ enemyBullets := #() ]
+!
+
+lifeItem
+	^ lifeItem ifNil: [ lifeItem := OVLifeItem new centre: 3000 @ (self height / 2) ]
+!
+
+saucers
+	^ saucers ifNil: [ 
+		saucers := #().
+		5 timesRepeat: [ 
+			saucers add:
+				(OVSaucer new 
+					centre: self width atRandom @ self height atRandom;
+					toughness: self difficulty) ].
+		saucers ]
+!
+
+ship
+	^ ship ifNil: [ ship := OVSpaceShip new centre: 105 @ (self height / 2) ]
+! !
+
+!OVGame methodsFor: 'accessing - texts'!
 
 highScoreText
 	^ highScoreText ifNil: [ highScoreText := 
@@ -99,10 +158,6 @@ highScoreText
 			fontName: 'ChangaOne';
 			fontSize: 20;
 			position: 10@40) ]
-!
-
-lifeItem
-	^ lifeItem ifNil: [ lifeItem := OVLifeItem new centre: 3000 @ (self height / 2) ]
 !
 
 livesText
@@ -122,12 +177,16 @@ livesTextContents
 		self player lives timesRepeat: [ s nextPut: '♥' ]]
 !
 
-musicIsMute
-	^ musicIsMute ifNil: [ musicIsMute := false ]
-!
-
-musicIsMute: aBoolean
-	musicIsMute := aBoolean
+phaseNumberText
+	^ phaseNumberText ifNil: [ phaseNumberText := 
+		(Text new 
+			contents: 'PHASE ' , self phase number asString;
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 1;
+			fontName: 'ChangaOne';
+			fontSize: 20;
+			position: 325@20) ]
 !
 
 playTimeText
@@ -142,21 +201,6 @@ playTimeText
 			position: 660@20) ]
 !
 
-player
-	^ player ifNil: [ player := OVPlayer new ]
-!
-
-saucers
-	^ saucers ifNil: [ 
-		saucers := #().
-		5 timesRepeat: [ 
-			saucers add:
-				(OVSaucer new 
-					centre: self width atRandom @ self height atRandom;
-					toughness: self difficulty) ].
-		saucers ]
-!
-
 scoreText
 	^ scoreText ifNil: [ scoreText := 
 		(Text new 
@@ -167,26 +211,6 @@ scoreText
 			fontName: 'ChangaOne';
 			fontSize: 20;
 			position: 10@55) ]
-!
-
-ship
-	^ ship ifNil: [ ship := OVSpaceShip new centre: 105 @ (self height / 2) ]
-!
-
-soundIsMute
-	^ soundIsMute ifNil: [ soundIsMute := false ]
-!
-
-soundIsMute: aBoolean
-	soundIsMute := aBoolean
-!
-
-starField
-	^ starField ifNil: [ 
-		starField := 
-			Background new 
-				imageSrc: 'images/ovni/starfield.png';
-				addParallaxNamed: 'background' origin: 0@0 size: 800@600 speed: 6 ]
 ! !
 
 !OVGame methodsFor: 'audio'!
@@ -199,6 +223,67 @@ soundNamed: aString
 
 !OVGame methodsFor: 'control'!
 
+controlBullets
+	self bullets do: [ :eachBullet | 
+		eachBullet move.
+		(eachBullet isAllInsideCanvas: self canvas) 
+			ifFalse: [ bullets remove: eachBullet ]].
+	self enemyBullets do: [ :eachBullet | 
+		eachBullet move.
+		(eachBullet isAllInsideCanvas: self canvas) 
+			ifFalse: [ enemyBullets remove: eachBullet ]]
+!
+
+controlItems
+	self lifeItem move.
+	(self lifeItem collidesWith: self ship) ifTrue: [
+		(self soundNamed: 'life') play.
+		self player addLife.
+		self lifeItem x: -20 ]
+!
+
+controlPhase
+	self phase shouldAdvance 
+		ifTrue: [ 
+			self phase isLast 
+				ifTrue: [ 
+					(self soundNamed: 'gamewon') play.
+					self switchToScreenNamed: 'gameWon' ]
+				ifFalse: [ self nextPhase ]]
+!
+
+controlSaucers
+	self saucers do: [ :eachSaucer | 
+		eachSaucer
+			checkCollisionWith: self bullets;
+			step.
+			
+		eachSaucer isHit ifTrue: [ 
+			(self soundNamed: 'explosion-1') play. 
+			self phase saucerKilled ].
+			
+		eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].
+		eachSaucer shouldRespawn ifTrue: [
+			eachSaucer 
+				respawnAtX: self width + self width atRandom y: self height atRandom ].
+		eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].
+!
+
+controlShip
+	(self ship exploding and: [ self ship atLastFrame ])
+		ifTrue: [
+			self resetSprites.
+			self player lives: self player lives - 1.
+			self player lives < 0 ifTrue: [ self end ]].
+	(((self ship collidesWithAnyOf: self enemyBullets)
+		or: [ (self ship collidesWithAnyOf: self saucers) ]) 
+			and: [ self ship exploding not])
+				ifTrue: [
+					(self soundNamed: 'explosion-2') play.
+					self ship explode ].
+	self ship moveWithHandler: self inputHandler inCanvas: self canvas.
+!
+
 end
 	self debug: 'game over'.
 	(self soundNamed: 'gameover') play.
@@ -207,10 +292,19 @@ end
 
 newGame
 	self debug: 'new game started'.
+	self phase: nil.
 	self player
 		lives: 3;
 		score: 0;
 		resetStartTime
+!
+
+nextPhase
+	(self soundNamed: 'nextphase') play.
+	self phase: self phase next.
+	self saucers do: [ :each | each toughness: self difficulty * self phase number ].
+	self starField speed: self starField speed + 1.
+	self farBackground speed: self farBackground speed + 0.5.
 !
 
 resetSprites
@@ -227,15 +321,15 @@ step
 		controlShip;
 		controlSaucers;
 		controlBullets;
-		controlItems.
+		controlItems;
+		controlPhase.
+
 	self inputHandler 
 		onKeyPressed: Key space do: [ self shoot ];
 		onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].
+
 	self player updateHighScore.
-	self scoreText contents: self player score.
-	self livesText contents: self livesTextContents.
-	self highScoreText contents: self player highScore.
-	self playTimeText contents: self player playTimeString.
+	self updateTexts.
 !
 
 toggleMuteMusic
@@ -249,6 +343,14 @@ toggleMuteMusic
 toggleMuteSounds
 	self debug: (self soundIsMute ifFalse: [ 'muting' ] ifTrue: [ 'activatig' ]), ' sounds'.
 	self soundIsMute: self soundIsMute not
+!
+
+updateTexts
+	self scoreText contents: self player score.
+	self livesText contents: self livesTextContents.
+	self highScoreText contents: self player highScore.
+	self playTimeText contents: self player playTimeString.
+	self phaseNumberText contents: 'PHASE ' , self phase number asString.
 ! !
 
 !OVGame methodsFor: 'debug'!
@@ -260,19 +362,20 @@ debug: aString
 !OVGame methodsFor: 'drawing'!
 
 draw
-	self 
+	self
 		clearCanvas;
-		drawBackground: self farBackground;
-		drawSpriteCollection: self saucers;
-		drawSpriteCollection: self bullets;
-		drawSpriteCollection: self enemyBullets;
-		drawSprite: self ship;
-		drawSprite: self lifeItem;
-		drawBackground: self starField;
+		draw: self farBackground;
+		drawAll: self saucers;
+		drawAll: self bullets;
+		drawAll: self enemyBullets;
+		draw: self ship;
+		draw: self lifeItem;
+		draw: self starField;
 		draw: self livesText;
 		draw: self scoreText;
 		draw: self highScoreText;
-		draw: self playTimeText
+		draw: self playTimeText;
+		draw: self phaseNumberText
 ! !
 
 !OVGame methodsFor: 'game actions'!
@@ -291,6 +394,7 @@ addScreens
 		addScreen: OVMainMenu new named: 'mainMenu';
 		addScreen: OVOptionsMenu new named: 'optionsMenu';
 		addScreen: OVPauseScreen new named: 'pause';
+		addScreen: OVGameWonScreen new named: 'gameWon';
 		addScreen: OVGameOverScreen new named: 'end'.
 !
 
@@ -304,7 +408,9 @@ loadSounds
 		loadSound: 'sounds/ovni/gameover.ogg';
 		loadSound: 'sounds/ovni/explosion-1.ogg';
 		loadSound: 'sounds/ovni/explosion-2.ogg';
-		loadSound: 'sounds/ovni/life.ogg'
+		loadSound: 'sounds/ovni/life.ogg';
+		loadSound: 'sounds/ovni/nextphase.ogg';
+		loadSound: 'sounds/ovni/gamewon.ogg'
 !
 
 preloadImages
@@ -331,55 +437,6 @@ startGame
 	self switchToScreenNamed: 'start'.
 	
 	(self soundNamed: 'background') loop.
-! !
-
-!OVGame methodsFor: 'sprite processing'!
-
-controlBullets
-	self bullets do: [ :eachBullet | 
-		eachBullet move.
-		(eachBullet isAllInsideCanvas: self canvas) 
-			ifFalse: [ bullets remove: eachBullet ]].
-	self enemyBullets do: [ :eachBullet | 
-		eachBullet move.
-		(eachBullet isAllInsideCanvas: self canvas) 
-			ifFalse: [ enemyBullets remove: eachBullet ]]
-!
-
-controlItems
-	self lifeItem move.
-	(self lifeItem collidesWith: self ship) ifTrue: [
-		(self soundNamed: 'life') play.
-		self player addLife.
-		self lifeItem x: -20 ]
-!
-
-controlSaucers
-	self saucers do: [ :eachSaucer | 
-		eachSaucer
-			checkCollisionWith: self bullets;
-			step.
-		(eachSaucer exploding and: [ eachSaucer atFirstFrame ]) ifTrue: [ (self soundNamed: 'explosion-1') play ].
-		eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].
-		eachSaucer shouldRespawn ifTrue: [
-			eachSaucer 
-				respawnAtX: self width + self width atRandom y: self height atRandom ].
-		eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].
-!
-
-controlShip
-	(self ship exploding and: [ self ship atLastFrame ])
-		ifTrue: [
-			self resetSprites.
-			self player lives: self player lives - 1.
-			self player lives < 0 ifTrue: [ self end ]].
-	(((self ship collidesWithAnyOf: self enemyBullets)
-		or: [ (self ship collidesWithAnyOf: self saucers) ]) 
-			and: [ self ship exploding not])
-				ifTrue: [
-					(self soundNamed: 'explosion-2') play.
-					self ship explode ].
-	self ship moveWithHandler: self inputHandler inCanvas: self canvas.
 ! !
 
 Screen subclass: #OVGameOverScreen
@@ -414,7 +471,7 @@ step
 
 draw
 	self 
-		drawBackground: self game farBackground;
+		draw: self game farBackground;
 		draw: self gameOverText;
 		draw: self restartGameText
 ! !
@@ -442,6 +499,70 @@ startScreen
 			position: 170@320)
 ! !
 
+Screen subclass: #OVGameWonScreen
+	instanceVariableNames: 'gameWonText restartGameText'
+	package: 'OVNI'!
+
+!OVGameWonScreen methodsFor: 'accessing'!
+
+gameWonText
+	^ gameWonText
+!
+
+gameWonText: anObject
+	gameWonText := anObject
+!
+
+restartGameText
+	^ restartGameText
+!
+
+restartGameText: aText
+	restartGameText := aText
+! !
+
+!OVGameWonScreen methodsFor: 'control'!
+
+step
+	self game ship moveCentreBy: 5@0.
+	self inputHandler onKeyPressed: Key space do: [ self game switchToScreenNamed: 'start' ].
+! !
+
+!OVGameWonScreen methodsFor: 'drawing'!
+
+draw
+	self clearCanvas.
+	self 
+		draw: self game farBackground;
+		draw: self gameWonText;
+		draw: self restartGameText;
+		draw: self game ship;
+		draw: self game starField.
+! !
+
+!OVGameWonScreen methodsFor: 'initialization'!
+
+startScreen
+	self gameWonText:
+		(Text new
+			contents: 'YOU WON!!';
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 3;
+			fontName: 'ChangaOne';
+			fontSize: 92;
+			position: 170@280).
+	self restartGameText:
+		(Text new 
+			contents: 'Press SPACE to restart';
+			color: 'rgba(90,113,26,0.7)';
+			outlineColor: 'rgba(242,246,144,0.8)';
+			outlineSize: 2;
+			fontName: 'ChangaOne';
+			fontSize: 40;
+			position: 170@320)
+! !
+
 Sprite subclass: #OVLifeItem
 	instanceVariableNames: ''
 	package: 'OVNI'!
@@ -451,7 +572,7 @@ Sprite subclass: #OVLifeItem
 initialize
 	super initialize.
 	self 
-		imageSrc: 'images/ovni/life.png';
+		source: 'images/ovni/life.png';
 		addFrameGroupNamed: 'life' origin: 0@0 size: 20@20 frameCount: 4;
 		frameRate: 3.
 ! !
@@ -546,10 +667,10 @@ selectStartGame
 
 draw
 	self 
-		drawBackground: self game farBackground;
+		draw: self game farBackground;
 		draw: startGameText;
 		draw: optionsMenuText;
-		drawSprite: pointer
+		draw: pointer
 ! !
 
 !OVMainMenu methodsFor: 'initialization'!
@@ -576,7 +697,7 @@ startScreen
 				position: 150@330);
 		pointer:
 			((Sprite new
-				imageSrc: 'images/ovni/pointer.png';
+				source: 'images/ovni/pointer.png';
 				addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)
 					position: 75@205;
 					yourself).
@@ -671,13 +792,13 @@ selectMuteSounds
 
 draw
 	self 
-		drawBackground: self game farBackground;
+		draw: self game farBackground;
 		draw: self goBackText;
 		draw: self difficultyText;
 		draw: self muteMusicText;
 		draw: self muteSoundsText;
 		draw: self debugModeText;
-		drawSprite: self pointer
+		draw: self pointer
 ! !
 
 !OVOptionsMenu methodsFor: 'initialization'!
@@ -731,7 +852,7 @@ startScreen
 				position: 150@440);
 		pointer:
 			((Sprite new
-				imageSrc: 'images/ovni/pointer.png';
+				source: 'images/ovni/pointer.png';
 				addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)
 					position: 75@75;
 					yourself).
@@ -803,6 +924,70 @@ startScreen
 			fontName: 'ChangaOne';
 			fontSize: 40;
 			position: 155@320)
+! !
+
+Game subclass: #OVPhase
+	instanceVariableNames: 'number saucersToGo shouldAdvance'
+	package: 'OVNI'!
+
+!OVPhase methodsFor: 'accessing'!
+
+next
+	^ self class number: self number + 1
+!
+
+number
+	^ number
+!
+
+number: anObject
+	number := anObject
+!
+
+saucersToGo
+	^ saucersToGo
+!
+
+saucersToGo: anObject
+	saucersToGo := anObject
+!
+
+shouldAdvance
+	^ shouldAdvance ifNil: [ shouldAdvance := false ]
+!
+
+shouldAdvance: aBoolean
+	shouldAdvance := aBoolean
+! !
+
+!OVPhase methodsFor: 'control'!
+
+saucerKilled
+	self saucersToGo: self saucersToGo - 1.
+	self saucersToGo = 0 ifTrue: [ self shouldAdvance: true ]
+! !
+
+!OVPhase methodsFor: 'testing'!
+
+isLast
+	^ self number = self class lastPhaseNumber
+! !
+
+!OVPhase class methodsFor: 'accessing'!
+
+lastPhaseNumber
+	^ 4
+! !
+
+!OVPhase class methodsFor: 'instance creation'!
+
+number: aNumber
+	| instance |
+	instance := self new.
+	instance 
+		number: aNumber;
+		saucersToGo: ((20 to: (self lastPhaseNumber * 5) + 15 by: 5) at: aNumber).
+	^ instance
 ! !
 
 Object subclass: #OVPlayer
@@ -981,7 +1166,7 @@ step
 initialize
 	super initialize.
 	self 
-		imageSrc: 'images/ovni/saucer.png';
+		source: 'images/ovni/saucer.png';
 		addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;
 		addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10.
 	
@@ -1002,6 +1187,10 @@ wander
 
 isDead
 	^ self dead
+!
+
+isHit
+	^ self exploding and: [ self atFirstFrame ]
 ! !
 
 Sprite subclass: #OVSpaceShip
@@ -1045,7 +1234,7 @@ explode
 initialize
 	super initialize.
 	self 
-		imageSrc: 'images/ovni/ship.png';
+		source: 'images/ovni/ship.png';
 		addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4;
 		addFrameGroupNamed: 'exploding' origin: 0@29 size: 64@29 frameCount: 8.
 	
@@ -1134,7 +1323,7 @@ startScreen
 			y: (self game height - 100) atRandom + 50 ].
 			
 	self title: 
-		(Drawable new 
+		(Image new 
 			source: 'images/ovni/title.png' 
 			origin: 0@0 
 			size: 600@196 
@@ -1172,8 +1361,8 @@ step
 
 draw
 	self 
-		drawBackground: self game farBackground;
-		drawSpriteCollection: self saucers;
+		draw: self game farBackground;
+		drawAll: self saucers;
 		draw: self title;
 		draw: self authorText.
 		

@@ -2,7 +2,9 @@ Background music (CC0 Public Domain) by TinyWorlds: http://opengameart.org/conte
 Laser sound (CC Attribution) by jalastram: http://freesound.org/people/jalastram/sounds/221443/
 Menu sound (CC Attribution Non-Commercial) by broumbroum: http://freesound.org/people/broumbroum/sounds/50561/
 Menu selection sound (CC Attribution Non-Commercial) by killkhan: http://freesound.org/people/killkhan/sounds/150222/
-Game over sound (CC Attribution) by notchfilter: http://freesound.org/people/notchfilter/sounds/43698/
 Explosion 1 (CC Attribution) by timgormly: http://freesound.org/people/timgormly/sounds/170146/
 Explosion 2 (CC Attribution) by dayOfDagon: http://freesound.org/people/dayOfDagon/sounds/164855/
 Life pickup sound (CC0 Public Domain) by soundnimja: http://freesound.org/people/soundnimja/sounds/173323/
+Game over sound (CC Attribution) by notchfilter: http://freesound.org/people/notchfilter/sounds/43698/
+Phase over sound (CC Attibution) by RADYI: http://freesound.org/people/RADIY/sounds/213149/
+Game won sound (CC Attibution) by Robinhood76: http://freesound.org/people/Robinhood76/sounds/123435/
