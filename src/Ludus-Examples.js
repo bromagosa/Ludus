@@ -104,7 +104,7 @@ _st($3)._animalName_(anAnimal);
 $4=$3;
 $5=_st("images/memory/".__comma(anAnimal)).__comma(".png");
 $ctx1.sendIdx[","]=1;
-_st($4)._imageSrc_($5);
+_st($4)._source_($5);
 $6=$3;
 $7=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -118,8 +118,8 @@ $2=$8;
 _st($1)._add_($2);
 return self}, function($ctx1) {$ctx1.fill(self,"addCardForAnimal:inPosition:",{anAnimal:anAnimal,aPosition:aPosition},globals.MemoryGame)})},
 args: ["anAnimal", "aPosition"],
-source: "addCardForAnimal: anAnimal inPosition: aPosition\x0a\x0a\x09self cards add:\x0a\x09\x09(MemoryCard new\x0a\x09\x09\x09animalName: anAnimal;\x0a\x09\x09\x09imageSrc: 'images/memory/' , anAnimal , '.png';\x0a\x09\x09\x09addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;\x0a\x09\x09\x09centre: aPosition;\x0a\x09\x09\x09frameRate: 25;\x0a\x09\x09\x09loop: false;\x0a\x09\x09\x09flip;\x0a\x09\x09\x09stopAnimation)",
-messageSends: ["add:", "cards", "animalName:", "new", "imageSrc:", ",", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "frameRate:", "loop:", "flip", "stopAnimation"],
+source: "addCardForAnimal: anAnimal inPosition: aPosition\x0a\x0a\x09self cards add:\x0a\x09\x09(MemoryCard new\x0a\x09\x09\x09animalName: anAnimal;\x0a\x09\x09\x09source: 'images/memory/' , anAnimal , '.png';\x0a\x09\x09\x09addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;\x0a\x09\x09\x09centre: aPosition;\x0a\x09\x09\x09frameRate: 25;\x0a\x09\x09\x09loop: false;\x0a\x09\x09\x09flip;\x0a\x09\x09\x09stopAnimation)",
+messageSends: ["add:", "cards", "animalName:", "new", "source:", ",", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "frameRate:", "loop:", "flip", "stopAnimation"],
 referencedClasses: ["MemoryCard"]
 }),
 globals.MemoryGame);
@@ -154,7 +154,7 @@ _st(self._animalNames())._do_((function(eachAnimal){
 return smalltalk.withContext(function($ctx2) {
 $6=_st("sounds/".__comma(eachAnimal)).__comma(".ogg");
 $ctx2.sendIdx[","]=1;
-self._addSound_($6);
+self._loadSound_($6);
 return (2)._timesRepeat_((function(){
 var position;
 return smalltalk.withContext(function($ctx3) {
@@ -166,8 +166,8 @@ return self._addCardForAnimal_inPosition_(eachAnimal,position);
 }, function($ctx2) {$ctx2.fillBlock({eachAnimal:eachAnimal},$ctx1,3)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"addCards",{positions:positions},globals.MemoryGame)})},
 args: [],
-source: "addCards\x0a\x09| positions |\x0a\x09positions :=#().\x0a\x09\x0a\x090 to: self rows - 1 do: [ :r |\x0a\x09\x090 to: self columns - 1 do: [ :c |\x0a\x09\x09\x09positions add: ((100*c) + 50)@((100*r) + 50) ]].\x0a\x0a\x09self animalNames do: [ :eachAnimal |\x0a\x09\x09self addSound: 'sounds/' , eachAnimal , '.ogg'.\x0a\x09\x092 timesRepeat: [\x0a\x09\x09\x09| position |\x0a\x09\x09\x09position := positions atRandom.\x0a\x09\x09\x09positions remove: position.\x0a\x09\x09\x09self addCardForAnimal: eachAnimal inPosition: position.\x0a\x09\x09]\x0a\x09]",
-messageSends: ["to:do:", "-", "rows", "columns", "add:", "@", "+", "*", "do:", "animalNames", "addSound:", ",", "timesRepeat:", "atRandom", "remove:", "addCardForAnimal:inPosition:"],
+source: "addCards\x0a\x09| positions |\x0a\x09positions :=#().\x0a\x09\x0a\x090 to: self rows - 1 do: [ :r |\x0a\x09\x090 to: self columns - 1 do: [ :c |\x0a\x09\x09\x09positions add: ((100*c) + 50)@((100*r) + 50) ]].\x0a\x0a\x09self animalNames do: [ :eachAnimal |\x0a\x09\x09self loadSound: 'sounds/' , eachAnimal , '.ogg'.\x0a\x09\x092 timesRepeat: [\x0a\x09\x09\x09| position |\x0a\x09\x09\x09position := positions atRandom.\x0a\x09\x09\x09positions remove: position.\x0a\x09\x09\x09self addCardForAnimal: eachAnimal inPosition: position.\x0a\x09\x09]\x0a\x09]",
+messageSends: ["to:do:", "-", "rows", "columns", "add:", "@", "+", "*", "do:", "animalNames", "loadSound:", ",", "timesRepeat:", "atRandom", "remove:", "addCardForAnimal:inPosition:"],
 referencedClasses: []
 }),
 globals.MemoryGame);
@@ -243,11 +243,11 @@ protocol: 'drawing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._drawSpriteCollection_(self["@cards"]);
+self._drawAll_(self["@cards"]);
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.MemoryGame)})},
 args: [],
-source: "draw\x0a\x09self drawSpriteCollection: cards",
-messageSends: ["drawSpriteCollection:"],
+source: "draw\x0a\x09self drawAll: cards",
+messageSends: ["drawAll:"],
 referencedClasses: []
 }),
 globals.MemoryGame);
@@ -436,7 +436,7 @@ var offsetX,offsetY;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$6,$5;
-self["@ball"]=_st(_st($Sprite())._new())._imageSrc_("images/ball.png");
+self["@ball"]=_st(_st($Sprite())._new())._source_("images/ball.png");
 $1=self["@ball"];
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -451,8 +451,8 @@ _st($4)._centre_($5);
 _st(self["@ball"])._frameRate_((5));
 return self}, function($ctx1) {$ctx1.fill(self,"createBall",{offsetX:offsetX,offsetY:offsetY},globals.Pong)})},
 args: [],
-source: "createBall\x0a\x09|offsetX offsetY|\x0a\x09ball := Sprite new imageSrc: 'images/ball.png'.\x0a\x09ball addFrameGroupNamed: 'moving' origin: (0@0) size: (15@15) frameCount: 6.\x0a\x09ball centre:  ((self width / 2) @ (self height / 2)).\x0a\x09ball frameRate: 5.",
-messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "/", "width", "height", "frameRate:"],
+source: "createBall\x0a\x09|offsetX offsetY|\x0a\x09ball := Sprite new source: 'images/ball.png'.\x0a\x09ball addFrameGroupNamed: 'moving' origin: (0@0) size: (15@15) frameCount: 6.\x0a\x09ball centre:  ((self width / 2) @ (self height / 2)).\x0a\x09ball frameRate: 5.",
+messageSends: ["source:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "/", "width", "height", "frameRate:"],
 referencedClasses: ["Sprite"]
 }),
 globals.Pong);
@@ -467,7 +467,7 @@ var verticalOffset;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$5,$6,$7,$8,$9;
-self["@paddle1"]=_st(_st($Sprite())._new())._imageSrc_("images/paddle.png");
+self["@paddle1"]=_st(_st($Sprite())._new())._source_("images/paddle.png");
 $1=self["@paddle1"];
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -494,8 +494,8 @@ _st(self["@paddle1"])._x_((10));
 _st(self["@paddle1"])._y_(_st(_st(self._height()).__slash((2))).__minus(verticalOffset));
 return self}, function($ctx1) {$ctx1.fill(self,"createPaddle1",{verticalOffset:verticalOffset},globals.Pong)})},
 args: [],
-source: "createPaddle1\x0a\x09|verticalOffset|\x0a\x09paddle1 := Sprite new imageSrc: 'images/paddle.png'.\x0a\x09paddle1 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.\x0a\x09paddle1 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.\x0a\x09paddle1 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.\x0a\x09verticalOffset := paddle1 height / 2.\x0a\x09paddle1 x: 10.\x0a\x09paddle1 y: ((self height / 2) - verticalOffset)",
-messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "/", "height", "x:", "y:", "-"],
+source: "createPaddle1\x0a\x09|verticalOffset|\x0a\x09paddle1 := Sprite new source: 'images/paddle.png'.\x0a\x09paddle1 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.\x0a\x09paddle1 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.\x0a\x09paddle1 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.\x0a\x09verticalOffset := paddle1 height / 2.\x0a\x09paddle1 x: 10.\x0a\x09paddle1 y: ((self height / 2) - verticalOffset)",
+messageSends: ["source:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "/", "height", "x:", "y:", "-"],
 referencedClasses: ["Sprite"]
 }),
 globals.Pong);
@@ -509,7 +509,7 @@ var self=this;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$5,$6,$7,$8,$9,$12,$11,$10;
-self["@paddle2"]=_st(_st($Sprite())._new())._imageSrc_("images/paddle.png");
+self["@paddle2"]=_st(_st($Sprite())._new())._source_("images/paddle.png");
 $1=self["@paddle2"];
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
@@ -538,8 +538,8 @@ _st($9)._x_($10);
 _st(self["@paddle2"])._y_(_st(self["@paddle1"])._y());
 return self}, function($ctx1) {$ctx1.fill(self,"createPaddle2",{},globals.Pong)})},
 args: [],
-source: "createPaddle2\x0a\x09paddle2 := Sprite new imageSrc: 'images/paddle.png'.\x0a\x09paddle2 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 x: self width - paddle2 width - 10.\x0a\x09paddle2 y: paddle1 y",
-messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "x:", "-", "width", "y:", "y"],
+source: "createPaddle2\x0a\x09paddle2 := Sprite new source: 'images/paddle.png'.\x0a\x09paddle2 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.\x0a\x09paddle2 x: self width - paddle2 width - 10.\x0a\x09paddle2 y: paddle1 y",
+messageSends: ["source:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "x:", "-", "width", "y:", "y"],
 referencedClasses: ["Sprite"]
 }),
 globals.Pong);
@@ -553,19 +553,19 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 self._clearCanvas();
-self._drawSprite_(self["@paddle1"]);
-$ctx1.sendIdx["drawSprite:"]=1;
-self._drawSprite_(self["@paddle2"]);
-$ctx1.sendIdx["drawSprite:"]=2;
+self._draw_(self["@paddle1"]);
+$ctx1.sendIdx["draw:"]=1;
+self._draw_(self["@paddle2"]);
+$ctx1.sendIdx["draw:"]=2;
 self._drawMiddleLine();
-$1=self._drawSprite_(self["@ball"]);
+$1=self._draw_(self["@ball"]);
 _st(self["@paddle1"])._currentFrameGroup_("still");
 $ctx1.sendIdx["currentFrameGroup:"]=1;
 _st(self["@paddle2"])._currentFrameGroup_("still");
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.Pong)})},
 args: [],
-source: "draw\x0a\x09\x09self clearCanvas;\x0a\x09\x09\x09drawSprite: paddle1;\x0a\x09\x09\x09drawSprite: paddle2;\x0a\x09\x09\x09drawMiddleLine;\x0a\x09\x09\x09drawSprite: ball.\x0a\x09\x09paddle1 currentFrameGroup: 'still'.\x0a\x09\x09paddle2 currentFrameGroup: 'still'",
-messageSends: ["clearCanvas", "drawSprite:", "drawMiddleLine", "currentFrameGroup:"],
+source: "draw\x0a\x09\x09self clearCanvas;\x0a\x09\x09\x09draw: paddle1;\x0a\x09\x09\x09draw: paddle2;\x0a\x09\x09\x09drawMiddleLine;\x0a\x09\x09\x09draw: ball.\x0a\x09\x09paddle1 currentFrameGroup: 'still'.\x0a\x09\x09paddle2 currentFrameGroup: 'still'",
+messageSends: ["clearCanvas", "draw:", "drawMiddleLine", "currentFrameGroup:"],
 referencedClasses: []
 }),
 globals.Pong);
@@ -833,9 +833,9 @@ self._width_((640));
 $1=self._height_((360));
 self["@speed"]=(10);
 _st(self["@canvas"])._style_("background-color: blue");
-self._addSound_("sounds/applause.ogg");
-$ctx1.sendIdx["addSound:"]=1;
-self._addSound_("sounds/click.ogg");
+self._loadSound_("sounds/applause.ogg");
+$ctx1.sendIdx["loadSound:"]=1;
+self._loadSound_("sounds/click.ogg");
 self._createPaddle1();
 self._createPaddle2();
 $2=self._createBall();
@@ -849,8 +849,8 @@ _st($3)._direction_($4);
 _st(window)._alert_("Left Player: s - up x - down / Right Player: up/down arrows");
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.Pong)})},
 args: [],
-source: "startGame\x0a\x09self width: 640; \x0a\x09\x09height: 360.\x0a\x0a\x09speed := 10.\x0a\x0a\x09canvas style: 'background-color: blue'.\x0a\x0a\x09self addSound: 'sounds/applause.ogg'.\x0a\x09self addSound: 'sounds/click.ogg'.\x0a\x0a\x09self createPaddle1;\x0a\x09\x09createPaddle2;\x0a\x09\x09createBall.\x0a\x0a\x09ball direction: (#(-1 1) at: (2 atRandom)) @ ((20 atRandom - 10)/10).\x0a\x09window alert: 'Left Player: s - up x - down / Right Player: up/down arrows'",
-messageSends: ["width:", "height:", "style:", "addSound:", "createPaddle1", "createPaddle2", "createBall", "direction:", "@", "at:", "atRandom", "/", "-", "alert:"],
+source: "startGame\x0a\x09self width: 640; \x0a\x09\x09height: 360.\x0a\x0a\x09speed := 10.\x0a\x0a\x09canvas style: 'background-color: blue'.\x0a\x0a\x09self\x0a\x09\x09loadSound: 'sounds/applause.ogg';\x0a\x09\x09loadSound: 'sounds/click.ogg';\x0a\x09\x09createPaddle1;\x0a\x09\x09createPaddle2;\x0a\x09\x09createBall.\x0a\x0a\x09ball direction: (#(-1 1) at: (2 atRandom)) @ ((20 atRandom - 10)/10).\x0a\x09window alert: 'Left Player: s - up x - down / Right Player: up/down arrows'",
+messageSends: ["width:", "height:", "style:", "loadSound:", "createPaddle1", "createPaddle2", "createBall", "direction:", "@", "at:", "atRandom", "/", "-", "alert:"],
 referencedClasses: []
 }),
 globals.Pong);
@@ -987,14 +987,14 @@ return smalltalk.withContext(function($ctx1) {
 var $2,$1;
 ($ctx1.supercall = true, globals.Ship.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._imageSrc_("images/trail.png");
+self._source_("images/trail.png");
 $2=(0).__at((0));
 $ctx1.sendIdx["@"]=1;
 $1=self._addFrameGroupNamed_origin_size_frameCount_("ship",$2,(10).__at((10)),(1));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.Ship)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09imageSrc: 'images/trail.png';\x0a\x09\x09addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.",
-messageSends: ["initialize", "imageSrc:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/trail.png';\x0a\x09\x09addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.",
+messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
 referencedClasses: []
 }),
 globals.Ship);
@@ -1050,7 +1050,7 @@ var self=this;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14;
-self["@ghost"]=_st(_st($Sprite())._new())._imageSrc_("images/ghost.png");
+self["@ghost"]=_st(_st($Sprite())._new())._source_("images/ghost.png");
 $1=self["@ghost"];
 $2=$1;
 $3=(0).__at((0));
@@ -1082,8 +1082,8 @@ _st($11)._addFrameGroupNamed_origin_size_frameCount_("left",$12,$13,(2));
 $14=_st($1)._centre_((500).__at((500)));
 return self}, function($ctx1) {$ctx1.fill(self,"createGhost",{},globals.SimplePacman)})},
 args: [],
-source: "createGhost\x0a\x09ghost := Sprite new imageSrc: 'images/ghost.png'.\x0a\x09ghost \x0a\x09\x09addFrameGroupNamed: 'down' origin: (0@0) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'up' origin: (100@0) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'right' origin: (0@55) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'left' origin: (100@55) size: (50@55) frameCount: 2;\x0a\x09\x09centre: 500@500.",
-messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:"],
+source: "createGhost\x0a\x09ghost := Sprite new source: 'images/ghost.png'.\x0a\x09ghost \x0a\x09\x09addFrameGroupNamed: 'down' origin: (0@0) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'up' origin: (100@0) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'right' origin: (0@55) size: (50@55) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'left' origin: (100@55) size: (50@55) frameCount: 2;\x0a\x09\x09centre: 500@500.",
+messageSends: ["source:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:"],
 referencedClasses: ["Sprite"]
 }),
 globals.SimplePacman);
@@ -1097,7 +1097,7 @@ var self=this;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14;
-self["@pacman"]=_st(_st($Sprite())._new())._imageSrc_("images/pacman.png");
+self["@pacman"]=_st(_st($Sprite())._new())._source_("images/pacman.png");
 $1=self["@pacman"];
 $2=$1;
 $3=(0).__at((0));
@@ -1129,8 +1129,8 @@ _st($11)._addFrameGroupNamed_origin_size_frameCount_("up",$12,$13,(2));
 $14=_st($1)._centre_((100).__at((100)));
 return self}, function($ctx1) {$ctx1.fill(self,"createPacman",{},globals.SimplePacman)})},
 args: [],
-source: "createPacman\x0a\x09pacman := Sprite new imageSrc: 'images/pacman.png'.\x0a\x09pacman \x0a\x09\x09addFrameGroupNamed: 'left' origin: (0@0) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'right' origin: (0@50) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'down' origin: (100@0) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'up' origin: (100@50) size: (50@50) frameCount: 2;\x0a\x09\x09centre: 100@100.",
-messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:"],
+source: "createPacman\x0a\x09pacman := Sprite new source: 'images/pacman.png'.\x0a\x09pacman \x0a\x09\x09addFrameGroupNamed: 'left' origin: (0@0) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'right' origin: (0@50) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'down' origin: (100@0) size: (50@50) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'up' origin: (100@50) size: (50@50) frameCount: 2;\x0a\x09\x09centre: 100@100.",
+messageSends: ["source:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:"],
 referencedClasses: ["Sprite"]
 }),
 globals.SimplePacman);
@@ -1144,13 +1144,13 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 self._clearCanvas();
-self._drawSprite_(self["@ghost"]);
-$ctx1.sendIdx["drawSprite:"]=1;
-$1=self._drawSprite_(self["@pacman"]);
+self._draw_(self["@ghost"]);
+$ctx1.sendIdx["draw:"]=1;
+$1=self._draw_(self["@pacman"]);
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.SimplePacman)})},
 args: [],
-source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09drawSprite: ghost;\x0a\x09\x09drawSprite: pacman.",
-messageSends: ["clearCanvas", "drawSprite:"],
+source: "draw\x0a\x09self \x0a\x09\x09clearCanvas;\x0a\x09\x09draw: ghost;\x0a\x09\x09draw: pacman.",
+messageSends: ["clearCanvas", "draw:"],
 referencedClasses: []
 }),
 globals.SimplePacman);
@@ -1548,20 +1548,16 @@ self._clearCanvas();
 self._drawCeiling();
 self._drawFloor();
 self._drawObstacles();
-$2=self._drawSprite_(self["@ship"]);
-$ctx1.sendIdx["drawSprite:"]=1;
+$2=self._draw_(self["@ship"]);
 $2;
-_st(_st(self._trail())._allButLast())._do_((function(each){
-return smalltalk.withContext(function($ctx2) {
-return self._drawSprite_(each);
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,3)})}));
+self._drawAll_(_st(self["@trail"])._allButLast());
 } else {
 self._drawWelcomeScreen();
 };
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.SmallCave)})},
 args: [],
-source: "draw\x0a\x09self started \x0a\x09\x09ifFalse: [self drawWelcomeScreen]\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09self clearCanvas;\x0a\x09\x09\x09\x09drawCeiling; \x0a\x09\x09\x09\x09drawFloor;\x0a\x09\x09\x09\x09drawObstacles;\x0a\x09\x09\x09\x09drawSprite: ship.\x0a\x09\x09\x09self trail allButLast do: [:each | self drawSprite: each ]].",
-messageSends: ["ifFalse:ifTrue:", "started", "drawWelcomeScreen", "clearCanvas", "drawCeiling", "drawFloor", "drawObstacles", "drawSprite:", "do:", "allButLast", "trail"],
+source: "draw\x0a\x09self started \x0a\x09\x09ifFalse: [self drawWelcomeScreen]\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09self clearCanvas;\x0a\x09\x09\x09\x09drawCeiling; \x0a\x09\x09\x09\x09drawFloor;\x0a\x09\x09\x09\x09drawObstacles;\x0a\x09\x09\x09\x09draw: ship.\x0a\x09\x09\x09self drawAll: trail allButLast ]",
+messageSends: ["ifFalse:ifTrue:", "started", "drawWelcomeScreen", "clearCanvas", "drawCeiling", "drawFloor", "drawObstacles", "draw:", "drawAll:", "allButLast"],
 referencedClasses: []
 }),
 globals.SmallCave);
@@ -2079,7 +2075,7 @@ self["@trail"];
 (0)._to_do_((10),(function(i){
 var ghostBall;
 return smalltalk.withContext(function($ctx2) {
-ghostBall=_st(_st($Sprite())._new())._imageSrc_("images/trail.png");
+ghostBall=_st(_st($Sprite())._new())._source_("images/trail.png");
 ghostBall;
 $3=ghostBall;
 $4=(0).__at((0));
@@ -2097,8 +2093,8 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"trail",{},globals.SmallCave)})},
 args: [],
-source: "trail\x0a\x09^ trail ifNil: [\x0a        \x09trail := #().\x0a          \x090 to: 10 do: [:i |\x0a                             |ghostBall|\x0a                              ghostBall := Sprite new imageSrc: 'images/trail.png'.\x0a                              ghostBall addFrameGroupNamed: 'trail' origin: (0@0) size: (10@10) frameCount: 1.\x0a                              ghostBall position: (i * 10) @ (self height / 2).\x0a                              trail add: ghostBall.\x0a                             ].\x0a\x09\x09trail]",
-messageSends: ["ifNil:", "to:do:", "imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "position:", "*", "/", "height", "add:"],
+source: "trail\x0a\x09^ trail \x0a\x09\x09ifNil: [\x0a        \x09trail := #().\x0a          \x090 to: 10 do: \x0a\x09\x09\x09\x09[:i |\x0a                \x09|ghostBall|\x0a                    ghostBall := Sprite new source: 'images/trail.png'.\x0a                    ghostBall addFrameGroupNamed: 'trail' origin: (0@0) size: (10@10) frameCount: 1.\x0a                    ghostBall position: (i * 10) @ (self height / 2).\x0a                    trail add: ghostBall \x0a\x09\x09\x09\x09].\x0a\x09\x09\x09trail ]",
+messageSends: ["ifNil:", "to:do:", "source:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "position:", "*", "/", "height", "add:"],
 referencedClasses: ["Sprite"]
 }),
 globals.SmallCave);
@@ -2442,7 +2438,7 @@ return _st(eachRow)._withIndexDo_((function(eachColumn,x){
 return smalltalk.withContext(function($ctx3) {
 $2=_st(eachColumn).__eq((7));
 if(smalltalk.assert($2)){
-box=_st(_st($Sprite())._new())._imageSrc_("images/box.png");
+box=_st(_st($Sprite())._new())._source_("images/box.png");
 box;
 $3=box;
 $6=_st((6)._atRandom()).__minus((1));
@@ -2469,8 +2465,8 @@ return _st(self._boxes())._add_(box);
 $ctx1.sendIdx["withIndexDo:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"createBoxes",{box:box},globals.Sokoban)})},
 args: [],
-source: "createBoxes\x0a\x09| box |\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 7) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 7 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09box := Sprite new imageSrc: 'images/box.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09box addFrameGroupNamed: 'still' origin: (((6 atRandom - 1) * 28)@0) size: (28@28) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09box centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self boxes add: box ]]]].",
-messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "*", "-", "atRandom", "centre:", "add:", "boxes"],
+source: "createBoxes\x0a\x09| box |\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 7) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 7 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09box := Sprite new source: 'images/box.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09box addFrameGroupNamed: 'still' origin: (((6 atRandom - 1) * 28)@0) size: (28@28) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09box centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self boxes add: box ]]]].",
+messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "source:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "*", "-", "atRandom", "centre:", "add:", "boxes"],
 referencedClasses: ["Sprite"]
 }),
 globals.Sokoban);
@@ -2493,7 +2489,7 @@ return _st(eachRow)._withIndexDo_((function(eachColumn,x){
 return smalltalk.withContext(function($ctx3) {
 $2=_st(eachColumn).__eq((9));
 if(smalltalk.assert($2)){
-exit=_st(_st($Sprite())._new())._imageSrc_("images/exit.png");
+exit=_st(_st($Sprite())._new())._source_("images/exit.png");
 exit;
 $3=exit;
 $4=(0).__at((0));
@@ -2516,8 +2512,8 @@ return _st(self._exits())._add_(exit);
 $ctx1.sendIdx["withIndexDo:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"createExits",{exit:exit},globals.Sokoban)})},
 args: [],
-source: "createExits\x0a\x09| exit |\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 9) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 9 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09exit := Sprite new imageSrc: 'images/exit.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09exit addFrameGroupNamed: 'exit' origin: (0@0) size: (28@28) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09exit centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self exits add: exit ]]]].",
-messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "-", "*", "add:", "exits"],
+source: "createExits\x0a\x09| exit |\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 9) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 9 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09exit := Sprite new source: 'images/exit.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09exit addFrameGroupNamed: 'exit' origin: (0@0) size: (28@28) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09exit centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self exits add: exit ]]]].",
+messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "source:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "-", "*", "add:", "exits"],
 referencedClasses: ["Sprite"]
 }),
 globals.Sokoban);
@@ -2540,7 +2536,7 @@ return _st(eachRow)._withIndexDo_((function(eachColumn,x){
 return smalltalk.withContext(function($ctx3) {
 $2=_st(eachColumn).__gt((1));
 if(smalltalk.assert($2)){
-tile=_st(_st($Sprite())._new())._imageSrc_("images/floor.png");
+tile=_st(_st($Sprite())._new())._source_("images/floor.png");
 tile;
 $3=tile;
 $4=(0).__at((0));
@@ -2563,8 +2559,8 @@ return _st(self._floor())._add_(tile);
 $ctx1.sendIdx["withIndexDo:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"createFloor",{tile:tile},globals.Sokoban)})},
 args: [],
-source: "createFloor\x0a\x09| tile |\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 1) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn > 1\x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile := Sprite new imageSrc: 'images/floor.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile addFrameGroupNamed: 'tile' origin: (0@0) size: (30@30) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self floor add: tile ]]]].",
-messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", ">", "imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "-", "*", "add:", "floor"],
+source: "createFloor\x0a\x09| tile |\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 1) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn > 1\x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile := Sprite new source: 'images/floor.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile addFrameGroupNamed: 'tile' origin: (0@0) size: (30@30) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09tile centre: ((x * 30) - 15) @ ((y * 30) - 15).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self floor add: tile ]]]].",
+messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", ">", "source:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "-", "*", "add:", "floor"],
 referencedClasses: ["Sprite"]
 }),
 globals.Sokoban);
@@ -2578,7 +2574,7 @@ var self=this;
 function $Sprite(){return globals.Sprite||(typeof Sprite=="undefined"?nil:Sprite)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35,$36,$37;
-self["@guy"]=_st(_st($Sprite())._new())._imageSrc_("images/guy.png");
+self["@guy"]=_st(_st($Sprite())._new())._source_("images/guy.png");
 $1=self["@guy"];
 $2=$1;
 $3=(0).__at((0));
@@ -2665,8 +2661,8 @@ _st($1)._centre_(self._startPositionFor_(self._currentLevel()));
 $37=_st($1)._frameRate_((2));
 return self}, function($ctx1) {$ctx1.fill(self,"createGuy",{},globals.Sokoban)})},
 args: [],
-source: "createGuy\x0a\x09guy := Sprite new imageSrc: 'images/guy.png'.\x0a\x09guy\x0a\x09\x09addFrameGroupNamed: 'walkDown' origin: (0@0) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkUp' origin: (0@25) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkLeft' origin: (0@50) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkRight' origin: (0@75) size: (25@25) frameCount: 2;\x0a\x0a\x09\x09addFrameGroupNamed: 'stillDown' origin: (50@0) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillUp' origin: (50@25) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillLeft' origin: (50@50) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillRight' origin: (50@75) size: (25@25) frameCount: 1;\x0a\x0a\x09\x09addFrameGroupNamed: 'pushDown' origin: (75@0) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushUp' origin: (75@25) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushLeft' origin: (75@50) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushRight' origin: (75@75) size: (25@25) frameCount: 2;\x0a\x0a\x09\x09centre: (self startPositionFor: self currentLevel);\x0a\x0a\x09\x09frameRate: 2.",
-messageSends: ["imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "startPositionFor:", "currentLevel", "frameRate:"],
+source: "createGuy\x0a\x09guy := Sprite new source: 'images/guy.png'.\x0a\x09guy\x0a\x09\x09addFrameGroupNamed: 'walkDown' origin: (0@0) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkUp' origin: (0@25) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkLeft' origin: (0@50) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'walkRight' origin: (0@75) size: (25@25) frameCount: 2;\x0a\x0a\x09\x09addFrameGroupNamed: 'stillDown' origin: (50@0) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillUp' origin: (50@25) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillLeft' origin: (50@50) size: (25@25) frameCount: 1;\x0a\x09\x09addFrameGroupNamed: 'stillRight' origin: (50@75) size: (25@25) frameCount: 1;\x0a\x0a\x09\x09addFrameGroupNamed: 'pushDown' origin: (75@0) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushUp' origin: (75@25) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushLeft' origin: (75@50) size: (25@25) frameCount: 2;\x0a\x09\x09addFrameGroupNamed: 'pushRight' origin: (75@75) size: (25@25) frameCount: 2;\x0a\x0a\x09\x09centre: (self startPositionFor: self currentLevel);\x0a\x0a\x09\x09frameRate: 2.",
+messageSends: ["source:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "centre:", "startPositionFor:", "currentLevel", "frameRate:"],
 referencedClasses: ["Sprite"]
 }),
 globals.Sokoban);
@@ -2710,7 +2706,7 @@ return _st(eachRow)._withIndexDo_((function(eachColumn,x){
 return smalltalk.withContext(function($ctx3) {
 $2=_st(eachColumn).__eq((1));
 if(smalltalk.assert($2)){
-wall=_st(_st($Sprite())._new())._imageSrc_("images/wall.png");
+wall=_st(_st($Sprite())._new())._source_("images/wall.png");
 wall;
 $3=wall;
 $4=(0).__at((0));
@@ -2733,8 +2729,8 @@ return _st(self._walls())._add_(wall);
 $ctx1.sendIdx["withIndexDo:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"createWalls",{wall:wall},globals.Sokoban)})},
 args: [],
-source: "createWalls\x0a\x09|wall|\x0a\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 1) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 1 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09wall := Sprite new imageSrc: 'images/wall.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09wall addFrameGroupNamed: 'wall' origin: (0@0) size: (30@30) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09wall x: ((x * 30) - 30); y: ((y * 30) - 30).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self walls add: wall ]]]].",
-messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "imageSrc:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "x:", "-", "*", "y:", "add:", "walls"],
+source: "createWalls\x0a\x09|wall|\x0a\x0a\x09self currentLevel\x0a\x09\x09withIndexDo: [ :eachRow :y | \x0a\x09\x09\x09(eachRow includes: 1) \x0a\x09\x09\x09\x09ifTrue: \x0a\x09\x09\x09\x09\x09[ eachRow withIndexDo: [ :eachColumn :x |\x0a\x09\x09\x09\x09\x09\x09eachColumn = 1 \x0a\x09\x09\x09\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09\x09\x09\x09wall := Sprite new source: 'images/wall.png'.\x0a\x09\x09\x09\x09\x09\x09\x09\x09wall addFrameGroupNamed: 'wall' origin: (0@0) size: (30@30) frameCount: 1.\x0a\x09\x09\x09\x09\x09\x09\x09\x09wall x: ((x * 30) - 30); y: ((y * 30) - 30).\x0a\x09\x09\x09\x09\x09\x09\x09\x09self walls add: wall ]]]].",
+messageSends: ["withIndexDo:", "currentLevel", "ifTrue:", "includes:", "=", "source:", "new", "addFrameGroupNamed:origin:size:frameCount:", "@", "x:", "-", "*", "y:", "add:", "walls"],
 referencedClasses: ["Sprite"]
 }),
 globals.Sokoban);
@@ -2798,13 +2794,13 @@ return smalltalk.withContext(function($ctx1) {
 self._clearCanvas();
 _st([self._floor(),self._walls(),self._exits(),self._boxes()])._do_((function(eachCollection){
 return smalltalk.withContext(function($ctx2) {
-return self._drawSpriteCollection_(eachCollection);
+return self._drawAll_(eachCollection);
 }, function($ctx2) {$ctx2.fillBlock({eachCollection:eachCollection},$ctx1,1)})}));
-self._drawSprite_(self["@guy"]);
+self._draw_(self["@guy"]);
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.Sokoban)})},
 args: [],
-source: "draw\x0a\x09self clearCanvas.\x0a    \x0a\x09{ self floor. self walls. self exits. self boxes } \x0a\x09\x09do: [ :eachCollection | self drawSpriteCollection: eachCollection ].\x0a\x0a\x09self drawSprite: guy.",
-messageSends: ["clearCanvas", "do:", "floor", "walls", "exits", "boxes", "drawSpriteCollection:", "drawSprite:"],
+source: "draw\x0a\x09self clearCanvas.\x0a    \x0a\x09{ self floor. self walls. self exits. self boxes } \x0a\x09\x09do: [ :eachCollection | self drawAll: eachCollection ].\x0a\x0a\x09self draw: guy.",
+messageSends: ["clearCanvas", "do:", "floor", "walls", "exits", "boxes", "drawAll:", "draw:"],
 referencedClasses: []
 }),
 globals.Sokoban);
@@ -3291,17 +3287,14 @@ return smalltalk.withContext(function($ctx3) {
 return _st(aBox)._moveCentreBy_(offset);
 }, function($ctx3) {$ctx3.fillBlock({},$ctx2,4)})}))._valueWithTimeout_((100));
 self._clearCanvas();
-return _st(self._boxes())._do_((function(each){
-return smalltalk.withContext(function($ctx3) {
-return self._drawSprite_(each);
-}, function($ctx3) {$ctx3.fillBlock({each:each},$ctx2,5)})}));
+return self._drawAll_(self._boxes());
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 };
 };
 return self}, function($ctx1) {$ctx1.fill(self,"moveBox:direction:",{aBox:aBox,aDirection:aDirection,side:side,offset:offset},globals.Sokoban)})},
 args: ["aBox", "aDirection"],
-source: "moveBox: aBox direction: aDirection\x0a\x09|side offset|\x0a\x09side := self directionDictionary at: aDirection.\x0a\x09offset := self boxOffsetDictionary at: aDirection.\x0a\x0a\x09aBox centre: aBox centre + offset.\x0a\x09(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {walls})\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {boxes})\x0a\x09\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09\x09(self soundNamed: 'slide') play.\x0a                    5 timesRepeat: [\x0a\x09\x09\x09\x09\x09\x09[ aBox moveCentreBy: offset ] valueWithTimeout: 100.\x0a\x09\x09\x09\x09\x09\x09self clearCanvas. \x0a\x09\x09\x09\x09\x09\x09self boxes do: [ :each | self drawSprite: each ]]]\x0a\x09\x09\x09\x09ifTrue: [ aBox centre: aBox centre - offset ]]\x0a\x09\x09ifTrue: [ aBox centre: aBox centre - offset ]",
-messageSends: ["at:", "directionDictionary", "boxOffsetDictionary", "centre:", "+", "centre", "ifFalse:ifTrue:", "perform:withArguments:", ",", "play", "soundNamed:", "timesRepeat:", "valueWithTimeout:", "moveCentreBy:", "clearCanvas", "do:", "boxes", "drawSprite:", "-"],
+source: "moveBox: aBox direction: aDirection\x0a\x09|side offset|\x0a\x09side := self directionDictionary at: aDirection.\x0a\x09offset := self boxOffsetDictionary at: aDirection.\x0a\x0a\x09aBox centre: aBox centre + offset.\x0a\x09(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {walls})\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09(aBox perform: side , 'CollidesWithAnyOf:' withArguments: {boxes})\x0a\x09\x09\x09\x09ifFalse: [\x0a\x09\x09\x09\x09\x09(self soundNamed: 'slide') play.\x0a                    5 timesRepeat: [\x0a\x09\x09\x09\x09\x09\x09[ aBox moveCentreBy: offset ] valueWithTimeout: 100.\x0a\x09\x09\x09\x09\x09\x09self clearCanvas. \x0a\x09\x09\x09\x09\x09\x09self drawAll: self boxes ]]\x0a\x09\x09\x09\x09ifTrue: [ aBox centre: aBox centre - offset ]]\x0a\x09\x09ifTrue: [ aBox centre: aBox centre - offset ]",
+messageSends: ["at:", "directionDictionary", "boxOffsetDictionary", "centre:", "+", "centre", "ifFalse:ifTrue:", "perform:withArguments:", ",", "play", "soundNamed:", "timesRepeat:", "valueWithTimeout:", "moveCentreBy:", "clearCanvas", "drawAll:", "boxes", "-"],
 referencedClasses: []
 }),
 globals.Sokoban);
@@ -3337,17 +3330,17 @@ self["@stepSize"]=(10);
 self._width_((720));
 $1=self._height_((540));
 _st(self["@canvas"])._style_("border: 1px solid; background-image: url(\x22images/background.png\x22)");
-self._addSound_("sounds/slide.ogg");
-$ctx1.sendIdx["addSound:"]=1;
-self._addSound_("sounds/factory.ogg");
-$ctx1.sendIdx["addSound:"]=2;
-$2=self._addSound_("sounds/applause.ogg");
+self._loadSound_("sounds/slide.ogg");
+$ctx1.sendIdx["loadSound:"]=1;
+self._loadSound_("sounds/factory.ogg");
+$ctx1.sendIdx["loadSound:"]=2;
+$2=self._loadSound_("sounds/applause.ogg");
 _st(self._soundNamed_("factory"))._loop();
 self._createLevel();
 return self}, function($ctx1) {$ctx1.fill(self,"startGame",{},globals.Sokoban)})},
 args: [],
-source: "startGame\x0a\x09fps := 20.\x09\x0a\x09stepSize := 10.\x0a\x0a\x09self\x0a\x09\x09width: 720; \x0a\x09\x09height: 540.\x0a\x0a\x09canvas style: 'border: 1px solid; background-image: url(\x22images/background.png\x22)'.\x0a\x0a\x09self\x0a\x09\x09addSound: 'sounds/slide.ogg';\x0a\x09\x09addSound: 'sounds/factory.ogg';\x0a\x09\x09addSound: 'sounds/applause.ogg'.\x0a\x0a\x09(self soundNamed: 'factory') loop.\x0a\x0a\x09self createLevel.",
-messageSends: ["width:", "height:", "style:", "addSound:", "loop", "soundNamed:", "createLevel"],
+source: "startGame\x0a\x09fps := 20.\x09\x0a\x09stepSize := 10.\x0a\x0a\x09self\x0a\x09\x09width: 720; \x0a\x09\x09height: 540.\x0a\x0a\x09canvas style: 'border: 1px solid; background-image: url(\x22images/background.png\x22)'.\x0a\x0a\x09self\x0a\x09\x09loadSound: 'sounds/slide.ogg';\x0a\x09\x09loadSound: 'sounds/factory.ogg';\x0a\x09\x09loadSound: 'sounds/applause.ogg'.\x0a\x0a\x09(self soundNamed: 'factory') loop.\x0a\x0a\x09self createLevel.",
+messageSends: ["width:", "height:", "style:", "loadSound:", "loop", "soundNamed:", "createLevel"],
 referencedClasses: []
 }),
 globals.Sokoban);

@@ -81,7 +81,7 @@ step
 !MemoryGame methodsFor: 'drawing'!
 
 draw
-	self drawSpriteCollection: cards
+	self drawAll: cards
 ! !
 
 !MemoryGame methodsFor: 'events'!
@@ -144,7 +144,7 @@ addCardForAnimal: anAnimal inPosition: aPosition
 	self cards add:
 		(MemoryCard new
 			animalName: anAnimal;
-			imageSrc: 'images/memory/' , anAnimal , '.png';
+			source: 'images/memory/' , anAnimal , '.png';
 			addFrameGroupNamed: 'card' origin: 0@0 size: 100@100 frameCount: 2;
 			centre: aPosition;
 			frameRate: 25;
@@ -162,7 +162,7 @@ addCards
 			positions add: ((100*c) + 50)@((100*r) + 50) ]].
 
 	self animalNames do: [ :eachAnimal |
-		self addSound: 'sounds/' , eachAnimal , '.ogg'.
+		self loadSound: 'sounds/' , eachAnimal , '.ogg'.
 		2 timesRepeat: [
 			| position |
 			position := positions atRandom.
@@ -196,7 +196,7 @@ bounceAgainstPaddle2
 
 createBall
 	|offsetX offsetY|
-	ball := Sprite new imageSrc: 'images/ball.png'.
+	ball := Sprite new source: 'images/ball.png'.
 	ball addFrameGroupNamed: 'moving' origin: (0@0) size: (15@15) frameCount: 6.
 	ball centre:  ((self width / 2) @ (self height / 2)).
 	ball frameRate: 5.
@@ -204,7 +204,7 @@ createBall
 
 createPaddle1
 	|verticalOffset|
-	paddle1 := Sprite new imageSrc: 'images/paddle.png'.
+	paddle1 := Sprite new source: 'images/paddle.png'.
 	paddle1 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.
 	paddle1 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.
 	paddle1 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.
@@ -214,7 +214,7 @@ createPaddle1
 !
 
 createPaddle2
-	paddle2 := Sprite new imageSrc: 'images/paddle.png'.
+	paddle2 := Sprite new source: 'images/paddle.png'.
 	paddle2 addFrameGroupNamed: 'still' origin: (0@0) size: (15@80) frameCount: 1.
 	paddle2 addFrameGroupNamed: 'up' origin: (15@0) size: (15@80) frameCount: 1.
 	paddle2 addFrameGroupNamed: 'down' origin: (30@0) size: (15@80) frameCount: 1.
@@ -224,10 +224,10 @@ createPaddle2
 
 draw
 		self clearCanvas;
-			drawSprite: paddle1;
-			drawSprite: paddle2;
+			draw: paddle1;
+			draw: paddle2;
 			drawMiddleLine;
-			drawSprite: ball.
+			draw: ball.
 		paddle1 currentFrameGroup: 'still'.
 		paddle2 currentFrameGroup: 'still'
 !
@@ -320,10 +320,10 @@ startGame
 
 	canvas style: 'background-color: blue'.
 
-	self addSound: 'sounds/applause.ogg'.
-	self addSound: 'sounds/click.ogg'.
-
-	self createPaddle1;
+	self
+		loadSound: 'sounds/applause.ogg';
+		loadSound: 'sounds/click.ogg';
+		createPaddle1;
 		createPaddle2;
 		createBall.
 
@@ -374,7 +374,7 @@ increaseSpeed
 initialize
 	super initialize.
 	self 
-		imageSrc: 'images/trail.png';
+		source: 'images/trail.png';
 		addFrameGroupNamed: 'ship' origin: 0@0 size: 10@10 frameCount: 1.
 !
 
@@ -393,7 +393,7 @@ Game subclass: #SimplePacman
 !SimplePacman methodsFor: 'not yet classified'!
 
 createGhost
-	ghost := Sprite new imageSrc: 'images/ghost.png'.
+	ghost := Sprite new source: 'images/ghost.png'.
 	ghost 
 		addFrameGroupNamed: 'down' origin: (0@0) size: (50@55) frameCount: 2;
 		addFrameGroupNamed: 'up' origin: (100@0) size: (50@55) frameCount: 2;
@@ -403,7 +403,7 @@ createGhost
 !
 
 createPacman
-	pacman := Sprite new imageSrc: 'images/pacman.png'.
+	pacman := Sprite new source: 'images/pacman.png'.
 	pacman 
 		addFrameGroupNamed: 'left' origin: (0@0) size: (50@50) frameCount: 2;
 		addFrameGroupNamed: 'right' origin: (0@50) size: (50@50) frameCount: 2;
@@ -415,8 +415,8 @@ createPacman
 draw
 	self 
 		clearCanvas;
-		drawSprite: ghost;
-		drawSprite: pacman.
+		draw: ghost;
+		draw: pacman.
 !
 
 moveDown
@@ -540,8 +540,8 @@ draw
 				drawCeiling; 
 				drawFloor;
 				drawObstacles;
-				drawSprite: ship.
-			self trail allButLast do: [:each | self drawSprite: each ]].
+				draw: ship.
+			self drawAll: trail allButLast ]
 !
 
 drawCeiling
@@ -663,16 +663,18 @@ step
 !
 
 trail
-	^ trail ifNil: [
+	^ trail 
+		ifNil: [
         	trail := #().
-          	0 to: 10 do: [:i |
-                             |ghostBall|
-                              ghostBall := Sprite new imageSrc: 'images/trail.png'.
-                              ghostBall addFrameGroupNamed: 'trail' origin: (0@0) size: (10@10) frameCount: 1.
-                              ghostBall position: (i * 10) @ (self height / 2).
-                              trail add: ghostBall.
-                             ].
-		trail]
+          	0 to: 10 do: 
+				[:i |
+                	|ghostBall|
+                    ghostBall := Sprite new source: 'images/trail.png'.
+                    ghostBall addFrameGroupNamed: 'trail' origin: (0@0) size: (10@10) frameCount: 1.
+                    ghostBall position: (i * 10) @ (self height / 2).
+                    trail add: ghostBall 
+				].
+			trail ]
 !
 
 updateBumps
@@ -748,9 +750,9 @@ startGame
 	canvas style: 'border: 1px solid; background-image: url("images/background.png")'.
 
 	self
-		addSound: 'sounds/slide.ogg';
-		addSound: 'sounds/factory.ogg';
-		addSound: 'sounds/applause.ogg'.
+		loadSound: 'sounds/slide.ogg';
+		loadSound: 'sounds/factory.ogg';
+		loadSound: 'sounds/applause.ogg'.
 
 	(self soundNamed: 'factory') loop.
 
@@ -788,9 +790,9 @@ draw
 	self clearCanvas.
     
 	{ self floor. self walls. self exits. self boxes } 
-		do: [ :eachCollection | self drawSpriteCollection: eachCollection ].
+		do: [ :eachCollection | self drawAll: eachCollection ].
 
-	self drawSprite: guy.
+	self draw: guy.
 ! !
 
 !Sokoban methodsFor: 'levels'!
@@ -1290,7 +1292,7 @@ moveBox: aBox direction: aDirection
                     5 timesRepeat: [
 						[ aBox moveCentreBy: offset ] valueWithTimeout: 100.
 						self clearCanvas. 
-						self boxes do: [ :each | self drawSprite: each ]]]
+						self drawAll: self boxes ]]
 				ifTrue: [ aBox centre: aBox centre - offset ]]
 		ifTrue: [ aBox centre: aBox centre - offset ]
 ! !
@@ -1324,7 +1326,7 @@ createBoxes
 					[ eachRow withIndexDo: [ :eachColumn :x |
 						eachColumn = 7 
 							ifTrue: [
-								box := Sprite new imageSrc: 'images/box.png'.
+								box := Sprite new source: 'images/box.png'.
 								box addFrameGroupNamed: 'still' origin: (((6 atRandom - 1) * 28)@0) size: (28@28) frameCount: 1.
 								box centre: ((x * 30) - 15) @ ((y * 30) - 15).
 								self boxes add: box ]]]].
@@ -1339,7 +1341,7 @@ createExits
 					[ eachRow withIndexDo: [ :eachColumn :x |
 						eachColumn = 9 
 							ifTrue: [
-								exit := Sprite new imageSrc: 'images/exit.png'.
+								exit := Sprite new source: 'images/exit.png'.
 								exit addFrameGroupNamed: 'exit' origin: (0@0) size: (28@28) frameCount: 1.
 								exit centre: ((x * 30) - 15) @ ((y * 30) - 15).
 								self exits add: exit ]]]].
@@ -1354,14 +1356,14 @@ createFloor
 					[ eachRow withIndexDo: [ :eachColumn :x |
 						eachColumn > 1
 							ifTrue: [
-								tile := Sprite new imageSrc: 'images/floor.png'.
+								tile := Sprite new source: 'images/floor.png'.
 								tile addFrameGroupNamed: 'tile' origin: (0@0) size: (30@30) frameCount: 1.
 								tile centre: ((x * 30) - 15) @ ((y * 30) - 15).
 								self floor add: tile ]]]].
 !
 
 createGuy
-	guy := Sprite new imageSrc: 'images/guy.png'.
+	guy := Sprite new source: 'images/guy.png'.
 	guy
 		addFrameGroupNamed: 'walkDown' origin: (0@0) size: (25@25) frameCount: 2;
 		addFrameGroupNamed: 'walkUp' origin: (0@25) size: (25@25) frameCount: 2;
@@ -1393,7 +1395,7 @@ createWalls
 					[ eachRow withIndexDo: [ :eachColumn :x |
 						eachColumn = 1 
 							ifTrue: [
-								wall := Sprite new imageSrc: 'images/wall.png'.
+								wall := Sprite new source: 'images/wall.png'.
 								wall addFrameGroupNamed: 'wall' origin: (0@0) size: (30@30) frameCount: 1.
 								wall x: ((x * 30) - 30); y: ((y * 30) - 30).
 								self walls add: wall ]]]].

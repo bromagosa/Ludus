@@ -1,433 +1,61 @@
 Smalltalk createPackage: 'Ludus'!
-Widget subclass: #AbstractScreen
-	instanceVariableNames: 'inputHandler canvas context fps step'
+Object subclass: #AbstractDrawable
+	instanceVariableNames: 'image'
 	package: 'Ludus'!
 
-!AbstractScreen methodsFor: 'accessing'!
+!AbstractDrawable methodsFor: 'aspect'!
 
-canvas
-	^ canvas
-!
-
-canvas: anObject
-	canvas := anObject
-!
-
-context
-	^ context
-!
-
-fps
-	^ fps
-!
-
-fps: anInteger
-	fps := anInteger
-!
-
-inputHandler
-	^ inputHandler ifNil: [ inputHandler := InputHandler new canvas: self canvas ]
-!
-
-stepCount
-	^ step
+newImage
+	^ document createElement: 'img'
 ! !
 
-!AbstractScreen methodsFor: 'attributes'!
+!AbstractDrawable methodsFor: 'attributes'!
 
-backgroundColor: aColor
-	self canvas at: 'style' put: ('background-color: ', aColor , ';')
+image
+	image ifNil: [ image := self newImage ].
+	^ image
 !
 
-height
-	^ self canvas element height
-!
-
-height: anInteger
-	self canvas at: 'height' put: anInteger.
-!
-
-width
-	^ self canvas element width
-!
-
-width: anInteger
-	self canvas at: 'width' put: anInteger.
+source: anImageUrl
+	self image src: anImageUrl; yourself
 ! !
 
-!AbstractScreen methodsFor: 'control'!
+!AbstractDrawable methodsFor: 'drawing'!
 
-everyStepNumber: anInteger do: aBlock
-	(step \\ anInteger) = 0 ifTrue: aBlock
-!
-
-step
-	self subclassResponsibility
+drawOnCanvas: aCanvas step: aStep
+	"If a subclass of mine needs to know what step the renderer is in, it will implement a method accordingly. Otherwise, I'll just ignore the step"
+	
+	self drawOnCanvas: aCanvas
 ! !
 
-!AbstractScreen methodsFor: 'control - private'!
+!AbstractDrawable methodsFor: 'testing'!
 
-gameLoop
-	"Do not override me, use #step and #draw instead"
-	self isGameOver
-		ifFalse: [[
-			self currentScreen
-				step;
-				draw.
-			step := step + 1.
-			self gameLoop ] valueWithTimeout: (1000 / fps) ]
+isAnimation
+	^ false
+!
+
+isBackground
+	^ false
+!
+
+isImage
+	^ false
+!
+
+isParallax
+	^ false
+!
+
+isSprite
+	^ false
+!
+
+isText
+	^ false
 ! !
 
-!AbstractScreen methodsFor: 'drawing'!
-
-clearCanvas
-	self context
-		clearRect: 0
-		y: 0
-		width: self canvas element width
-		height: self canvas element height.
-!
-
-draw
-	self subclassResponsibility
-!
-
-drawBackground: aBackground
-	aBackground drawOnContext: self context step: step width: self canvas element width
-!
-
-drawSprite: aSprite
-	aSprite drawOnContext: self context step: step
-!
-
-drawSpriteCollection: aSpriteCollection
-	aSpriteCollection
-		do: [ :eachSprite | 
-			self drawSprite: eachSprite ]
-! !
-
-!AbstractScreen methodsFor: 'fonts'!
-
-addFont: aFontSrc named: aFontName
-	'head' asJQuery prepend: 
-		'<style type="text/css"> @font-face { font-family: "'
-			, aFontName
-			, '";src: local(''☺''), url('''
-			, aFontSrc
-			,''') format(''opentype'');}</style>'
-! !
-
-!AbstractScreen methodsFor: 'initialization'!
-
-initialize
-	super initialize.
-	fps := 30.
-	step := 1.
-! !
-
-!AbstractScreen methodsFor: 'rendering'!
-
-renderOn: html
-	"Do not override me, use #startGame instead"
-	canvas := html canvas.
-	self canvas 
-		at: 'width' put: 250;
-		at: 'height' put: 250;
-		id: self class name.
-	context := canvas element getContext: '2d'.
-
-	self inputHandler bindEvents.
-
-	self 
-		startGame;
-		gameLoop.
-! !
-
-AbstractScreen subclass: #Game
-	instanceVariableNames: 'end sounds screens currentScreen'
-	package: 'Ludus'!
-!Game commentStamp!
-I am a game. You need to override a couple of my methods to make me usable:
-
-**#startGame** Here you can define my intial conditions, such as the size of the canvas, my sounds, the background properties, the FPS, etc.
-
-**#step**  Here you can define what has to be done at each game cycle, or step. This method should control posititions, collisions, mouse and keyboard events, etc. This method should not deal with any graphic properties, these should be dealt with by:
-
-**#draw**  This is the method that controls my view. Here you should define the drawing of sprites and other graphic elements. Don't forget to clear the canvas before re-drawing sprites, if your game requires so.!
-
-!Game methodsFor: 'accessing'!
-
-currentScreen
-	^ currentScreen ifNil: [ currentScreen := self ]
-!
-
-screens
-	^ screens ifNil: [ screens := #() ]
-!
-
-sounds
-	^ sounds ifNil: [ sounds := #() ]
-! !
-
-!Game methodsFor: 'audio'!
-
-addSound: aSoundUrl
-	(self hasSound: aSoundUrl) ifFalse: [
-		| sound |
-		sound := (Sound src: aSoundUrl).
-		sound 
-			cssClass: self class name;
-			appendToJQuery: 'body' asJQuery.
-		self sounds add: sound.
-	]
-!
-
-hasSound: aSoundUrl
-	^ self sounds anySatisfy: [ :any | any src = aSoundUrl ]
-!
-
-soundNamed: aName
-	^ self sounds detect: [ :each | each id = aName ]
-! !
-
-!Game methodsFor: 'control'!
-
-end
-	end := true
-!
-
-restart
-	self
-		kill;
-		initialize;
-		start.
-!
-
-start
-	self appendToJQuery: ('body' asJQuery).
-!
-
-stop
-	self end.
-	self class stop.
-! !
-
-!Game methodsFor: 'control - testing'!
-
-isGameOver
-	^ end ifNil: [ end := false ]
-! !
-
-!Game methodsFor: 'initialization'!
-
-startGame
-	self subclassResponsibility
-! !
-
-!Game methodsFor: 'screens'!
-
-addScreen: aScreen named: aString
-	aScreen
-		name: aString;
-		game: self.
-	self screens add: aScreen.
-!
-
-screenNamed: aString
-	^ self screens detect: [ :which | which name = aString ] ifNone: [ nil ]
-!
-
-switchToGame
-	currentScreen := self
-!
-
-switchToScreen: aScreen
-	currentScreen := aScreen startScreen
-!
-
-switchToScreenNamed: aString
-	self switchToScreen: (self screenNamed: aString)
-! !
-
-Game class instanceVariableNames: 'Instances'!
-
-!Game class methodsFor: 'control'!
-
-start
-	|instance|
-	instance := self new start.
-	^ instance
-!
-
-stop
-	document asJQuery
-		unbind: 'keydown';
-		unbind: 'keyup'.
-	('canvas#' , self name) asJQuery remove.
-	('audio.' , self name) asJQuery remove.
-!
-
-stopAll
-	self instances do: [ :each | each stop ]
-! !
-
-!Game class methodsFor: 'initialization'!
-
-initialize
-	"uncomment if you want the game to start when loading the page"
-"	'self start"
-! !
-
-!Game class methodsFor: 'instance creation'!
-
-new
-	| instance |
-	instance := super new.
-	Game instances add: instance.
-	^ instance
-! !
-
-!Game class methodsFor: 'instance treatment'!
-
-instances
-	^ Instances ifNil: [ Instances := #() ]
-! !
-
-AbstractScreen subclass: #Screen
-	instanceVariableNames: 'game name'
-	package: 'Ludus'!
-!Screen commentStamp!
-I am a game screen. I need to implement #startScreen, #step and #draw, as these will be called by the game who owns me.
-I can represent many things: levels, menu screens, or anything that needs to change the whole canvas.!
-
-!Screen methodsFor: 'accessing'!
-
-canvas
-	^ self game canvas
-!
-
-context
-	^ self game context
-!
-
-game
-	^ game
-!
-
-game: anObject
-	game := anObject
-!
-
-inputHandler
-	^ self game inputHandler
-!
-
-name
-	^ name ifNil: [ self class name ]
-!
-
-name: anObject
-	name := anObject
-! !
-
-!Screen methodsFor: 'drawing'!
-
-draw: aDrawable
-	aDrawable drawOnContext: self context
-! !
-
-!Screen methodsFor: 'initialization'!
-
-startScreen
-	self subclassResponsibility
-! !
-
-!Screen class methodsFor: 'instance creation'!
-
-named: aString
-	| instance |
-	instance := self new name: aString.
-	^ instance
-! !
-
-Screen subclass: #Menu
-	instanceVariableNames: 'options currentOption pointer optionSeparation pointerOriginY'
-	package: 'Ludus'!
-
-!Menu methodsFor: 'accessing'!
-
-currentOption
-	^ currentOption ifNil: [ currentOption := self options first ]
-!
-
-currentOption: anOption
-	currentOption := anOption
-!
-
-optionSeparation
-	^ optionSeparation ifNil: [ optionSeparation := 50 ]
-!
-
-optionSeparation: anObject
-	optionSeparation := anObject
-!
-
-options
-	^ options ifNil: [ options := #() ]
-!
-
-options: anObject
-	options := anObject
-!
-
-pointer
-	^ pointer
-!
-
-pointer: anObject
-	pointer := anObject
-!
-
-pointerOriginY
-	^ pointerOriginY ifNil: [ pointerOriginY := 100 ]
-!
-
-pointerOriginY: anObject
-	pointerOriginY := anObject
-! !
-
-!Menu methodsFor: 'control'!
-
-nextOption
-	self 
-		currentOption: 
-			(self options at: 
-				(((self options indexOf: self currentOption) + 1) min: self options size));
-		placePointer.
-!
-
-placePointer
-	self pointer y: (((self options indexOf: self currentOption) - 1) * self optionSeparation) +  self pointerOriginY
-!
-
-previousOption
-	self 
-		currentOption: 
-			(self options at: 
-				(((self options indexOf: self currentOption) - 1) max: 1)) ;
-		placePointer.
-!
-
-step
-	self inputHandler 
-		onKeyPressed: Key downArrow do: [ self nextOption ];
-		onKeyPressed: Key upArrow do: [ self previousOption ];
-		onKeyPressed: Key enter do: [ self perform: self currentOption ];
-		onKeyPressed: Key space do: [ self perform: self currentOption ]
-! !
-
-Object subclass: #Animation
-	instanceVariableNames: 'spriteSheet currentFrameGroup frameGroups animating loop image'
+AbstractDrawable subclass: #Animation
+	instanceVariableNames: 'spriteSheet currentFrameGroup frameGroups animating loop'
 	package: 'Ludus'!
 
 !Animation methodsFor: 'animation'!
@@ -468,32 +96,11 @@ toggleAnimation
 	animating := animating not
 ! !
 
-!Animation methodsFor: 'aspect'!
-
-newImage
-	^ document createElement: 'img'
-! !
-
-!Animation methodsFor: 'attributes'!
-
-image
-	image ifNil: [ image := self newImage ].
-	^ image
-!
-
-imageSrc: anImageUrl
-	self image src: anImageUrl
-! !
-
 !Animation methodsFor: 'drawing'!
 
-drawOnContext: aContext
-	self subclassResponsibility
-!
-
-drawOnContext: aContext step: aStep
+drawOnCanvas: aCanvas step: aStep
 	self 
-		drawOnContext: aContext;
+		drawOnCanvas: aCanvas;
 		nextFrameWithStep: aStep.
 ! !
 
@@ -507,6 +114,10 @@ addFrameGroupNamed: aString origin: anOriginPoint size: aSizePoint frameCount: a
 				origin: anOriginPoint
 				frameSize: aSizePoint
 				frameCount: anInteger)
+!
+
+atFirstFrame
+	^ self currentFrameGroup atFirstFrame
 !
 
 atLastFrame
@@ -548,6 +159,10 @@ nextFrameWithStep: aStep
 
 toFirstFrame
 	self currentFrameGroup toFirstFrame
+!
+
+toLastFrame
+	self currentFrameGroup toLastFrame
 ! !
 
 !Animation methodsFor: 'geometry'!
@@ -560,18 +175,37 @@ width
 	^ self currentFrameGroup width
 ! !
 
+!Animation methodsFor: 'testing'!
+
+isAnimation
+	^ true
+! !
+
 Animation subclass: #Background
 	instanceVariableNames: 'parallaxSpeed'
 	package: 'Ludus'!
 
+!Background methodsFor: 'attributes'!
+
+speed
+	^ self isParallax ifTrue: [ self currentFrameGroup speed ] ifFalse: [ 0 ]
+!
+
+speed: anInteger
+	self isParallax ifTrue: [ self currentFrameGroup speed: anInteger ]
+! !
+
 !Background methodsFor: 'drawing'!
 
-drawOnContext: aContext step: aStep width: aWidth
+drawOnCanvas: aCanvas step: aStep
 	self isParallax 
-		ifFalse: [ super drawOnContext: aContext step: aStep ]
+		ifFalse: [
+			self 
+				drawOnCanvas: aCanvas;
+				nextFrameWithStep: aStep. ]
 		ifTrue: [ 
 			self currentFrameGroup 
-				drawFromBackground: self onContext: aContext;
+				drawFromBackground: self onCanvas: aCanvas;
 				move ]
 ! !
 
@@ -589,12 +223,16 @@ addParallaxNamed: aString origin: anOriginPoint size: aSizePoint speed: anIntege
 
 !Background methodsFor: 'testing'!
 
+isBackground
+	^ true
+!
+
 isParallax
 	^ self currentFrameGroup isParallax
 ! !
 
 Animation subclass: #Sprite
-	instanceVariableNames: 'speed position direction'
+	instanceVariableNames: 'speed position direction debugMode'
 	package: 'Ludus'!
 !Sprite commentStamp!
 I am a Sprite. I need to have a spritesheet, which is an image file that displays all possible frames I can paint organized in an ordered fashion.
@@ -742,8 +380,18 @@ topCollidesWithWhichOf: aSpriteCollection
 
 !Sprite methodsFor: 'drawing'!
 
-drawOnContext: aContext
-	self currentFrameGroup drawFromSprite: self onContext: aContext
+drawBoundingBoxOnCanvas: aCanvas
+	(aCanvas element getContext: '2d')
+		beginPath;
+		strokeStyle: 'rgba(255,0,0,0.5)';
+		lineWidth: 1;
+		rect: self x y: self y width: self width height: self height;
+		stroke.
+!
+
+drawOnCanvas: aCanvas
+	self currentFrameGroup drawFromSprite: self onCanvas: aCanvas.
+	Game debugMode ifTrue: [ self drawBoundingBoxOnCanvas: aCanvas ]
 ! !
 
 !Sprite methodsFor: 'events'!
@@ -812,16 +460,17 @@ isTopInsideCanvas: aCanvas
 	^ self y >= 0
 ! !
 
-Object subclass: #Drawable
-	instanceVariableNames: 'origin size image position'
+!Sprite methodsFor: 'testing'!
+
+isSprite
+	^ true
+! !
+
+AbstractDrawable subclass: #Image
+	instanceVariableNames: 'origin size position'
 	package: 'Ludus'!
 
-!Drawable methodsFor: 'accessing'!
-
-image
-	image ifNil: [ image := self newImage ].
-	^ image
-!
+!Image methodsFor: 'accessing'!
 
 origin
 	^ origin
@@ -847,10 +496,6 @@ size: anObject
 	size := anObject
 !
 
-source: anImageUrl
-	self image src: anImageUrl; yourself
-!
-
 source: aSourceString origin: anOriginPoint size: aSizePoint position: aPosition
 	self 
 		source: aSourceString;
@@ -859,13 +504,7 @@ source: aSourceString origin: anOriginPoint size: aSizePoint position: aPosition
 		position: aPosition
 ! !
 
-!Drawable methodsFor: 'aspect'!
-
-newImage
-	^ document createElement: 'img'
-! !
-
-!Drawable methodsFor: 'attributes'!
+!Image methodsFor: 'attributes'!
 
 height
 	^ self size y
@@ -891,10 +530,10 @@ y: anInteger
 	self position y: anInteger
 ! !
 
-!Drawable methodsFor: 'drawing'!
+!Image methodsFor: 'drawing'!
 
-drawOnContext: aContext
-	aContext
+drawOnCanvas: aCanvas
+	(aCanvas element getContext: '2d')
 		drawImage: self image
 		originX: self origin x
 		originY: self origin y
@@ -906,13 +545,13 @@ drawOnContext: aContext
 		scaleHeight: self height.
 ! !
 
-!Drawable methodsFor: 'testing'!
+!Image methodsFor: 'testing'!
 
-isParallax
-	^ false
+isImage
+	^ true
 ! !
 
-Drawable subclass: #FrameGroup
+Image subclass: #FrameGroup
 	instanceVariableNames: 'identifier frameCount currentFrameNumber frameRate'
 	package: 'Ludus'!
 !FrameGroup commentStamp!
@@ -952,8 +591,8 @@ identifier: aString origin: anOriginPoint frameSize: aSizePoint frameCount: anIn
 
 !FrameGroup methodsFor: 'drawing'!
 
-drawFromSprite: aSprite onContext: aContext
-	aContext
+drawFromSprite: aSprite onCanvas: aCanvas
+	(aCanvas element getContext: '2d')
 		drawImage: aSprite image
 		originX: self origin x + self offset
 		originY: self origin y
@@ -991,9 +630,17 @@ offset
 
 toFirstFrame
 	currentFrameNumber := 0
+!
+
+toLastFrame
+	currentFrameNumber := self frameCount
 ! !
 
 !FrameGroup methodsFor: 'frames - testing'!
+
+atFirstFrame
+	^ self currentFrameNumber = 1
+!
 
 atLastFrame
 	^ self currentFrameNumber = (self frameCount - 1)
@@ -1033,8 +680,8 @@ identifier: aString origin: anOriginPoint size: aSizePoint speed: anInteger
 
 !ParallaxImage methodsFor: 'drawing'!
 
-drawFromBackground: aBackground onContext: aContext
-	aContext
+drawFromBackground: aBackground onCanvas: aCanvas
+	(aCanvas element getContext: '2d')
 		drawImage: aBackground image
 		originX: self origin x + self offset
 		originY: self origin y
@@ -1068,6 +715,592 @@ move
 
 isParallax
 	^ true
+! !
+
+AbstractDrawable subclass: #Text
+	instanceVariableNames: 'fontName fontSize fontStyle color position contents outlineColor outlineSize'
+	package: 'Ludus'!
+
+!Text methodsFor: 'accessing'!
+
+color
+	^ color ifNil: [ color := 'red' ]
+!
+
+color: anObject
+	color := anObject
+!
+
+contents
+	^ contents ifNil: [ '' ]
+!
+
+contents: anObject
+	contents := anObject
+!
+
+fontName
+	^ fontName ifNil: [ fontName := 'Sans' ]
+!
+
+fontName: anObject
+	fontName := anObject
+!
+
+fontSize
+	^ fontSize ifNil: [ fontSize := 12 ]
+!
+
+fontSize: anObject
+	fontSize := anObject
+!
+
+fontStyle
+	^ fontStyle ifNil: [ '' ]
+!
+
+outlineColor
+	^ outlineColor
+!
+
+outlineColor: aColorName
+	outlineColor := aColorName.
+!
+
+outlineSize
+	^ outlineSize
+!
+
+outlineSize: aSize
+	outlineSize := aSize
+!
+
+position
+	^ position ifNil: [ position := 10@10 ]
+!
+
+position: anObject
+	position := anObject
+! !
+
+!Text methodsFor: 'attributes'!
+
+beBold
+	fontStyle := 'bold'
+!
+
+beItalic
+	fontStyle := 'italic'
+!
+
+beNormal
+	fontStyle := ''
+!
+
+fontDefinition
+	^ self fontStyle  , ' ' , self fontSize printString , 'px ' , self fontName
+!
+
+removeOutline
+	outlineColor := nil.
+	outlineSize := nil.
+! !
+
+!Text methodsFor: 'drawing'!
+
+drawOnCanvas: aCanvas
+	(aCanvas element getContext: '2d')
+		font: self fontDefinition;
+		fillStyle: self color;
+		fillText: self contents
+			x: self position x
+			y: self position y.
+	(self outlineSize notNil & self outlineColor notNil) ifTrue: [
+		(aCanvas element getContext: '2d')
+			lineWidth: self outlineSize;
+			strokeStyle: self outlineColor;
+			strokeText: self contents
+				x: self position x
+				y: self position y ]
+! !
+
+!Text methodsFor: 'testing'!
+
+isText
+	^ true
+! !
+
+Widget subclass: #AbstractScreen
+	instanceVariableNames: 'inputHandler canvas context fps step'
+	package: 'Ludus'!
+
+!AbstractScreen methodsFor: 'accessing'!
+
+canvas
+	^ canvas
+!
+
+canvas: anObject
+	canvas := anObject
+!
+
+context
+	^ context
+!
+
+fps
+	^ fps
+!
+
+fps: anInteger
+	fps := anInteger
+!
+
+inputHandler
+	^ inputHandler ifNil: [ inputHandler := InputHandler new canvas: self canvas ]
+!
+
+stepCount
+	^ step
+! !
+
+!AbstractScreen methodsFor: 'attributes'!
+
+backgroundColor: aColor
+	self canvas at: 'style' put: ('background-color: ', aColor , ';')
+!
+
+height
+	^ self canvas element height
+!
+
+height: anInteger
+	self canvas at: 'height' put: anInteger.
+!
+
+hiddenStyle
+	^ 'visibility: hidden; width: 0px; height: 0px; position: absolute; left: 0px; top: 0px;'
+!
+
+width
+	^ self canvas element width
+!
+
+width: anInteger
+	self canvas at: 'width' put: anInteger.
+! !
+
+!AbstractScreen methodsFor: 'audio'!
+
+hasSound: aSoundUrl
+	^ self sounds anySatisfy: [ :any | any src = aSoundUrl ]
+!
+
+loadSound: aSoundUrl
+	(self hasSound: aSoundUrl) ifFalse: [
+		| sound |
+		sound := (Sound src: aSoundUrl).
+		sound 
+			cssClass: self class name;
+			appendToJQuery: 'div.preloader' asJQuery.
+		self sounds add: sound.
+	]
+!
+
+soundNamed: aName
+	^ self sounds detect: [ :each | each id = aName ] ifNone: [ nil ]
+! !
+
+!AbstractScreen methodsFor: 'control'!
+
+everyStepNumber: anInteger do: aBlock
+	(step \\ anInteger) = 0 ifTrue: aBlock
+!
+
+step
+	self subclassResponsibility
+! !
+
+!AbstractScreen methodsFor: 'control - private'!
+
+gameLoop
+	"Do not override me, use #step and #draw instead"
+	self isGameOver
+		ifFalse: [[
+			self currentScreen
+				step;
+				draw.
+			step := step + 1.
+			self gameLoop ] valueWithTimeout: (1000 / fps) ]
+! !
+
+!AbstractScreen methodsFor: 'drawing'!
+
+clearCanvas
+	self context
+		clearRect: 0
+		y: 0
+		width: self canvas element width
+		height: self canvas element height.
+!
+
+draw
+	self subclassResponsibility
+!
+
+draw: somethingDrawable
+	somethingDrawable drawOnCanvas: self canvas step: step
+!
+
+drawAll: aCollection
+	aCollection
+		do: [ :each | self draw: each ]
+! !
+
+!AbstractScreen methodsFor: 'fonts'!
+
+addFont: aFontSrc named: aFontName
+	'head' asJQuery prepend: 
+		'<style type="text/css"> @font-face { font-family: "'
+			, aFontName
+			, '";src: local(''☺''), url('''
+			, aFontSrc
+			,''') format(''opentype'');}</style>'
+! !
+
+!AbstractScreen methodsFor: 'image preloading'!
+
+preloadAnimation: anAnimation
+	|image|
+	image := anAnimation image.
+	image 
+		width: 1; 
+		height: 1.
+	'div.preloader' asJQuery append: image asJQuery.
+!
+
+preloadBackground: aBackground
+	self preloadAnimation: aBackground
+!
+
+preloadSprite: aSprite
+	self preloadAnimation: aSprite
+! !
+
+!AbstractScreen methodsFor: 'initialization'!
+
+initialize
+	super initialize.
+	fps := 30.
+	step := 1.
+! !
+
+AbstractScreen subclass: #Game
+	instanceVariableNames: 'end sounds screens currentScreen debugMode preloader'
+	package: 'Ludus'!
+!Game commentStamp!
+I am a game. You need to override a couple of my methods to make me usable:
+
+**#startGame** Here you can define my intial conditions, such as the size of the canvas, my sounds, the background properties, the FPS, etc.
+
+**#step**  Here you can define what has to be done at each game cycle, or step. This method should control posititions, collisions, mouse and keyboard events, etc. This method should not deal with any graphic properties, these should be dealt with by:
+
+**#draw**  This is the method that controls my view. Here you should define the drawing of sprites and other graphic elements. Don't forget to clear the canvas before re-drawing sprites, if your game requires so.!
+
+!Game methodsFor: 'accessing'!
+
+currentScreen
+	^ currentScreen ifNil: [ currentScreen := self ]
+!
+
+screens
+	^ screens ifNil: [ screens := #() ]
+!
+
+sounds
+	^ sounds ifNil: [ sounds := #() ]
+! !
+
+!Game methodsFor: 'control'!
+
+end
+	end := true
+!
+
+restart
+	self
+		kill;
+		initialize;
+		start.
+!
+
+start
+	self appendToJQuery: ('body' asJQuery).
+!
+
+stop
+	self end.
+	self class stop.
+! !
+
+!Game methodsFor: 'control - testing'!
+
+isGameOver
+	^ end ifNil: [ end := false ]
+! !
+
+!Game methodsFor: 'initialization'!
+
+startGame
+	self subclassResponsibility
+! !
+
+!Game methodsFor: 'rendering'!
+
+renderOn: html
+	"Do not override me, use #startGame instead"
+	preloader := html div 
+		class: 'preloader'; 
+		style: self hiddenStyle.
+		
+	canvas := html canvas.
+	
+	self canvas
+		at: 'width' put: 250;
+		at: 'height' put: 250;
+		id: self class name.
+	context := canvas element getContext: '2d'.
+
+	self inputHandler bindEvents.
+
+	self
+		startGame;
+		gameLoop
+! !
+
+!Game methodsFor: 'screens'!
+
+addScreen: aScreen named: aString
+	aScreen
+		name: aString;
+		game: self.
+	self screens add: aScreen.
+!
+
+screenNamed: aString
+	^ self screens detect: [ :which | which name = aString ] ifNone: [ nil ]
+!
+
+switchToGame
+	currentScreen := self
+!
+
+switchToScreen: aScreen
+	currentScreen := aScreen startScreen
+!
+
+switchToScreenNamed: aString
+	self switchToScreen: (self screenNamed: aString)
+! !
+
+Game class instanceVariableNames: 'Instances DebugMode'!
+
+!Game class methodsFor: 'control'!
+
+start
+	|instance|
+	instance := self new start.
+	^ instance
+!
+
+stop
+	document asJQuery
+		unbind: 'keydown';
+		unbind: 'keyup'.
+	('canvas#' , self name) asJQuery remove.
+	'div.preloader' asJQuery remove.
+!
+
+stopAll
+	self instances do: [ :each | each stop ].
+	Instances := #().
+! !
+
+!Game class methodsFor: 'debug'!
+
+debugMode
+ 	^ DebugMode ifNil: [ DebugMode := false ]
+!
+
+debugMode: aBoolean
+ 	DebugMode := aBoolean
+!
+
+setToggleDebug
+	self debugMode: true
+!
+
+toggleDebugMode
+	^ self debugMode: self debugMode not
+!
+
+unsetToggleDebug
+	self debugMode: false
+! !
+
+!Game class methodsFor: 'initialization'!
+
+initialize
+	"uncomment if you want the game to start when loading the page"
+"	'self start"
+! !
+
+!Game class methodsFor: 'instance creation'!
+
+new
+	| instance |
+	instance := super new.
+	Game instances add: instance.
+	^ instance
+! !
+
+!Game class methodsFor: 'instance treatment'!
+
+instances
+	^ Instances ifNil: [ Instances := #() ]
+! !
+
+AbstractScreen subclass: #Screen
+	instanceVariableNames: 'game name'
+	package: 'Ludus'!
+!Screen commentStamp!
+I am a game screen. I need to implement #startScreen, #step and #draw, as these will be called by the game who owns me.
+I can represent many things: levels, menu screens, or anything that needs to change the whole canvas.!
+
+!Screen methodsFor: 'accessing'!
+
+canvas
+	^ self game canvas
+!
+
+context
+	^ self game context
+!
+
+game
+	^ game
+!
+
+game: anObject
+	game := anObject
+!
+
+inputHandler
+	^ self game inputHandler
+!
+
+name
+	^ name ifNil: [ self class name ]
+!
+
+name: anObject
+	name := anObject
+! !
+
+!Screen methodsFor: 'as yet unclassified'!
+
+draw: somethingDrawable
+	self game draw: somethingDrawable
+! !
+
+!Screen methodsFor: 'initialization'!
+
+startScreen
+	self subclassResponsibility
+! !
+
+!Screen class methodsFor: 'instance creation'!
+
+named: aString
+	| instance |
+	instance := self new name: aString.
+	^ instance
+! !
+
+Screen subclass: #Menu
+	instanceVariableNames: 'options currentOption pointer optionSeparation pointerOriginY'
+	package: 'Ludus'!
+
+!Menu methodsFor: 'accessing'!
+
+currentOption
+	^ currentOption ifNil: [ currentOption := self options first ]
+!
+
+currentOption: anOption
+	currentOption := anOption
+!
+
+optionSeparation
+	^ optionSeparation ifNil: [ optionSeparation := 50 ]
+!
+
+optionSeparation: anObject
+	optionSeparation := anObject
+!
+
+options
+	^ options ifNil: [ options := #() ]
+!
+
+options: anObject
+	options := anObject
+!
+
+pointer
+	^ pointer
+!
+
+pointer: anObject
+	pointer := anObject
+!
+
+pointerOriginY
+	^ pointerOriginY ifNil: [ pointerOriginY := 100 ]
+!
+
+pointerOriginY: anObject
+	pointerOriginY := anObject
+! !
+
+!Menu methodsFor: 'control'!
+
+nextOption
+	self 
+		currentOption: 
+			(self options at: 
+				(((self options indexOf: self currentOption) + 1) min: self options size));
+		placePointer.
+!
+
+placePointer
+	self pointer y: (((self options indexOf: self currentOption) - 1) * self optionSeparation) +  self pointerOriginY
+!
+
+previousOption
+	self 
+		currentOption: 
+			(self options at: 
+				(((self options indexOf: self currentOption) - 1) max: 1)) ;
+		placePointer.
+!
+
+step
+	self inputHandler 
+		onKeyPressed: Key downArrow do: [ self nextOption ];
+		onKeyPressed: Key upArrow do: [ self previousOption ];
+		onKeyPressed: Key enter do: [ self perform: self currentOption ];
+		onKeyPressed: Key space do: [ self perform: self currentOption ]
 ! !
 
 Object subclass: #InputHandler
@@ -1286,6 +1519,16 @@ upArrow
 	^ 38
 ! !
 
+Object subclass: #NullSound
+	instanceVariableNames: ''
+	package: 'Ludus'!
+
+!NullSound methodsFor: 'sound playing'!
+
+play
+	"self doNothing"
+! !
+
 Widget subclass: #Sound
 	instanceVariableNames: 'src cssClass'
 	package: 'Ludus'!
@@ -1360,116 +1603,14 @@ stop
 	(document getElementById: self id) src: self src.
 ! !
 
+!Sound methodsFor: 'xxxDoIt'!
+
+xxxDoIt ^ [ self at: #play put: [] ] value
+! !
+
 !Sound class methodsFor: 'instance creation'!
 
 src: anUrl
 	^ self new src: anUrl
-! !
-
-Object subclass: #Text
-	instanceVariableNames: 'fontName fontSize fontStyle color position contents outlineColor outlineSize'
-	package: 'Ludus'!
-
-!Text methodsFor: 'accessing'!
-
-color
-	^ color ifNil: [ color := 'red' ]
-!
-
-color: anObject
-	color := anObject
-!
-
-contents
-	^ contents ifNil: [ '' ]
-!
-
-contents: anObject
-	contents := anObject
-!
-
-fontName
-	^ fontName ifNil: [ fontName := 'Sans' ]
-!
-
-fontName: anObject
-	fontName := anObject
-!
-
-fontSize
-	^ fontSize ifNil: [ fontSize := 12 ]
-!
-
-fontSize: anObject
-	fontSize := anObject
-!
-
-fontStyle
-	^ fontStyle ifNil: [ '' ]
-!
-
-outlineColor
-	^ outlineColor
-!
-
-outlineColor: aColorName
-	outlineColor := aColorName.
-!
-
-outlineSize
-	^ outlineSize
-!
-
-outlineSize: aSize
-	outlineSize := aSize
-!
-
-position
-	^ position ifNil: [ position := 10@10 ]
-!
-
-position: anObject
-	position := anObject
-! !
-
-!Text methodsFor: 'attributes'!
-
-beBold
-	fontStyle := 'bold'
-!
-
-beItalic
-	fontStyle := 'italic'
-!
-
-beNormal
-	fontStyle := ''
-!
-
-removeOutline
-	outlineColor := nil.
-	outlineSize := nil.
-! !
-
-!Text methodsFor: 'drawing'!
-
-drawOnContext: aContext
-	aContext
-		font: self fontDefinition;
-		fillStyle: self color;
-		fillText: self contents
-			x: self position x
-			y: self position y.
-	(self outlineSize notNil & self outlineColor notNil) ifTrue: [
-		aContext
-			lineWidth: self outlineSize;
-			strokeStyle: self outlineColor;
-			strokeText: self contents
-				x: self position x
-				y: self position y ]
-!
-
-fontDefinition
-	^ self fontStyle  , ' ' , self fontSize printString , 'px ' , self fontName
 ! !
 
