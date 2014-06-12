@@ -58,7 +58,7 @@ AbstractDrawable subclass: #Animation
 	instanceVariableNames: 'spriteSheet currentFrameGroup frameGroups animating loop'
 	package: 'Ludus'!
 
-!Animation methodsFor: 'animation'!
+!Animation methodsFor: 'animating'!
 
 animating
 	animating ifNil: [ animating := true ].
@@ -378,6 +378,12 @@ topCollidesWithWhichOf: aSpriteCollection
 	^ (aSpriteCollection detect: [ :each | self topCollidesWith: each ] ifNone: [ nil ])
 ! !
 
+!Sprite methodsFor: 'control'!
+
+stepOnGame: aGame
+	"self doSomethingAccordingTo: (self someState and: [ aGame someOtherState ])"
+! !
+
 !Sprite methodsFor: 'drawing'!
 
 drawBoundingBoxOnCanvas: aCanvas
@@ -464,6 +470,33 @@ isTopInsideCanvas: aCanvas
 
 isSprite
 	^ true
+! !
+
+Sprite subclass: #FSMSprite
+	instanceVariableNames: 'state'
+	package: 'Ludus'!
+
+!FSMSprite methodsFor: 'accessing'!
+
+defaultStateClass
+	"My subclasses should define which class implements my default state class"
+	
+	^ FSMState
+!
+
+state
+	^ state ifNil: [ self state: self defaultStateClass new. state ]
+!
+
+state: aState
+	state := aState.
+	aState context: self.
+! !
+
+!FSMSprite methodsFor: 'control'!
+
+stepOnGame: aGame
+	self state step
 ! !
 
 AbstractDrawable subclass: #Image
@@ -996,7 +1029,7 @@ initialize
 ! !
 
 AbstractScreen subclass: #Game
-	instanceVariableNames: 'end sounds screens currentScreen debugMode preloader'
+	instanceVariableNames: 'end sounds screens soundIsMute currentScreen debugMode preloader'
 	package: 'Ludus'!
 !Game commentStamp!
 I am a game. You need to override a couple of my methods to make me usable:
@@ -1017,8 +1050,24 @@ screens
 	^ screens ifNil: [ screens := #() ]
 !
 
+soundIsMute
+	^ soundIsMute ifNil: [ soundIsMute := false ]
+!
+
+soundIsMute: aBoolean
+	soundIsMute := aBoolean
+!
+
 sounds
 	^ sounds ifNil: [ sounds := #() ]
+! !
+
+!Game methodsFor: 'audio'!
+
+soundNamed: aString
+	^ self soundIsMute
+		ifTrue: [ NullSound new ]
+		ifFalse: [ self sounds detect: [ :each | each id = aString ] ifNone: [ NullSound new ]].
 ! !
 
 !Game methodsFor: 'control'!
@@ -1301,6 +1350,26 @@ step
 		onKeyPressed: Key upArrow do: [ self previousOption ];
 		onKeyPressed: Key enter do: [ self perform: self currentOption ];
 		onKeyPressed: Key space do: [ self perform: self currentOption ]
+! !
+
+Object subclass: #FSMState
+	instanceVariableNames: 'context'
+	package: 'Ludus'!
+
+!FSMState methodsFor: 'accessing'!
+
+context
+	^ context
+!
+
+context: anObject
+	context := anObject
+! !
+
+!FSMState methodsFor: 'control'!
+
+step
+	self subclassResponsibility
 ! !
 
 Object subclass: #InputHandler

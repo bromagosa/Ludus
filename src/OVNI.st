@@ -13,6 +13,14 @@ speed
 	^ speed ifNil: [ speed := 5 ]
 ! !
 
+!OVBullet methodsFor: 'behaviour'!
+
+stepOnGame: aGame
+	self move.
+	(self isAllInsideCanvas: aGame canvas) 
+		ifFalse: [ aGame bullets remove: self ]
+! !
+
 !OVBullet methodsFor: 'initialization'!
 
 initialize
@@ -46,6 +54,14 @@ acceleration
 
 speed
 	^ speed ifNil: [ speed := 1 ]
+! !
+
+!OVEnemyBullet methodsFor: 'behaviour'!
+
+stepOnGame: aGame
+	self move.
+	(self isAllInsideCanvas: aGame canvas) 
+		ifFalse: [ aGame enemyBullets remove: self ]
 ! !
 
 !OVEnemyBullet methodsFor: 'initialization'!
@@ -237,25 +253,6 @@ soundNamed: aString
 
 !OVGame methodsFor: 'control'!
 
-controlBullets
-	self bullets do: [ :eachBullet | 
-		eachBullet move.
-		(eachBullet isAllInsideCanvas: self canvas) 
-			ifFalse: [ bullets remove: eachBullet ]].
-	self enemyBullets do: [ :eachBullet | 
-		eachBullet move.
-		(eachBullet isAllInsideCanvas: self canvas) 
-			ifFalse: [ enemyBullets remove: eachBullet ]]
-!
-
-controlItems
-	self lifeItem move.
-	(self lifeItem collidesWith: self ship) ifTrue: [
-		(self soundNamed: 'life') play.
-		self player addLife.
-		self lifeItem x: -20 ]
-!
-
 controlPhase
 	self phase shouldAdvance 
 		ifTrue: [ 
@@ -264,40 +261,6 @@ controlPhase
 					(self soundNamed: 'gamewon') play.
 					self switchToScreenNamed: 'gameWon' ]
 				ifFalse: [ self nextPhase ]]
-!
-
-controlSaucers
-	self saucers do: [ :eachSaucer | 
-		eachSaucer
-			checkCollisionWith: self bullets;
-			step.
-			
-		eachSaucer isHit ifTrue: [ 
-			(self soundNamed: 'explosion-1') play. 
-			self phase saucerKilled ].
-			
-		eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].
-		eachSaucer escaped ifTrue: [ self player score: ((self player score - self difficulty) max: 0) ].
-		
-		eachSaucer shouldRespawn ifTrue: [
-			eachSaucer 
-				respawnAtX: self width + self width atRandom y: self height atRandom ].
-		eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].
-!
-
-controlShip
-	(self ship exploding and: [ self ship atLastFrame ])
-		ifTrue: [
-			self resetSprites.
-			self player lives: self player lives - 1.
-			self player lives < 0 ifTrue: [ self end ]].
-	(((self ship collidesWithAnyOf: self enemyBullets)
-		or: [ (self ship collidesWithAnyOf: self saucers) ]) 
-			and: [ self ship exploding not])
-				ifTrue: [
-					(self soundNamed: 'explosion-2') play.
-					self ship explode ].
-	self ship moveWithHandler: self inputHandler inCanvas: self canvas.
 !
 
 end
@@ -337,19 +300,19 @@ resetSprites
 !
 
 step
-	self 
-		controlShip;
-		controlSaucers;
-		controlBullets;
-		controlItems;
-		controlPhase.
 
-	self inputHandler 
-		onKeyPressed: Key space do: [ self shoot ];
-		onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].
+	self stepSprites.
+	self controlPhase.
+
+	self inputHandler onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].
 
 	self player updateHighScore.
 	self updateTexts.
+!
+
+stepSprites
+	(self bullets, self enemyBullets, self saucers, { self ship. self lifeItem })
+		do: [ :eachSprite | eachSprite stepOnGame: self ]
 !
 
 toggleMuteMusic
@@ -398,12 +361,40 @@ draw
 		draw: self phaseNumberText
 ! !
 
-!OVGame methodsFor: 'game actions'!
+!OVGame methodsFor: 'game events'!
 
-shoot
+enemyShot: aBullet
+	self enemyBullets add: aBullet
+!
+
+lifeItemCollected
+	(self soundNamed: 'life') play.
+	self player addLife.
+!
+
+playerDied
+	self resetSprites.
+	self player lives: self player lives - 1.
+	self player lives < 0 ifTrue: [ self end ]
+!
+
+playerShot: aBullet
 	self debug: 'shooting bullet'.
 	(self soundNamed: 'laser') play.
-	self bullets add: self ship newBullet.
+	self bullets add: aBullet
+!
+
+saucerDied
+	self player score: self player score + (5 * self difficulty)
+!
+
+saucerEscaped
+	self player score: ((self player score - self difficulty) max: 0)
+!
+
+saucerWasHit
+	(self soundNamed: 'explosion-1') play. 
+	self phase saucerWasHit
 ! !
 
 !OVGame methodsFor: 'game initialization'!
@@ -586,6 +577,16 @@ startScreen
 Sprite subclass: #OVLifeItem
 	instanceVariableNames: ''
 	package: 'OVNI'!
+
+!OVLifeItem methodsFor: 'as yet unclassified'!
+
+stepOnGame: aGame
+	self move.
+	(self collidesWith: aGame ship) 
+		ifTrue: [
+			aGame lifeItemCollected.
+			self x: -20 ]
+! !
 
 !OVLifeItem methodsFor: 'initialization'!
 
@@ -982,7 +983,7 @@ shouldAdvance: aBoolean
 
 !OVPhase methodsFor: 'control'!
 
-saucerKilled
+saucerWasHit
 	self saucersToGo: self saucersToGo - 1.
 	self saucersToGo = 0 ifTrue: [ self shouldAdvance: true ]
 ! !
@@ -1092,7 +1093,7 @@ resetStartTime
 	gameStartTime := Date now
 ! !
 
-Sprite subclass: #OVSaucer
+FSMSprite subclass: #OVSaucer
 	instanceVariableNames: 'exploding dead toughness'
 	package: 'OVNI'!
 
@@ -1155,6 +1156,22 @@ respawnAtX: anX y: aY
 		dead: false
 ! !
 
+!OVSaucer methodsFor: 'behaviour'!
+
+stepOnGame: aGame
+	self
+		checkCollisionWith: aGame bullets;
+		move;
+		checkShouldDie.
+
+	self isHit ifTrue: [ aGame saucerWasHit ].
+	self isDead ifTrue: [ aGame saucerDied ].
+	self escaped ifTrue: [ aGame saucerEscaped ].
+
+	self shouldRespawn ifTrue: [ self respawnAtX: aGame width + aGame width atRandom y: aGame height atRandom ].
+	self shouldShoot ifTrue: [ aGame enemyShot: self newBullet ]
+! !
+
 !OVSaucer methodsFor: 'collisions'!
 
 checkCollisionWith: aSpriteCollection
@@ -1178,12 +1195,6 @@ checkShouldDie
 
 shouldShoot
 	^ self shootProbability atRandom = 1
-!
-
-step
-	self 
-		move;
-		checkShouldDie
 ! !
 
 !OVSaucer methodsFor: 'initialization'!
@@ -1226,6 +1237,36 @@ shouldRespawn
 	^ self escaped | self dead
 ! !
 
+OVSaucer subclass: #OVSmartSaucer
+	instanceVariableNames: ''
+	package: 'OVNI'!
+
+!OVSmartSaucer methodsFor: 'as yet unclassified'!
+
+alignedWith: aSprite
+	^ (self y - aSprite y) abs < self alignmentThreshold
+!
+
+alignedWithWhichOf: aSpriteCollection
+	^ aSpriteCollection detect: [ :which | self alignedWith: which ] ifNone: [ nil ]
+!
+
+alignmentThreshold
+	^ 10
+!
+
+stepOnGame: aGame
+	super step.
+	(self alignedWith: aGame ship)
+		ifTrue: [ self shootOnGame: aGame ]
+		ifFalse: [ 
+			| dangerousBullet |
+			dangerousBullet := (self alignedWithWhichOf: aGame bullets).
+			dangerousBullet 
+				ifNotNil: [ self moveAwayFrom: dangerousBullet ] 
+				ifNil: [ self moveTowards: aGame ship ]].
+! !
+
 Sprite subclass: #OVSpaceShip
 	instanceVariableNames: 'speed exploding'
 	package: 'OVNI'!
@@ -1252,7 +1293,7 @@ speed: anObject
 	speed := anObject
 ! !
 
-!OVSpaceShip methodsFor: 'actions'!
+!OVSpaceShip methodsFor: 'behaviour'!
 
 explode
 	self 
@@ -1260,6 +1301,25 @@ explode
 		toFirstFrame;
 		loop: false; 
 		exploding: true.
+!
+
+shootOnGame: aGame
+	aGame playerShot: self newBullet.
+!
+
+stepOnGame: aGame
+	(self exploding and: [ self atLastFrame ])
+		ifTrue: [ aGame playerDied ].
+		
+	(((self collidesWithAnyOf: aGame enemyBullets)
+		or: [ (self collidesWithAnyOf: aGame saucers) ]) 
+			and: [ self exploding not])
+		ifTrue: [
+			(aGame soundNamed: 'explosion-2') play.
+			self explode ].
+	
+	aGame inputHandler onKeyPressed: Key space do: [ self shootOnGame: aGame ].
+	self moveWithHandler: aGame inputHandler inCanvas: aGame canvas.
 ! !
 
 !OVSpaceShip methodsFor: 'initialization'!
