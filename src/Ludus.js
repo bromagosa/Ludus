@@ -1847,12 +1847,17 @@ protocol: 'accessing',
 fn: function (aState){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+var $receiver;
+if(($receiver = aState) == null || $receiver.isNil){
+self["@state"]=_st(self._defaultStateClass())._new();
+} else {
 self["@state"]=aState;
-_st(aState)._context_(self);
+};
+_st(self["@state"])._context_(self);
 return self}, function($ctx1) {$ctx1.fill(self,"state:",{aState:aState},globals.FSMSprite)})},
 args: ["aState"],
-source: "state: aState\x0a\x09state := aState.\x0a\x09aState context: self.",
-messageSends: ["context:"],
+source: "state: aState\x0a\x09state := aState ifNil: [ self defaultStateClass new ].\x0a\x09state context: self.",
+messageSends: ["ifNil:", "new", "defaultStateClass", "context:"],
 referencedClasses: []
 }),
 globals.FSMSprite);

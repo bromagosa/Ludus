@@ -1544,10 +1544,11 @@ selector: "startScreen",
 protocol: 'control',
 fn: function (){
 var self=this;
+function $OVSaucerWanderingState(){return globals.OVSaucerWanderingState||(typeof OVSaucerWanderingState=="undefined"?nil:OVSaucerWanderingState)}
 function $Image(){return globals.Image||(typeof Image=="undefined"?nil:Image)}
 function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$7,$6,$5,$4,$3,$13,$12,$11,$10,$9,$8,$15,$16,$17,$18,$14,$20,$22,$23,$21,$19,$24,$25;
+var $2,$1,$3,$8,$7,$6,$5,$4,$14,$13,$12,$11,$10,$9,$16,$17,$18,$19,$15,$21,$23,$24,$22,$20,$25,$26;
 $2=self._game();
 $ctx1.sendIdx["game"]=1;
 $1=_st($2)._saucers();
@@ -1555,68 +1556,71 @@ $ctx1.sendIdx["saucers"]=1;
 self._saucers_($1);
 _st(self._saucers())._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
+$3=_st($OVSaucerWanderingState())._new();
+$ctx2.sendIdx["new"]=1;
+_st(each)._state_($3);
 _st(each)._currentFrameGroup_("flying");
-$7=self._game();
+$8=self._game();
 $ctx2.sendIdx["game"]=2;
-$6=_st($7)._width();
-$5=_st($6).__minus((100));
+$7=_st($8)._width();
+$6=_st($7).__minus((100));
 $ctx2.sendIdx["-"]=1;
-$4=_st($5)._atRandom();
+$5=_st($6)._atRandom();
 $ctx2.sendIdx["atRandom"]=1;
-$3=_st($4).__plus((50));
+$4=_st($5).__plus((50));
 $ctx2.sendIdx["+"]=1;
-_st(each)._x_($3);
-$13=self._game();
+_st(each)._x_($4);
+$14=self._game();
 $ctx2.sendIdx["game"]=3;
-$12=_st($13)._height();
+$13=_st($14)._height();
 $ctx2.sendIdx["height"]=1;
-$11=_st($12).__minus((100));
-$10=_st($11)._atRandom();
-$9=_st($10).__plus((50));
-$8=_st(each)._y_($9);
-return $8;
+$12=_st($13).__minus((100));
+$11=_st($12)._atRandom();
+$10=_st($11).__plus((50));
+$9=_st(each)._y_($10);
+return $9;
 }, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
-$15=_st($Image())._new();
-$ctx1.sendIdx["new"]=1;
-$16=(0).__at((0));
-$ctx1.sendIdx["@"]=1;
-$17=(600).__at((196));
-$ctx1.sendIdx["@"]=2;
-$18=(55).__at(_st(self._game())._height());
-$ctx1.sendIdx["@"]=3;
-$14=_st($15)._source_origin_size_position_("images/ovni/title.png",$16,$17,$18);
-self._title_($14);
-$20=_st($Text())._new();
+$16=_st($Image())._new();
 $ctx1.sendIdx["new"]=2;
-_st($20)._contents_("Press SPACE to start");
+$17=(0).__at((0));
+$ctx1.sendIdx["@"]=1;
+$18=(600).__at((196));
+$ctx1.sendIdx["@"]=2;
+$19=(55).__at(_st(self._game())._height());
+$ctx1.sendIdx["@"]=3;
+$15=_st($16)._source_origin_size_position_("images/ovni/title.png",$17,$18,$19);
+self._title_($15);
+$21=_st($Text())._new();
+$ctx1.sendIdx["new"]=3;
+_st($21)._contents_("Press SPACE to start");
 $ctx1.sendIdx["contents:"]=1;
-_st($20)._color_("rgba(90,113,26,0.7)");
+_st($21)._color_("rgba(90,113,26,0.7)");
 $ctx1.sendIdx["color:"]=1;
-_st($20)._outlineColor_("rgba(242,246,144,0.8)");
-_st($20)._outlineSize_((1));
-_st($20)._fontName_("ChangaOne");
+_st($21)._outlineColor_("rgba(242,246,144,0.8)");
+_st($21)._outlineSize_((1));
+_st($21)._fontName_("ChangaOne");
 $ctx1.sendIdx["fontName:"]=1;
-_st($20)._fontSize_((40));
+_st($21)._fontSize_((40));
 $ctx1.sendIdx["fontSize:"]=1;
-$22=$20;
-$23=(180).__at((320));
+$23=$21;
+$24=(180).__at((320));
 $ctx1.sendIdx["@"]=4;
-$21=_st($22)._position_($23);
+$22=_st($23)._position_($24);
 $ctx1.sendIdx["position:"]=1;
-$19=$21;
-self._startGameText_($19);
-$24=_st($Text())._new();
-_st($24)._contents_("Bernat Romagosa 2014");
-_st($24)._color_("rgba(90,113,26,0.7)");
-_st($24)._fontName_("ChangaOne");
-_st($24)._fontSize_((12));
-$25=_st($24)._position_((580).__at((530)));
-self._authorText_($25);
+$20=$22;
+self._startGameText_($20);
+$25=_st($Text())._new();
+_st($25)._contents_("Bernat Romagosa 2014");
+_st($25)._color_("rgba(90,113,26,0.7)");
+_st($25)._fontName_("ChangaOne");
+_st($25)._fontSize_((12));
+$26=_st($25)._position_((580).__at((530)));
+self._authorText_($26);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVStartScreen)})},
 args: [],
-source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each\x0a\x09\x09\x09currentFrameGroup: 'flying';\x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Image new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height).\x0a\x09\x09\x09\x0a\x09self startGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to start';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 180@320).\x0a\x09\x09\x09\x0a\x09self authorText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Bernat Romagosa 2014';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 12;\x0a\x09\x09\x09position: 580@530)",
-messageSends: ["saucers:", "saucers", "game", "do:", "currentFrameGroup:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "source:origin:size:position:", "new", "@", "startGameText:", "contents:", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "authorText:"],
-referencedClasses: ["Image", "Text"]
+source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each\x0a\x09\x09\x09state: OVSaucerWanderingState new;\x0a\x09\x09\x09currentFrameGroup: 'flying';\x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Image new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height).\x0a\x09\x09\x09\x0a\x09self startGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to start';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 180@320).\x0a\x09\x09\x09\x0a\x09self authorText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Bernat Romagosa 2014';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 12;\x0a\x09\x09\x09position: 580@530)",
+messageSends: ["saucers:", "saucers", "game", "do:", "state:", "new", "currentFrameGroup:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "source:origin:size:position:", "@", "startGameText:", "contents:", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "authorText:"],
+referencedClasses: ["OVSaucerWanderingState", "Image", "Text"]
 }),
 globals.OVStartScreen);
 
@@ -1628,7 +1632,7 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $3,$2,$1,$4,$5,$7,$6;
+var $3,$2,$1,$4,$5,$6,$7,$9,$8;
 $3=self._title();
 $ctx1.sendIdx["title"]=1;
 $2=_st($3)._y();
@@ -1643,25 +1647,29 @@ $5=self._saucers();
 $ctx1.sendIdx["saucers"]=1;
 _st($5)._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
-return _st(each)._wander();
+$6=self._game();
+$ctx2.sendIdx["game"]=1;
+return _st(each)._stepOnGame_($6);
 }, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,2)})}));
 $ctx1.sendIdx["do:"]=1;
 _st(self._inputHandler())._onKeyPressed_do_(_st($Key())._space(),(function(){
 return smalltalk.withContext(function($ctx2) {
 _st(self._saucers())._do_((function(each){
 return smalltalk.withContext(function($ctx3) {
-return _st(each)._x_((-100));
+_st(each)._state_(nil);
+$7=_st(each)._x_((-100));
+return $7;
 }, function($ctx3) {$ctx3.fillBlock({each:each},$ctx2,4)})}));
-$7=self._game();
-$ctx2.sendIdx["game"]=1;
-$6=_st($7)._soundNamed_("select");
-_st($6)._play();
+$9=self._game();
+$ctx2.sendIdx["game"]=2;
+$8=_st($9)._soundNamed_("select");
+_st($8)._play();
 return _st(self._game())._switchToScreenNamed_("mainMenu");
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVStartScreen)})},
 args: [],
-source: "step\x0a\x09self title y > 40 ifTrue: [ self title y: self title y - 4 ].\x0a\x09self saucers do: [ :each | each wander ].\x0a\x09self inputHandler onKeyPressed: Key space do: [ \x0a\x09\x09self saucers do: [ :each | each x: -100 ].\x0a\x09\x09(self game soundNamed: 'select') play.\x0a\x09\x09self game switchToScreenNamed: 'mainMenu' ]",
-messageSends: ["ifTrue:", ">", "y", "title", "y:", "-", "do:", "saucers", "wander", "onKeyPressed:do:", "inputHandler", "space", "x:", "play", "soundNamed:", "game", "switchToScreenNamed:"],
+source: "step\x0a\x09self title y > 40 ifTrue: [ self title y: self title y - 4 ].\x0a\x09self saucers do: [ :each | each stepOnGame: self game ].\x0a\x09self inputHandler onKeyPressed: Key space do: [ \x0a\x09\x09self saucers do: [ :each | \x0a\x09\x09\x09each \x0a\x09\x09\x09\x09state: nil; \x0a\x09\x09\x09\x09x: -100 ].\x0a\x09\x09(self game soundNamed: 'select') play.\x0a\x09\x09self game switchToScreenNamed: 'mainMenu' ]",
+messageSends: ["ifTrue:", ">", "y", "title", "y:", "-", "do:", "saucers", "stepOnGame:", "game", "onKeyPressed:do:", "inputHandler", "space", "state:", "x:", "play", "soundNamed:", "switchToScreenNamed:"],
 referencedClasses: ["Key"]
 }),
 globals.OVStartScreen);

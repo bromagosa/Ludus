@@ -489,8 +489,8 @@ state
 !
 
 state: aState
-	state := aState.
-	aState context: self.
+	state := aState ifNil: [ self defaultStateClass new ].
+	state context: self.
 ! !
 
 !FSMSprite methodsFor: 'control'!

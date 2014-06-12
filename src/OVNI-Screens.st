@@ -499,6 +499,7 @@ startScreen
 	self saucers: self game saucers.
 	self saucers do: [ :each | 
 		each
+			state: OVSaucerWanderingState new;
 			currentFrameGroup: 'flying';
 			x: (self game width - 100) atRandom + 50;
 			y: (self game height - 100) atRandom + 50 ].
@@ -531,9 +532,12 @@ startScreen
 
 step
 	self title y > 40 ifTrue: [ self title y: self title y - 4 ].
-	self saucers do: [ :each | each wander ].
+	self saucers do: [ :each | each stepOnGame: self game ].
 	self inputHandler onKeyPressed: Key space do: [ 
-		self saucers do: [ :each | each x: -100 ].
+		self saucers do: [ :each | 
+			each 
+				state: nil; 
+				x: -100 ].
 		(self game soundNamed: 'select') play.
 		self game switchToScreenNamed: 'mainMenu' ]
 ! !

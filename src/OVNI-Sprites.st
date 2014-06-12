@@ -13,7 +13,7 @@ speed
 	^ speed ifNil: [ speed := 5 ]
 ! !
 
-!OVBullet methodsFor: 'behaviour'!
+!OVBullet methodsFor: 'control'!
 
 stepOnGame: aGame
 	self move.
@@ -56,7 +56,7 @@ speed
 	^ speed ifNil: [ speed := 1 ]
 ! !
 
-!OVEnemyBullet methodsFor: 'behaviour'!
+!OVEnemyBullet methodsFor: 'control'!
 
 stepOnGame: aGame
 	self move.
@@ -77,7 +77,7 @@ Sprite subclass: #OVLifeItem
 	instanceVariableNames: ''
 	package: 'OVNI-Sprites'!
 
-!OVLifeItem methodsFor: 'as yet unclassified'!
+!OVLifeItem methodsFor: 'control'!
 
 stepOnGame: aGame
 	self move.
@@ -116,6 +116,10 @@ dead
 
 dead: aBoolean
 	dead := aBoolean
+!
+
+defaultStateClass
+	^ OVSaucerState
 !
 
 exploding
@@ -167,22 +171,6 @@ respawnAtX: anX y: aY
 		dead: false
 ! !
 
-!OVSaucer methodsFor: 'behaviour'!
-
-stepOnGame: aGame
-	self
-		checkCollisionWith: aGame bullets;
-		move;
-		checkShouldDie.
-
-	self isHit ifTrue: [ aGame saucerWasHit ].
-	self isDead ifTrue: [ aGame saucerDied ].
-	self escaped ifTrue: [ aGame saucerEscaped ].
-
-	self shouldRespawn ifTrue: [ self respawnAtX: aGame width + aGame width atRandom y: aGame height atRandom ].
-	self shouldShoot ifTrue: [ aGame enemyShot: self newBullet ]
-! !
-
 !OVSaucer methodsFor: 'collisions'!
 
 checkCollisionWith: aSpriteCollection
@@ -206,6 +194,21 @@ checkShouldDie
 
 shouldShoot
 	^ self shootProbability atRandom = 1
+!
+
+stepOnGame: aGame
+	super stepOnGame: aGame.
+	
+	self
+		checkCollisionWith: aGame bullets;
+		checkShouldDie.
+
+	self isHit ifTrue: [ aGame saucerWasHit ].
+	self isDead ifTrue: [ aGame saucerDied ].
+	self escaped ifTrue: [ aGame saucerEscaped ].
+
+	self shouldRespawn ifTrue: [ self respawnAtX: aGame width + aGame width atRandom y: aGame height atRandom ].
+	self shouldShoot ifTrue: [ aGame enemyShot: self newBullet ]
 ! !
 
 !OVSaucer methodsFor: 'initialization'!
@@ -218,16 +221,6 @@ initialize
 		addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10.
 	
 	(self frameGroupNamed: 'exploding') frameRate: 2.
-! !
-
-!OVSaucer methodsFor: 'movement'!
-
-move
-	self moveCentreBy: -2 @ (5 atRandom - 3).
-!
-
-wander
-	self moveCentreBy: (3 atRandom - 2) @ (3 atRandom - 2).
 ! !
 
 !OVSaucer methodsFor: 'testing'!
@@ -278,6 +271,32 @@ stepOnGame: aGame
 				ifNil: [ self moveTowards: aGame ship ]].
 ! !
 
+FSMState subclass: #OVSaucerState
+	instanceVariableNames: ''
+	package: 'OVNI-Sprites'!
+
+!OVSaucerState methodsFor: 'control'!
+
+step
+	self move.
+! !
+
+!OVSaucerState methodsFor: 'movement'!
+
+move
+	self context moveCentreBy: -2 @ (5 atRandom - 3).
+! !
+
+OVSaucerState subclass: #OVSaucerWanderingState
+	instanceVariableNames: ''
+	package: 'OVNI-Sprites'!
+
+!OVSaucerWanderingState methodsFor: 'movement'!
+
+move
+	self context moveCentreBy: (3 atRandom - 2) @ (3 atRandom - 2).
+! !
+
 Sprite subclass: #OVSpaceShip
 	instanceVariableNames: 'speed exploding'
 	package: 'OVNI-Sprites'!
@@ -316,7 +335,9 @@ explode
 
 shootOnGame: aGame
 	aGame playerShot: self newBullet.
-!
+! !
+
+!OVSpaceShip methodsFor: 'control'!
 
 stepOnGame: aGame
 	(self exploding and: [ self atLastFrame ])
