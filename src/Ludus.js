@@ -1799,7 +1799,53 @@ globals.Sprite);
 
 
 
-smalltalk.addClass('FSMSprite', globals.Sprite, ['state'], 'Ludus');
+smalltalk.addClass('FSMSprite', globals.Sprite, ['currentState', 'states'], 'Ludus');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "currentState",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@currentState"];
+if(($receiver = $2) == null || $receiver.isNil){
+self._currentState_(_st(self._states())._first());
+$1=self["@currentState"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"currentState",{},globals.FSMSprite)})},
+args: [],
+source: "currentState\x0a\x09^ currentState ifNil: [ self currentState: self states first. currentState ]",
+messageSends: ["ifNil:", "currentState:", "first", "states"],
+referencedClasses: []
+}),
+globals.FSMSprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "currentState:",
+protocol: 'accessing',
+fn: function (aState){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $receiver;
+if(($receiver = aState) == null || $receiver.isNil){
+self["@currentState"]=_st(self._defaultStateClass())._new();
+} else {
+self["@currentState"]=aState;
+};
+_st(self["@currentState"])._context_(self);
+return self}, function($ctx1) {$ctx1.fill(self,"currentState:",{aState:aState},globals.FSMSprite)})},
+args: ["aState"],
+source: "currentState: aState\x0a\x09currentState := aState ifNil: [ self defaultStateClass new ].\x0a\x09currentState context: self.",
+messageSends: ["ifNil:", "new", "defaultStateClass", "context:"],
+referencedClasses: []
+}),
+globals.FSMSprite);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "defaultStateClass",
@@ -1818,46 +1864,24 @@ globals.FSMSprite);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "state",
+selector: "states",
 protocol: 'accessing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $2,$1,$receiver;
-$2=self["@state"];
+$2=self["@states"];
 if(($receiver = $2) == null || $receiver.isNil){
-self._state_(_st(self._defaultStateClass())._new());
-$1=self["@state"];
+self["@states"]=[_st(self._defaultStateClass())._new()];
+$1=self["@states"];
 } else {
 $1=$2;
 };
 return $1;
-}, function($ctx1) {$ctx1.fill(self,"state",{},globals.FSMSprite)})},
+}, function($ctx1) {$ctx1.fill(self,"states",{},globals.FSMSprite)})},
 args: [],
-source: "state\x0a\x09^ state ifNil: [ self state: self defaultStateClass new. state ]",
-messageSends: ["ifNil:", "state:", "new", "defaultStateClass"],
-referencedClasses: []
-}),
-globals.FSMSprite);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "state:",
-protocol: 'accessing',
-fn: function (aState){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $receiver;
-if(($receiver = aState) == null || $receiver.isNil){
-self["@state"]=_st(self._defaultStateClass())._new();
-} else {
-self["@state"]=aState;
-};
-_st(self["@state"])._context_(self);
-return self}, function($ctx1) {$ctx1.fill(self,"state:",{aState:aState},globals.FSMSprite)})},
-args: ["aState"],
-source: "state: aState\x0a\x09state := aState ifNil: [ self defaultStateClass new ].\x0a\x09state context: self.",
-messageSends: ["ifNil:", "new", "defaultStateClass", "context:"],
+source: "states\x0a\x09^ states ifNil: [ states := { self defaultStateClass new } ]",
+messageSends: ["ifNil:", "new", "defaultStateClass"],
 referencedClasses: []
 }),
 globals.FSMSprite);
@@ -1869,11 +1893,37 @@ protocol: 'control',
 fn: function (aGame){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(self._state())._step();
+_st(self._currentState())._stepOnGame_(aGame);
 return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.FSMSprite)})},
 args: ["aGame"],
-source: "stepOnGame: aGame\x0a\x09self state step",
-messageSends: ["step", "state"],
+source: "stepOnGame: aGame\x0a\x09self currentState stepOnGame: aGame",
+messageSends: ["stepOnGame:", "currentState"],
+referencedClasses: []
+}),
+globals.FSMSprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "switchToState:",
+protocol: 'control',
+fn: function (aStateClass){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+$2=self._states();
+$ctx1.sendIdx["states"]=1;
+$1=_st($2)._detect_ifNone_((function(any){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st(any)._class()).__eq(aStateClass);
+}, function($ctx2) {$ctx2.fillBlock({any:any},$ctx1,1)})}),(function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(self._states())._add_(_st(aStateClass)._new());
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+self._currentState_($1);
+return self}, function($ctx1) {$ctx1.fill(self,"switchToState:",{aStateClass:aStateClass},globals.FSMSprite)})},
+args: ["aStateClass"],
+source: "switchToState: aStateClass\x0a\x09self currentState: (self states detect: [ :any | any class = aStateClass ] ifNone: [ self states add: aStateClass new ])",
+messageSends: ["currentState:", "detect:ifNone:", "states", "=", "class", "add:", "new"],
 referencedClasses: []
 }),
 globals.FSMSprite);
@@ -4753,16 +4803,32 @@ globals.FSMState);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "step",
+selector: "stepOnGame:",
 protocol: 'control',
-fn: function (){
+fn: function (aGame){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 self._subclassResponsibility();
-return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.FSMState)})},
-args: [],
-source: "step\x0a\x09self subclassResponsibility",
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.FSMState)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09self subclassResponsibility",
 messageSends: ["subclassResponsibility"],
+referencedClasses: []
+}),
+globals.FSMState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "switchToState:",
+protocol: 'state transition',
+fn: function (aState){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._context())._switchToState_(aState);
+return self}, function($ctx1) {$ctx1.fill(self,"switchToState:",{aState:aState},globals.FSMState)})},
+args: ["aState"],
+source: "switchToState: aState\x0a\x09self context switchToState: aState",
+messageSends: ["switchToState:", "context"],
 referencedClasses: []
 }),
 globals.FSMState);

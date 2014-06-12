@@ -119,7 +119,7 @@ dead: aBoolean
 !
 
 defaultStateClass
-	^ OVSaucerState
+	^ OVSaucerObservingState
 !
 
 exploding
@@ -169,6 +169,10 @@ respawnAtX: anX y: aY
 		x: anX;
 		y: aY;
 		dead: false
+!
+
+shootOnGame: aGame
+	aGame enemyShot: self newBullet
 ! !
 
 !OVSaucer methodsFor: 'collisions'!
@@ -198,7 +202,7 @@ shouldShoot
 
 stepOnGame: aGame
 	super stepOnGame: aGame.
-	
+		
 	self
 		checkCollisionWith: aGame bullets;
 		checkShouldDie.
@@ -208,7 +212,16 @@ stepOnGame: aGame
 	self escaped ifTrue: [ aGame saucerEscaped ].
 
 	self shouldRespawn ifTrue: [ self respawnAtX: aGame width + aGame width atRandom y: aGame height atRandom ].
-	self shouldShoot ifTrue: [ aGame enemyShot: self newBullet ]
+! !
+
+!OVSaucer methodsFor: 'geometry'!
+
+alignedWith: aSprite threshold: aThreshold
+	^ (self centre y - aSprite centre y) abs < aThreshold
+!
+
+alignedWithWhichOf: aSpriteCollection threshold: aThreshold
+	^ aSpriteCollection detect: [ :which | self alignedWith: which threshold: aThreshold ] ifNone: [ nil ]
 ! !
 
 !OVSaucer methodsFor: 'initialization'!
@@ -241,59 +254,82 @@ shouldRespawn
 	^ self escaped | self dead
 ! !
 
-OVSaucer subclass: #OVSmartSaucer
-	instanceVariableNames: ''
+FSMState subclass: #OVSaucerAvoidingState
+	instanceVariableNames: 'bullet'
 	package: 'OVNI-Sprites'!
 
-!OVSmartSaucer methodsFor: 'as yet unclassified'!
+!OVSaucerAvoidingState methodsFor: 'accessing'!
 
-alignedWith: aSprite
-	^ (self y - aSprite y) abs < self alignmentThreshold
+bullet
+	^ bullet
 !
 
-alignedWithWhichOf: aSpriteCollection
-	^ aSpriteCollection detect: [ :which | self alignedWith: which ] ifNone: [ nil ]
-!
+bullet: anObject
+	bullet := anObject
+! !
 
-alignmentThreshold
-	^ 10
+!OVSaucerAvoidingState methodsFor: 'control'!
+
+moveAwayFrom: aSprite
+	self context moveCentreBy: -2 @ (aSprite y > self context y ifTrue: [ 2 atRandom * -1 ] ifFalse: [ 2 atRandom ]).
 !
 
 stepOnGame: aGame
-	super step.
-	(self alignedWith: aGame ship)
-		ifTrue: [ self shootOnGame: aGame ]
-		ifFalse: [ 
-			| dangerousBullet |
-			dangerousBullet := (self alignedWithWhichOf: aGame bullets).
-			dangerousBullet 
-				ifNotNil: [ self moveAwayFrom: dangerousBullet ] 
-				ifNil: [ self moveTowards: aGame ship ]].
+	self moveAwayFrom: self bullet.
+	(self context alignedWith: self bullet threshold: 50) 
+		ifFalse: [ self switchToState: OVSaucerObservingState ].
 ! !
 
-FSMState subclass: #OVSaucerState
+FSMState subclass: #OVSaucerObservingState
 	instanceVariableNames: ''
 	package: 'OVNI-Sprites'!
 
-!OVSaucerState methodsFor: 'control'!
+!OVSaucerObservingState methodsFor: 'control'!
 
-step
-	self move.
+stepOnGame: aGame
+	(self context alignedWithWhichOf: aGame bullets threshold: 50)
+		ifNotNil: [ :bullet |
+			self switchToState: OVSaucerAvoidingState.
+			self context currentState bullet: bullet ]
+		ifNil: [
+			(self context alignedWith: aGame ship threshold: 10)
+				ifFalse: [ self switchToState: OVSaucerSeekingState ]
+				ifTrue: [ self context shootOnGame: aGame].
+			self move ]
 ! !
 
-!OVSaucerState methodsFor: 'movement'!
+!OVSaucerObservingState methodsFor: 'movement'!
 
 move
 	self context moveCentreBy: -2 @ (5 atRandom - 3).
 ! !
 
-OVSaucerState subclass: #OVSaucerWanderingState
+FSMState subclass: #OVSaucerSeekingState
 	instanceVariableNames: ''
 	package: 'OVNI-Sprites'!
 
-!OVSaucerWanderingState methodsFor: 'movement'!
+!OVSaucerSeekingState methodsFor: 'control'!
 
-move
+moveTowards: aSprite
+	self context moveCentreBy: -2 @ (aSprite y > self context y ifTrue: [ 2 atRandom ] ifFalse: [ 2 atRandom * -1 ]).
+!
+
+stepOnGame: aGame
+	self moveTowards: aGame ship.
+	(self context alignedWith: aGame ship threshold: 10)
+		ifTrue: [ self switchToState: OVSaucerObservingState ].
+	(self context alignedWithWhichOf: aGame bullets threshold: 25) ifNotNil: [ :bullet | 
+			self switchToState: OVSaucerAvoidingState.
+			self context currentState bullet: bullet ]
+! !
+
+FSMState subclass: #OVSaucerWanderingState
+	instanceVariableNames: ''
+	package: 'OVNI-Sprites'!
+
+!OVSaucerWanderingState methodsFor: 'control'!
+
+stepOnGame: aGame
 	self context moveCentreBy: (3 atRandom - 2) @ (3 atRandom - 2).
 ! !
 

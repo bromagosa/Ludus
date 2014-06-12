@@ -473,10 +473,19 @@ isSprite
 ! !
 
 Sprite subclass: #FSMSprite
-	instanceVariableNames: 'state'
+	instanceVariableNames: 'currentState states'
 	package: 'Ludus'!
 
 !FSMSprite methodsFor: 'accessing'!
+
+currentState
+	^ currentState ifNil: [ self currentState: self states first. currentState ]
+!
+
+currentState: aState
+	currentState := aState ifNil: [ self defaultStateClass new ].
+	currentState context: self.
+!
 
 defaultStateClass
 	"My subclasses should define which class implements my default state class"
@@ -484,19 +493,18 @@ defaultStateClass
 	^ FSMState
 !
 
-state
-	^ state ifNil: [ self state: self defaultStateClass new. state ]
-!
-
-state: aState
-	state := aState ifNil: [ self defaultStateClass new ].
-	state context: self.
+states
+	^ states ifNil: [ states := { self defaultStateClass new } ]
 ! !
 
 !FSMSprite methodsFor: 'control'!
 
 stepOnGame: aGame
-	self state step
+	self currentState stepOnGame: aGame
+!
+
+switchToState: aStateClass
+	self currentState: (self states detect: [ :any | any class = aStateClass ] ifNone: [ self states add: aStateClass new ])
 ! !
 
 AbstractDrawable subclass: #Image
@@ -1368,8 +1376,14 @@ context: anObject
 
 !FSMState methodsFor: 'control'!
 
-step
+stepOnGame: aGame
 	self subclassResponsibility
+! !
+
+!FSMState methodsFor: 'state transition'!
+
+switchToState: aState
+	self context switchToState: aState
 ! !
 
 Object subclass: #InputHandler
