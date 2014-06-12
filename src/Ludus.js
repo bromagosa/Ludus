@@ -194,7 +194,7 @@ globals.Animation);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "animating",
-protocol: 'animation',
+protocol: 'animating',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -358,7 +358,7 @@ globals.Animation);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "frameRate:",
-protocol: 'animation',
+protocol: 'animating',
 fn: function (anInteger){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -410,7 +410,7 @@ globals.Animation);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "loop",
-protocol: 'animation',
+protocol: 'animating',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -434,7 +434,7 @@ globals.Animation);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "loop:",
-protocol: 'animation',
+protocol: 'animating',
 fn: function (aBoolean){
 var self=this;
 self["@loop"]=aBoolean;
@@ -524,7 +524,7 @@ globals.Animation);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "restartAnimation",
-protocol: 'animation',
+protocol: 'animating',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -542,7 +542,7 @@ globals.Animation);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "startAnimation",
-protocol: 'animation',
+protocol: 'animating',
 fn: function (){
 var self=this;
 self["@animating"]=true;
@@ -557,7 +557,7 @@ globals.Animation);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "stopAnimation",
-protocol: 'animation',
+protocol: 'animating',
 fn: function (){
 var self=this;
 self["@animating"]=false;
@@ -604,7 +604,7 @@ globals.Animation);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "toggleAnimation",
-protocol: 'animation',
+protocol: 'animating',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -1609,6 +1609,20 @@ globals.Sprite);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'control',
+fn: function (aGame){
+var self=this;
+return self},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09\x22self doSomethingAccordingTo: (self someState and: [ aGame someOtherState ])\x22",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Sprite);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "topCollidesWith:",
 protocol: 'collisions',
 fn: function (aSprite){
@@ -1782,6 +1796,82 @@ messageSends: ["y:", "position"],
 referencedClasses: []
 }),
 globals.Sprite);
+
+
+
+smalltalk.addClass('FSMSprite', globals.Sprite, ['state'], 'Ludus');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "defaultStateClass",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $FSMState(){return globals.FSMState||(typeof FSMState=="undefined"?nil:FSMState)}
+return $FSMState();
+},
+args: [],
+source: "defaultStateClass\x0a\x09\x22My subclasses should define which class implements my default state class\x22\x0a\x09\x0a\x09^ FSMState",
+messageSends: [],
+referencedClasses: ["FSMState"]
+}),
+globals.FSMSprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "state",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@state"];
+if(($receiver = $2) == null || $receiver.isNil){
+self._state_(_st(self._defaultStateClass())._new());
+$1=self["@state"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"state",{},globals.FSMSprite)})},
+args: [],
+source: "state\x0a\x09^ state ifNil: [ self state: self defaultStateClass new. state ]",
+messageSends: ["ifNil:", "state:", "new", "defaultStateClass"],
+referencedClasses: []
+}),
+globals.FSMSprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "state:",
+protocol: 'accessing',
+fn: function (aState){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self["@state"]=aState;
+_st(aState)._context_(self);
+return self}, function($ctx1) {$ctx1.fill(self,"state:",{aState:aState},globals.FSMSprite)})},
+args: ["aState"],
+source: "state: aState\x0a\x09state := aState.\x0a\x09aState context: self.",
+messageSends: ["context:"],
+referencedClasses: []
+}),
+globals.FSMSprite);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'control',
+fn: function (aGame){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._state())._step();
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.FSMSprite)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09self state step",
+messageSends: ["step", "state"],
+referencedClasses: []
+}),
+globals.FSMSprite);
 
 
 
@@ -3559,7 +3649,7 @@ globals.AbstractScreen);
 
 
 
-smalltalk.addClass('Game', globals.AbstractScreen, ['end', 'sounds', 'screens', 'currentScreen', 'debugMode', 'preloader'], 'Ludus');
+smalltalk.addClass('Game', globals.AbstractScreen, ['end', 'sounds', 'screens', 'soundIsMute', 'currentScreen', 'debugMode', 'preloader'], 'Ludus');
 globals.Game.comment="I am a game. You need to override a couple of my methods to make me usable:\x0a\x0a**#startGame** Here you can define my intial conditions, such as the size of the canvas, my sounds, the background properties, the FPS, etc.\x0a\x0a**#step**  Here you can define what has to be done at each game cycle, or step. This method should control posititions, collisions, mouse and keyboard events, etc. This method should not deal with any graphic properties, these should be dealt with by:\x0a\x0a**#draw**  This is the method that controls my view. Here you should define the drawing of sprites and other graphic elements. Don't forget to clear the canvas before re-drawing sprites, if your game requires so.";
 smalltalk.addMethod(
 smalltalk.method({
@@ -3737,6 +3827,76 @@ args: [],
 source: "screens\x0a\x09^ screens ifNil: [ screens := #() ]",
 messageSends: ["ifNil:"],
 referencedClasses: []
+}),
+globals.Game);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "soundIsMute",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@soundIsMute"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@soundIsMute"]=false;
+$1=self["@soundIsMute"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"soundIsMute",{},globals.Game)})},
+args: [],
+source: "soundIsMute\x0a\x09^ soundIsMute ifNil: [ soundIsMute := false ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.Game);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "soundIsMute:",
+protocol: 'accessing',
+fn: function (aBoolean){
+var self=this;
+self["@soundIsMute"]=aBoolean;
+return self},
+args: ["aBoolean"],
+source: "soundIsMute: aBoolean\x0a\x09soundIsMute := aBoolean",
+messageSends: [],
+referencedClasses: []
+}),
+globals.Game);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "soundNamed:",
+protocol: 'audio',
+fn: function (aString){
+var self=this;
+function $NullSound(){return globals.NullSound||(typeof NullSound=="undefined"?nil:NullSound)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+$2=self._soundIsMute();
+if(smalltalk.assert($2)){
+$1=_st($NullSound())._new();
+$ctx1.sendIdx["new"]=1;
+} else {
+$1=_st(self._sounds())._detect_ifNone_((function(each){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st(each)._id()).__eq(aString);
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,3)})}),(function(){
+return smalltalk.withContext(function($ctx2) {
+return _st($NullSound())._new();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"soundNamed:",{aString:aString},globals.Game)})},
+args: ["aString"],
+source: "soundNamed: aString\x0a\x09^ self soundIsMute\x0a\x09\x09ifTrue: [ NullSound new ]\x0a\x09\x09ifFalse: [ self sounds detect: [ :each | each id = aString ] ifNone: [ NullSound new ]].",
+messageSends: ["ifTrue:ifFalse:", "soundIsMute", "new", "detect:ifNone:", "sounds", "=", "id"],
+referencedClasses: ["NullSound"]
 }),
 globals.Game);
 
@@ -4550,6 +4710,57 @@ messageSends: ["onKeyPressed:do:", "inputHandler", "downArrow", "nextOption", "u
 referencedClasses: ["Key"]
 }),
 globals.Menu);
+
+
+
+smalltalk.addClass('FSMState', globals.Object, ['context'], 'Ludus');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "context",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@context"];
+return $1;
+},
+args: [],
+source: "context\x0a\x09^ context",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FSMState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "context:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@context"]=anObject;
+return self},
+args: ["anObject"],
+source: "context: anObject\x0a\x09context := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FSMState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "step",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._subclassResponsibility();
+return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.FSMState)})},
+args: [],
+source: "step\x0a\x09self subclassResponsibility",
+messageSends: ["subclassResponsibility"],
+referencedClasses: []
+}),
+globals.FSMState);
 
 
 

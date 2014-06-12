@@ -107,6 +107,27 @@ referencedClasses: []
 }),
 globals.OVBullet);
 
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'behaviour',
+fn: function (aGame){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._move();
+$1=self._isAllInsideCanvas_(_st(aGame)._canvas());
+if(! smalltalk.assert($1)){
+_st(_st(aGame)._bullets())._remove_(self);
+};
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVBullet)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09self move.\x0a\x09(self isAllInsideCanvas: aGame canvas) \x0a\x09\x09ifFalse: [ aGame bullets remove: self ]",
+messageSends: ["move", "ifFalse:", "isAllInsideCanvas:", "canvas", "remove:", "bullets"],
+referencedClasses: []
+}),
+globals.OVBullet);
+
 
 
 smalltalk.addClass('OVEnemyBullet', globals.OVBullet, [], 'OVNI');
@@ -176,6 +197,27 @@ return $1;
 args: [],
 source: "speed\x0a\x09^ speed ifNil: [ speed := 1 ]",
 messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVEnemyBullet);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'behaviour',
+fn: function (aGame){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._move();
+$1=self._isAllInsideCanvas_(_st(aGame)._canvas());
+if(! smalltalk.assert($1)){
+_st(_st(aGame)._enemyBullets())._remove_(self);
+};
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVEnemyBullet)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09self move.\x0a\x09(self isAllInsideCanvas: aGame canvas) \x0a\x09\x09ifFalse: [ aGame enemyBullets remove: self ]",
+messageSends: ["move", "ifFalse:", "isAllInsideCanvas:", "canvas", "remove:", "enemyBullets"],
 referencedClasses: []
 }),
 globals.OVEnemyBullet);
@@ -252,71 +294,6 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "controlBullets",
-protocol: 'control',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$3;
-_st(self._bullets())._do_((function(eachBullet){
-return smalltalk.withContext(function($ctx2) {
-_st(eachBullet)._move();
-$ctx2.sendIdx["move"]=1;
-$2=self._canvas();
-$ctx2.sendIdx["canvas"]=1;
-$1=_st(eachBullet)._isAllInsideCanvas_($2);
-$ctx2.sendIdx["isAllInsideCanvas:"]=1;
-if(! smalltalk.assert($1)){
-return _st(self["@bullets"])._remove_(eachBullet);
-$ctx2.sendIdx["remove:"]=1;
-};
-}, function($ctx2) {$ctx2.fillBlock({eachBullet:eachBullet},$ctx1,1)})}));
-$ctx1.sendIdx["do:"]=1;
-_st(self._enemyBullets())._do_((function(eachBullet){
-return smalltalk.withContext(function($ctx2) {
-_st(eachBullet)._move();
-$3=_st(eachBullet)._isAllInsideCanvas_(self._canvas());
-if(! smalltalk.assert($3)){
-return _st(self["@enemyBullets"])._remove_(eachBullet);
-};
-}, function($ctx2) {$ctx2.fillBlock({eachBullet:eachBullet},$ctx1,3)})}));
-return self}, function($ctx1) {$ctx1.fill(self,"controlBullets",{},globals.OVGame)})},
-args: [],
-source: "controlBullets\x0a\x09self bullets do: [ :eachBullet | \x0a\x09\x09eachBullet move.\x0a\x09\x09(eachBullet isAllInsideCanvas: self canvas) \x0a\x09\x09\x09ifFalse: [ bullets remove: eachBullet ]].\x0a\x09self enemyBullets do: [ :eachBullet | \x0a\x09\x09eachBullet move.\x0a\x09\x09(eachBullet isAllInsideCanvas: self canvas) \x0a\x09\x09\x09ifFalse: [ enemyBullets remove: eachBullet ]]",
-messageSends: ["do:", "bullets", "move", "ifFalse:", "isAllInsideCanvas:", "canvas", "remove:", "enemyBullets"],
-referencedClasses: []
-}),
-globals.OVGame);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "controlItems",
-protocol: 'control',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$3,$2;
-$1=self._lifeItem();
-$ctx1.sendIdx["lifeItem"]=1;
-_st($1)._move();
-$3=self._lifeItem();
-$ctx1.sendIdx["lifeItem"]=2;
-$2=_st($3)._collidesWith_(self._ship());
-if(smalltalk.assert($2)){
-_st(self._soundNamed_("life"))._play();
-_st(self._player())._addLife();
-_st(self._lifeItem())._x_((-20));
-};
-return self}, function($ctx1) {$ctx1.fill(self,"controlItems",{},globals.OVGame)})},
-args: [],
-source: "controlItems\x0a\x09self lifeItem move.\x0a\x09(self lifeItem collidesWith: self ship) ifTrue: [\x0a\x09\x09(self soundNamed: 'life') play.\x0a\x09\x09self player addLife.\x0a\x09\x09self lifeItem x: -20 ]",
-messageSends: ["move", "lifeItem", "ifTrue:", "collidesWith:", "ship", "play", "soundNamed:", "addLife", "player", "x:"],
-referencedClasses: []
-}),
-globals.OVGame);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "controlPhase",
 protocol: 'control',
 fn: function (){
@@ -339,134 +316,6 @@ return self}, function($ctx1) {$ctx1.fill(self,"controlPhase",{},globals.OVGame)
 args: [],
 source: "controlPhase\x0a\x09self phase shouldAdvance \x0a\x09\x09ifTrue: [ \x0a\x09\x09\x09self phase isLast \x0a\x09\x09\x09\x09ifTrue: [ \x0a\x09\x09\x09\x09\x09(self soundNamed: 'gamewon') play.\x0a\x09\x09\x09\x09\x09self switchToScreenNamed: 'gameWon' ]\x0a\x09\x09\x09\x09ifFalse: [ self nextPhase ]]",
 messageSends: ["ifTrue:", "shouldAdvance", "phase", "ifTrue:ifFalse:", "isLast", "play", "soundNamed:", "switchToScreenNamed:", "nextPhase"],
-referencedClasses: []
-}),
-globals.OVGame);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "controlSaucers",
-protocol: 'control',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$7,$6,$9,$8,$5,$10,$11,$12,$14,$15,$13,$16;
-_st(self._saucers())._do_((function(eachSaucer){
-return smalltalk.withContext(function($ctx2) {
-_st(eachSaucer)._checkCollisionWith_(self._bullets());
-$1=_st(eachSaucer)._step();
-$1;
-$2=_st(eachSaucer)._isHit();
-if(smalltalk.assert($2)){
-_st(self._soundNamed_("explosion-1"))._play();
-_st(self._phase())._saucerKilled();
-};
-$3=_st(eachSaucer)._isDead();
-if(smalltalk.assert($3)){
-$4=self._player();
-$ctx2.sendIdx["player"]=1;
-$7=self._player();
-$ctx2.sendIdx["player"]=2;
-$6=_st($7)._score();
-$ctx2.sendIdx["score"]=1;
-$9=self._difficulty();
-$ctx2.sendIdx["difficulty"]=1;
-$8=(5).__star($9);
-$5=_st($6).__plus($8);
-$ctx2.sendIdx["+"]=1;
-_st($4)._score_($5);
-$ctx2.sendIdx["score:"]=1;
-};
-$10=_st(eachSaucer)._escaped();
-if(smalltalk.assert($10)){
-$11=self._player();
-$ctx2.sendIdx["player"]=3;
-_st($11)._score_(_st(_st(_st(self._player())._score()).__minus(self._difficulty()))._max_((0)));
-};
-$12=_st(eachSaucer)._shouldRespawn();
-if(smalltalk.assert($12)){
-$14=self._width();
-$ctx2.sendIdx["width"]=1;
-$15=_st(self._width())._atRandom();
-$ctx2.sendIdx["atRandom"]=1;
-$13=_st($14).__plus($15);
-_st(eachSaucer)._respawnAtX_y_($13,_st(self._height())._atRandom());
-};
-$16=_st(eachSaucer)._shouldShoot();
-if(smalltalk.assert($16)){
-return _st(self._enemyBullets())._add_(_st(eachSaucer)._newBullet());
-};
-}, function($ctx2) {$ctx2.fillBlock({eachSaucer:eachSaucer},$ctx1,1)})}));
-return self}, function($ctx1) {$ctx1.fill(self,"controlSaucers",{},globals.OVGame)})},
-args: [],
-source: "controlSaucers\x0a\x09self saucers do: [ :eachSaucer | \x0a\x09\x09eachSaucer\x0a\x09\x09\x09checkCollisionWith: self bullets;\x0a\x09\x09\x09step.\x0a\x09\x09\x09\x0a\x09\x09eachSaucer isHit ifTrue: [ \x0a\x09\x09\x09(self soundNamed: 'explosion-1') play. \x0a\x09\x09\x09self phase saucerKilled ].\x0a\x09\x09\x09\x0a\x09\x09eachSaucer isDead ifTrue: [ self player score: self player score + (5 * self difficulty) ].\x0a\x09\x09eachSaucer escaped ifTrue: [ self player score: ((self player score - self difficulty) max: 0) ].\x0a\x09\x09\x0a\x09\x09eachSaucer shouldRespawn ifTrue: [\x0a\x09\x09\x09eachSaucer \x0a\x09\x09\x09\x09respawnAtX: self width + self width atRandom y: self height atRandom ].\x0a\x09\x09eachSaucer shouldShoot ifTrue: [ self enemyBullets add: eachSaucer newBullet ]].",
-messageSends: ["do:", "saucers", "checkCollisionWith:", "bullets", "step", "ifTrue:", "isHit", "play", "soundNamed:", "saucerKilled", "phase", "isDead", "score:", "player", "+", "score", "*", "difficulty", "escaped", "max:", "-", "shouldRespawn", "respawnAtX:y:", "width", "atRandom", "height", "shouldShoot", "add:", "enemyBullets", "newBullet"],
-referencedClasses: []
-}),
-globals.OVGame);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "controlShip",
-protocol: 'control',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $3,$2,$4,$1,$5,$8,$7,$6,$9,$13,$12,$14,$11,$16,$15,$10,$17;
-$3=self._ship();
-$ctx1.sendIdx["ship"]=1;
-$2=_st($3)._exploding();
-$ctx1.sendIdx["exploding"]=1;
-$1=_st($2)._and_((function(){
-return smalltalk.withContext(function($ctx2) {
-$4=self._ship();
-$ctx2.sendIdx["ship"]=2;
-return _st($4)._atLastFrame();
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-$ctx1.sendIdx["and:"]=1;
-if(smalltalk.assert($1)){
-self._resetSprites();
-$5=self._player();
-$ctx1.sendIdx["player"]=1;
-$8=self._player();
-$ctx1.sendIdx["player"]=2;
-$7=_st($8)._lives();
-$ctx1.sendIdx["lives"]=1;
-$6=_st($7).__minus((1));
-_st($5)._lives_($6);
-$9=_st(_st(self._player())._lives()).__lt((0));
-if(smalltalk.assert($9)){
-self._end();
-};
-};
-$13=self._ship();
-$ctx1.sendIdx["ship"]=3;
-$12=_st($13)._collidesWithAnyOf_(self._enemyBullets());
-$ctx1.sendIdx["collidesWithAnyOf:"]=1;
-$11=_st($12)._or_((function(){
-return smalltalk.withContext(function($ctx2) {
-$14=self._ship();
-$ctx2.sendIdx["ship"]=4;
-return _st($14)._collidesWithAnyOf_(self._saucers());
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
-$10=_st($11)._and_((function(){
-return smalltalk.withContext(function($ctx2) {
-$16=self._ship();
-$ctx2.sendIdx["ship"]=5;
-$15=_st($16)._exploding();
-return _st($15)._not();
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)})}));
-if(smalltalk.assert($10)){
-_st(self._soundNamed_("explosion-2"))._play();
-$17=self._ship();
-$ctx1.sendIdx["ship"]=6;
-_st($17)._explode();
-};
-_st(self._ship())._moveWithHandler_inCanvas_(self._inputHandler(),self._canvas());
-return self}, function($ctx1) {$ctx1.fill(self,"controlShip",{},globals.OVGame)})},
-args: [],
-source: "controlShip\x0a\x09(self ship exploding and: [ self ship atLastFrame ])\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09self resetSprites.\x0a\x09\x09\x09self player lives: self player lives - 1.\x0a\x09\x09\x09self player lives < 0 ifTrue: [ self end ]].\x0a\x09(((self ship collidesWithAnyOf: self enemyBullets)\x0a\x09\x09or: [ (self ship collidesWithAnyOf: self saucers) ]) \x0a\x09\x09\x09and: [ self ship exploding not])\x0a\x09\x09\x09\x09ifTrue: [\x0a\x09\x09\x09\x09\x09(self soundNamed: 'explosion-2') play.\x0a\x09\x09\x09\x09\x09self ship explode ].\x0a\x09self ship moveWithHandler: self inputHandler inCanvas: self canvas.",
-messageSends: ["ifTrue:", "and:", "exploding", "ship", "atLastFrame", "resetSprites", "lives:", "player", "-", "lives", "<", "end", "or:", "collidesWithAnyOf:", "enemyBullets", "saucers", "not", "play", "soundNamed:", "explode", "moveWithHandler:inCanvas:", "inputHandler", "canvas"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -620,6 +469,22 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "enemyShot:",
+protocol: 'game events',
+fn: function (aBullet){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._enemyBullets())._add_(aBullet);
+return self}, function($ctx1) {$ctx1.fill(self,"enemyShot:",{aBullet:aBullet},globals.OVGame)})},
+args: ["aBullet"],
+source: "enemyShot: aBullet\x0a\x09self enemyBullets add: aBullet",
+messageSends: ["add:", "enemyBullets"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "farBackground",
 protocol: 'accessing',
 fn: function (){
@@ -719,6 +584,23 @@ args: [],
 source: "lifeItem\x0a\x09^ lifeItem ifNil: [ lifeItem := OVLifeItem new centre: 3000 @ (self height / 2) ]",
 messageSends: ["ifNil:", "centre:", "new", "@", "/", "height"],
 referencedClasses: ["OVLifeItem"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "lifeItemCollected",
+protocol: 'game events',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._soundNamed_("life"))._play();
+_st(self._player())._addLife();
+return self}, function($ctx1) {$ctx1.fill(self,"lifeItemCollected",{},globals.OVGame)})},
+args: [],
+source: "lifeItemCollected\x0a\x09(self soundNamed: 'life') play.\x0a\x09self player addLife.",
+messageSends: ["play", "soundNamed:", "addLife", "player"],
+referencedClasses: []
 }),
 globals.OVGame);
 
@@ -1079,6 +961,53 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "playerDied",
+protocol: 'game events',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$4,$3,$2,$5;
+self._resetSprites();
+$1=self._player();
+$ctx1.sendIdx["player"]=1;
+$4=self._player();
+$ctx1.sendIdx["player"]=2;
+$3=_st($4)._lives();
+$ctx1.sendIdx["lives"]=1;
+$2=_st($3).__minus((1));
+_st($1)._lives_($2);
+$5=_st(_st(self._player())._lives()).__lt((0));
+if(smalltalk.assert($5)){
+self._end();
+};
+return self}, function($ctx1) {$ctx1.fill(self,"playerDied",{},globals.OVGame)})},
+args: [],
+source: "playerDied\x0a\x09self resetSprites.\x0a\x09self player lives: self player lives - 1.\x0a\x09self player lives < 0 ifTrue: [ self end ]",
+messageSends: ["resetSprites", "lives:", "player", "-", "lives", "ifTrue:", "<", "end"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "playerShot:",
+protocol: 'game events',
+fn: function (aBullet){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._debug_("shooting bullet");
+_st(self._soundNamed_("laser"))._play();
+_st(self._bullets())._add_(aBullet);
+return self}, function($ctx1) {$ctx1.fill(self,"playerShot:",{aBullet:aBullet},globals.OVGame)})},
+args: ["aBullet"],
+source: "playerShot: aBullet\x0a\x09self debug: 'shooting bullet'.\x0a\x09(self soundNamed: 'laser') play.\x0a\x09self bullets add: aBullet",
+messageSends: ["debug:", "play", "soundNamed:", "add:", "bullets"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "preloadImages",
 protocol: 'game initialization',
 fn: function (){
@@ -1119,6 +1048,61 @@ return self}, function($ctx1) {$ctx1.fill(self,"resetSprites",{},globals.OVGame)
 args: [],
 source: "resetSprites\x0a\x09self debug: 'resetting sprites'.\x0a\x09ship := nil.\x0a\x09self saucers do: [ :each | each position: -100@0 ].\x0a\x09self enemyBullets removeAll.\x0a\x09self bullets removeAll.",
 messageSends: ["debug:", "do:", "saucers", "position:", "@", "removeAll", "enemyBullets", "bullets"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "saucerDied",
+protocol: 'game events',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=self._player();
+$ctx1.sendIdx["player"]=1;
+_st($1)._score_(_st(_st(self._player())._score()).__plus((5).__star(self._difficulty())));
+return self}, function($ctx1) {$ctx1.fill(self,"saucerDied",{},globals.OVGame)})},
+args: [],
+source: "saucerDied\x0a\x09self player score: self player score + (5 * self difficulty)",
+messageSends: ["score:", "player", "+", "score", "*", "difficulty"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "saucerEscaped",
+protocol: 'game events',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=self._player();
+$ctx1.sendIdx["player"]=1;
+_st($1)._score_(_st(_st(_st(self._player())._score()).__minus(self._difficulty()))._max_((0)));
+return self}, function($ctx1) {$ctx1.fill(self,"saucerEscaped",{},globals.OVGame)})},
+args: [],
+source: "saucerEscaped\x0a\x09self player score: ((self player score - self difficulty) max: 0)",
+messageSends: ["score:", "player", "max:", "-", "score", "difficulty"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "saucerWasHit",
+protocol: 'game events',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._soundNamed_("explosion-1"))._play();
+_st(self._phase())._saucerWasHit();
+return self}, function($ctx1) {$ctx1.fill(self,"saucerWasHit",{},globals.OVGame)})},
+args: [],
+source: "saucerWasHit\x0a\x09(self soundNamed: 'explosion-1') play. \x0a\x09self phase saucerWasHit",
+messageSends: ["play", "soundNamed:", "saucerWasHit", "phase"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -1222,24 +1206,6 @@ args: [],
 source: "ship\x0a\x09^ ship ifNil: [ ship := OVSpaceShip new centre: 105 @ (self height / 2) ]",
 messageSends: ["ifNil:", "centre:", "new", "@", "/", "height"],
 referencedClasses: ["OVSpaceShip"]
-}),
-globals.OVGame);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "shoot",
-protocol: 'game actions',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-self._debug_("shooting bullet");
-_st(self._soundNamed_("laser"))._play();
-_st(self._bullets())._add_(_st(self._ship())._newBullet());
-return self}, function($ctx1) {$ctx1.fill(self,"shoot",{},globals.OVGame)})},
-args: [],
-source: "shoot\x0a\x09self debug: 'shooting bullet'.\x0a\x09(self soundNamed: 'laser') play.\x0a\x09self bullets add: self ship newBullet.",
-messageSends: ["debug:", "play", "soundNamed:", "add:", "bullets", "newBullet", "ship"],
-referencedClasses: []
 }),
 globals.OVGame);
 
@@ -1387,29 +1353,43 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3;
-self._controlShip();
-self._controlSaucers();
-self._controlBullets();
-self._controlItems();
-$1=self._controlPhase();
-$2=self._inputHandler();
-_st($2)._onKeyPressed_do_(_st($Key())._space(),(function(){
-return smalltalk.withContext(function($ctx2) {
-return self._shoot();
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-$ctx1.sendIdx["onKeyPressed:do:"]=1;
-$3=_st($2)._onKeyPressed_do_(_st($Key())._p(),(function(){
+self._stepSprites();
+self._controlPhase();
+_st(self._inputHandler())._onKeyPressed_do_(_st($Key())._p(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._switchToScreenNamed_("pause");
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 _st(self._player())._updateHighScore();
 self._updateTexts();
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVGame)})},
 args: [],
-source: "step\x0a\x09self \x0a\x09\x09controlShip;\x0a\x09\x09controlSaucers;\x0a\x09\x09controlBullets;\x0a\x09\x09controlItems;\x0a\x09\x09controlPhase.\x0a\x0a\x09self inputHandler \x0a\x09\x09onKeyPressed: Key space do: [ self shoot ];\x0a\x09\x09onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].\x0a\x0a\x09self player updateHighScore.\x0a\x09self updateTexts.",
-messageSends: ["controlShip", "controlSaucers", "controlBullets", "controlItems", "controlPhase", "onKeyPressed:do:", "inputHandler", "space", "shoot", "p", "switchToScreenNamed:", "updateHighScore", "player", "updateTexts"],
+source: "step\x0a\x0a\x09self stepSprites.\x0a\x09self controlPhase.\x0a\x0a\x09self inputHandler onKeyPressed: Key p do: [ self switchToScreenNamed: 'pause' ].\x0a\x0a\x09self player updateHighScore.\x0a\x09self updateTexts.",
+messageSends: ["stepSprites", "controlPhase", "onKeyPressed:do:", "inputHandler", "p", "switchToScreenNamed:", "updateHighScore", "player", "updateTexts"],
 referencedClasses: ["Key"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepSprites",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+$2=_st(_st(self._bullets()).__comma(self._enemyBullets())).__comma(self._saucers());
+$ctx1.sendIdx[","]=2;
+$1=_st($2).__comma([self._ship(),self._lifeItem()]);
+$ctx1.sendIdx[","]=1;
+_st($1)._do_((function(eachSprite){
+return smalltalk.withContext(function($ctx2) {
+return _st(eachSprite)._stepOnGame_(self);
+}, function($ctx2) {$ctx2.fillBlock({eachSprite:eachSprite},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"stepSprites",{},globals.OVGame)})},
+args: [],
+source: "stepSprites\x0a\x09(self bullets, self enemyBullets, self saucers, { self ship. self lifeItem })\x0a\x09\x09do: [ :eachSprite | eachSprite stepOnGame: self ]",
+messageSends: ["do:", ",", "bullets", "enemyBullets", "saucers", "ship", "lifeItem", "stepOnGame:"],
+referencedClasses: []
 }),
 globals.OVGame);
 
@@ -1878,6 +1858,28 @@ return self}, function($ctx1) {$ctx1.fill(self,"move",{},globals.OVLifeItem)})},
 args: [],
 source: "move\x0a\x09self x < 20 ifTrue: [ self x: 3000 ].\x0a\x09self moveCentreBy: -2 @ (5 atRandom - 3).",
 messageSends: ["ifTrue:", "<", "x", "x:", "moveCentreBy:", "@", "-", "atRandom"],
+referencedClasses: []
+}),
+globals.OVLifeItem);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'as yet unclassified',
+fn: function (aGame){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._move();
+$1=self._collidesWith_(_st(aGame)._ship());
+if(smalltalk.assert($1)){
+_st(aGame)._lifeItemCollected();
+self._x_((-20));
+};
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVLifeItem)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09self move.\x0a\x09(self collidesWith: aGame ship) \x0a\x09\x09ifTrue: [\x0a\x09\x09\x09aGame lifeItemCollected.\x0a\x09\x09\x09self x: -20 ]",
+messageSends: ["move", "ifTrue:", "collidesWith:", "ship", "lifeItemCollected", "x:"],
 referencedClasses: []
 }),
 globals.OVLifeItem);
@@ -3056,7 +3058,7 @@ globals.OVPhase);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "saucerKilled",
+selector: "saucerWasHit",
 protocol: 'control',
 fn: function (){
 var self=this;
@@ -3070,9 +3072,9 @@ $3=_st(self._saucersToGo()).__eq((0));
 if(smalltalk.assert($3)){
 self._shouldAdvance_(true);
 };
-return self}, function($ctx1) {$ctx1.fill(self,"saucerKilled",{},globals.OVPhase)})},
+return self}, function($ctx1) {$ctx1.fill(self,"saucerWasHit",{},globals.OVPhase)})},
 args: [],
-source: "saucerKilled\x0a\x09self saucersToGo: self saucersToGo - 1.\x0a\x09self saucersToGo = 0 ifTrue: [ self shouldAdvance: true ]",
+source: "saucerWasHit\x0a\x09self saucersToGo: self saucersToGo - 1.\x0a\x09self saucersToGo = 0 ifTrue: [ self shouldAdvance: true ]",
 messageSends: ["saucersToGo:", "-", "saucersToGo", "ifTrue:", "=", "shouldAdvance:"],
 referencedClasses: []
 }),
@@ -3505,7 +3507,7 @@ globals.OVPlayer);
 
 
 
-smalltalk.addClass('OVSaucer', globals.Sprite, ['exploding', 'dead', 'toughness'], 'OVNI');
+smalltalk.addClass('OVSaucer', globals.FSMSprite, ['exploding', 'dead', 'toughness'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "checkCollisionWith:",
@@ -3864,18 +3866,44 @@ globals.OVSaucer);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "step",
-protocol: 'control',
-fn: function (){
+selector: "stepOnGame:",
+protocol: 'behaviour',
+fn: function (aGame){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
+var $1,$2,$3,$4,$5,$7,$8,$6,$9;
+self._checkCollisionWith_(_st(aGame)._bullets());
 self._move();
 $1=self._checkShouldDie();
-return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVSaucer)})},
-args: [],
-source: "step\x0a\x09self \x0a\x09\x09move;\x0a\x09\x09checkShouldDie",
-messageSends: ["move", "checkShouldDie"],
+$2=self._isHit();
+if(smalltalk.assert($2)){
+_st(aGame)._saucerWasHit();
+};
+$3=self._isDead();
+if(smalltalk.assert($3)){
+_st(aGame)._saucerDied();
+};
+$4=self._escaped();
+if(smalltalk.assert($4)){
+_st(aGame)._saucerEscaped();
+};
+$5=self._shouldRespawn();
+if(smalltalk.assert($5)){
+$7=_st(aGame)._width();
+$ctx1.sendIdx["width"]=1;
+$8=_st(_st(aGame)._width())._atRandom();
+$ctx1.sendIdx["atRandom"]=1;
+$6=_st($7).__plus($8);
+self._respawnAtX_y_($6,_st(_st(aGame)._height())._atRandom());
+};
+$9=self._shouldShoot();
+if(smalltalk.assert($9)){
+_st(aGame)._enemyShot_(self._newBullet());
+};
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVSaucer)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09self\x0a\x09\x09checkCollisionWith: aGame bullets;\x0a\x09\x09move;\x0a\x09\x09checkShouldDie.\x0a\x0a\x09self isHit ifTrue: [ aGame saucerWasHit ].\x0a\x09self isDead ifTrue: [ aGame saucerDied ].\x0a\x09self escaped ifTrue: [ aGame saucerEscaped ].\x0a\x0a\x09self shouldRespawn ifTrue: [ self respawnAtX: aGame width + aGame width atRandom y: aGame height atRandom ].\x0a\x09self shouldShoot ifTrue: [ aGame enemyShot: self newBullet ]",
+messageSends: ["checkCollisionWith:", "bullets", "move", "checkShouldDie", "ifTrue:", "isHit", "saucerWasHit", "isDead", "saucerDied", "escaped", "saucerEscaped", "shouldRespawn", "respawnAtX:y:", "+", "width", "atRandom", "height", "shouldShoot", "enemyShot:", "newBullet"],
 referencedClasses: []
 }),
 globals.OVSaucer);
@@ -3943,11 +3971,108 @@ globals.OVSaucer);
 
 
 
+smalltalk.addClass('OVSmartSaucer', globals.OVSaucer, [], 'OVNI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "alignedWith:",
+protocol: 'as yet unclassified',
+fn: function (aSprite){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $4,$3,$2,$1;
+$4=self._y();
+$ctx1.sendIdx["y"]=1;
+$3=_st($4).__minus(_st(aSprite)._y());
+$2=_st($3)._abs();
+$1=_st($2).__lt(self._alignmentThreshold());
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"alignedWith:",{aSprite:aSprite},globals.OVSmartSaucer)})},
+args: ["aSprite"],
+source: "alignedWith: aSprite\x0a\x09^ (self y - aSprite y) abs < self alignmentThreshold",
+messageSends: ["<", "abs", "-", "y", "alignmentThreshold"],
+referencedClasses: []
+}),
+globals.OVSmartSaucer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "alignedWithWhichOf:",
+protocol: 'as yet unclassified',
+fn: function (aSpriteCollection){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(aSpriteCollection)._detect_ifNone_((function(which){
+return smalltalk.withContext(function($ctx2) {
+return self._alignedWith_(which);
+}, function($ctx2) {$ctx2.fillBlock({which:which},$ctx1,1)})}),(function(){
+return nil;
+}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"alignedWithWhichOf:",{aSpriteCollection:aSpriteCollection},globals.OVSmartSaucer)})},
+args: ["aSpriteCollection"],
+source: "alignedWithWhichOf: aSpriteCollection\x0a\x09^ aSpriteCollection detect: [ :which | self alignedWith: which ] ifNone: [ nil ]",
+messageSends: ["detect:ifNone:", "alignedWith:"],
+referencedClasses: []
+}),
+globals.OVSmartSaucer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "alignmentThreshold",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return (10);
+},
+args: [],
+source: "alignmentThreshold\x0a\x09^ 10",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVSmartSaucer);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'as yet unclassified',
+fn: function (aGame){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$3,$receiver;
+($ctx1.supercall = true, globals.OVSmartSaucer.superclass.fn.prototype._step.apply(_st(self), []));
+$ctx1.supercall = false;
+$2=_st(aGame)._ship();
+$ctx1.sendIdx["ship"]=1;
+$1=self._alignedWith_($2);
+if(smalltalk.assert($1)){
+self._shootOnGame_(aGame);
+} else {
+var dangerousBullet;
+dangerousBullet=self._alignedWithWhichOf_(_st(aGame)._bullets());
+dangerousBullet;
+$3=dangerousBullet;
+if(($receiver = $3) == null || $receiver.isNil){
+self._moveTowards_(_st(aGame)._ship());
+} else {
+self._moveAwayFrom_(dangerousBullet);
+};
+};
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVSmartSaucer)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09super step.\x0a\x09(self alignedWith: aGame ship)\x0a\x09\x09ifTrue: [ self shootOnGame: aGame ]\x0a\x09\x09ifFalse: [ \x0a\x09\x09\x09| dangerousBullet |\x0a\x09\x09\x09dangerousBullet := (self alignedWithWhichOf: aGame bullets).\x0a\x09\x09\x09dangerousBullet \x0a\x09\x09\x09\x09ifNotNil: [ self moveAwayFrom: dangerousBullet ] \x0a\x09\x09\x09\x09ifNil: [ self moveTowards: aGame ship ]].",
+messageSends: ["step", "ifTrue:ifFalse:", "alignedWith:", "ship", "shootOnGame:", "alignedWithWhichOf:", "bullets", "ifNotNil:ifNil:", "moveAwayFrom:", "moveTowards:"],
+referencedClasses: []
+}),
+globals.OVSmartSaucer);
+
+
+
 smalltalk.addClass('OVSpaceShip', globals.Sprite, ['speed', 'exploding'], 'OVNI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "explode",
-protocol: 'actions',
+protocol: 'behaviour',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -4165,6 +4290,22 @@ globals.OVSpaceShip);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "shootOnGame:",
+protocol: 'behaviour',
+fn: function (aGame){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(aGame)._playerShot_(self._newBullet());
+return self}, function($ctx1) {$ctx1.fill(self,"shootOnGame:",{aGame:aGame},globals.OVSpaceShip)})},
+args: ["aGame"],
+source: "shootOnGame: aGame\x0a\x09aGame playerShot: self newBullet.",
+messageSends: ["playerShot:", "newBullet"],
+referencedClasses: []
+}),
+globals.OVSpaceShip);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "speed",
 protocol: 'accessing',
 fn: function (){
@@ -4199,6 +4340,54 @@ args: ["anObject"],
 source: "speed: anObject\x0a\x09speed := anObject",
 messageSends: [],
 referencedClasses: []
+}),
+globals.OVSpaceShip);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'behaviour',
+fn: function (aGame){
+var self=this;
+function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$5,$4,$3,$6;
+$2=self._exploding();
+$ctx1.sendIdx["exploding"]=1;
+$1=_st($2)._and_((function(){
+return smalltalk.withContext(function($ctx2) {
+return self._atLastFrame();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["and:"]=1;
+if(smalltalk.assert($1)){
+_st(aGame)._playerDied();
+};
+$5=self._collidesWithAnyOf_(_st(aGame)._enemyBullets());
+$ctx1.sendIdx["collidesWithAnyOf:"]=1;
+$4=_st($5)._or_((function(){
+return smalltalk.withContext(function($ctx2) {
+return self._collidesWithAnyOf_(_st(aGame)._saucers());
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
+$3=_st($4)._and_((function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(self._exploding())._not();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
+if(smalltalk.assert($3)){
+_st(_st(aGame)._soundNamed_("explosion-2"))._play();
+self._explode();
+};
+$6=_st(aGame)._inputHandler();
+$ctx1.sendIdx["inputHandler"]=1;
+_st($6)._onKeyPressed_do_(_st($Key())._space(),(function(){
+return smalltalk.withContext(function($ctx2) {
+return self._shootOnGame_(aGame);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,6)})}));
+self._moveWithHandler_inCanvas_(_st(aGame)._inputHandler(),_st(aGame)._canvas());
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVSpaceShip)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09(self exploding and: [ self atLastFrame ])\x0a\x09\x09ifTrue: [ aGame playerDied ].\x0a\x09\x09\x0a\x09(((self collidesWithAnyOf: aGame enemyBullets)\x0a\x09\x09or: [ (self collidesWithAnyOf: aGame saucers) ]) \x0a\x09\x09\x09and: [ self exploding not])\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09(aGame soundNamed: 'explosion-2') play.\x0a\x09\x09\x09self explode ].\x0a\x09\x0a\x09aGame inputHandler onKeyPressed: Key space do: [ self shootOnGame: aGame ].\x0a\x09self moveWithHandler: aGame inputHandler inCanvas: aGame canvas.",
+messageSends: ["ifTrue:", "and:", "exploding", "atLastFrame", "playerDied", "or:", "collidesWithAnyOf:", "enemyBullets", "saucers", "not", "play", "soundNamed:", "explode", "onKeyPressed:do:", "inputHandler", "space", "shootOnGame:", "moveWithHandler:inCanvas:", "canvas"],
+referencedClasses: ["Key"]
 }),
 globals.OVSpaceShip);
 
