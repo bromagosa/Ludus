@@ -85,7 +85,8 @@ restartGameText: aText
 
 step
 	self game ship moveCentreBy: 5@0.
-	self inputHandler onKeyPressed: Key space do: [ self game switchToScreenNamed: 'start' ].
+	self game ship x > self game width
+		ifTrue: [ self inputHandler onKeyPressed: Key space do: [ self game switchToScreenNamed: 'start' ]]
 ! !
 
 !OVGameWonScreen methodsFor: 'drawing'!
@@ -95,9 +96,11 @@ draw
 	self 
 		draw: self game farBackground;
 		draw: self gameWonText;
-		draw: self restartGameText;
 		draw: self game ship;
 		draw: self game starField.
+		
+	self game ship x > self game width 
+		ifTrue: [ self draw: self restartGameText ]
 ! !
 
 !OVGameWonScreen methodsFor: 'initialization'!

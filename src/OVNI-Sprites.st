@@ -73,42 +73,11 @@ initialize
 		addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.
 ! !
 
-Sprite subclass: #OVLifeItem
-	instanceVariableNames: ''
-	package: 'OVNI-Sprites'!
-
-!OVLifeItem methodsFor: 'control'!
-
-stepOnGame: aGame
-	self move.
-	(self collidesWith: aGame ship) 
-		ifTrue: [
-			aGame lifeItemCollected.
-			self x: -20 ]
-! !
-
-!OVLifeItem methodsFor: 'initialization'!
-
-initialize
-	super initialize.
-	self 
-		source: 'images/ovni/life.png';
-		addFrameGroupNamed: 'life' origin: 0@0 size: 20@20 frameCount: 4;
-		frameRate: 3.
-! !
-
-!OVLifeItem methodsFor: 'movement'!
-
-move
-	self x < 20 ifTrue: [ self x: 3000 ].
-	self moveCentreBy: -2 @ (5 atRandom - 3).
-! !
-
-FSMSprite subclass: #OVSaucer
+FSMSprite subclass: #OVEnemy
 	instanceVariableNames: 'exploding dead toughness'
 	package: 'OVNI-Sprites'!
 
-!OVSaucer methodsFor: 'accessing'!
+!OVEnemy methodsFor: 'accessing'!
 
 dead
 	^ dead ifNil: [ dead := false ]
@@ -116,10 +85,6 @@ dead
 
 dead: aBoolean
 	dead := aBoolean
-!
-
-defaultStateClass
-	^ OVSaucerObservingState
 !
 
 exploding
@@ -130,14 +95,6 @@ exploding: aBoolean
 	exploding := aBoolean
 !
 
-newBullet
-	^ OVEnemyBullet new centre: (self centre - ((self width / 2) @ 0))
-!
-
-shootProbability
-	^ 200 / self toughness
-!
-
 toughness
 	^ toughness ifNil: [ toughness := 1 ]
 !
@@ -146,7 +103,7 @@ toughness: anInteger
 	toughness := anInteger
 ! !
 
-!OVSaucer methodsFor: 'actions'!
+!OVEnemy methodsFor: 'actions'!
 
 die
 	self 
@@ -169,13 +126,9 @@ respawnAtX: anX y: aY
 		x: anX;
 		y: aY;
 		dead: false
-!
-
-shootOnGame: aGame
-	aGame enemyShot: self newBullet
 ! !
 
-!OVSaucer methodsFor: 'collisions'!
+!OVEnemy methodsFor: 'collisions'!
 
 checkCollisionWith: aSpriteCollection
 	| killingBullet |
@@ -186,7 +139,7 @@ checkCollisionWith: aSpriteCollection
 			aSpriteCollection remove: killingBullet ].
 ! !
 
-!OVSaucer methodsFor: 'control'!
+!OVEnemy methodsFor: 'control'!
 
 checkShouldDie
 	(self exploding & self atLastFrame ) 
@@ -194,7 +147,91 @@ checkShouldDie
 			self 
 				exploding: false;
 				die ]
+! !
+
+!OVEnemy methodsFor: 'testing'!
+
+escaped
+	^ ((self x + self width) < 0)
 !
+
+isDead
+	^ self dead
+!
+
+isHit
+	^ self exploding and: [ self atFirstFrame ]
+!
+
+shouldRespawn
+	^ self escaped | self dead
+! !
+
+OVEnemy subclass: #OVAsteroid
+	instanceVariableNames: ''
+	package: 'OVNI-Sprites'!
+
+!OVAsteroid methodsFor: 'accessing'!
+
+defaultStateClass
+	^ OVAsteroidMovingState
+! !
+
+!OVAsteroid methodsFor: 'control'!
+
+stepOnGame: aGame
+	super stepOnGame: aGame.
+		
+	self
+		checkCollisionWith: aGame bullets;
+		checkShouldDie.
+
+	self isHit ifTrue: [ aGame asteroidWasHit ].
+	self isDead ifTrue: [ aGame asteroidDied ].
+	self escaped ifTrue: [ aGame asteroidEscaped ].
+
+	self shouldRespawn ifTrue: [ self respawnAtX: aGame width + aGame width atRandom y: aGame height atRandom ].
+! !
+
+!OVAsteroid methodsFor: 'initialization'!
+
+initialize
+	super initialize.
+	self 
+		source: 'images/ovni/asteroid.png';
+		addFrameGroupNamed: 'flying' origin: 0@0 size: 30@30 frameCount: 64;
+		addFrameGroupNamed: 'exploding' origin: 0@30 size: 30@30 frameCount: 10.
+	
+	self frameRate: 2.
+! !
+
+OVEnemy subclass: #OVSaucer
+	instanceVariableNames: ''
+	package: 'OVNI-Sprites'!
+
+!OVSaucer methodsFor: 'accessing'!
+
+defaultStateClass
+	^ OVSaucerObservingState
+!
+
+newBullet
+	^ OVEnemyBullet new centre: (self centre - ((self width / 2) @ 0))
+!
+
+shootProbability
+	^ 200 / self toughness
+! !
+
+!OVSaucer methodsFor: 'actions'!
+
+shootOnGame: aGame
+	aGame 
+		everyStepNumber: (10 / self toughness) rounded
+		do: [ aGame enemyShot: self newBullet ]
+! !
+
+!OVSaucer methodsFor: 'control'!
 
 shouldShoot
 	^ self shootProbability atRandom = 1
@@ -236,101 +273,35 @@ initialize
 	(self frameGroupNamed: 'exploding') frameRate: 2.
 ! !
 
-!OVSaucer methodsFor: 'testing'!
-
-escaped
-	^ ((self x + self width) < 0)
-!
-
-isDead
-	^ self dead
-!
-
-isHit
-	^ self exploding and: [ self atFirstFrame ]
-!
-
-shouldRespawn
-	^ self escaped | self dead
-! !
-
-FSMState subclass: #OVSaucerAvoidingState
-	instanceVariableNames: 'bullet'
-	package: 'OVNI-Sprites'!
-
-!OVSaucerAvoidingState methodsFor: 'accessing'!
-
-bullet
-	^ bullet
-!
-
-bullet: anObject
-	bullet := anObject
-! !
-
-!OVSaucerAvoidingState methodsFor: 'control'!
-
-moveAwayFrom: aSprite
-	self context moveCentreBy: -2 @ (aSprite y > self context y ifTrue: [ 2 atRandom * -1 ] ifFalse: [ 2 atRandom ]).
-!
-
-stepOnGame: aGame
-	self moveAwayFrom: self bullet.
-	(self context alignedWith: self bullet threshold: 50) 
-		ifFalse: [ self switchToState: OVSaucerObservingState ].
-! !
-
-FSMState subclass: #OVSaucerObservingState
+Sprite subclass: #OVLifeItem
 	instanceVariableNames: ''
 	package: 'OVNI-Sprites'!
 
-!OVSaucerObservingState methodsFor: 'control'!
+!OVLifeItem methodsFor: 'control'!
 
 stepOnGame: aGame
-	(self context alignedWithWhichOf: aGame bullets threshold: 50)
-		ifNotNil: [ :bullet |
-			self switchToState: OVSaucerAvoidingState.
-			self context currentState bullet: bullet ]
-		ifNil: [
-			(self context alignedWith: aGame ship threshold: 10)
-				ifFalse: [ self switchToState: OVSaucerSeekingState ]
-				ifTrue: [ self context shootOnGame: aGame].
-			self move ]
+	self move.
+	(self collidesWith: aGame ship) 
+		ifTrue: [
+			aGame lifeItemCollected.
+			self x: -20 ]
 ! !
 
-!OVSaucerObservingState methodsFor: 'movement'!
+!OVLifeItem methodsFor: 'initialization'!
+
+initialize
+	super initialize.
+	self 
+		source: 'images/ovni/life.png';
+		addFrameGroupNamed: 'life' origin: 0@0 size: 20@20 frameCount: 4;
+		frameRate: 3.
+! !
+
+!OVLifeItem methodsFor: 'movement'!
 
 move
-	self context moveCentreBy: -2 @ (5 atRandom - 3).
-! !
-
-FSMState subclass: #OVSaucerSeekingState
-	instanceVariableNames: ''
-	package: 'OVNI-Sprites'!
-
-!OVSaucerSeekingState methodsFor: 'control'!
-
-moveTowards: aSprite
-	self context moveCentreBy: -2 @ (aSprite y > self context y ifTrue: [ 2 atRandom ] ifFalse: [ 2 atRandom * -1 ]).
-!
-
-stepOnGame: aGame
-	self moveTowards: aGame ship.
-	(self context alignedWith: aGame ship threshold: 10)
-		ifTrue: [ self switchToState: OVSaucerObservingState ].
-	(self context alignedWithWhichOf: aGame bullets threshold: 25) ifNotNil: [ :bullet | 
-			self switchToState: OVSaucerAvoidingState.
-			self context currentState bullet: bullet ]
-! !
-
-FSMState subclass: #OVSaucerWanderingState
-	instanceVariableNames: ''
-	package: 'OVNI-Sprites'!
-
-!OVSaucerWanderingState methodsFor: 'control'!
-
-stepOnGame: aGame
-	self context moveCentreBy: (3 atRandom - 2) @ (3 atRandom - 2).
+	self x < 20 ifTrue: [ self x: 3000 ].
+	self moveCentreBy: -2 @ (5 atRandom - 3).
 ! !
 
 Sprite subclass: #OVSpaceShip
@@ -379,8 +350,7 @@ stepOnGame: aGame
 	(self exploding and: [ self atLastFrame ])
 		ifTrue: [ aGame playerDied ].
 		
-	(((self collidesWithAnyOf: aGame enemyBullets)
-		or: [ (self collidesWithAnyOf: aGame saucers) ]) 
+	((self collidesWithAnyOf: aGame enemyBullets , aGame saucers , aGame asteroids)
 			and: [ self exploding not])
 		ifTrue: [
 			(aGame soundNamed: 'explosion-2') play.

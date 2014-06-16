@@ -1,6 +1,6 @@
 Smalltalk createPackage: 'OVNI-Core'!
 Game subclass: #OVGame
-	instanceVariableNames: 'player phase difficulty ship lifeItem saucers bullets enemyBullets scoreText highScoreText playTimeText livesText phaseNumberText farBackground starField soundIsMute musicIsMute'
+	instanceVariableNames: 'player phase difficulty ship lifeItem saucers bullets enemyBullets scoreText highScoreText playTimeText livesText phaseNumberText farBackground starField soundIsMute musicIsMute asteroids'
 	package: 'OVNI-Core'!
 
 !OVGame methodsFor: 'accessing'!
@@ -61,6 +61,17 @@ starField: aBackground
 
 !OVGame methodsFor: 'accessing - sprites'!
 
+asteroids
+	^ asteroids ifNil: [ 
+		asteroids := #().
+		(2 * self difficulty) timesRepeat: [ asteroids add: self newAsteroid ].
+		asteroids ]
+!
+
+asteroids: aCollection
+	asteroids := aCollection
+!
+
 bullets
 	^ bullets ifNil: [ bullets := #() ]
 !
@@ -71,6 +82,12 @@ enemyBullets
 
 lifeItem
 	^ lifeItem ifNil: [ lifeItem := OVLifeItem new centre: 3000 @ (self height / 2) ]
+!
+
+newAsteroid
+	^ (OVAsteroid new 
+		centre: self width atRandom + self width @ self height atRandom;
+		toughness: self difficulty)
 !
 
 newSaucer
@@ -182,6 +199,7 @@ end
 newGame
 	self debug: 'new game started'.
 	self saucers: nil.
+	self asteroids: nil.
 	self phase: nil.
 	self farBackground: nil.
 	self starField: nil.
@@ -193,8 +211,9 @@ nextPhase
 	(self soundNamed: 'nextphase') play.
 	(self soundNamed: 'explosion-1') play.
 	self phase: self phase next.
+	self asteroids add: self newAsteroid.
 	self saucers add: self newSaucer.
-	self saucers do: [ :each | 
+	self saucers , self asteroids do: [ :each | 
 		each explode.
 		each toughness: self difficulty * self phase number ].
 	self starField speed: self starField speed + 1.
@@ -221,7 +240,7 @@ step
 !
 
 stepSprites
-	(self bullets, self enemyBullets, self saucers, { self ship. self lifeItem })
+	(self bullets, self enemyBullets, self saucers, self asteroids, { self ship. self lifeItem })
 		do: [ :eachSprite | eachSprite stepOnGame: self ]
 !
 
@@ -256,22 +275,28 @@ debug: aString
 
 draw
 	self
-		clearCanvas;
-		draw: self farBackground;
-		drawAll: self saucers;
-		drawAll: self bullets;
-		drawAll: self enemyBullets;
-		draw: self ship;
-		draw: self lifeItem;
-		draw: self starField;
-		draw: self livesText;
-		draw: self scoreText;
-		draw: self highScoreText;
-		draw: self playTimeText;
-		draw: self phaseNumberText
+		clearCanvas.
+	
+	self 
+		drawAll:
+			{ self farBackground } , self saucers , self asteroids , self bullets
+			, self enemyBullets , { self ship. self lifeItem. self starField. self livesText.
+				self scoreText. self highScoreText. self playTimeText. self phaseNumberText }
 ! !
 
 !OVGame methodsFor: 'game events'!
+
+asteroidDied
+	self player score: self player score + (2 * self difficulty)
+!
+
+asteroidEscaped
+	self player score: ((self player score - self difficulty) max: 0)
+!
+
+asteroidWasHit
+	(self soundNamed: 'explosion-1') play.
+!
 
 enemyShot: aBullet
 	self enemyBullets add: aBullet

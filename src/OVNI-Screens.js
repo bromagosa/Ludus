@@ -165,7 +165,7 @@ protocol: 'drawing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$4,$3,$5;
+var $2,$1,$4,$3,$7,$6,$5,$11,$10,$9,$8;
 self._clearCanvas();
 $2=self._game();
 $ctx1.sendIdx["game"]=1;
@@ -174,18 +174,29 @@ self._draw_($1);
 $ctx1.sendIdx["draw:"]=1;
 self._draw_(self._gameWonText());
 $ctx1.sendIdx["draw:"]=2;
-self._draw_(self._restartGameText());
-$ctx1.sendIdx["draw:"]=3;
 $4=self._game();
 $ctx1.sendIdx["game"]=2;
 $3=_st($4)._ship();
+$ctx1.sendIdx["ship"]=1;
 self._draw_($3);
+$ctx1.sendIdx["draw:"]=3;
+$7=self._game();
+$ctx1.sendIdx["game"]=3;
+$6=_st($7)._starField();
+$5=self._draw_($6);
 $ctx1.sendIdx["draw:"]=4;
-$5=self._draw_(_st(self._game())._starField());
+$11=self._game();
+$ctx1.sendIdx["game"]=4;
+$10=_st($11)._ship();
+$9=_st($10)._x();
+$8=_st($9).__gt(_st(self._game())._width());
+if(smalltalk.assert($8)){
+self._draw_(self._restartGameText());
+};
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVGameWonScreen)})},
 args: [],
-source: "draw\x0a\x09self clearCanvas.\x0a\x09self \x0a\x09\x09draw: self game farBackground;\x0a\x09\x09draw: self gameWonText;\x0a\x09\x09draw: self restartGameText;\x0a\x09\x09draw: self game ship;\x0a\x09\x09draw: self game starField.",
-messageSends: ["clearCanvas", "draw:", "farBackground", "game", "gameWonText", "restartGameText", "ship", "starField"],
+source: "draw\x0a\x09self clearCanvas.\x0a\x09self \x0a\x09\x09draw: self game farBackground;\x0a\x09\x09draw: self gameWonText;\x0a\x09\x09draw: self game ship;\x0a\x09\x09draw: self game starField.\x0a\x09\x09\x0a\x09self game ship x > self game width \x0a\x09\x09ifTrue: [ self draw: self restartGameText ]",
+messageSends: ["clearCanvas", "draw:", "farBackground", "game", "gameWonText", "ship", "starField", "ifTrue:", ">", "x", "width", "restartGameText"],
 referencedClasses: []
 }),
 globals.OVGameWonScreen);
@@ -309,19 +320,30 @@ fn: function (){
 var self=this;
 function $Key(){return globals.Key||(typeof Key=="undefined"?nil:Key)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1;
+var $2,$1,$6,$5,$4,$8,$7,$3;
 $2=self._game();
 $ctx1.sendIdx["game"]=1;
 $1=_st($2)._ship();
+$ctx1.sendIdx["ship"]=1;
 _st($1)._moveCentreBy_((5).__at((0)));
+$6=self._game();
+$ctx1.sendIdx["game"]=2;
+$5=_st($6)._ship();
+$4=_st($5)._x();
+$8=self._game();
+$ctx1.sendIdx["game"]=3;
+$7=_st($8)._width();
+$3=_st($4).__gt($7);
+if(smalltalk.assert($3)){
 _st(self._inputHandler())._onKeyPressed_do_(_st($Key())._space(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return _st(self._game())._switchToScreenNamed_("start");
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+};
 return self}, function($ctx1) {$ctx1.fill(self,"step",{},globals.OVGameWonScreen)})},
 args: [],
-source: "step\x0a\x09self game ship moveCentreBy: 5@0.\x0a\x09self inputHandler onKeyPressed: Key space do: [ self game switchToScreenNamed: 'start' ].",
-messageSends: ["moveCentreBy:", "ship", "game", "@", "onKeyPressed:do:", "inputHandler", "space", "switchToScreenNamed:"],
+source: "step\x0a\x09self game ship moveCentreBy: 5@0.\x0a\x09self game ship x > self game width\x0a\x09\x09ifTrue: [ self inputHandler onKeyPressed: Key space do: [ self game switchToScreenNamed: 'start' ]]",
+messageSends: ["moveCentreBy:", "ship", "game", "@", "ifTrue:", ">", "x", "width", "onKeyPressed:do:", "inputHandler", "space", "switchToScreenNamed:"],
 referencedClasses: ["Key"]
 }),
 globals.OVGameWonScreen);
