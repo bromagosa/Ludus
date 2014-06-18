@@ -1,7 +1,7 @@
-Smalltalk createPackage: 'OVNI-Sprites'!
+Smalltalk createPackage: 'OVNI-Drawables'!
 Circle subclass: #OVBullet
 	instanceVariableNames: 'speed acceleration'
-	package: 'OVNI-Sprites'!
+	package: 'OVNI-Drawables'!
 
 !OVBullet methodsFor: 'accessing'!
 
@@ -46,7 +46,7 @@ move
 
 OVBullet subclass: #OVEnemyBullet
 	instanceVariableNames: ''
-	package: 'OVNI-Sprites'!
+	package: 'OVNI-Drawables'!
 
 !OVEnemyBullet methodsFor: 'accessing'!
 
@@ -79,7 +79,7 @@ initialize
 
 FSMSprite subclass: #OVEnemy
 	instanceVariableNames: 'exploding dead toughness'
-	package: 'OVNI-Sprites'!
+	package: 'OVNI-Drawables'!
 
 !OVEnemy methodsFor: 'accessing'!
 
@@ -173,7 +173,7 @@ shouldRespawn
 
 OVEnemy subclass: #OVAsteroid
 	instanceVariableNames: ''
-	package: 'OVNI-Sprites'!
+	package: 'OVNI-Drawables'!
 
 !OVAsteroid methodsFor: 'accessing'!
 
@@ -211,7 +211,7 @@ initialize
 
 OVEnemy subclass: #OVSaucer
 	instanceVariableNames: ''
-	package: 'OVNI-Sprites'!
+	package: 'OVNI-Drawables'!
 
 !OVSaucer methodsFor: 'accessing'!
 
@@ -272,14 +272,13 @@ initialize
 	self 
 		source: 'images/ovni/saucer.png';
 		addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;
-		addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10.
-	
-	(self frameGroupNamed: 'exploding') frameRate: 2.
+		addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10;
+		frameRate: 2
 ! !
 
 Sprite subclass: #OVLifeItem
 	instanceVariableNames: ''
-	package: 'OVNI-Sprites'!
+	package: 'OVNI-Drawables'!
 
 !OVLifeItem methodsFor: 'control'!
 
@@ -310,7 +309,7 @@ move
 
 Sprite subclass: #OVSpaceShip
 	instanceVariableNames: 'speed exploding'
-	package: 'OVNI-Sprites'!
+	package: 'OVNI-Drawables'!
 
 !OVSpaceShip methodsFor: 'accessing'!
 
@@ -371,9 +370,8 @@ initialize
 	self 
 		source: 'images/ovni/ship.png';
 		addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4;
-		addFrameGroupNamed: 'exploding' origin: 0@29 size: 64@29 frameCount: 8.
-	
-	(self frameGroupNamed: 'exploding') frameRate: 2.
+		addFrameGroupNamed: 'exploding' origin: 0@29 size: 64@29 frameCount: 8;
+		frameRate: 2.
 ! !
 
 !OVSpaceShip methodsFor: 'movement'!

@@ -1,8 +1,8 @@
-define("HOS/OVNI-Sprites", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "HOS/Ludus"], function(smalltalk,nil,_st, globals){
-smalltalk.addPackage('OVNI-Sprites');
-smalltalk.packages["OVNI-Sprites"].transport = {"type":"amd","amdNamespace":"HOS"};
+define("HOS/OVNI-Drawables", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "HOS/Ludus"], function(smalltalk,nil,_st, globals){
+smalltalk.addPackage('OVNI-Drawables');
+smalltalk.packages["OVNI-Drawables"].transport = {"type":"amd","amdNamespace":"HOS"};
 
-smalltalk.addClass('OVBullet', globals.Circle, ['speed', 'acceleration'], 'OVNI-Sprites');
+smalltalk.addClass('OVBullet', globals.Circle, ['speed', 'acceleration'], 'OVNI-Drawables');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "accelerate",
@@ -130,7 +130,7 @@ globals.OVBullet);
 
 
 
-smalltalk.addClass('OVEnemyBullet', globals.OVBullet, [], 'OVNI-Sprites');
+smalltalk.addClass('OVEnemyBullet', globals.OVBullet, [], 'OVNI-Drawables');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "acceleration",
@@ -224,7 +224,7 @@ globals.OVEnemyBullet);
 
 
 
-smalltalk.addClass('OVEnemy', globals.FSMSprite, ['exploding', 'dead', 'toughness'], 'OVNI-Sprites');
+smalltalk.addClass('OVEnemy', globals.FSMSprite, ['exploding', 'dead', 'toughness'], 'OVNI-Drawables');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "checkCollisionWith:",
@@ -522,7 +522,7 @@ globals.OVEnemy);
 
 
 
-smalltalk.addClass('OVAsteroid', globals.OVEnemy, [], 'OVNI-Sprites');
+smalltalk.addClass('OVAsteroid', globals.OVEnemy, [], 'OVNI-Drawables');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "defaultStateClass",
@@ -611,7 +611,7 @@ globals.OVAsteroid);
 
 
 
-smalltalk.addClass('OVSaucer', globals.OVEnemy, [], 'OVNI-Sprites');
+smalltalk.addClass('OVSaucer', globals.OVEnemy, [], 'OVNI-Drawables');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "alignedWith:threshold:",
@@ -682,7 +682,7 @@ protocol: 'initialization',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$4,$3;
+var $1,$2,$3,$4;
 ($ctx1.supercall = true, globals.OVSaucer.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
 self._source_("images/ovni/saucer.png");
@@ -692,14 +692,14 @@ $2=(40).__at((40));
 $ctx1.sendIdx["@"]=2;
 self._addFrameGroupNamed_origin_size_frameCount_("flying",$1,$2,(6));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=1;
-$4=(0).__at((40));
+$3=(0).__at((40));
 $ctx1.sendIdx["@"]=3;
-$3=self._addFrameGroupNamed_origin_size_frameCount_("exploding",$4,(40).__at((40)),(10));
-_st(self._frameGroupNamed_("exploding"))._frameRate_((2));
+self._addFrameGroupNamed_origin_size_frameCount_("exploding",$3,(40).__at((40)),(10));
+$4=self._frameRate_((2));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVSaucer)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/saucer.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10.\x0a\x09\x0a\x09(self frameGroupNamed: 'exploding') frameRate: 2.",
-messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:", "frameGroupNamed:"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/saucer.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10;\x0a\x09\x09frameRate: 2",
+messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:"],
 referencedClasses: []
 }),
 globals.OVSaucer);
@@ -821,7 +821,7 @@ globals.OVSaucer);
 
 
 
-smalltalk.addClass('OVLifeItem', globals.Sprite, [], 'OVNI-Sprites');
+smalltalk.addClass('OVLifeItem', globals.Sprite, [], 'OVNI-Drawables');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "initialize",
@@ -890,7 +890,7 @@ globals.OVLifeItem);
 
 
 
-smalltalk.addClass('OVSpaceShip', globals.Sprite, ['speed', 'exploding'], 'OVNI-Sprites');
+smalltalk.addClass('OVSpaceShip', globals.Sprite, ['speed', 'exploding'], 'OVNI-Drawables');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "explode",
@@ -1021,7 +1021,7 @@ protocol: 'initialization',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$4,$3;
+var $1,$2,$3,$4;
 ($ctx1.supercall = true, globals.OVSpaceShip.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
 self._source_("images/ovni/ship.png");
@@ -1031,14 +1031,14 @@ $2=(64).__at((29));
 $ctx1.sendIdx["@"]=2;
 self._addFrameGroupNamed_origin_size_frameCount_("flying",$1,$2,(4));
 $ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=1;
-$4=(0).__at((29));
+$3=(0).__at((29));
 $ctx1.sendIdx["@"]=3;
-$3=self._addFrameGroupNamed_origin_size_frameCount_("exploding",$4,(64).__at((29)),(8));
-_st(self._frameGroupNamed_("exploding"))._frameRate_((2));
+self._addFrameGroupNamed_origin_size_frameCount_("exploding",$3,(64).__at((29)),(8));
+$4=self._frameRate_((2));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVSpaceShip)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/ship.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@29 size: 64@29 frameCount: 8.\x0a\x09\x0a\x09(self frameGroupNamed: 'exploding') frameRate: 2.",
-messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:", "frameGroupNamed:"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/ship.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 64@29 frameCount: 4;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@29 size: 64@29 frameCount: 8;\x0a\x09\x09frameRate: 2.",
+messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:"],
 referencedClasses: []
 }),
 globals.OVSpaceShip);
