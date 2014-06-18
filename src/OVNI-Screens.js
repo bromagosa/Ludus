@@ -105,8 +105,8 @@ _st($2)._color_("rgba(90,113,26,0.7)");
 $ctx1.sendIdx["color:"]=1;
 _st($2)._outlineColor_("rgba(242,246,144,0.8)");
 $ctx1.sendIdx["outlineColor:"]=1;
-_st($2)._outlineSize_((3));
-$ctx1.sendIdx["outlineSize:"]=1;
+_st($2)._outlineWidth_((3));
+$ctx1.sendIdx["outlineWidth:"]=1;
 _st($2)._fontName_("ChangaOne");
 $ctx1.sendIdx["fontName:"]=1;
 _st($2)._fontSize_((92));
@@ -122,15 +122,15 @@ $6=_st($Text())._new();
 _st($6)._contents_("Press SPACE to restart");
 _st($6)._color_("rgba(90,113,26,0.7)");
 _st($6)._outlineColor_("rgba(242,246,144,0.8)");
-_st($6)._outlineSize_((2));
+_st($6)._outlineWidth_((2));
 _st($6)._fontName_("ChangaOne");
 _st($6)._fontSize_((40));
 $7=_st($6)._position_((170).__at((320)));
 self._restartGameText_($7);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVGameOverScreen)})},
 args: [],
-source: "startScreen\x0a\x09self gameOverText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'GAME OVER';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 92;\x0a\x09\x09\x09position: 130@280).\x0a\x09self restartGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to restart';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 2;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 170@320)",
-messageSends: ["gameOverText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "restartGameText:"],
+source: "startScreen\x0a\x09self gameOverText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'GAME OVER';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 3;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 92;\x0a\x09\x09\x09position: 130@280).\x0a\x09self restartGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to restart';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 2;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 170@320)",
+messageSends: ["gameOverText:", "contents:", "new", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "@", "restartGameText:"],
 referencedClasses: ["Text"]
 }),
 globals.OVGameOverScreen);
@@ -282,8 +282,8 @@ _st($2)._color_("rgba(90,113,26,0.7)");
 $ctx1.sendIdx["color:"]=1;
 _st($2)._outlineColor_("rgba(242,246,144,0.8)");
 $ctx1.sendIdx["outlineColor:"]=1;
-_st($2)._outlineSize_((3));
-$ctx1.sendIdx["outlineSize:"]=1;
+_st($2)._outlineWidth_((3));
+$ctx1.sendIdx["outlineWidth:"]=1;
 _st($2)._fontName_("ChangaOne");
 $ctx1.sendIdx["fontName:"]=1;
 _st($2)._fontSize_((92));
@@ -299,15 +299,15 @@ $6=_st($Text())._new();
 _st($6)._contents_("Press SPACE to restart");
 _st($6)._color_("rgba(90,113,26,0.7)");
 _st($6)._outlineColor_("rgba(242,246,144,0.8)");
-_st($6)._outlineSize_((2));
+_st($6)._outlineWidth_((2));
 _st($6)._fontName_("ChangaOne");
 _st($6)._fontSize_((40));
 $7=_st($6)._position_((170).__at((320)));
 self._restartGameText_($7);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVGameWonScreen)})},
 args: [],
-source: "startScreen\x0a\x09self gameWonText:\x0a\x09\x09(Text new\x0a\x09\x09\x09contents: 'YOU WON!';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 92;\x0a\x09\x09\x09position: 170@280).\x0a\x09self restartGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to restart';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 2;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 170@320)",
-messageSends: ["gameWonText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "restartGameText:"],
+source: "startScreen\x0a\x09self gameWonText:\x0a\x09\x09(Text new\x0a\x09\x09\x09contents: 'YOU WON!';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 3;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 92;\x0a\x09\x09\x09position: 170@280).\x0a\x09self restartGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to restart';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 2;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 170@320)",
+messageSends: ["gameWonText:", "contents:", "new", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "@", "restartGameText:"],
 referencedClasses: ["Text"]
 }),
 globals.OVGameWonScreen);
@@ -670,8 +670,8 @@ _st($2)._color_("rgba(90,113,26,0.7)");
 $ctx1.sendIdx["color:"]=1;
 _st($2)._outlineColor_("rgba(242,246,144,0.8)");
 $ctx1.sendIdx["outlineColor:"]=1;
-_st($2)._outlineSize_((3));
-$ctx1.sendIdx["outlineSize:"]=1;
+_st($2)._outlineWidth_((3));
+$ctx1.sendIdx["outlineWidth:"]=1;
 _st($2)._fontName_("ChangaOne");
 $ctx1.sendIdx["fontName:"]=1;
 _st($2)._fontSize_((80));
@@ -688,7 +688,7 @@ $ctx1.sendIdx["new"]=2;
 _st($7)._contents_("OPTIONS");
 _st($7)._color_("rgba(90,113,26,0.7)");
 _st($7)._outlineColor_("rgba(242,246,144,0.8)");
-_st($7)._outlineSize_((3));
+_st($7)._outlineWidth_((3));
 _st($7)._fontName_("ChangaOne");
 _st($7)._fontSize_((80));
 $9=$7;
@@ -713,8 +713,8 @@ $12=$19;
 $11=self._pointer_($12);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVMainMenu)})},
 args: [],
-source: "startScreen\x0a\x09self \x0a\x09\x09startGameText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'START';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@250);\x0a\x09\x09optionsMenuText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'OPTIONS';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@330);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09source: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@205;\x0a\x09\x09\x09\x09\x09yourself).",
-messageSends: ["startGameText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "optionsMenuText:", "pointer:", "source:", "addFrameGroupNamed:origin:size:frameCount:", "yourself"],
+source: "startScreen\x0a\x09self \x0a\x09\x09startGameText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'START';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineWidth: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@250);\x0a\x09\x09optionsMenuText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'OPTIONS';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineWidth: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@330);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09source: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@205;\x0a\x09\x09\x09\x09\x09yourself).",
+messageSends: ["startGameText:", "contents:", "new", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "@", "optionsMenuText:", "pointer:", "source:", "addFrameGroupNamed:origin:size:frameCount:", "yourself"],
 referencedClasses: ["Text", "Sprite"]
 }),
 globals.OVMainMenu);
@@ -1131,8 +1131,8 @@ _st($2)._color_("rgba(90,113,26,0.7)");
 $ctx1.sendIdx["color:"]=1;
 _st($2)._outlineColor_("rgba(242,246,144,0.8)");
 $ctx1.sendIdx["outlineColor:"]=1;
-_st($2)._outlineSize_((3));
-$ctx1.sendIdx["outlineSize:"]=1;
+_st($2)._outlineWidth_((3));
+$ctx1.sendIdx["outlineWidth:"]=1;
 _st($2)._fontName_("ChangaOne");
 $ctx1.sendIdx["fontName:"]=1;
 _st($2)._fontSize_((80));
@@ -1159,8 +1159,8 @@ _st($7)._color_("rgba(90,113,26,0.7)");
 $ctx1.sendIdx["color:"]=2;
 _st($7)._outlineColor_("rgba(242,246,144,0.8)");
 $ctx1.sendIdx["outlineColor:"]=2;
-_st($7)._outlineSize_((3));
-$ctx1.sendIdx["outlineSize:"]=2;
+_st($7)._outlineWidth_((3));
+$ctx1.sendIdx["outlineWidth:"]=2;
 _st($7)._fontName_("ChangaOne");
 $ctx1.sendIdx["fontName:"]=2;
 _st($7)._fontSize_((80));
@@ -1191,8 +1191,8 @@ _st($17)._color_("rgba(90,113,26,0.7)");
 $ctx1.sendIdx["color:"]=3;
 _st($17)._outlineColor_("rgba(242,246,144,0.8)");
 $ctx1.sendIdx["outlineColor:"]=3;
-_st($17)._outlineSize_((3));
-$ctx1.sendIdx["outlineSize:"]=3;
+_st($17)._outlineWidth_((3));
+$ctx1.sendIdx["outlineWidth:"]=3;
 _st($17)._fontName_("ChangaOne");
 $ctx1.sendIdx["fontName:"]=3;
 _st($17)._fontSize_((80));
@@ -1221,8 +1221,8 @@ _st($27)._color_("rgba(90,113,26,0.7)");
 $ctx1.sendIdx["color:"]=4;
 _st($27)._outlineColor_("rgba(242,246,144,0.8)");
 $ctx1.sendIdx["outlineColor:"]=4;
-_st($27)._outlineSize_((3));
-$ctx1.sendIdx["outlineSize:"]=4;
+_st($27)._outlineWidth_((3));
+$ctx1.sendIdx["outlineWidth:"]=4;
 _st($27)._fontName_("ChangaOne");
 $ctx1.sendIdx["fontName:"]=4;
 _st($27)._fontSize_((80));
@@ -1247,7 +1247,7 @@ $38="DEBUG: ".__comma($39);
 _st($37)._contents_($38);
 _st($36)._color_("rgba(90,113,26,0.7)");
 _st($36)._outlineColor_("rgba(242,246,144,0.8)");
-_st($36)._outlineSize_((3));
+_st($36)._outlineWidth_((3));
 _st($36)._fontName_("ChangaOne");
 _st($36)._fontSize_((80));
 $42=$36;
@@ -1272,8 +1272,8 @@ $45=$52;
 $44=self._pointer_($45);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVOptionsMenu)})},
 args: [],
-source: "startScreen\x0a\x09self \x0a\x09\x09goBackText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'BACK';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@120);\x0a\x09\x09difficultyText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DIFFICULTY: ' , self game difficulty printString;\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@200);\x0a\x09\x09muteSoundsText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@280); \x0a\x09\x09muteMusicText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@360);\x0a\x09\x09debugModeText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DEBUG: ' , (Game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@440);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09source: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@75;\x0a\x09\x09\x09\x09\x09yourself).",
-messageSends: ["goBackText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "difficultyText:", ",", "printString", "difficulty", "game", "muteSoundsText:", "ifTrue:ifFalse:", "soundIsMute", "muteMusicText:", "musicIsMute", "debugModeText:", "debugMode", "pointer:", "source:", "addFrameGroupNamed:origin:size:frameCount:", "yourself"],
+source: "startScreen\x0a\x09self \x0a\x09\x09goBackText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'BACK';\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineWidth: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@120);\x0a\x09\x09difficultyText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DIFFICULTY: ' , self game difficulty printString;\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineWidth: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@200);\x0a\x09\x09muteSoundsText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineWidth: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@280); \x0a\x09\x09muteMusicText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineWidth: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@360);\x0a\x09\x09debugModeText:\x0a\x09\x09\x09(Text new \x0a\x09\x09\x09\x09contents: 'DEBUG: ' , (Game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ]);\x0a\x09\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09\x09outlineWidth: 3;\x0a\x09\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09\x09fontSize: 80;\x0a\x09\x09\x09\x09position: 150@440);\x0a\x09\x09pointer:\x0a\x09\x09\x09((Sprite new\x0a\x09\x09\x09\x09source: 'images/ovni/pointer.png';\x0a\x09\x09\x09\x09addFrameGroupNamed: 'pointing' origin: 0@0 size: 65@40 frameCount: 1)\x0a\x09\x09\x09\x09\x09position: 75@75;\x0a\x09\x09\x09\x09\x09yourself).",
+messageSends: ["goBackText:", "contents:", "new", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "@", "difficultyText:", ",", "printString", "difficulty", "game", "muteSoundsText:", "ifTrue:ifFalse:", "soundIsMute", "muteMusicText:", "musicIsMute", "debugModeText:", "debugMode", "pointer:", "source:", "addFrameGroupNamed:origin:size:frameCount:", "yourself"],
 referencedClasses: ["Text", "Game", "Sprite"]
 }),
 globals.OVOptionsMenu);
@@ -1382,8 +1382,8 @@ _st($2)._color_("rgba(90,113,26,0.7)");
 $ctx1.sendIdx["color:"]=1;
 _st($2)._outlineColor_("rgba(242,246,144,0.8)");
 $ctx1.sendIdx["outlineColor:"]=1;
-_st($2)._outlineSize_((3));
-$ctx1.sendIdx["outlineSize:"]=1;
+_st($2)._outlineWidth_((3));
+$ctx1.sendIdx["outlineWidth:"]=1;
 _st($2)._fontName_("ChangaOne");
 $ctx1.sendIdx["fontName:"]=1;
 _st($2)._fontSize_((92));
@@ -1399,15 +1399,15 @@ $6=_st($Text())._new();
 _st($6)._contents_("Press SPACE to resume");
 _st($6)._color_("rgba(90,113,26,0.7)");
 _st($6)._outlineColor_("rgba(242,246,144,0.8)");
-_st($6)._outlineSize_((2));
+_st($6)._outlineWidth_((2));
 _st($6)._fontName_("ChangaOne");
 _st($6)._fontSize_((40));
 $7=_st($6)._position_((155).__at((320)));
 self._resumeGameText_($7);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVPauseScreen)})},
 args: [],
-source: "startScreen\x0a\x09self gamePausedText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'GAME PAUSED';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 3;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 92;\x0a\x09\x09\x09position: 70@280).\x0a\x09self resumeGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to resume';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 2;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 155@320)",
-messageSends: ["gamePausedText:", "contents:", "new", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@", "resumeGameText:"],
+source: "startScreen\x0a\x09self gamePausedText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'GAME PAUSED';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 3;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 92;\x0a\x09\x09\x09position: 70@280).\x0a\x09self resumeGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to resume';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 2;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 155@320)",
+messageSends: ["gamePausedText:", "contents:", "new", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "@", "resumeGameText:"],
 referencedClasses: ["Text"]
 }),
 globals.OVPauseScreen);
@@ -1617,7 +1617,7 @@ $ctx1.sendIdx["contents:"]=1;
 _st($20)._color_("rgba(90,113,26,0.7)");
 $ctx1.sendIdx["color:"]=1;
 _st($20)._outlineColor_("rgba(242,246,144,0.8)");
-_st($20)._outlineSize_((1));
+_st($20)._outlineWidth_((1));
 _st($20)._fontName_("ChangaOne");
 $ctx1.sendIdx["fontName:"]=1;
 _st($20)._fontSize_((40));
@@ -1638,8 +1638,8 @@ $25=_st($24)._position_((580).__at((530)));
 self._authorText_($25);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVStartScreen)})},
 args: [],
-source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each\x0a\x09\x09\x09switchToState: OVSaucerWanderingState;\x0a\x09\x09\x09currentFrameGroup: 'flying';\x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Image new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height).\x0a\x09\x09\x09\x0a\x09self startGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to start';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 180@320).\x0a\x09\x09\x09\x0a\x09self authorText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Bernat Romagosa 2014';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 12;\x0a\x09\x09\x09position: 580@530)",
-messageSends: ["saucers:", "saucers", "game", "do:", "switchToState:", "currentFrameGroup:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "source:origin:size:position:", "new", "@", "startGameText:", "contents:", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "authorText:"],
+source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each\x0a\x09\x09\x09switchToState: OVSaucerWanderingState;\x0a\x09\x09\x09currentFrameGroup: 'flying';\x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Image new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height).\x0a\x09\x09\x09\x0a\x09self startGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to start';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 180@320).\x0a\x09\x09\x09\x0a\x09self authorText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Bernat Romagosa 2014';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 12;\x0a\x09\x09\x09position: 580@530)",
+messageSends: ["saucers:", "saucers", "game", "do:", "switchToState:", "currentFrameGroup:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "source:origin:size:position:", "new", "@", "startGameText:", "contents:", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "authorText:"],
 referencedClasses: ["OVSaucerWanderingState", "Image", "Text"]
 }),
 globals.OVStartScreen);

@@ -282,7 +282,7 @@ $ctx1.sendIdx[","]=1;
 self._drawAll_($1);
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVGame)})},
 args: [],
-source: "draw\x0a\x09self\x0a\x09\x09clearCanvas.\x0a\x09\x0a\x09self \x0a\x09\x09drawAll:\x0a\x09\x09\x09{ self farBackground } , self saucers , self asteroids , self bullets\x0a\x09\x09\x09, self enemyBullets , { self ship. self lifeItem. self starField. self livesText.\x0a\x09\x09\x09\x09self scoreText. self highScoreText. self playTimeText. self phaseNumberText }",
+source: "draw\x0a\x09self\x0a\x09\x09clearCanvas.\x0a\x09\x0a\x09self \x0a\x09\x09drawAll:\x0a\x09\x09\x09{ self farBackground } , self saucers , self asteroids , self bullets , self enemyBullets\x0a\x09\x09\x09,  { self ship. self lifeItem. self starField. self livesText.\x0a\x09\x09\x09\x09self scoreText. self highScoreText. self playTimeText. self phaseNumberText }.",
 messageSends: ["clearCanvas", "drawAll:", ",", "farBackground", "saucers", "asteroids", "bullets", "enemyBullets", "ship", "lifeItem", "starField", "livesText", "scoreText", "highScoreText", "playTimeText", "phaseNumberText"],
 referencedClasses: []
 }),
@@ -407,7 +407,7 @@ $3=_st($Text())._new();
 _st($3)._contents_(_st(self._player())._highScore());
 _st($3)._color_("rgba(90,113,26,0.7)");
 _st($3)._outlineColor_("rgba(242,246,144,0.8)");
-_st($3)._outlineSize_((1));
+_st($3)._outlineWidth_((1));
 _st($3)._fontName_("ChangaOne");
 _st($3)._fontSize_((20));
 $4=_st($3)._position_((10).__at((40)));
@@ -419,8 +419,8 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"highScoreText",{},globals.OVGame)})},
 args: [],
-source: "highScoreText\x0a\x09^ highScoreText ifNil: [ highScoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player highScore;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@40) ]",
-messageSends: ["ifNil:", "contents:", "new", "highScore", "player", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
+source: "highScoreText\x0a\x09^ highScoreText ifNil: [ highScoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player highScore;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@40) ]",
+messageSends: ["ifNil:", "contents:", "new", "highScore", "player", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "@"],
 referencedClasses: ["Text"]
 }),
 globals.OVGame);
@@ -482,7 +482,7 @@ $3=_st($Text())._new();
 _st($3)._contents_(self._livesTextContents());
 _st($3)._color_("rgba(90,113,26,0.7)");
 _st($3)._outlineColor_("rgba(242,246,144,0.8)");
-_st($3)._outlineSize_((1));
+_st($3)._outlineWidth_((1));
 _st($3)._fontName_("ChangaOne");
 _st($3)._fontSize_((20));
 $4=_st($3)._position_((7).__at((22)));
@@ -494,8 +494,8 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"livesText",{},globals.OVGame)})},
 args: [],
-source: "livesText\x0a\x09^ livesText ifNil: [ livesText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self livesTextContents;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 7@22) ]",
-messageSends: ["ifNil:", "contents:", "new", "livesTextContents", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
+source: "livesText\x0a\x09^ livesText ifNil: [ livesText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self livesTextContents;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 7@22) ]",
+messageSends: ["ifNil:", "contents:", "new", "livesTextContents", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "@"],
 referencedClasses: ["Text"]
 }),
 globals.OVGame);
@@ -659,20 +659,23 @@ fn: function (){
 var self=this;
 function $OVSaucer(){return globals.OVSaucer||(typeof OVSaucer=="undefined"?nil:OVSaucer)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$5,$4,$6,$1;
+var $2,$3,$7,$6,$5,$4,$8,$1;
 $2=_st($OVSaucer())._new();
 $3=$2;
-$5=_st(self._width())._atRandom();
+$7=self._width();
+$ctx1.sendIdx["width"]=1;
+$6=_st($7)._atRandom();
 $ctx1.sendIdx["atRandom"]=1;
+$5=_st($6).__plus(self._width());
 $4=_st($5).__at(_st(self._height())._atRandom());
 _st($3)._centre_($4);
-$6=_st($2)._toughness_(self._difficulty());
-$1=$6;
+$8=_st($2)._toughness_(self._difficulty());
+$1=$8;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"newSaucer",{},globals.OVGame)})},
 args: [],
-source: "newSaucer\x0a\x09^ (OVSaucer new \x0a\x09\x09centre: self width atRandom @ self height atRandom;\x0a\x09\x09toughness: self difficulty)",
-messageSends: ["centre:", "new", "@", "atRandom", "width", "height", "toughness:", "difficulty"],
+source: "newSaucer\x0a\x09^ (OVSaucer new \x0a\x09\x09centre: self width atRandom + self width @ self height atRandom;\x0a\x09\x09toughness: self difficulty)",
+messageSends: ["centre:", "new", "@", "+", "atRandom", "width", "height", "toughness:", "difficulty"],
 referencedClasses: ["OVSaucer"]
 }),
 globals.OVGame);
@@ -684,43 +687,46 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$3,$2,$4,$5,$6,$8,$7,$9;
-$1=self._soundNamed_("nextphase");
-$ctx1.sendIdx["soundNamed:"]=1;
-_st($1)._play();
-$ctx1.sendIdx["play"]=1;
-_st(self._soundNamed_("explosion-1"))._play();
-$3=self._phase();
-$ctx1.sendIdx["phase"]=1;
-$2=_st($3)._next();
-self._phase_($2);
-$4=self._asteroids();
-$ctx1.sendIdx["asteroids"]=1;
-_st($4)._add_(self._newAsteroid());
-$ctx1.sendIdx["add:"]=1;
-$5=self._saucers();
+var $2,$3,$1,$5,$7,$6,$4,$8,$9,$11,$10,$12;
+$2=self._saucers();
 $ctx1.sendIdx["saucers"]=1;
-_st($5)._add_(self._newSaucer());
-_st(_st(self._saucers()).__comma(self._asteroids()))._do_((function(each){
+$3=self._asteroids();
+$ctx1.sendIdx["asteroids"]=1;
+$1=_st($2).__comma($3);
+_st($1)._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
 _st(each)._explode();
-return _st(each)._toughness_(_st(self._difficulty()).__star(_st(self._phase())._number()));
+$5=self._difficulty();
+$7=self._phase();
+$ctx2.sendIdx["phase"]=1;
+$6=_st($7)._number();
+$4=_st($5).__star($6);
+return _st(each)._toughness_($4);
 }, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
-$6=self._starField();
+$8=self._soundNamed_("nextphase");
+$ctx1.sendIdx["soundNamed:"]=1;
+_st($8)._play();
+$ctx1.sendIdx["play"]=1;
+_st(self._soundNamed_("explosion-1"))._play();
+self._phase_(_st(self._phase())._next());
+_st(self._asteroids())._add_(self._newAsteroid());
+$ctx1.sendIdx["add:"]=1;
+_st(self._saucers())._add_(self._newSaucer());
+$9=self._starField();
 $ctx1.sendIdx["starField"]=1;
-$8=_st(self._starField())._speed();
+$11=_st(self._starField())._speed();
 $ctx1.sendIdx["speed"]=1;
-$7=_st($8).__plus((1));
+$10=_st($11).__plus((1));
 $ctx1.sendIdx["+"]=1;
-_st($6)._speed_($7);
+_st($9)._speed_($10);
 $ctx1.sendIdx["speed:"]=1;
-$9=self._farBackground();
+$12=self._farBackground();
 $ctx1.sendIdx["farBackground"]=1;
-_st($9)._speed_(_st(_st(self._farBackground())._speed()).__plus((0.75)));
+_st($12)._speed_(_st(_st(self._farBackground())._speed()).__plus((0.75)));
 return self}, function($ctx1) {$ctx1.fill(self,"nextPhase",{},globals.OVGame)})},
 args: [],
-source: "nextPhase\x0a\x09(self soundNamed: 'nextphase') play.\x0a\x09(self soundNamed: 'explosion-1') play.\x0a\x09self phase: self phase next.\x0a\x09self asteroids add: self newAsteroid.\x0a\x09self saucers add: self newSaucer.\x0a\x09self saucers , self asteroids do: [ :each | \x0a\x09\x09each explode.\x0a\x09\x09each toughness: self difficulty * self phase number ].\x0a\x09self starField speed: self starField speed + 1.\x0a\x09self farBackground speed: self farBackground speed + 0.75.",
-messageSends: ["play", "soundNamed:", "phase:", "next", "phase", "add:", "asteroids", "newAsteroid", "saucers", "newSaucer", "do:", ",", "explode", "toughness:", "*", "difficulty", "number", "speed:", "starField", "+", "speed", "farBackground"],
+source: "nextPhase\x0a\x09self saucers , self asteroids do: [ :each |\x0a\x09\x09each explode.\x0a\x09\x09each toughness: self difficulty * self phase number ].\x0a\x09(self soundNamed: 'nextphase') play.\x0a\x09(self soundNamed: 'explosion-1') play.\x0a\x09self phase: self phase next.\x0a\x09self asteroids add: self newAsteroid.\x0a\x09self saucers add: self newSaucer.\x0a\x09self starField speed: self starField speed + 1.\x0a\x09self farBackground speed: self farBackground speed + 0.75.",
+messageSends: ["do:", ",", "saucers", "asteroids", "explode", "toughness:", "*", "difficulty", "number", "phase", "play", "soundNamed:", "phase:", "next", "add:", "newAsteroid", "newSaucer", "speed:", "starField", "+", "speed", "farBackground"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -780,7 +786,7 @@ $3=_st($Text())._new();
 _st($3)._contents_("PHASE ".__comma(_st(_st(self._phase())._number())._asString()));
 _st($3)._color_("rgba(90,113,26,0.7)");
 _st($3)._outlineColor_("rgba(242,246,144,0.8)");
-_st($3)._outlineSize_((1));
+_st($3)._outlineWidth_((1));
 _st($3)._fontName_("ChangaOne");
 _st($3)._fontSize_((20));
 $4=_st($3)._position_((325).__at((20)));
@@ -792,8 +798,8 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"phaseNumberText",{},globals.OVGame)})},
 args: [],
-source: "phaseNumberText\x0a\x09^ phaseNumberText ifNil: [ phaseNumberText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'PHASE ' , self phase number asString;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 325@20) ]",
-messageSends: ["ifNil:", "contents:", "new", ",", "asString", "number", "phase", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
+source: "phaseNumberText\x0a\x09^ phaseNumberText ifNil: [ phaseNumberText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'PHASE ' , self phase number asString;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 325@20) ]",
+messageSends: ["ifNil:", "contents:", "new", ",", "asString", "number", "phase", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "@"],
 referencedClasses: ["Text"]
 }),
 globals.OVGame);
@@ -813,7 +819,7 @@ $3=_st($Text())._new();
 _st($3)._contents_(_st(self._player())._playTimeString());
 _st($3)._color_("rgba(90,113,26,0.7)");
 _st($3)._outlineColor_("rgba(242,246,144,0.8)");
-_st($3)._outlineSize_((1));
+_st($3)._outlineWidth_((1));
 _st($3)._fontName_("ChangaOne");
 _st($3)._fontSize_((20));
 $4=_st($3)._position_((660).__at((20)));
@@ -825,8 +831,8 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"playTimeText",{},globals.OVGame)})},
 args: [],
-source: "playTimeText\x0a\x09^ playTimeText ifNil: [ playTimeText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player playTimeString;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 660@20) ]",
-messageSends: ["ifNil:", "contents:", "new", "playTimeString", "player", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
+source: "playTimeText\x0a\x09^ playTimeText ifNil: [ playTimeText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player playTimeString;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 660@20) ]",
+messageSends: ["ifNil:", "contents:", "new", "playTimeString", "player", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "@"],
 referencedClasses: ["Text"]
 }),
 globals.OVGame);
@@ -1063,7 +1069,7 @@ $3=_st($Text())._new();
 _st($3)._contents_(_st(self._player())._score());
 _st($3)._color_("rgba(90,113,26,0.7)");
 _st($3)._outlineColor_("rgba(242,246,144,0.8)");
-_st($3)._outlineSize_((1));
+_st($3)._outlineWidth_((1));
 _st($3)._fontName_("ChangaOne");
 _st($3)._fontSize_((20));
 $4=_st($3)._position_((10).__at((55)));
@@ -1075,8 +1081,8 @@ $1=$2;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"scoreText",{},globals.OVGame)})},
 args: [],
-source: "scoreText\x0a\x09^ scoreText ifNil: [ scoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player score;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineSize: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@55) ]",
-messageSends: ["ifNil:", "contents:", "new", "score", "player", "color:", "outlineColor:", "outlineSize:", "fontName:", "fontSize:", "position:", "@"],
+source: "scoreText\x0a\x09^ scoreText ifNil: [ scoreText := \x0a\x09\x09(Text new \x0a\x09\x09\x09contents: self player score;\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 20;\x0a\x09\x09\x09position: 10@55) ]",
+messageSends: ["ifNil:", "contents:", "new", "score", "player", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "@"],
 referencedClasses: ["Text"]
 }),
 globals.OVGame);

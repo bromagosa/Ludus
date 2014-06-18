@@ -2,7 +2,7 @@ define("HOS/OVNI-Sprites", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st"
 smalltalk.addPackage('OVNI-Sprites');
 smalltalk.packages["OVNI-Sprites"].transport = {"type":"amd","amdNamespace":"HOS"};
 
-smalltalk.addClass('OVBullet', globals.Sprite, ['speed', 'acceleration'], 'OVNI-Sprites');
+smalltalk.addClass('OVBullet', globals.Circle, ['speed', 'acceleration'], 'OVNI-Sprites');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "accelerate",
@@ -50,17 +50,17 @@ protocol: 'initialization',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1;
+var $1;
 ($ctx1.supercall = true, globals.OVBullet.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._source_("images/ovni/bullet.png");
-$2=(0).__at((0));
-$ctx1.sendIdx["@"]=1;
-$1=self._addFrameGroupNamed_origin_size_frameCount_("shooting",$2,(9).__at((9)),(1));
+self._color_("rgba(200,0,30,0.8)");
+self._outlineColor_("rgba(230,0,30,1)");
+self._outlineWidth_((1));
+$1=self._radius_((3));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVBullet)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/bullet.png';\x0a\x09\x09addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.",
-messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09color: 'rgba(200,0,30,0.8)';\x0a\x09\x09outlineColor: 'rgba(230,0,30,1)';\x0a\x09\x09outlineWidth: 1;\x0a\x09\x09radius: 3",
+messageSends: ["initialize", "color:", "outlineColor:", "outlineWidth:", "radius:"],
 referencedClasses: []
 }),
 globals.OVBullet);
@@ -162,17 +162,17 @@ protocol: 'initialization',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1;
+var $1;
 ($ctx1.supercall = true, globals.OVEnemyBullet.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._source_("images/ovni/enemybullet.png");
-$2=(0).__at((0));
-$ctx1.sendIdx["@"]=1;
-$1=self._addFrameGroupNamed_origin_size_frameCount_("shooting",$2,(9).__at((9)),(1));
+self._color_("rgba(0,200,30,0.8)");
+self._outlineColor_("rgba(0,230,30,1)");
+self._outlineWidth_((1));
+$1=self._radius_((3));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVEnemyBullet)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/enemybullet.png';\x0a\x09\x09addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.",
-messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@"],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09color: 'rgba(0,200,30,0.8)';\x0a\x09\x09outlineColor: 'rgba(0,230,30,1)';\x0a\x09\x09outlineWidth: 1;\x0a\x09\x09radius: 3",
+messageSends: ["initialize", "color:", "outlineColor:", "outlineWidth:", "radius:"],
 referencedClasses: []
 }),
 globals.OVEnemyBullet);

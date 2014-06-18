@@ -44,7 +44,7 @@ startScreen
 			contents: 'GAME OVER';
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 3;
+			outlineWidth: 3;
 			fontName: 'ChangaOne';
 			fontSize: 92;
 			position: 130@280).
@@ -53,7 +53,7 @@ startScreen
 			contents: 'Press SPACE to restart';
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 2;
+			outlineWidth: 2;
 			fontName: 'ChangaOne';
 			fontSize: 40;
 			position: 170@320)
@@ -111,7 +111,7 @@ startScreen
 			contents: 'YOU WON!!';
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 3;
+			outlineWidth: 3;
 			fontName: 'ChangaOne';
 			fontSize: 92;
 			position: 170@280).
@@ -120,7 +120,7 @@ startScreen
 			contents: 'Press SPACE to restart';
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 2;
+			outlineWidth: 2;
 			fontName: 'ChangaOne';
 			fontSize: 40;
 			position: 170@320)
@@ -224,7 +224,7 @@ startScreen
 				contents: 'START';
 				color: 'rgba(90,113,26,0.7)';
 				outlineColor: 'rgba(242,246,144,0.8)';
-				outlineSize: 3;
+				outlineWidth: 3;
 				fontName: 'ChangaOne';
 				fontSize: 80;
 				position: 150@250);
@@ -233,7 +233,7 @@ startScreen
 				contents: 'OPTIONS';
 				color: 'rgba(90,113,26,0.7)';
 				outlineColor: 'rgba(242,246,144,0.8)';
-				outlineSize: 3;
+				outlineWidth: 3;
 				fontName: 'ChangaOne';
 				fontSize: 80;
 				position: 150@330);
@@ -352,7 +352,7 @@ startScreen
 				contents: 'BACK';
 				color: 'rgba(90,113,26,0.7)';
 				outlineColor: 'rgba(242,246,144,0.8)';
-				outlineSize: 3;
+				outlineWidth: 3;
 				fontName: 'ChangaOne';
 				fontSize: 80;
 				position: 150@120);
@@ -361,7 +361,7 @@ startScreen
 				contents: 'DIFFICULTY: ' , self game difficulty printString;
 				color: 'rgba(90,113,26,0.7)';
 				outlineColor: 'rgba(242,246,144,0.8)';
-				outlineSize: 3;
+				outlineWidth: 3;
 				fontName: 'ChangaOne';
 				fontSize: 80;
 				position: 150@200);
@@ -370,7 +370,7 @@ startScreen
 				contents: 'SOUNDS: ' , (self game soundIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);
 				color: 'rgba(90,113,26,0.7)';
 				outlineColor: 'rgba(242,246,144,0.8)';
-				outlineSize: 3;
+				outlineWidth: 3;
 				fontName: 'ChangaOne';
 				fontSize: 80;
 				position: 150@280); 
@@ -379,7 +379,7 @@ startScreen
 				contents: 'MUSIC: ' , (self game musicIsMute ifTrue: [ 'OFF' ] ifFalse: [ 'ON' ]);
 				color: 'rgba(90,113,26,0.7)';
 				outlineColor: 'rgba(242,246,144,0.8)';
-				outlineSize: 3;
+				outlineWidth: 3;
 				fontName: 'ChangaOne';
 				fontSize: 80;
 				position: 150@360);
@@ -388,7 +388,7 @@ startScreen
 				contents: 'DEBUG: ' , (Game debugMode ifTrue: [ 'ON' ] ifFalse: [ 'OFF' ]);
 				color: 'rgba(90,113,26,0.7)';
 				outlineColor: 'rgba(242,246,144,0.8)';
-				outlineSize: 3;
+				outlineWidth: 3;
 				fontName: 'ChangaOne';
 				fontSize: 80;
 				position: 150@440);
@@ -443,7 +443,7 @@ startScreen
 			contents: 'GAME PAUSED';
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 3;
+			outlineWidth: 3;
 			fontName: 'ChangaOne';
 			fontSize: 92;
 			position: 70@280).
@@ -452,7 +452,7 @@ startScreen
 			contents: 'Press SPACE to resume';
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 2;
+			outlineWidth: 2;
 			fontName: 'ChangaOne';
 			fontSize: 40;
 			position: 155@320)
@@ -519,7 +519,7 @@ startScreen
 			contents: 'Press SPACE to start';
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 1;
+			outlineWidth: 1;
 			fontName: 'ChangaOne';
 			fontSize: 40;
 			position: 180@320).

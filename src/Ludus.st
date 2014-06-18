@@ -1,7 +1,21 @@
 Smalltalk createPackage: 'Ludus'!
 Object subclass: #AbstractDrawable
-	instanceVariableNames: 'image'
+	instanceVariableNames: 'image scale'
 	package: 'Ludus'!
+
+!AbstractDrawable methodsFor: 'accessing'!
+
+image: anObject
+	image := anObject
+!
+
+scale
+	^ scale ifNil: [ scale := 1@1 ]
+!
+
+scale: anObject
+	scale := anObject
+! !
 
 !AbstractDrawable methodsFor: 'aspect'!
 
@@ -22,10 +36,72 @@ source: anImageUrl
 
 !AbstractDrawable methodsFor: 'drawing'!
 
+drawBoundingBoxOnCanvas: aCanvas
+	(aCanvas element getContext: '2d')
+		beginPath;
+		strokeStyle: 'rgba(255,0,0,0.5)';
+		lineWidth: 1;
+		rect: self x y: self y width: self width height: self height;
+		stroke.
+!
+
 drawOnCanvas: aCanvas step: aStep
 	"If a subclass of mine needs to know what step the renderer is in, it will implement a method accordingly. Otherwise, I'll just ignore the step"
 	
 	self drawOnCanvas: aCanvas
+! !
+
+!AbstractDrawable methodsFor: 'geometry'!
+
+distanceFromCentreTo: aPoint
+	^ Math 
+		sqrt: 
+			((Math pow: ((self centre x) - (aPoint  x)) to: 2)
+				+ (Math pow: ((self centre y) - (aPoint y)) to: 2))
+! !
+
+!AbstractDrawable methodsFor: 'movement'!
+
+moveCentreBy: anOffset
+	"aSprite moveCentreBy: 0@5"
+	self centre: self centre + anOffset
+!
+
+moveCentreBy: anOffset speed: anInteger
+	"aSprite moveCentreBy: 0@5"
+	self centre: self centre + (anOffset * anInteger)
+! !
+
+!AbstractDrawable methodsFor: 'position'!
+
+isAllInsideCanvas: aCanvas
+	^ ((((self x) >= 0) 
+		and: [ (self y) >= 0 ])
+			and: [ self x + self width <= aCanvas element width ])
+				and: [ self y + self height <= aCanvas element height ]
+!
+
+isBottomInsideCanvas: aCanvas
+	^ (self y + self height) <= aCanvas element height
+!
+
+isInsideCanvas: aCanvas
+	^ ((((self x + self width) >= 0) 
+		and: [ (self y + self height) >= 0 ])
+			and: [ self x <= aCanvas element width ])
+				and: [ self y <= aCanvas element height ]
+!
+
+isLeftInsideCanvas: aCanvas
+	^ self x >= 0
+!
+
+isRightInsideCanvas: aCanvas
+	^ (self x + self width) <= aCanvas element width
+!
+
+isTopInsideCanvas: aCanvas
+	^ self y >= 0
 ! !
 
 !AbstractDrawable methodsFor: 'testing'!
@@ -43,6 +119,10 @@ isImage
 !
 
 isParallax
+	^ false
+!
+
+isShape
 	^ false
 !
 
@@ -386,15 +466,6 @@ stepOnGame: aGame
 
 !Sprite methodsFor: 'drawing'!
 
-drawBoundingBoxOnCanvas: aCanvas
-	(aCanvas element getContext: '2d')
-		beginPath;
-		strokeStyle: 'rgba(255,0,0,0.5)';
-		lineWidth: 1;
-		rect: self x y: self y width: self width height: self height;
-		stroke.
-!
-
 drawOnCanvas: aCanvas
 	self currentFrameGroup drawFromSprite: self onCanvas: aCanvas.
 	Game debugMode ifTrue: [ self drawBoundingBoxOnCanvas: aCanvas ]
@@ -413,57 +484,6 @@ containsPoint: aPoint
 		and: [ self y <= aPoint y ])
 			and: [ self width + self x >= aPoint x ])
 				and: [ self height + self y >= aPoint y ]
-!
-
-distanceFromCentreTo: aPoint
-	^ Math 
-		sqrt: 
-			((Math pow: ((self centre x) - (aPoint  x)) to: 2)
-				+ (Math pow: ((self centre y) - (aPoint y)) to: 2))
-! !
-
-!Sprite methodsFor: 'movement'!
-
-moveCentreBy: anOffset
-	"aSprite moveCentreBy: 0@5"
-	self centre: self centre + anOffset
-!
-
-moveCentreBy: anOffset speed: anInteger
-	"aSprite moveCentreBy: 0@5"
-	self centre: self centre + (anOffset * anInteger)
-! !
-
-!Sprite methodsFor: 'position'!
-
-isAllInsideCanvas: aCanvas
-	^ ((((self x) >= 0) 
-		and: [ (self y) >= 0 ])
-			and: [ self x + self width <= aCanvas element width ])
-				and: [ self y + self height <= aCanvas element height ]
-!
-
-isBottomInsideCanvas: aCanvas
-	^ (self y + self height) <= aCanvas element height
-!
-
-isInsideCanvas: aCanvas
-	^ ((((self x + self width) >= 0) 
-		and: [ (self y + self height) >= 0 ])
-			and: [ self x <= aCanvas element width ])
-				and: [ self y <= aCanvas element height ]
-!
-
-isLeftInsideCanvas: aCanvas
-	^ self x >= 0
-!
-
-isRightInsideCanvas: aCanvas
-	^ (self x + self width) <= aCanvas element width
-!
-
-isTopInsideCanvas: aCanvas
-	^ self y >= 0
 ! !
 
 !Sprite methodsFor: 'testing'!
@@ -582,8 +602,8 @@ drawOnCanvas: aCanvas
 		height: self height
 		xPosition: self position x
 		yPosition: self position y
-		scaleWidth: self width
-		scaleHeight: self height.
+		scaleWidth: self width * self scale x
+		scaleHeight: self height * self scale y.
 ! !
 
 !Image methodsFor: 'testing'!
@@ -639,10 +659,10 @@ drawFromSprite: aSprite onCanvas: aCanvas
 		originY: self origin y
 		frameWidth: self width
 		frameHeight: self height
-		x: aSprite x 
+		x: aSprite x
 		y: aSprite y
-		scaleWidth: self width
-		scaleHeight: self height.
+		scaleWidth: self width * aSprite scale x
+		scaleHeight: self height * aSprite scale y
 ! !
 
 !FrameGroup methodsFor: 'frames'!
@@ -730,8 +750,8 @@ drawFromBackground: aBackground onCanvas: aCanvas
 		frameHeight: self height
 		x: self xPosition1
 		y: 0
-		scaleWidth: self width
-		scaleHeight: self height;
+		scaleWidth: self width * aBackground scale x
+		scaleHeight: self height * aBackground scale y;
 		drawImage: aBackground image
 		originX: self origin x + self offset
 		originY: self origin y
@@ -739,8 +759,8 @@ drawFromBackground: aBackground onCanvas: aCanvas
 		frameHeight: self height
 		x: self xPosition2
 		y: 0
-		scaleWidth: self width
-		scaleHeight: self height.
+		scaleWidth: self width * aBackground scale x
+		scaleHeight: self height * aBackground scale y.
 ! !
 
 !ParallaxImage methodsFor: 'positions'!
@@ -758,11 +778,11 @@ isParallax
 	^ true
 ! !
 
-AbstractDrawable subclass: #Text
-	instanceVariableNames: 'fontName fontSize fontStyle color position contents outlineColor outlineSize'
+AbstractDrawable subclass: #Shape
+	instanceVariableNames: 'position color outlineColor outlineWidth'
 	package: 'Ludus'!
 
-!Text methodsFor: 'accessing'!
+!Shape methodsFor: 'accessing'!
 
 color
 	^ color ifNil: [ color := 'red' ]
@@ -771,6 +791,169 @@ color
 color: anObject
 	color := anObject
 !
+
+outlineColor
+	^ outlineColor
+!
+
+outlineColor: aColorName
+	outlineColor := aColorName.
+!
+
+outlineWidth
+	^ outlineWidth
+!
+
+outlineWidth: aSize
+	outlineWidth := aSize
+!
+
+position
+	^ position ifNil: [ position := 10@10 ]
+!
+
+position: anObject
+	position := anObject
+!
+
+x
+	^ self position x
+!
+
+y
+	^ self position y
+! !
+
+!Shape methodsFor: 'testing'!
+
+isShape
+	^ true
+! !
+
+Shape subclass: #GeometricShape
+	instanceVariableNames: 'width height centre'
+	package: 'Ludus'!
+
+!GeometricShape methodsFor: 'accessing'!
+
+centre
+	^ centre
+!
+
+centre: anObject
+	centre := anObject
+!
+
+height
+	^ height
+!
+
+height: anObject
+	height := anObject
+!
+
+width
+	^ width
+!
+
+width: anObject
+	width := anObject
+! !
+
+!GeometricShape methodsFor: 'drawing'!
+
+drawStrokeOn: aCanvas
+	Game debugMode ifTrue: [ self drawBoundingBoxOnCanvas: aCanvas ].
+	(self outlineWidth notNil & self outlineColor notNil)
+		ifTrue: [
+			(aCanvas element getContext: '2d')
+				lineWidth: self outlineWidth;
+				scale: self scale x y: self scale y;
+				strokeStyle: self outlineColor;
+				stroke ]
+! !
+
+GeometricShape subclass: #Circle
+	instanceVariableNames: 'radius'
+	package: 'Ludus'!
+
+!Circle methodsFor: 'accessing'!
+
+height
+	^ self radius * 2
+!
+
+position
+	^ (self centre x - self radius) @ (self centre y - self radius)
+!
+
+position: aPosition
+	self centre: (aPosition x + self radius @ aPosition y + self radius)
+!
+
+radius
+	^ radius ifNil: [ radius := 10 ]
+!
+
+radius: anObject
+	radius := anObject
+!
+
+width
+	^ self radius * 2
+! !
+
+!Circle methodsFor: 'drawing'!
+
+drawOnCanvas: aCanvas
+	(aCanvas element getContext: '2d')
+		beginPath;
+		arc: self centre x y: self centre y radius: self radius startAngle: 0 endAngle: 2 * Math PI;
+		scale: self scale x y: self scale y;
+		fillStyle: self color;
+		fill.
+	(self drawStrokeOn: aCanvas)
+! !
+
+GeometricShape subclass: #Rectangle
+	instanceVariableNames: 'width height'
+	package: 'Ludus'!
+
+!Rectangle methodsFor: 'accessing'!
+
+height
+	^ height ifNil: [ height := 10 ]
+!
+
+height: anObject
+	height := anObject
+!
+
+width
+	^ width ifNil: [ width := 10 ]
+!
+
+width: anObject
+	width := anObject
+! !
+
+!Rectangle methodsFor: 'drawing'!
+
+drawOnCanvas: aCanvas
+	(aCanvas element getContext: '2d')
+		beginPath;
+		rect: self x y: self y width: self with height: self height;
+		scale: self scale x y: self scale y;
+		fillStyle: self color;
+		fill.
+	(self drawStrokeOn: aCanvas)
+! !
+
+Shape subclass: #Text
+	instanceVariableNames: 'fontName fontSize fontStyle contents'
+	package: 'Ludus'!
+
+!Text methodsFor: 'accessing'!
 
 contents
 	^ contents ifNil: [ '' ]
@@ -798,30 +981,6 @@ fontSize: anObject
 
 fontStyle
 	^ fontStyle ifNil: [ '' ]
-!
-
-outlineColor
-	^ outlineColor
-!
-
-outlineColor: aColorName
-	outlineColor := aColorName.
-!
-
-outlineSize
-	^ outlineSize
-!
-
-outlineSize: aSize
-	outlineSize := aSize
-!
-
-position
-	^ position ifNil: [ position := 10@10 ]
-!
-
-position: anObject
-	position := anObject
 ! !
 
 !Text methodsFor: 'attributes'!
@@ -844,7 +1003,7 @@ fontDefinition
 
 removeOutline
 	outlineColor := nil.
-	outlineSize := nil.
+	outlineWidth := nil.
 ! !
 
 !Text methodsFor: 'drawing'!
@@ -853,16 +1012,23 @@ drawOnCanvas: aCanvas
 	(aCanvas element getContext: '2d')
 		font: self fontDefinition;
 		fillStyle: self color;
+		scale: self scale x y: self scale y;
 		fillText: self contents
 			x: self position x
 			y: self position y.
-	(self outlineSize notNil & self outlineColor notNil) ifTrue: [
-		(aCanvas element getContext: '2d')
-			lineWidth: self outlineSize;
-			strokeStyle: self outlineColor;
-			strokeText: self contents
-				x: self position x
-				y: self position y ]
+	self drawStrokeOn: aCanvas
+!
+
+drawStrokeOn: aCanvas
+	(self outlineWidth notNil & self outlineColor notNil)
+		ifTrue: [
+			(aCanvas element getContext: '2d')
+				lineWidth: self outlineWidth;
+				strokeStyle: self outlineColor;
+				scale: self scale x y: self scale y;
+				strokeText: self contents
+					x: self position x
+					y: self position y ]
 ! !
 
 !Text methodsFor: 'testing'!

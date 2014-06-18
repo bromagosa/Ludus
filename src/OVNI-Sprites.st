@@ -1,5 +1,5 @@
 Smalltalk createPackage: 'OVNI-Sprites'!
-Sprite subclass: #OVBullet
+Circle subclass: #OVBullet
 	instanceVariableNames: 'speed acceleration'
 	package: 'OVNI-Sprites'!
 
@@ -26,8 +26,10 @@ stepOnGame: aGame
 initialize
 	super initialize.
 	self 
-		source: 'images/ovni/bullet.png';
-		addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.
+		color: 'rgba(200,0,30,0.8)';
+		outlineColor: 'rgba(230,0,30,1)';
+		outlineWidth: 1;
+		radius: 3
 ! !
 
 !OVBullet methodsFor: 'movement'!
@@ -69,8 +71,10 @@ stepOnGame: aGame
 initialize
 	super initialize.
 	self 
-		source: 'images/ovni/enemybullet.png';
-		addFrameGroupNamed: 'shooting' origin: 0@0 size: 9@9 frameCount: 1.
+		color: 'rgba(0,200,30,0.8)';
+		outlineColor: 'rgba(0,230,30,1)';
+		outlineWidth: 1;
+		radius: 3
 ! !
 
 FSMSprite subclass: #OVEnemy

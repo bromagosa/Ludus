@@ -153,20 +153,22 @@ protocol: 'control',
 fn: function (aSprite,aGame){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$4,$3,$7,$6,$8,$5,$2;
+var $1,$4,$3,$8,$7,$6,$9,$5,$2;
 $1=self._context();
 $ctx1.sendIdx["context"]=1;
 $4=_st(aGame)._difficulty();
 $ctx1.sendIdx["difficulty"]=1;
 $3=_st($4).__star((-1));
 $ctx1.sendIdx["*"]=1;
-$7=_st(aSprite)._y();
+$8=_st(aSprite)._centre();
+$ctx1.sendIdx["centre"]=1;
+$7=_st($8)._y();
 $ctx1.sendIdx["y"]=1;
-$6=_st($7).__gt(_st(self._context())._y());
+$6=_st($7).__gt(_st(_st(self._context())._centre())._y());
 if(smalltalk.assert($6)){
-$8=_st(aGame)._difficulty();
+$9=_st(aGame)._difficulty();
 $ctx1.sendIdx["difficulty"]=2;
-$5=_st($8).__star((-1));
+$5=_st($9).__star((-1));
 } else {
 $5=_st(aGame)._difficulty();
 };
@@ -174,8 +176,8 @@ $2=_st($3).__at($5);
 _st($1)._moveCentreBy_($2);
 return self}, function($ctx1) {$ctx1.fill(self,"moveAwayFrom:onGame:",{aSprite:aSprite,aGame:aGame},globals.OVSaucerAvoidingState)})},
 args: ["aSprite", "aGame"],
-source: "moveAwayFrom: aSprite onGame: aGame\x0a\x09self context moveCentreBy: aGame difficulty * -1\x0a\x09\x09@ (aSprite y > self context y \x0a\x09\x09\x09ifTrue: [ aGame difficulty * -1 ] \x0a\x09\x09\x09ifFalse: [ aGame difficulty ]).",
-messageSends: ["moveCentreBy:", "context", "@", "*", "difficulty", "ifTrue:ifFalse:", ">", "y"],
+source: "moveAwayFrom: aSprite onGame: aGame\x0a\x09self context moveCentreBy: aGame difficulty * -1\x0a\x09\x09@ (aSprite centre y > self context centre y \x0a\x09\x09\x09ifTrue: [ aGame difficulty * -1 ] \x0a\x09\x09\x09ifFalse: [ aGame difficulty ]).",
+messageSends: ["moveCentreBy:", "context", "@", "*", "difficulty", "ifTrue:ifFalse:", ">", "y", "centre"],
 referencedClasses: []
 }),
 globals.OVSaucerAvoidingState);
@@ -283,16 +285,18 @@ protocol: 'control',
 fn: function (aSprite,aGame){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$4,$3,$7,$6,$5,$2;
+var $1,$4,$3,$8,$7,$6,$5,$2;
 $1=self._context();
 $ctx1.sendIdx["context"]=1;
 $4=_st(aGame)._difficulty();
 $ctx1.sendIdx["difficulty"]=1;
 $3=_st($4).__star((-1));
 $ctx1.sendIdx["*"]=1;
-$7=_st(aSprite)._y();
+$8=_st(aSprite)._centre();
+$ctx1.sendIdx["centre"]=1;
+$7=_st($8)._y();
 $ctx1.sendIdx["y"]=1;
-$6=_st($7).__gt(_st(self._context())._y());
+$6=_st($7).__gt(_st(_st(self._context())._centre())._y());
 if(smalltalk.assert($6)){
 $5=_st(aGame)._difficulty();
 $ctx1.sendIdx["difficulty"]=2;
@@ -303,8 +307,8 @@ $2=_st($3).__at($5);
 _st($1)._moveCentreBy_($2);
 return self}, function($ctx1) {$ctx1.fill(self,"moveTowards:onGame:",{aSprite:aSprite,aGame:aGame},globals.OVSaucerSeekingState)})},
 args: ["aSprite", "aGame"],
-source: "moveTowards: aSprite onGame: aGame\x0a\x09self context moveCentreBy: aGame difficulty * -1\x0a\x09\x09@ (aSprite y > self context y \x0a\x09\x09\x09ifTrue: [ aGame difficulty ] \x0a\x09\x09\x09ifFalse: [ aGame difficulty * -1 ]).",
-messageSends: ["moveCentreBy:", "context", "@", "*", "difficulty", "ifTrue:ifFalse:", ">", "y"],
+source: "moveTowards: aSprite onGame: aGame\x0a\x09self context moveCentreBy: aGame difficulty * -1\x0a\x09\x09@ (aSprite centre y > self context centre y \x0a\x09\x09\x09ifTrue: [ aGame difficulty ] \x0a\x09\x09\x09ifFalse: [ aGame difficulty * -1 ]).",
+messageSends: ["moveCentreBy:", "context", "@", "*", "difficulty", "ifTrue:ifFalse:", ">", "y", "centre"],
 referencedClasses: []
 }),
 globals.OVSaucerSeekingState);

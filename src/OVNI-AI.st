@@ -45,7 +45,7 @@ bullet: anObject
 
 moveAwayFrom: aSprite onGame: aGame
 	self context moveCentreBy: aGame difficulty * -1
-		@ (aSprite y > self context y 
+		@ (aSprite centre y > self context centre y 
 			ifTrue: [ aGame difficulty * -1 ] 
 			ifFalse: [ aGame difficulty ]).
 !
@@ -90,7 +90,7 @@ FSMState subclass: #OVSaucerSeekingState
 
 moveTowards: aSprite onGame: aGame
 	self context moveCentreBy: aGame difficulty * -1
-		@ (aSprite y > self context y 
+		@ (aSprite centre y > self context centre y 
 			ifTrue: [ aGame difficulty ] 
 			ifFalse: [ aGame difficulty * -1 ]).
 !

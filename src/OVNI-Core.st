@@ -92,7 +92,7 @@ newAsteroid
 
 newSaucer
 	^ (OVSaucer new 
-		centre: self width atRandom @ self height atRandom;
+		centre: self width atRandom + self width @ self height atRandom;
 		toughness: self difficulty)
 !
 
@@ -119,7 +119,7 @@ highScoreText
 			contents: self player highScore;
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 1;
+			outlineWidth: 1;
 			fontName: 'ChangaOne';
 			fontSize: 20;
 			position: 10@40) ]
@@ -131,7 +131,7 @@ livesText
 			contents: self livesTextContents;
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 1;
+			outlineWidth: 1;
 			fontName: 'ChangaOne';
 			fontSize: 20;
 			position: 7@22) ]
@@ -148,7 +148,7 @@ phaseNumberText
 			contents: 'PHASE ' , self phase number asString;
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 1;
+			outlineWidth: 1;
 			fontName: 'ChangaOne';
 			fontSize: 20;
 			position: 325@20) ]
@@ -160,7 +160,7 @@ playTimeText
 			contents: self player playTimeString;
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 1;
+			outlineWidth: 1;
 			fontName: 'ChangaOne';
 			fontSize: 20;
 			position: 660@20) ]
@@ -172,7 +172,7 @@ scoreText
 			contents: self player score;
 			color: 'rgba(90,113,26,0.7)';
 			outlineColor: 'rgba(242,246,144,0.8)';
-			outlineSize: 1;
+			outlineWidth: 1;
 			fontName: 'ChangaOne';
 			fontSize: 20;
 			position: 10@55) ]
@@ -208,14 +208,14 @@ newGame
 !
 
 nextPhase
+	self saucers , self asteroids do: [ :each |
+		each explode.
+		each toughness: self difficulty * self phase number ].
 	(self soundNamed: 'nextphase') play.
 	(self soundNamed: 'explosion-1') play.
 	self phase: self phase next.
 	self asteroids add: self newAsteroid.
 	self saucers add: self newSaucer.
-	self saucers , self asteroids do: [ :each | 
-		each explode.
-		each toughness: self difficulty * self phase number ].
 	self starField speed: self starField speed + 1.
 	self farBackground speed: self farBackground speed + 0.75.
 !
@@ -279,9 +279,9 @@ draw
 	
 	self 
 		drawAll:
-			{ self farBackground } , self saucers , self asteroids , self bullets
-			, self enemyBullets , { self ship. self lifeItem. self starField. self livesText.
-				self scoreText. self highScoreText. self playTimeText. self phaseNumberText }
+			{ self farBackground } , self saucers , self asteroids , self bullets , self enemyBullets
+			,  { self ship. self lifeItem. self starField. self livesText.
+				self scoreText. self highScoreText. self playTimeText. self phaseNumberText }.
 ! !
 
 !OVGame methodsFor: 'game events'!
