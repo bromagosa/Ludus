@@ -1566,7 +1566,7 @@ selector: "startScreen",
 protocol: 'control',
 fn: function (){
 var self=this;
-function $OVSaucerWanderingState(){return globals.OVSaucerWanderingState||(typeof OVSaucerWanderingState=="undefined"?nil:OVSaucerWanderingState)}
+function $OVWanderingState(){return globals.OVWanderingState||(typeof OVWanderingState=="undefined"?nil:OVWanderingState)}
 function $Image(){return globals.Image||(typeof Image=="undefined"?nil:Image)}
 function $Text(){return globals.Text||(typeof Text=="undefined"?nil:Text)}
 return smalltalk.withContext(function($ctx1) { 
@@ -1578,7 +1578,7 @@ $ctx1.sendIdx["saucers"]=1;
 self._saucers_($1);
 _st(self._saucers())._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
-_st(each)._switchToState_($OVSaucerWanderingState());
+_st(each)._switchToState_($OVWanderingState());
 _st(each)._currentFrameGroup_("flying");
 $7=self._game();
 $ctx2.sendIdx["game"]=2;
@@ -1638,9 +1638,9 @@ $25=_st($24)._position_((580).__at((530)));
 self._authorText_($25);
 return self}, function($ctx1) {$ctx1.fill(self,"startScreen",{},globals.OVStartScreen)})},
 args: [],
-source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each\x0a\x09\x09\x09switchToState: OVSaucerWanderingState;\x0a\x09\x09\x09currentFrameGroup: 'flying';\x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Image new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height).\x0a\x09\x09\x09\x0a\x09self startGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to start';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 180@320).\x0a\x09\x09\x09\x0a\x09self authorText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Bernat Romagosa 2014';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 12;\x0a\x09\x09\x09position: 580@530)",
+source: "startScreen\x0a\x09self saucers: self game saucers.\x0a\x09self saucers do: [ :each | \x0a\x09\x09each\x0a\x09\x09\x09switchToState: OVWanderingState;\x0a\x09\x09\x09currentFrameGroup: 'flying';\x0a\x09\x09\x09x: (self game width - 100) atRandom + 50;\x0a\x09\x09\x09y: (self game height - 100) atRandom + 50 ].\x0a\x09\x09\x09\x0a\x09self title: \x0a\x09\x09(Image new \x0a\x09\x09\x09source: 'images/ovni/title.png' \x0a\x09\x09\x09origin: 0@0 \x0a\x09\x09\x09size: 600@196 \x0a\x09\x09\x09position: 55 @ self game height).\x0a\x09\x09\x09\x0a\x09self startGameText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Press SPACE to start';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09outlineColor: 'rgba(242,246,144,0.8)';\x0a\x09\x09\x09outlineWidth: 1;\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 40;\x0a\x09\x09\x09position: 180@320).\x0a\x09\x09\x09\x0a\x09self authorText:\x0a\x09\x09(Text new \x0a\x09\x09\x09contents: 'Bernat Romagosa 2014';\x0a\x09\x09\x09color: 'rgba(90,113,26,0.7)';\x0a\x09\x09\x09fontName: 'ChangaOne';\x0a\x09\x09\x09fontSize: 12;\x0a\x09\x09\x09position: 580@530)",
 messageSends: ["saucers:", "saucers", "game", "do:", "switchToState:", "currentFrameGroup:", "x:", "+", "atRandom", "-", "width", "y:", "height", "title:", "source:origin:size:position:", "new", "@", "startGameText:", "contents:", "color:", "outlineColor:", "outlineWidth:", "fontName:", "fontSize:", "position:", "authorText:"],
-referencedClasses: ["OVSaucerWanderingState", "Image", "Text"]
+referencedClasses: ["OVWanderingState", "Image", "Text"]
 }),
 globals.OVStartScreen);
 

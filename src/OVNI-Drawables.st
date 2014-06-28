@@ -209,6 +209,41 @@ initialize
 	self frameRate: 2.
 ! !
 
+OVEnemy subclass: #OVBoss
+	instanceVariableNames: ''
+	package: 'OVNI-Drawables'!
+
+!OVBoss methodsFor: 'as yet unclassified'!
+
+defaultStateClass
+	^ OVWanderingState
+!
+
+stepOnGame: aGame
+	super stepOnGame: aGame.
+		
+	self
+		checkCollisionWith: aGame bullets;
+		checkShouldDie.
+
+	"self isHit ifTrue: [ aGame saucerWasHit ].
+	self isDead ifTrue: [ aGame saucerDied ].
+	self escaped ifTrue: [ aGame saucerEscaped ].
+
+	self shouldRespawn ifTrue: [ self respawnAtX: aGame width + aGame width atRandom y: aGame height atRandom ]."
+! !
+
+!OVBoss methodsFor: 'initialization'!
+
+initialize
+	super initialize.
+	self 
+		source: 'images/ovni/boss.png';
+		addFrameGroupNamed: 'flying' origin: 0@0 size: 128@128 frameCount: 6;
+		addFrameGroupNamed: 'exploding' origin: 0@128 size: 128@128 frameCount: 20;
+		frameRate: 2
+! !
+
 OVEnemy subclass: #OVSaucer
 	instanceVariableNames: ''
 	package: 'OVNI-Drawables'!
@@ -221,10 +256,6 @@ defaultStateClass
 
 newBullet
 	^ OVEnemyBullet new centre: (self centre - ((self width / 2) @ 0))
-!
-
-shootProbability
-	^ 200 / self toughness
 ! !
 
 !OVSaucer methodsFor: 'actions'!
@@ -269,7 +300,7 @@ alignedWithWhichOf: aSpriteCollection threshold: aThreshold
 
 initialize
 	super initialize.
-	self 
+	self
 		source: 'images/ovni/saucer.png';
 		addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;
 		addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10;

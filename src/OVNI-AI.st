@@ -105,11 +105,11 @@ stepOnGame: aGame
 			self context currentState bullet: bullet ]
 ! !
 
-FSMState subclass: #OVSaucerWanderingState
+FSMState subclass: #OVWanderingState
 	instanceVariableNames: ''
 	package: 'OVNI-AI'!
 
-!OVSaucerWanderingState methodsFor: 'control'!
+!OVWanderingState methodsFor: 'control'!
 
 stepOnGame: aGame
 	self context moveCentreBy: (3 atRandom - 2) @ (3 atRandom - 2).

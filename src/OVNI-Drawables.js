@@ -611,6 +611,74 @@ globals.OVAsteroid);
 
 
 
+smalltalk.addClass('OVBoss', globals.OVEnemy, [], 'OVNI-Drawables');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "defaultStateClass",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+function $OVWanderingState(){return globals.OVWanderingState||(typeof OVWanderingState=="undefined"?nil:OVWanderingState)}
+return $OVWanderingState();
+},
+args: [],
+source: "defaultStateClass\x0a\x09^ OVWanderingState",
+messageSends: [],
+referencedClasses: ["OVWanderingState"]
+}),
+globals.OVBoss);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "initialize",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3,$4;
+($ctx1.supercall = true, globals.OVBoss.superclass.fn.prototype._initialize.apply(_st(self), []));
+$ctx1.supercall = false;
+self._source_("images/ovni/boss.png");
+$1=(0).__at((0));
+$ctx1.sendIdx["@"]=1;
+$2=(128).__at((128));
+$ctx1.sendIdx["@"]=2;
+self._addFrameGroupNamed_origin_size_frameCount_("flying",$1,$2,(6));
+$ctx1.sendIdx["addFrameGroupNamed:origin:size:frameCount:"]=1;
+$3=(0).__at((128));
+$ctx1.sendIdx["@"]=3;
+self._addFrameGroupNamed_origin_size_frameCount_("exploding",$3,(128).__at((128)),(20));
+$4=self._frameRate_((2));
+return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVBoss)})},
+args: [],
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/boss.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 128@128 frameCount: 6;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@128 size: 128@128 frameCount: 20;\x0a\x09\x09frameRate: 2",
+messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:"],
+referencedClasses: []
+}),
+globals.OVBoss);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'as yet unclassified',
+fn: function (aGame){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+($ctx1.supercall = true, globals.OVBoss.superclass.fn.prototype._stepOnGame_.apply(_st(self), [aGame]));
+$ctx1.supercall = false;
+self._checkCollisionWith_(_st(aGame)._bullets());
+$1=self._checkShouldDie();
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVBoss)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09super stepOnGame: aGame.\x0a\x09\x09\x0a\x09self\x0a\x09\x09checkCollisionWith: aGame bullets;\x0a\x09\x09checkShouldDie.\x0a\x0a\x09\x22self isHit ifTrue: [ aGame saucerWasHit ].\x0a\x09self isDead ifTrue: [ aGame saucerDied ].\x0a\x09self escaped ifTrue: [ aGame saucerEscaped ].\x0a\x0a\x09self shouldRespawn ifTrue: [ self respawnAtX: aGame width + aGame width atRandom y: aGame height atRandom ].\x22",
+messageSends: ["stepOnGame:", "checkCollisionWith:", "bullets", "checkShouldDie"],
+referencedClasses: []
+}),
+globals.OVBoss);
+
+
+
 smalltalk.addClass('OVSaucer', globals.OVEnemy, [], 'OVNI-Drawables');
 smalltalk.addMethod(
 smalltalk.method({
@@ -698,7 +766,7 @@ self._addFrameGroupNamed_origin_size_frameCount_("exploding",$3,(40).__at((40)),
 $4=self._frameRate_((2));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVSaucer)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09source: 'images/ovni/saucer.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10;\x0a\x09\x09frameRate: 2",
+source: "initialize\x0a\x09super initialize.\x0a\x09self\x0a\x09\x09source: 'images/ovni/saucer.png';\x0a\x09\x09addFrameGroupNamed: 'flying' origin: 0@0 size: 40@40 frameCount: 6;\x0a\x09\x09addFrameGroupNamed: 'exploding' origin: 0@40 size: 40@40 frameCount: 10;\x0a\x09\x09frameRate: 2",
 messageSends: ["initialize", "source:", "addFrameGroupNamed:origin:size:frameCount:", "@", "frameRate:"],
 referencedClasses: []
 }),
@@ -738,24 +806,6 @@ return self}, function($ctx1) {$ctx1.fill(self,"shootOnGame:",{aGame:aGame},glob
 args: ["aGame"],
 source: "shootOnGame: aGame\x0a\x09aGame \x0a\x09\x09everyStepNumber: (10 / self toughness) rounded\x0a\x09\x09do: [ aGame enemyShot: self newBullet ]",
 messageSends: ["everyStepNumber:do:", "rounded", "/", "toughness", "enemyShot:", "newBullet"],
-referencedClasses: []
-}),
-globals.OVSaucer);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "shootProbability",
-protocol: 'accessing',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=(200).__slash(self._toughness());
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"shootProbability",{},globals.OVSaucer)})},
-args: [],
-source: "shootProbability\x0a\x09^ 200 / self toughness",
-messageSends: ["/", "toughness"],
 referencedClasses: []
 }),
 globals.OVSaucer);

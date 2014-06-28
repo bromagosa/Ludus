@@ -354,7 +354,7 @@ globals.OVSaucerSeekingState);
 
 
 
-smalltalk.addClass('OVSaucerWanderingState', globals.FSMState, [], 'OVNI-AI');
+smalltalk.addClass('OVWanderingState', globals.FSMState, [], 'OVNI-AI');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "stepOnGame:",
@@ -370,13 +370,13 @@ $3=_st($4).__minus((2));
 $ctx1.sendIdx["-"]=1;
 $2=_st($3).__at(_st((3)._atRandom()).__minus((2)));
 _st($1)._moveCentreBy_($2);
-return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVSaucerWanderingState)})},
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVWanderingState)})},
 args: ["aGame"],
 source: "stepOnGame: aGame\x0a\x09self context moveCentreBy: (3 atRandom - 2) @ (3 atRandom - 2).",
 messageSends: ["moveCentreBy:", "context", "@", "-", "atRandom"],
 referencedClasses: []
 }),
-globals.OVSaucerWanderingState);
+globals.OVWanderingState);
 
 
 });

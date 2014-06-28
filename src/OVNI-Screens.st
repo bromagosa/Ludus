@@ -502,7 +502,7 @@ startScreen
 	self saucers: self game saucers.
 	self saucers do: [ :each | 
 		each
-			switchToState: OVSaucerWanderingState;
+			switchToState: OVWanderingState;
 			currentFrameGroup: 'flying';
 			x: (self game width - 100) atRandom + 50;
 			y: (self game height - 100) atRandom + 50 ].
