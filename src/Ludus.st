@@ -1,6 +1,6 @@
 Smalltalk createPackage: 'Ludus'!
 Object subclass: #AbstractDrawable
-	instanceVariableNames: 'image scale'
+	instanceVariableNames: 'image scale direction'
 	package: 'Ludus'!
 
 !AbstractDrawable methodsFor: 'accessing'!
@@ -24,6 +24,27 @@ newImage
 ! !
 
 !AbstractDrawable methodsFor: 'attributes'!
+
+direction
+	"The direction is always a unit vector"
+	direction ifNotNil: [
+		| angle |
+		direction y >= 0
+			ifTrue: [ angle := Math atan: (direction x / direction y) ]
+			ifFalse: [ angle := (Math atan: (direction x / direction y)) + Number pi ].
+		direction := (Math sin: angle) @ (Math cos: angle) ].
+
+	^ direction ifNil: [ direction := 0@1 ]
+!
+
+direction: aPoint
+	"The direction is always a unit vector"
+	| angle |
+	aPoint y >= 0
+		ifTrue: [ angle := Math atan: (aPoint x / aPoint y) ]
+		ifFalse: [ angle := (Math atan: (aPoint x / aPoint y)) + Number pi ].
+	direction := (Math sin: angle) @ (Math cos: angle).
+!
 
 image
 	image ifNil: [ image := self newImage ].
@@ -70,6 +91,14 @@ moveCentreBy: anOffset
 moveCentreBy: anOffset speed: anInteger
 	"aSprite moveCentreBy: 0@5"
 	self centre: self centre + (anOffset * anInteger)
+!
+
+moveCentreTowards: aPoint speed: aSpeed
+	| distance |
+	distance := self distanceFromCentreTo: aPoint.
+	distance < aSpeed 
+		ifFalse: [ self moveCentreBy: (aPoint x - self centre x / distance) @ (aPoint y - self centre y / distance) speed: aSpeed ]
+		ifTrue: [ self centre: aPoint ]
 ! !
 
 !AbstractDrawable methodsFor: 'position'!
@@ -312,7 +341,7 @@ isParallax
 ! !
 
 Animation subclass: #Sprite
-	instanceVariableNames: 'speed position direction debugMode'
+	instanceVariableNames: 'speed position debugMode'
 	package: 'Ludus'!
 !Sprite commentStamp!
 I am a Sprite. I need to have a spritesheet, which is an image file that displays all possible frames I can paint organized in an ordered fashion.
@@ -333,27 +362,6 @@ centre: aPoint
 	yOffset := (self height / 2).
 
 	self position: ((aPoint x - xOffset) @ (aPoint y - yOffset)).
-!
-
-direction
-	"The direction is always a unit vector"
-	direction ifNotNil: [
-		| angle |
-		direction y >= 0
-			ifTrue: [ angle := Math atan: (direction x / direction y) ]
-			ifFalse: [ angle := (Math atan: (direction x / direction y)) + Number pi ].
-		direction := (Math sin: angle) @ (Math cos: angle) ].
-
-	^ direction ifNil: [ direction := 0@1 ]
-!
-
-direction: aPoint
-	"The direction is always a unit vector"
-	| angle |
-	aPoint y >= 0
-		ifTrue: [ angle := Math atan: (aPoint x / aPoint y) ]
-		ifFalse: [ angle := (Math atan: (aPoint x / aPoint y)) + Number pi ].
-	direction := (Math sin: angle) @ (Math cos: angle).
 !
 
 position
@@ -504,7 +512,9 @@ currentState
 
 currentState: aState
 	currentState := aState ifNil: [ self defaultStateClass new ].
-	currentState context: self.
+	currentState 
+		context: self;
+		start.
 !
 
 defaultStateClass
@@ -524,7 +534,10 @@ stepOnGame: aGame
 !
 
 switchToState: aStateClass
-	self currentState: (self states detect: [ :any | any class = aStateClass ] ifNone: [ self states add: aStateClass new ])
+	| state |
+	state := (self states detect: [ :any | any class = aStateClass ] ifNone: [ self states add: aStateClass new ]).
+	self currentState: state.
+	state start
 ! !
 
 AbstractDrawable subclass: #Image
@@ -1542,6 +1555,9 @@ context: anObject
 
 !FSMState methodsFor: 'control'!
 
+start
+!
+
 stepOnGame: aGame
 	self subclassResponsibility
 ! !
@@ -1549,7 +1565,7 @@ stepOnGame: aGame
 !FSMState methodsFor: 'state transition'!
 
 switchToState: aState
-	self context switchToState: aState
+	self context switchToState: aState.
 ! !
 
 Object subclass: #InputHandler

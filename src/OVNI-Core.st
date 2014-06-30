@@ -1,9 +1,17 @@
 Smalltalk createPackage: 'OVNI-Core'!
 Game subclass: #OVGame
-	instanceVariableNames: 'player phase difficulty ship lifeItem saucers bullets enemyBullets scoreText highScoreText playTimeText livesText phaseNumberText farBackground starField soundIsMute musicIsMute asteroids'
+	instanceVariableNames: 'player canShoot phase difficulty ship lifeItem saucers bullets enemyBullets scoreText highScoreText playTimeText livesText phaseNumberText farBackground starField soundIsMute musicIsMute asteroids boss'
 	package: 'OVNI-Core'!
 
 !OVGame methodsFor: 'accessing'!
+
+canShoot
+	^ canShoot ifNil: [ canShoot := true ]
+!
+
+canShoot: aBoolean
+	canShoot := aBoolean
+!
 
 difficulty
 	^ difficulty ifNil: [ difficulty := 2 ]
@@ -61,6 +69,18 @@ starField: aBackground
 
 !OVGame methodsFor: 'accessing - sprites'!
 
+addAsteroid
+	self asteroids add: self newAsteroid
+!
+
+addBoss
+	self boss: (OVBoss new toughness: self difficulty)
+!
+
+addSaucer
+	self saucers add: self newSaucer
+!
+
 asteroids
 	^ asteroids ifNil: [ 
 		asteroids := #().
@@ -70,6 +90,14 @@ asteroids
 
 asteroids: aCollection
 	asteroids := aCollection
+!
+
+boss
+	^ boss
+!
+
+boss: aBoss
+	boss := aBoss
 !
 
 bullets
@@ -183,11 +211,7 @@ scoreText
 controlPhase
 	self phase shouldAdvance 
 		ifTrue: [ 
-			self phase isLast 
-				ifTrue: [ 
-					(self soundNamed: 'gamewon') play.
-					self switchToScreenNamed: 'gameWon' ]
-				ifFalse: [ self nextPhase ]]
+			self phase isLast ifFalse: [ self nextPhase ]]
 !
 
 end
@@ -197,13 +221,15 @@ end
 !
 
 newGame
-	self debug: 'new game started'.
-	self saucers: nil.
-	self asteroids: nil.
-	self phase: nil.
-	self farBackground: nil.
-	self starField: nil.
-	self resetSprites.
+	self
+		debug: 'new game started';
+		saucers: nil;
+		asteroids: nil;
+		boss: nil;
+		phase: nil;
+		farBackground: nil;
+		starField: nil;
+		resetSprites.
 	self player reset.
 !
 
@@ -214,10 +240,7 @@ nextPhase
 	(self soundNamed: 'nextphase') play.
 	(self soundNamed: 'explosion-1') play.
 	self phase: self phase next.
-	self asteroids add: self newAsteroid.
-	self saucers add: self newSaucer.
-	self starField speed: self starField speed + 1.
-	self farBackground speed: self farBackground speed + 0.75.
+	self phase startOnGame: self.
 !
 
 resetSprites
@@ -240,6 +263,7 @@ step
 !
 
 stepSprites
+	self boss ifNotNil: [ self boss stepOnGame: self ].
 	(self bullets, self enemyBullets, self saucers, self asteroids, { self ship. self lifeItem })
 		do: [ :eachSprite | eachSprite stepOnGame: self ]
 !
@@ -282,6 +306,8 @@ draw
 			{ self farBackground } , self saucers , self asteroids , self bullets , self enemyBullets
 			,  { self ship. self lifeItem. self starField. self livesText.
 				self scoreText. self highScoreText. self playTimeText. self phaseNumberText }.
+				
+	self boss ifNotNil: [ self draw: self boss ]
 ! !
 
 !OVGame methodsFor: 'game events'!
@@ -296,6 +322,18 @@ asteroidEscaped
 
 asteroidWasHit
 	(self soundNamed: 'explosion-1') play.
+!
+
+bossDied
+	self player score: self player score + (10 * self difficulty).
+	(self soundNamed: 'gamewon') play.
+	self switchToScreenNamed: 'gameWon'
+!
+
+bossWasHit
+	(self soundNamed: 'bosshit') play.
+	self phase bossWasHit.
+	self phase hitsToGo = 0 ifTrue: [ self boss explode ]
 !
 
 enemyShot: aBullet
@@ -356,7 +394,8 @@ loadSounds
 		loadSound: 'sounds/ovni/explosion-2.ogg';
 		loadSound: 'sounds/ovni/life.ogg';
 		loadSound: 'sounds/ovni/nextphase.ogg';
-		loadSound: 'sounds/ovni/gamewon.ogg'
+		loadSound: 'sounds/ovni/bosshit.ogg';
+		loadSound: 'sounds/ovni/gamewon.ogg'.
 !
 
 preloadImages
@@ -421,6 +460,16 @@ shouldAdvance: aBoolean
 
 !OVPhase methodsFor: 'control'!
 
+startOnGame: aGame
+	aGame
+		addAsteroid;
+		addSaucer.
+	aGame starField speed: aGame starField speed + 1.
+	aGame farBackground speed: aGame farBackground speed + 0.75.
+! !
+
+!OVPhase methodsFor: 'game events'!
+
 saucerWasHit
 	self saucersToGo: self saucersToGo - 1.
 	self saucersToGo = 0 ifTrue: [ self shouldAdvance: true ]
@@ -442,11 +491,54 @@ lastPhaseNumber
 
 number: aNumber
 	| instance |
-	instance := self new.
-	instance 
-		number: aNumber;
-		saucersToGo: ((20 to: (self lastPhaseNumber * 5) + 15 by: 5) at: aNumber).
+	
+	aNumber = self lastPhaseNumber 
+		ifTrue: [ instance := OVBossPhase new ]
+		ifFalse: [ 
+			instance := self new.
+			instance 
+				number: aNumber;
+				saucersToGo: ((20 to: (self lastPhaseNumber * 5) + 15 by: 5) at: aNumber) ].
+				
 	^ instance
+! !
+
+OVPhase subclass: #OVBossPhase
+	instanceVariableNames: 'hitsToGo'
+	package: 'OVNI-Core'!
+
+!OVBossPhase methodsFor: 'accessing'!
+
+hitsToGo
+	^ hitsToGo
+!
+
+hitsToGo: aNumber
+	hitsToGo := aNumber
+!
+
+number
+	^ self class lastPhaseNumber
+! !
+
+!OVBossPhase methodsFor: 'control'!
+
+startOnGame: aGame
+	self hitsToGo: aGame difficulty * 5.
+	aGame
+		canShoot: false;
+		addAsteroid;
+		addBoss.
+	aGame saucers removeAll.
+	aGame starField speed: aGame starField speed + 1.
+	aGame farBackground speed: aGame farBackground speed + 0.75.
+! !
+
+!OVBossPhase methodsFor: 'game events'!
+
+bossWasHit
+	self hitsToGo: self hitsToGo - 1.
+	self hitsToGo = 0 ifTrue: [ self shouldAdvance: true ]
 ! !
 
 Object subclass: #OVPlayer

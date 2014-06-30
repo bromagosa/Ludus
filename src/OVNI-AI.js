@@ -113,6 +113,442 @@ globals.OVAsteroidMovingState);
 
 
 
+smalltalk.addClass('OVBossArrivingState', globals.FSMState, [], 'OVNI-AI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "start",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._context())._centre_((900).__at((250)));
+return self}, function($ctx1) {$ctx1.fill(self,"start",{},globals.OVBossArrivingState)})},
+args: [],
+source: "start\x0a\x09self context centre: 900@250.",
+messageSends: ["centre:", "context", "@"],
+referencedClasses: []
+}),
+globals.OVBossArrivingState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'control',
+fn: function (aGame){
+var self=this;
+function $OVBossCircularMovementState(){return globals.OVBossCircularMovementState||(typeof OVBossCircularMovementState=="undefined"?nil:OVBossCircularMovementState)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+$1=self._context();
+$ctx1.sendIdx["context"]=1;
+_st($1)._moveCentreBy_((-2).__at(_st((3)._atRandom()).__minus((2))));
+$2=_st(_st(self._context())._x()).__lt((550));
+if(smalltalk.assert($2)){
+_st(aGame)._canShoot_(true);
+self._switchToState_($OVBossCircularMovementState());
+};
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVBossArrivingState)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09self context moveCentreBy: -2 @ (3 atRandom - 2).\x0a\x09self context x < 550 ifTrue: [\x0a\x09\x09aGame canShoot: true.\x0a\x09\x09self switchToState: OVBossCircularMovementState ]",
+messageSends: ["moveCentreBy:", "context", "@", "-", "atRandom", "ifTrue:", "<", "x", "canShoot:", "switchToState:"],
+referencedClasses: ["OVBossCircularMovementState"]
+}),
+globals.OVBossArrivingState);
+
+
+
+smalltalk.addClass('OVBossCircularMovementState', globals.FSMState, ['currentAngle', 'circleCentre'], 'OVNI-AI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "circleCentre",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@circleCentre"];
+return $1;
+},
+args: [],
+source: "circleCentre\x0a\x09^ circleCentre",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVBossCircularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "circleCentre:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@circleCentre"]=anObject;
+return self},
+args: ["anObject"],
+source: "circleCentre: anObject\x0a\x09circleCentre := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVBossCircularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "currentAngle",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@currentAngle"];
+return $1;
+},
+args: [],
+source: "currentAngle\x0a\x09^ currentAngle",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVBossCircularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "currentAngle:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@currentAngle"]=anObject;
+return self},
+args: ["anObject"],
+source: "currentAngle: anObject\x0a\x09currentAngle := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVBossCircularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "move",
+protocol: 'movement',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$7,$6,$8,$5,$4,$2;
+$1=self._context();
+$3=self._circleCentre();
+$7=self._currentAngle();
+$ctx1.sendIdx["currentAngle"]=1;
+$6=_st($7)._cos();
+$8=self._radius();
+$ctx1.sendIdx["radius"]=1;
+$5=_st($6).__star($8);
+$ctx1.sendIdx["*"]=1;
+$4=_st($5).__at(_st(_st(self._currentAngle())._sin()).__star(self._radius()));
+$2=_st($3).__plus($4);
+_st($1)._centre_($2);
+return self}, function($ctx1) {$ctx1.fill(self,"move",{},globals.OVBossCircularMovementState)})},
+args: [],
+source: "move\x0a\x09self context centre: self circleCentre + ((self currentAngle cos * self radius) @ (self currentAngle sin * self radius))",
+messageSends: ["centre:", "context", "+", "circleCentre", "@", "*", "cos", "currentAngle", "radius", "sin"],
+referencedClasses: []
+}),
+globals.OVBossCircularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "radius",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return (100);
+},
+args: [],
+source: "radius\x0a\x09^ 100",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVBossCircularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "start",
+protocol: 'control',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+self._currentAngle_((0));
+$1=self._circleCentre_(_st(_st(self._context())._centre()).__minus(_st(self._radius()).__at((0))));
+return self}, function($ctx1) {$ctx1.fill(self,"start",{},globals.OVBossCircularMovementState)})},
+args: [],
+source: "start\x0a\x09self \x0a\x09\x09currentAngle: 0;\x0a\x09\x09circleCentre: self context centre - (self radius @ 0)",
+messageSends: ["currentAngle:", "circleCentre:", "-", "centre", "context", "@", "radius"],
+referencedClasses: []
+}),
+globals.OVBossCircularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'control',
+fn: function (aGame){
+var self=this;
+function $Number(){return globals.Number||(typeof Number=="undefined"?nil:Number)}
+function $OVBossRandomWarpState(){return globals.OVBossRandomWarpState||(typeof OVBossRandomWarpState=="undefined"?nil:OVBossRandomWarpState)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$3;
+self._move();
+$2=self._currentAngle();
+$ctx1.sendIdx["currentAngle"]=1;
+$1=_st($2).__plus((0.1));
+self._currentAngle_($1);
+$3=_st(self._currentAngle()).__gt(_st(_st($Number())._pi()).__star((8)));
+if(smalltalk.assert($3)){
+self._switchToState_($OVBossRandomWarpState());
+};
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVBossCircularMovementState)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09self move.\x0a\x09self currentAngle: self currentAngle + 0.1.\x0a\x09self currentAngle > (Number pi * 8) ifTrue: [ self switchToState: OVBossRandomWarpState ]",
+messageSends: ["move", "currentAngle:", "+", "currentAngle", "ifTrue:", ">", "*", "pi", "switchToState:"],
+referencedClasses: ["Number", "OVBossRandomWarpState"]
+}),
+globals.OVBossCircularMovementState);
+
+
+
+smalltalk.addClass('OVBossRandomWarpState', globals.FSMState, [], 'OVNI-AI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'control',
+fn: function (aGame){
+var self=this;
+function $OVBossRectangularMovementState(){return globals.OVBossRectangularMovementState||(typeof OVBossRectangularMovementState=="undefined"?nil:OVBossRectangularMovementState)}
+return smalltalk.withContext(function($ctx1) { 
+_st(aGame)._everyStepNumber_do_((100),(function(){
+return smalltalk.withContext(function($ctx2) {
+return self._warpOnGame_(aGame);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["everyStepNumber:do:"]=1;
+_st(aGame)._everyStepNumber_do_((1000),(function(){
+return smalltalk.withContext(function($ctx2) {
+return self._switchToState_($OVBossRectangularMovementState());
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVBossRandomWarpState)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09aGame everyStepNumber: 100 do: [ self warpOnGame: aGame ].\x0a\x09aGame everyStepNumber: 1000 do: [ self switchToState: OVBossRectangularMovementState ].",
+messageSends: ["everyStepNumber:do:", "warpOnGame:", "switchToState:"],
+referencedClasses: ["OVBossRectangularMovementState"]
+}),
+globals.OVBossRandomWarpState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "warpOnGame:",
+protocol: 'control',
+fn: function (aGame){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$6,$5,$10,$9,$12,$11,$8,$7,$4,$15,$14,$13,$3,$19,$21,$20,$18,$17,$16,$2;
+$1=self._context();
+$ctx1.sendIdx["context"]=1;
+$6=_st(aGame)._width();
+$ctx1.sendIdx["width"]=1;
+$5=_st($6).__slash((2));
+$ctx1.sendIdx["/"]=1;
+$10=_st(aGame)._width();
+$ctx1.sendIdx["width"]=2;
+$9=_st($10).__slash((2));
+$ctx1.sendIdx["/"]=2;
+$12=self._context();
+$ctx1.sendIdx["context"]=2;
+$11=_st($12)._width();
+$ctx1.sendIdx["width"]=3;
+$8=_st($9).__minus($11);
+$ctx1.sendIdx["-"]=1;
+$7=_st($8)._atRandom();
+$ctx1.sendIdx["atRandom"]=1;
+$4=_st($5).__plus($7);
+$ctx1.sendIdx["+"]=2;
+$15=self._context();
+$ctx1.sendIdx["context"]=3;
+$14=_st($15)._width();
+$13=_st($14).__slash((2));
+$ctx1.sendIdx["/"]=3;
+$3=_st($4).__plus($13);
+$ctx1.sendIdx["+"]=1;
+$19=_st(aGame)._height();
+$ctx1.sendIdx["height"]=1;
+$21=self._context();
+$ctx1.sendIdx["context"]=4;
+$20=_st($21)._height();
+$ctx1.sendIdx["height"]=2;
+$18=_st($19).__minus($20);
+$17=_st($18)._atRandom();
+$16=_st($17).__plus(_st(_st(self._context())._height()).__slash((2)));
+$2=_st($3).__at($16);
+_st($1)._centre_($2);
+return self}, function($ctx1) {$ctx1.fill(self,"warpOnGame:",{aGame:aGame},globals.OVBossRandomWarpState)})},
+args: ["aGame"],
+source: "warpOnGame: aGame\x0a\x09self context centre: \x0a\x09\x09((aGame width / 2) + ((aGame width / 2) - self context width) atRandom + (self context width / 2))\x0a\x09\x09\x09@ ((aGame height - self context height) atRandom + (self context height / 2))",
+messageSends: ["centre:", "context", "@", "+", "/", "width", "atRandom", "-", "height"],
+referencedClasses: []
+}),
+globals.OVBossRandomWarpState);
+
+
+
+smalltalk.addClass('OVBossRectangularMovementState', globals.FSMState, ['currentDestination'], 'OVNI-AI');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "currentDestination",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@currentDestination"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@currentDestination"]=self._startPosition();
+$1=self["@currentDestination"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"currentDestination",{},globals.OVBossRectangularMovementState)})},
+args: [],
+source: "currentDestination\x0a\x09^ currentDestination ifNil: [ currentDestination := self startPosition ]",
+messageSends: ["ifNil:", "startPosition"],
+referencedClasses: []
+}),
+globals.OVBossRectangularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "currentDestination:",
+protocol: 'accessing',
+fn: function (aPoint){
+var self=this;
+self["@currentDestination"]=aPoint;
+return self},
+args: ["aPoint"],
+source: "currentDestination: aPoint\x0a\x09currentDestination := aPoint",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVBossRectangularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "move",
+protocol: 'movement',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $3,$2,$4,$1;
+$3=self._context();
+$ctx1.sendIdx["context"]=1;
+$2=_st($3)._centre();
+$4=self._currentDestination();
+$ctx1.sendIdx["currentDestination"]=1;
+$1=_st($2).__eq($4);
+if(smalltalk.assert($1)){
+self._nextDestination();
+} else {
+_st(self._context())._moveCentreTowards_speed_(self._currentDestination(),(4));
+};
+return self}, function($ctx1) {$ctx1.fill(self,"move",{},globals.OVBossRectangularMovementState)})},
+args: [],
+source: "move\x0a\x09self context centre = self currentDestination \x0a\x09\x09ifTrue: [ self nextDestination ]\x0a\x09\x09ifFalse: [ self context moveCentreTowards: self currentDestination speed: 4 ]",
+messageSends: ["ifTrue:ifFalse:", "=", "centre", "context", "currentDestination", "nextDestination", "moveCentreTowards:speed:"],
+referencedClasses: []
+}),
+globals.OVBossRectangularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "nextDestination",
+protocol: 'movement',
+fn: function (){
+var self=this;
+function $Dictionary(){return globals.Dictionary||(typeof Dictionary=="undefined"?nil:Dictionary)}
+return smalltalk.withContext(function($ctx1) { 
+var $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$2,$1;
+$3=_st($Dictionary())._new();
+$4=$3;
+$5=(640).__at((80));
+$ctx1.sendIdx["@"]=1;
+$6=(80).__at((80));
+$ctx1.sendIdx["@"]=2;
+_st($4)._at_put_($5,$6);
+$ctx1.sendIdx["at:put:"]=1;
+$7=$3;
+$8=(80).__at((80));
+$ctx1.sendIdx["@"]=3;
+$9=(80).__at((460));
+$ctx1.sendIdx["@"]=4;
+_st($7)._at_put_($8,$9);
+$ctx1.sendIdx["at:put:"]=2;
+$10=$3;
+$11=(80).__at((460));
+$ctx1.sendIdx["@"]=5;
+$12=(640).__at((460));
+$ctx1.sendIdx["@"]=6;
+_st($10)._at_put_($11,$12);
+$ctx1.sendIdx["at:put:"]=3;
+$13=$3;
+$14=(640).__at((460));
+$ctx1.sendIdx["@"]=7;
+_st($13)._at_put_($14,(640).__at((80)));
+$15=_st($3)._yourself();
+$2=$15;
+$1=_st($2)._at_(self._currentDestination());
+self._currentDestination_($1);
+return self}, function($ctx1) {$ctx1.fill(self,"nextDestination",{},globals.OVBossRectangularMovementState)})},
+args: [],
+source: "nextDestination\x0a\x09self currentDestination:\x0a\x09\x09((Dictionary new\x0a\x09\x09\x09at: 640@80 put: 80@80;\x0a\x09\x09\x09at: 80@80 put: 80@460;\x0a\x09\x09\x09at: 80@460 put: 640@460;\x0a\x09\x09\x09at: 640@460 put: 640@80;\x0a\x09\x09\x09yourself) at: self currentDestination)",
+messageSends: ["currentDestination:", "at:", "at:put:", "new", "@", "yourself", "currentDestination"],
+referencedClasses: ["Dictionary"]
+}),
+globals.OVBossRectangularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "startPosition",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=(640).__at((80));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"startPosition",{},globals.OVBossRectangularMovementState)})},
+args: [],
+source: "startPosition\x0a\x09^ 640@80",
+messageSends: ["@"],
+referencedClasses: []
+}),
+globals.OVBossRectangularMovementState);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "stepOnGame:",
+protocol: 'control',
+fn: function (aGame){
+var self=this;
+function $OVBossCircularMovementState(){return globals.OVBossCircularMovementState||(typeof OVBossCircularMovementState=="undefined"?nil:OVBossCircularMovementState)}
+return smalltalk.withContext(function($ctx1) { 
+self._move();
+_st(aGame)._everyStepNumber_do_((2000),(function(){
+return smalltalk.withContext(function($ctx2) {
+return self._switchToState_($OVBossCircularMovementState());
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVBossRectangularMovementState)})},
+args: ["aGame"],
+source: "stepOnGame: aGame\x0a\x09self move.\x0a\x09aGame everyStepNumber: 2000 do: [ self switchToState: OVBossCircularMovementState ].",
+messageSends: ["move", "everyStepNumber:do:", "switchToState:"],
+referencedClasses: ["OVBossCircularMovementState"]
+}),
+globals.OVBossRectangularMovementState);
+
+
+
 smalltalk.addClass('OVSaucerAvoidingState', globals.FSMState, ['bullet'], 'OVNI-AI');
 smalltalk.addMethod(
 smalltalk.method({

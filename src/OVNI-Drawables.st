@@ -77,6 +77,39 @@ initialize
 		radius: 3
 ! !
 
+OVEnemyBullet subclass: #OVBossBullet
+	instanceVariableNames: 'targetPosition'
+	package: 'OVNI-Drawables'!
+
+!OVBossBullet methodsFor: 'accessing'!
+
+targetPosition
+	^ targetPosition
+!
+
+targetPosition: anObject
+	targetPosition := anObject
+! !
+
+!OVBossBullet methodsFor: 'initialization'!
+
+initialize
+	super initialize.
+	self 
+		color: 'rgba(0,30,200,0.8)';
+		outlineColor: 'rgba(0,30,230,1)';
+		outlineWidth: 1;
+		radius: 3
+! !
+
+!OVBossBullet methodsFor: 'movement'!
+
+move
+	self 
+		moveCentreTowards: self targetPosition speed: self speed;
+		accelerate
+! !
+
 FSMSprite subclass: #OVEnemy
 	instanceVariableNames: 'exploding dead toughness'
 	package: 'OVNI-Drawables'!
@@ -210,27 +243,65 @@ initialize
 ! !
 
 OVEnemy subclass: #OVBoss
-	instanceVariableNames: ''
+	instanceVariableNames: 'isHit'
 	package: 'OVNI-Drawables'!
 
-!OVBoss methodsFor: 'as yet unclassified'!
+!OVBoss methodsFor: 'accessing'!
 
 defaultStateClass
-	^ OVWanderingState
+	^ OVBossArrivingState
 !
+
+isHit
+	^ isHit ifNil: [ isHit := false ]
+!
+
+isHit: aBoolean
+	isHit := aBoolean
+!
+
+newBullet
+	^ OVBossBullet new centre: (self centre - ((self width / 2) @ 0))
+! !
+
+!OVBoss methodsFor: 'actions'!
+
+die
+	self dead: true.
+!
+
+shootOnGame: aGame
+	aGame 
+		everyStepNumber: (10 / self toughness) rounded
+		do: [ aGame enemyShot: (self newBullet targetPosition: aGame ship centre) ]
+! !
+
+!OVBoss methodsFor: 'collisions'!
+
+checkCollisionWith: aSpriteCollection
+	| hittingBullet |
+	hittingBullet := (self collidesWithWhichOf: aSpriteCollection).
+	(hittingBullet notNil & self exploding not) 
+		ifTrue: [ 
+			self isHit: true.
+			aSpriteCollection remove: hittingBullet ].
+! !
+
+!OVBoss methodsFor: 'control'!
 
 stepOnGame: aGame
 	super stepOnGame: aGame.
 		
 	self
+		shootOnGame: aGame;
 		checkCollisionWith: aGame bullets;
 		checkShouldDie.
 
-	"self isHit ifTrue: [ aGame saucerWasHit ].
-	self isDead ifTrue: [ aGame saucerDied ].
-	self escaped ifTrue: [ aGame saucerEscaped ].
-
-	self shouldRespawn ifTrue: [ self respawnAtX: aGame width + aGame width atRandom y: aGame height atRandom ]."
+	self isHit ifTrue: [ 
+		aGame bossWasHit. 
+		self isHit: false ].
+	
+	self isDead ifTrue: [ aGame bossDied ].
 ! !
 
 !OVBoss methodsFor: 'initialization'!
@@ -241,7 +312,7 @@ initialize
 		source: 'images/ovni/boss.png';
 		addFrameGroupNamed: 'flying' origin: 0@0 size: 128@128 frameCount: 6;
 		addFrameGroupNamed: 'exploding' origin: 0@128 size: 128@128 frameCount: 20;
-		frameRate: 2
+		frameRate: 2.
 ! !
 
 OVEnemy subclass: #OVSaucer
@@ -375,7 +446,7 @@ explode
 !
 
 shootOnGame: aGame
-	aGame playerShot: self newBullet.
+	aGame canShoot ifTrue: [ aGame playerShot: self newBullet ]
 ! !
 
 !OVSpaceShip methodsFor: 'control'!

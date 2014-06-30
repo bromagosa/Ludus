@@ -27,6 +27,129 @@ stepOnGame: aGame
 	self checkBounceOnGame: aGame
 ! !
 
+FSMState subclass: #OVBossArrivingState
+	instanceVariableNames: ''
+	package: 'OVNI-AI'!
+
+!OVBossArrivingState methodsFor: 'control'!
+
+start
+	self context centre: 900@250.
+!
+
+stepOnGame: aGame
+	self context moveCentreBy: -2 @ (3 atRandom - 2).
+	self context x < 550 ifTrue: [
+		aGame canShoot: true.
+		self switchToState: OVBossCircularMovementState ]
+! !
+
+FSMState subclass: #OVBossCircularMovementState
+	instanceVariableNames: 'currentAngle circleCentre'
+	package: 'OVNI-AI'!
+
+!OVBossCircularMovementState methodsFor: 'accessing'!
+
+circleCentre
+	^ circleCentre
+!
+
+circleCentre: anObject
+	circleCentre := anObject
+!
+
+currentAngle
+	^ currentAngle
+!
+
+currentAngle: anObject
+	currentAngle := anObject
+!
+
+radius
+	^ 100
+! !
+
+!OVBossCircularMovementState methodsFor: 'control'!
+
+start
+	self 
+		currentAngle: 0;
+		circleCentre: self context centre - (self radius @ 0)
+!
+
+stepOnGame: aGame
+	self move.
+	self currentAngle: self currentAngle + 0.1.
+	self currentAngle > (Number pi * 8) ifTrue: [ self switchToState: OVBossRandomWarpState ]
+! !
+
+!OVBossCircularMovementState methodsFor: 'movement'!
+
+move
+	self context centre: self circleCentre + ((self currentAngle cos * self radius) @ (self currentAngle sin * self radius))
+! !
+
+FSMState subclass: #OVBossRandomWarpState
+	instanceVariableNames: ''
+	package: 'OVNI-AI'!
+
+!OVBossRandomWarpState methodsFor: 'control'!
+
+stepOnGame: aGame
+	aGame everyStepNumber: 100 do: [ self warpOnGame: aGame ].
+	aGame everyStepNumber: 1000 do: [ self switchToState: OVBossRectangularMovementState ].
+!
+
+warpOnGame: aGame
+	self context centre: 
+		((aGame width / 2) + ((aGame width / 2) - self context width) atRandom + (self context width / 2))
+			@ ((aGame height - self context height) atRandom + (self context height / 2))
+! !
+
+FSMState subclass: #OVBossRectangularMovementState
+	instanceVariableNames: 'currentDestination'
+	package: 'OVNI-AI'!
+
+!OVBossRectangularMovementState methodsFor: 'accessing'!
+
+currentDestination
+	^ currentDestination ifNil: [ currentDestination := self startPosition ]
+!
+
+currentDestination: aPoint
+	currentDestination := aPoint
+!
+
+startPosition
+	^ 640@80
+! !
+
+!OVBossRectangularMovementState methodsFor: 'control'!
+
+stepOnGame: aGame
+	self move.
+	aGame everyStepNumber: 2000 do: [ self switchToState: OVBossCircularMovementState ].
+! !
+
+!OVBossRectangularMovementState methodsFor: 'movement'!
+
+move
+	self context centre = self currentDestination 
+		ifTrue: [ self nextDestination ]
+		ifFalse: [ self context moveCentreTowards: self currentDestination speed: 4 ]
+!
+
+nextDestination
+	self currentDestination:
+		((Dictionary new
+			at: 640@80 put: 80@80;
+			at: 80@80 put: 80@460;
+			at: 80@460 put: 640@460;
+			at: 640@460 put: 640@80;
+			yourself) at: self currentDestination)
+! !
+
 FSMState subclass: #OVSaucerAvoidingState
 	instanceVariableNames: 'bullet'
 	package: 'OVNI-AI'!

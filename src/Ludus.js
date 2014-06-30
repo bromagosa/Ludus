@@ -2,7 +2,96 @@ define("HOS/Ludus", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "ambe
 smalltalk.addPackage('Ludus');
 smalltalk.packages["Ludus"].transport = {"type":"amd","amdNamespace":"HOS"};
 
-smalltalk.addClass('AbstractDrawable', globals.Object, ['image', 'scale'], 'Ludus');
+smalltalk.addClass('AbstractDrawable', globals.Object, ['image', 'scale', 'direction'], 'Ludus');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "direction",
+protocol: 'attributes',
+fn: function (){
+var self=this;
+function $Math(){return globals.Math||(typeof Math=="undefined"?nil:Math)}
+function $Number(){return globals.Number||(typeof Number=="undefined"?nil:Number)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$2,$5,$6,$4,$8,$7,$receiver;
+$1=self["@direction"];
+if(($receiver = $1) == null || $receiver.isNil){
+$1;
+} else {
+var angle;
+$3=_st(self["@direction"])._y();
+$ctx1.sendIdx["y"]=1;
+$2=_st($3).__gt_eq((0));
+if(smalltalk.assert($2)){
+$5=_st(self["@direction"])._x();
+$ctx1.sendIdx["x"]=1;
+$6=_st(self["@direction"])._y();
+$ctx1.sendIdx["y"]=2;
+$4=_st($5).__slash($6);
+$ctx1.sendIdx["/"]=1;
+angle=_st($Math())._atan_($4);
+$ctx1.sendIdx["atan:"]=1;
+angle;
+} else {
+angle=_st(_st($Math())._atan_(_st(_st(self["@direction"])._x()).__slash(_st(self["@direction"])._y()))).__plus(_st($Number())._pi());
+angle;
+};
+self["@direction"]=_st(_st($Math())._sin_(angle)).__at(_st($Math())._cos_(angle));
+$ctx1.sendIdx["@"]=1;
+self["@direction"];
+};
+$8=self["@direction"];
+if(($receiver = $8) == null || $receiver.isNil){
+self["@direction"]=(0).__at((1));
+$7=self["@direction"];
+} else {
+$7=$8;
+};
+return $7;
+}, function($ctx1) {$ctx1.fill(self,"direction",{},globals.AbstractDrawable)})},
+args: [],
+source: "direction\x0a\x09\x22The direction is always a unit vector\x22\x0a\x09direction ifNotNil: [\x0a\x09\x09| angle |\x0a\x09\x09direction y >= 0\x0a\x09\x09\x09ifTrue: [ angle := Math atan: (direction x / direction y) ]\x0a\x09\x09\x09ifFalse: [ angle := (Math atan: (direction x / direction y)) + Number pi ].\x0a\x09\x09direction := (Math sin: angle) @ (Math cos: angle) ].\x0a\x0a\x09^ direction ifNil: [ direction := 0@1 ]",
+messageSends: ["ifNotNil:", "ifTrue:ifFalse:", ">=", "y", "atan:", "/", "x", "+", "pi", "@", "sin:", "cos:", "ifNil:"],
+referencedClasses: ["Math", "Number"]
+}),
+globals.AbstractDrawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "direction:",
+protocol: 'attributes',
+fn: function (aPoint){
+var self=this;
+var angle;
+function $Math(){return globals.Math||(typeof Math=="undefined"?nil:Math)}
+function $Number(){return globals.Number||(typeof Number=="undefined"?nil:Number)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$4,$5,$3;
+$2=_st(aPoint)._y();
+$ctx1.sendIdx["y"]=1;
+$1=_st($2).__gt_eq((0));
+if(smalltalk.assert($1)){
+$4=_st(aPoint)._x();
+$ctx1.sendIdx["x"]=1;
+$5=_st(aPoint)._y();
+$ctx1.sendIdx["y"]=2;
+$3=_st($4).__slash($5);
+$ctx1.sendIdx["/"]=1;
+angle=_st($Math())._atan_($3);
+$ctx1.sendIdx["atan:"]=1;
+angle;
+} else {
+angle=_st(_st($Math())._atan_(_st(_st(aPoint)._x()).__slash(_st(aPoint)._y()))).__plus(_st($Number())._pi());
+angle;
+};
+self["@direction"]=_st(_st($Math())._sin_(angle)).__at(_st($Math())._cos_(angle));
+return self}, function($ctx1) {$ctx1.fill(self,"direction:",{aPoint:aPoint,angle:angle},globals.AbstractDrawable)})},
+args: ["aPoint"],
+source: "direction: aPoint\x0a\x09\x22The direction is always a unit vector\x22\x0a\x09| angle |\x0a\x09aPoint y >= 0\x0a\x09\x09ifTrue: [ angle := Math atan: (aPoint x / aPoint y) ]\x0a\x09\x09ifFalse: [ angle := (Math atan: (aPoint x / aPoint y)) + Number pi ].\x0a\x09direction := (Math sin: angle) @ (Math cos: angle).",
+messageSends: ["ifTrue:ifFalse:", ">=", "y", "atan:", "/", "x", "+", "pi", "@", "sin:", "cos:"],
+referencedClasses: ["Math", "Number"]
+}),
+globals.AbstractDrawable);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "distanceFromCentreTo:",
@@ -425,6 +514,44 @@ return self}, function($ctx1) {$ctx1.fill(self,"moveCentreBy:speed:",{anOffset:a
 args: ["anOffset", "anInteger"],
 source: "moveCentreBy: anOffset speed: anInteger\x0a\x09\x22aSprite moveCentreBy: 0@5\x22\x0a\x09self centre: self centre + (anOffset * anInteger)",
 messageSends: ["centre:", "+", "centre", "*"],
+referencedClasses: []
+}),
+globals.AbstractDrawable);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "moveCentreTowards:speed:",
+protocol: 'movement',
+fn: function (aPoint,aSpeed){
+var self=this;
+var distance;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$5,$7,$6,$4,$3,$10,$9,$8,$2;
+distance=self._distanceFromCentreTo_(aPoint);
+$1=_st(distance).__lt(aSpeed);
+if(smalltalk.assert($1)){
+self._centre_(aPoint);
+} else {
+$5=_st(aPoint)._x();
+$ctx1.sendIdx["x"]=1;
+$7=self._centre();
+$ctx1.sendIdx["centre"]=1;
+$6=_st($7)._x();
+$4=_st($5).__minus($6);
+$ctx1.sendIdx["-"]=1;
+$3=_st($4).__slash(distance);
+$ctx1.sendIdx["/"]=1;
+$10=_st(aPoint)._y();
+$ctx1.sendIdx["y"]=1;
+$9=_st($10).__minus(_st(self._centre())._y());
+$8=_st($9).__slash(distance);
+$2=_st($3).__at($8);
+self._moveCentreBy_speed_($2,aSpeed);
+};
+return self}, function($ctx1) {$ctx1.fill(self,"moveCentreTowards:speed:",{aPoint:aPoint,aSpeed:aSpeed,distance:distance},globals.AbstractDrawable)})},
+args: ["aPoint", "aSpeed"],
+source: "moveCentreTowards: aPoint speed: aSpeed\x0a\x09| distance |\x0a\x09distance := self distanceFromCentreTo: aPoint.\x0a\x09distance < aSpeed \x0a\x09\x09ifFalse: [ self moveCentreBy: (aPoint x - self centre x / distance) @ (aPoint y - self centre y / distance) speed: aSpeed ]\x0a\x09\x09ifTrue: [ self centre: aPoint ]",
+messageSends: ["distanceFromCentreTo:", "ifFalse:ifTrue:", "<", "moveCentreBy:speed:", "@", "/", "-", "x", "centre", "y", "centre:"],
 referencedClasses: []
 }),
 globals.AbstractDrawable);
@@ -1094,7 +1221,7 @@ globals.Background);
 
 
 
-smalltalk.addClass('Sprite', globals.Animation, ['speed', 'position', 'direction', 'debugMode'], 'Ludus');
+smalltalk.addClass('Sprite', globals.Animation, ['speed', 'position', 'debugMode'], 'Ludus');
 globals.Sprite.comment="I am a Sprite. I need to have a spritesheet, which is an image file that displays all possible frames I can paint organized in an ordered fashion.\x0aYou define different frame groups for this spritesheet, and you can cycle through these framegroups and through the frames of each of them.\x0aI have a direction, defined by a unit vector. This vector will always be a unit vector. If someone tries to force-set my direction to a vector that is not a unit one, I will just convert it.\x0aI handle collisions with other sprites and sprite collections.\x0aOf course, I also have a position, defined by cartesian coordinates.";
 smalltalk.addMethod(
 smalltalk.method({
@@ -1350,95 +1477,6 @@ args: ["aPoint"],
 source: "containsPoint: aPoint\x0a\x09^ (((self x <= aPoint x)\x0a\x09\x09and: [ self y <= aPoint y ])\x0a\x09\x09\x09and: [ self width + self x >= aPoint x ])\x0a\x09\x09\x09\x09and: [ self height + self y >= aPoint y ]",
 messageSends: ["and:", "<=", "x", "y", ">=", "+", "width", "height"],
 referencedClasses: []
-}),
-globals.Sprite);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "direction",
-protocol: 'attributes',
-fn: function (){
-var self=this;
-function $Math(){return globals.Math||(typeof Math=="undefined"?nil:Math)}
-function $Number(){return globals.Number||(typeof Number=="undefined"?nil:Number)}
-return smalltalk.withContext(function($ctx1) { 
-var $1,$3,$2,$5,$6,$4,$8,$7,$receiver;
-$1=self["@direction"];
-if(($receiver = $1) == null || $receiver.isNil){
-$1;
-} else {
-var angle;
-$3=_st(self["@direction"])._y();
-$ctx1.sendIdx["y"]=1;
-$2=_st($3).__gt_eq((0));
-if(smalltalk.assert($2)){
-$5=_st(self["@direction"])._x();
-$ctx1.sendIdx["x"]=1;
-$6=_st(self["@direction"])._y();
-$ctx1.sendIdx["y"]=2;
-$4=_st($5).__slash($6);
-$ctx1.sendIdx["/"]=1;
-angle=_st($Math())._atan_($4);
-$ctx1.sendIdx["atan:"]=1;
-angle;
-} else {
-angle=_st(_st($Math())._atan_(_st(_st(self["@direction"])._x()).__slash(_st(self["@direction"])._y()))).__plus(_st($Number())._pi());
-angle;
-};
-self["@direction"]=_st(_st($Math())._sin_(angle)).__at(_st($Math())._cos_(angle));
-$ctx1.sendIdx["@"]=1;
-self["@direction"];
-};
-$8=self["@direction"];
-if(($receiver = $8) == null || $receiver.isNil){
-self["@direction"]=(0).__at((1));
-$7=self["@direction"];
-} else {
-$7=$8;
-};
-return $7;
-}, function($ctx1) {$ctx1.fill(self,"direction",{},globals.Sprite)})},
-args: [],
-source: "direction\x0a\x09\x22The direction is always a unit vector\x22\x0a\x09direction ifNotNil: [\x0a\x09\x09| angle |\x0a\x09\x09direction y >= 0\x0a\x09\x09\x09ifTrue: [ angle := Math atan: (direction x / direction y) ]\x0a\x09\x09\x09ifFalse: [ angle := (Math atan: (direction x / direction y)) + Number pi ].\x0a\x09\x09direction := (Math sin: angle) @ (Math cos: angle) ].\x0a\x0a\x09^ direction ifNil: [ direction := 0@1 ]",
-messageSends: ["ifNotNil:", "ifTrue:ifFalse:", ">=", "y", "atan:", "/", "x", "+", "pi", "@", "sin:", "cos:", "ifNil:"],
-referencedClasses: ["Math", "Number"]
-}),
-globals.Sprite);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "direction:",
-protocol: 'attributes',
-fn: function (aPoint){
-var self=this;
-var angle;
-function $Math(){return globals.Math||(typeof Math=="undefined"?nil:Math)}
-function $Number(){return globals.Number||(typeof Number=="undefined"?nil:Number)}
-return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$4,$5,$3;
-$2=_st(aPoint)._y();
-$ctx1.sendIdx["y"]=1;
-$1=_st($2).__gt_eq((0));
-if(smalltalk.assert($1)){
-$4=_st(aPoint)._x();
-$ctx1.sendIdx["x"]=1;
-$5=_st(aPoint)._y();
-$ctx1.sendIdx["y"]=2;
-$3=_st($4).__slash($5);
-$ctx1.sendIdx["/"]=1;
-angle=_st($Math())._atan_($3);
-$ctx1.sendIdx["atan:"]=1;
-angle;
-} else {
-angle=_st(_st($Math())._atan_(_st(_st(aPoint)._x()).__slash(_st(aPoint)._y()))).__plus(_st($Number())._pi());
-angle;
-};
-self["@direction"]=_st(_st($Math())._sin_(angle)).__at(_st($Math())._cos_(angle));
-return self}, function($ctx1) {$ctx1.fill(self,"direction:",{aPoint:aPoint,angle:angle},globals.Sprite)})},
-args: ["aPoint"],
-source: "direction: aPoint\x0a\x09\x22The direction is always a unit vector\x22\x0a\x09| angle |\x0a\x09aPoint y >= 0\x0a\x09\x09ifTrue: [ angle := Math atan: (aPoint x / aPoint y) ]\x0a\x09\x09ifFalse: [ angle := (Math atan: (aPoint x / aPoint y)) + Number pi ].\x0a\x09direction := (Math sin: angle) @ (Math cos: angle).",
-messageSends: ["ifTrue:ifFalse:", ">=", "y", "atan:", "/", "x", "+", "pi", "@", "sin:", "cos:"],
-referencedClasses: ["Math", "Number"]
 }),
 globals.Sprite);
 
@@ -1900,17 +1938,19 @@ protocol: 'accessing',
 fn: function (aState){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $receiver;
+var $1,$2,$receiver;
 if(($receiver = aState) == null || $receiver.isNil){
 self["@currentState"]=_st(self._defaultStateClass())._new();
 } else {
 self["@currentState"]=aState;
 };
-_st(self["@currentState"])._context_(self);
+$1=self["@currentState"];
+_st($1)._context_(self);
+$2=_st($1)._start();
 return self}, function($ctx1) {$ctx1.fill(self,"currentState:",{aState:aState},globals.FSMSprite)})},
 args: ["aState"],
-source: "currentState: aState\x0a\x09currentState := aState ifNil: [ self defaultStateClass new ].\x0a\x09currentState context: self.",
-messageSends: ["ifNil:", "new", "defaultStateClass", "context:"],
+source: "currentState: aState\x0a\x09currentState := aState ifNil: [ self defaultStateClass new ].\x0a\x09currentState \x0a\x09\x09context: self;\x0a\x09\x09start.",
+messageSends: ["ifNil:", "new", "defaultStateClass", "context:", "start"],
 referencedClasses: []
 }),
 globals.FSMSprite);
@@ -1977,22 +2017,24 @@ selector: "switchToState:",
 protocol: 'control',
 fn: function (aStateClass){
 var self=this;
+var state;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1;
-$2=self._states();
+var $1;
+$1=self._states();
 $ctx1.sendIdx["states"]=1;
-$1=_st($2)._detect_ifNone_((function(any){
+state=_st($1)._detect_ifNone_((function(any){
 return smalltalk.withContext(function($ctx2) {
 return _st(_st(any)._class()).__eq(aStateClass);
 }, function($ctx2) {$ctx2.fillBlock({any:any},$ctx1,1)})}),(function(){
 return smalltalk.withContext(function($ctx2) {
 return _st(self._states())._add_(_st(aStateClass)._new());
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
-self._currentState_($1);
-return self}, function($ctx1) {$ctx1.fill(self,"switchToState:",{aStateClass:aStateClass},globals.FSMSprite)})},
+self._currentState_(state);
+_st(state)._start();
+return self}, function($ctx1) {$ctx1.fill(self,"switchToState:",{aStateClass:aStateClass,state:state},globals.FSMSprite)})},
 args: ["aStateClass"],
-source: "switchToState: aStateClass\x0a\x09self currentState: (self states detect: [ :any | any class = aStateClass ] ifNone: [ self states add: aStateClass new ])",
-messageSends: ["currentState:", "detect:ifNone:", "states", "=", "class", "add:", "new"],
+source: "switchToState: aStateClass\x0a\x09| state |\x0a\x09state := (self states detect: [ :any | any class = aStateClass ] ifNone: [ self states add: aStateClass new ]).\x0a\x09self currentState: state.\x0a\x09state start",
+messageSends: ["detect:ifNone:", "states", "=", "class", "add:", "new", "currentState:", "start"],
 referencedClasses: []
 }),
 globals.FSMSprite);
@@ -5405,6 +5447,20 @@ globals.FSMState);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "start",
+protocol: 'control',
+fn: function (){
+var self=this;
+return self},
+args: [],
+source: "start",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FSMState);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "stepOnGame:",
 protocol: 'control',
 fn: function (aGame){
@@ -5429,7 +5485,7 @@ return smalltalk.withContext(function($ctx1) {
 _st(self._context())._switchToState_(aState);
 return self}, function($ctx1) {$ctx1.fill(self,"switchToState:",{aState:aState},globals.FSMState)})},
 args: ["aState"],
-source: "switchToState: aState\x0a\x09self context switchToState: aState",
+source: "switchToState: aState\x0a\x09self context switchToState: aState.",
 messageSends: ["switchToState:", "context"],
 referencedClasses: []
 }),

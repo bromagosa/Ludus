@@ -2,7 +2,56 @@ define("HOS/OVNI-Core", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "
 smalltalk.addPackage('OVNI-Core');
 smalltalk.packages["OVNI-Core"].transport = {"type":"amd","amdNamespace":"HOS"};
 
-smalltalk.addClass('OVGame', globals.Game, ['player', 'phase', 'difficulty', 'ship', 'lifeItem', 'saucers', 'bullets', 'enemyBullets', 'scoreText', 'highScoreText', 'playTimeText', 'livesText', 'phaseNumberText', 'farBackground', 'starField', 'soundIsMute', 'musicIsMute', 'asteroids'], 'OVNI-Core');
+smalltalk.addClass('OVGame', globals.Game, ['player', 'canShoot', 'phase', 'difficulty', 'ship', 'lifeItem', 'saucers', 'bullets', 'enemyBullets', 'scoreText', 'highScoreText', 'playTimeText', 'livesText', 'phaseNumberText', 'farBackground', 'starField', 'soundIsMute', 'musicIsMute', 'asteroids', 'boss'], 'OVNI-Core');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addAsteroid",
+protocol: 'accessing - sprites',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._asteroids())._add_(self._newAsteroid());
+return self}, function($ctx1) {$ctx1.fill(self,"addAsteroid",{},globals.OVGame)})},
+args: [],
+source: "addAsteroid\x0a\x09self asteroids add: self newAsteroid",
+messageSends: ["add:", "asteroids", "newAsteroid"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addBoss",
+protocol: 'accessing - sprites',
+fn: function (){
+var self=this;
+function $OVBoss(){return globals.OVBoss||(typeof OVBoss=="undefined"?nil:OVBoss)}
+return smalltalk.withContext(function($ctx1) { 
+self._boss_(_st(_st($OVBoss())._new())._toughness_(self._difficulty()));
+return self}, function($ctx1) {$ctx1.fill(self,"addBoss",{},globals.OVGame)})},
+args: [],
+source: "addBoss\x0a\x09self boss: (OVBoss new toughness: self difficulty)",
+messageSends: ["boss:", "toughness:", "new", "difficulty"],
+referencedClasses: ["OVBoss"]
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addSaucer",
+protocol: 'accessing - sprites',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._saucers())._add_(self._newSaucer());
+return self}, function($ctx1) {$ctx1.fill(self,"addSaucer",{},globals.OVGame)})},
+args: [],
+source: "addSaucer\x0a\x09self saucers add: self newSaucer",
+messageSends: ["add:", "saucers", "newSaucer"],
+referencedClasses: []
+}),
+globals.OVGame);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "addScreens",
@@ -146,6 +195,83 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "boss",
+protocol: 'accessing - sprites',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@boss"];
+return $1;
+},
+args: [],
+source: "boss\x0a\x09^ boss",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "boss:",
+protocol: 'accessing - sprites',
+fn: function (aBoss){
+var self=this;
+self["@boss"]=aBoss;
+return self},
+args: ["aBoss"],
+source: "boss: aBoss\x0a\x09boss := aBoss",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "bossDied",
+protocol: 'game events',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=self._player();
+$ctx1.sendIdx["player"]=1;
+_st($1)._score_(_st(_st(self._player())._score()).__plus((10).__star(self._difficulty())));
+_st(self._soundNamed_("gamewon"))._play();
+self._switchToScreenNamed_("gameWon");
+return self}, function($ctx1) {$ctx1.fill(self,"bossDied",{},globals.OVGame)})},
+args: [],
+source: "bossDied\x0a\x09self player score: self player score + (10 * self difficulty).\x0a\x09(self soundNamed: 'gamewon') play.\x0a\x09self switchToScreenNamed: 'gameWon'",
+messageSends: ["score:", "player", "+", "score", "*", "difficulty", "play", "soundNamed:", "switchToScreenNamed:"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "bossWasHit",
+protocol: 'game events',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+_st(self._soundNamed_("bosshit"))._play();
+$1=self._phase();
+$ctx1.sendIdx["phase"]=1;
+_st($1)._bossWasHit();
+$2=_st(_st(self._phase())._hitsToGo()).__eq((0));
+if(smalltalk.assert($2)){
+_st(self._boss())._explode();
+};
+return self}, function($ctx1) {$ctx1.fill(self,"bossWasHit",{},globals.OVGame)})},
+args: [],
+source: "bossWasHit\x0a\x09(self soundNamed: 'bosshit') play.\x0a\x09self phase bossWasHit.\x0a\x09self phase hitsToGo = 0 ifTrue: [ self boss explode ]",
+messageSends: ["play", "soundNamed:", "bossWasHit", "phase", "ifTrue:", "=", "hitsToGo", "explode", "boss"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "bullets",
 protocol: 'accessing - sprites',
 fn: function (){
@@ -170,6 +296,45 @@ globals.OVGame);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "canShoot",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@canShoot"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@canShoot"]=true;
+$1=self["@canShoot"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"canShoot",{},globals.OVGame)})},
+args: [],
+source: "canShoot\x0a\x09^ canShoot ifNil: [ canShoot := true ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "canShoot:",
+protocol: 'accessing',
+fn: function (aBoolean){
+var self=this;
+self["@canShoot"]=aBoolean;
+return self},
+args: ["aBoolean"],
+source: "canShoot: aBoolean\x0a\x09canShoot := aBoolean",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "controlPhase",
 protocol: 'control',
 fn: function (){
@@ -181,17 +346,14 @@ $ctx1.sendIdx["phase"]=1;
 $1=_st($2)._shouldAdvance();
 if(smalltalk.assert($1)){
 $3=_st(self._phase())._isLast();
-if(smalltalk.assert($3)){
-_st(self._soundNamed_("gamewon"))._play();
-self._switchToScreenNamed_("gameWon");
-} else {
+if(! smalltalk.assert($3)){
 self._nextPhase();
 };
 };
 return self}, function($ctx1) {$ctx1.fill(self,"controlPhase",{},globals.OVGame)})},
 args: [],
-source: "controlPhase\x0a\x09self phase shouldAdvance \x0a\x09\x09ifTrue: [ \x0a\x09\x09\x09self phase isLast \x0a\x09\x09\x09\x09ifTrue: [ \x0a\x09\x09\x09\x09\x09(self soundNamed: 'gamewon') play.\x0a\x09\x09\x09\x09\x09self switchToScreenNamed: 'gameWon' ]\x0a\x09\x09\x09\x09ifFalse: [ self nextPhase ]]",
-messageSends: ["ifTrue:", "shouldAdvance", "phase", "ifTrue:ifFalse:", "isLast", "play", "soundNamed:", "switchToScreenNamed:", "nextPhase"],
+source: "controlPhase\x0a\x09self phase shouldAdvance \x0a\x09\x09ifTrue: [ \x0a\x09\x09\x09self phase isLast ifFalse: [ self nextPhase ]]",
+messageSends: ["ifTrue:", "shouldAdvance", "phase", "ifFalse:", "isLast", "nextPhase"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -269,7 +431,7 @@ protocol: 'drawing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $4,$3,$2,$1;
+var $4,$3,$2,$1,$5,$receiver;
 self._clearCanvas();
 $4=_st(_st([self._farBackground()]).__comma(self._saucers())).__comma(self._asteroids());
 $ctx1.sendIdx[","]=4;
@@ -280,10 +442,17 @@ $ctx1.sendIdx[","]=2;
 $1=_st($2).__comma([self._ship(),self._lifeItem(),self._starField(),self._livesText(),self._scoreText(),self._highScoreText(),self._playTimeText(),self._phaseNumberText()]);
 $ctx1.sendIdx[","]=1;
 self._drawAll_($1);
+$5=self._boss();
+$ctx1.sendIdx["boss"]=1;
+if(($receiver = $5) == null || $receiver.isNil){
+$5;
+} else {
+self._draw_(self._boss());
+};
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVGame)})},
 args: [],
-source: "draw\x0a\x09self\x0a\x09\x09clearCanvas.\x0a\x09\x0a\x09self \x0a\x09\x09drawAll:\x0a\x09\x09\x09{ self farBackground } , self saucers , self asteroids , self bullets , self enemyBullets\x0a\x09\x09\x09,  { self ship. self lifeItem. self starField. self livesText.\x0a\x09\x09\x09\x09self scoreText. self highScoreText. self playTimeText. self phaseNumberText }.",
-messageSends: ["clearCanvas", "drawAll:", ",", "farBackground", "saucers", "asteroids", "bullets", "enemyBullets", "ship", "lifeItem", "starField", "livesText", "scoreText", "highScoreText", "playTimeText", "phaseNumberText"],
+source: "draw\x0a\x09self\x0a\x09\x09clearCanvas.\x0a\x09\x0a\x09self \x0a\x09\x09drawAll:\x0a\x09\x09\x09{ self farBackground } , self saucers , self asteroids , self bullets , self enemyBullets\x0a\x09\x09\x09,  { self ship. self lifeItem. self starField. self livesText.\x0a\x09\x09\x09\x09self scoreText. self highScoreText. self playTimeText. self phaseNumberText }.\x0a\x09\x09\x09\x09\x0a\x09self boss ifNotNil: [ self draw: self boss ]",
+messageSends: ["clearCanvas", "drawAll:", ",", "farBackground", "saucers", "asteroids", "bullets", "enemyBullets", "ship", "lifeItem", "starField", "livesText", "scoreText", "highScoreText", "playTimeText", "phaseNumberText", "ifNotNil:", "boss", "draw:"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -551,10 +720,12 @@ self._loadSound_("sounds/ovni/life.ogg");
 $ctx1.sendIdx["loadSound:"]=8;
 self._loadSound_("sounds/ovni/nextphase.ogg");
 $ctx1.sendIdx["loadSound:"]=9;
+self._loadSound_("sounds/ovni/bosshit.ogg");
+$ctx1.sendIdx["loadSound:"]=10;
 $1=self._loadSound_("sounds/ovni/gamewon.ogg");
 return self}, function($ctx1) {$ctx1.fill(self,"loadSounds",{},globals.OVGame)})},
 args: [],
-source: "loadSounds\x0a\x0a\x09self\x0a\x09\x09loadSound: 'sounds/ovni/background.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/laser.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/select.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/menu.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/gameover.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/explosion-1.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/explosion-2.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/life.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/nextphase.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/gamewon.ogg'",
+source: "loadSounds\x0a\x0a\x09self\x0a\x09\x09loadSound: 'sounds/ovni/background.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/laser.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/select.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/menu.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/gameover.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/explosion-1.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/explosion-2.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/life.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/nextphase.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/bosshit.ogg';\x0a\x09\x09loadSound: 'sounds/ovni/gamewon.ogg'.",
 messageSends: ["loadSound:"],
 referencedClasses: []
 }),
@@ -635,18 +806,20 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+var $1;
 self._debug_("new game started");
 self._saucers_(nil);
 self._asteroids_(nil);
+self._boss_(nil);
 self._phase_(nil);
 self._farBackground_(nil);
 self._starField_(nil);
-self._resetSprites();
+$1=self._resetSprites();
 _st(self._player())._reset();
 return self}, function($ctx1) {$ctx1.fill(self,"newGame",{},globals.OVGame)})},
 args: [],
-source: "newGame\x0a\x09self debug: 'new game started'.\x0a\x09self saucers: nil.\x0a\x09self asteroids: nil.\x0a\x09self phase: nil.\x0a\x09self farBackground: nil.\x0a\x09self starField: nil.\x0a\x09self resetSprites.\x0a\x09self player reset.",
-messageSends: ["debug:", "saucers:", "asteroids:", "phase:", "farBackground:", "starField:", "resetSprites", "reset", "player"],
+source: "newGame\x0a\x09self\x0a\x09\x09debug: 'new game started';\x0a\x09\x09saucers: nil;\x0a\x09\x09asteroids: nil;\x0a\x09\x09boss: nil;\x0a\x09\x09phase: nil;\x0a\x09\x09farBackground: nil;\x0a\x09\x09starField: nil;\x0a\x09\x09resetSprites.\x0a\x09self player reset.",
+messageSends: ["debug:", "saucers:", "asteroids:", "boss:", "phase:", "farBackground:", "starField:", "resetSprites", "reset", "player"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -687,46 +860,31 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$1,$5,$7,$6,$4,$8,$9,$11,$10,$12;
-$2=self._saucers();
-$ctx1.sendIdx["saucers"]=1;
-$3=self._asteroids();
-$ctx1.sendIdx["asteroids"]=1;
-$1=_st($2).__comma($3);
-_st($1)._do_((function(each){
+var $2,$4,$3,$1,$5,$7,$6;
+_st(_st(self._saucers()).__comma(self._asteroids()))._do_((function(each){
 return smalltalk.withContext(function($ctx2) {
 _st(each)._explode();
-$5=self._difficulty();
-$7=self._phase();
+$2=self._difficulty();
+$4=self._phase();
 $ctx2.sendIdx["phase"]=1;
-$6=_st($7)._number();
-$4=_st($5).__star($6);
-return _st(each)._toughness_($4);
+$3=_st($4)._number();
+$1=_st($2).__star($3);
+return _st(each)._toughness_($1);
 }, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
-$8=self._soundNamed_("nextphase");
+$5=self._soundNamed_("nextphase");
 $ctx1.sendIdx["soundNamed:"]=1;
-_st($8)._play();
+_st($5)._play();
 $ctx1.sendIdx["play"]=1;
 _st(self._soundNamed_("explosion-1"))._play();
-self._phase_(_st(self._phase())._next());
-_st(self._asteroids())._add_(self._newAsteroid());
-$ctx1.sendIdx["add:"]=1;
-_st(self._saucers())._add_(self._newSaucer());
-$9=self._starField();
-$ctx1.sendIdx["starField"]=1;
-$11=_st(self._starField())._speed();
-$ctx1.sendIdx["speed"]=1;
-$10=_st($11).__plus((1));
-$ctx1.sendIdx["+"]=1;
-_st($9)._speed_($10);
-$ctx1.sendIdx["speed:"]=1;
-$12=self._farBackground();
-$ctx1.sendIdx["farBackground"]=1;
-_st($12)._speed_(_st(_st(self._farBackground())._speed()).__plus((0.75)));
+$7=self._phase();
+$ctx1.sendIdx["phase"]=2;
+$6=_st($7)._next();
+self._phase_($6);
+_st(self._phase())._startOnGame_(self);
 return self}, function($ctx1) {$ctx1.fill(self,"nextPhase",{},globals.OVGame)})},
 args: [],
-source: "nextPhase\x0a\x09self saucers , self asteroids do: [ :each |\x0a\x09\x09each explode.\x0a\x09\x09each toughness: self difficulty * self phase number ].\x0a\x09(self soundNamed: 'nextphase') play.\x0a\x09(self soundNamed: 'explosion-1') play.\x0a\x09self phase: self phase next.\x0a\x09self asteroids add: self newAsteroid.\x0a\x09self saucers add: self newSaucer.\x0a\x09self starField speed: self starField speed + 1.\x0a\x09self farBackground speed: self farBackground speed + 0.75.",
-messageSends: ["do:", ",", "saucers", "asteroids", "explode", "toughness:", "*", "difficulty", "number", "phase", "play", "soundNamed:", "phase:", "next", "add:", "newAsteroid", "newSaucer", "speed:", "starField", "+", "speed", "farBackground"],
+source: "nextPhase\x0a\x09self saucers , self asteroids do: [ :each |\x0a\x09\x09each explode.\x0a\x09\x09each toughness: self difficulty * self phase number ].\x0a\x09(self soundNamed: 'nextphase') play.\x0a\x09(self soundNamed: 'explosion-1') play.\x0a\x09self phase: self phase next.\x0a\x09self phase startOnGame: self.",
+messageSends: ["do:", ",", "saucers", "asteroids", "explode", "toughness:", "*", "difficulty", "number", "phase", "play", "soundNamed:", "phase:", "next", "startOnGame:"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -1215,21 +1373,29 @@ protocol: 'control',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $3,$2,$1;
-$3=_st(_st(self._bullets()).__comma(self._enemyBullets())).__comma(self._saucers());
+var $1,$4,$3,$2,$receiver;
+$1=self._boss();
+$ctx1.sendIdx["boss"]=1;
+if(($receiver = $1) == null || $receiver.isNil){
+$1;
+} else {
+_st(self._boss())._stepOnGame_(self);
+$ctx1.sendIdx["stepOnGame:"]=1;
+};
+$4=_st(_st(self._bullets()).__comma(self._enemyBullets())).__comma(self._saucers());
 $ctx1.sendIdx[","]=3;
-$2=_st($3).__comma(self._asteroids());
+$3=_st($4).__comma(self._asteroids());
 $ctx1.sendIdx[","]=2;
-$1=_st($2).__comma([self._ship(),self._lifeItem()]);
+$2=_st($3).__comma([self._ship(),self._lifeItem()]);
 $ctx1.sendIdx[","]=1;
-_st($1)._do_((function(eachSprite){
+_st($2)._do_((function(eachSprite){
 return smalltalk.withContext(function($ctx2) {
 return _st(eachSprite)._stepOnGame_(self);
-}, function($ctx2) {$ctx2.fillBlock({eachSprite:eachSprite},$ctx1,1)})}));
+}, function($ctx2) {$ctx2.fillBlock({eachSprite:eachSprite},$ctx1,2)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"stepSprites",{},globals.OVGame)})},
 args: [],
-source: "stepSprites\x0a\x09(self bullets, self enemyBullets, self saucers, self asteroids, { self ship. self lifeItem })\x0a\x09\x09do: [ :eachSprite | eachSprite stepOnGame: self ]",
-messageSends: ["do:", ",", "bullets", "enemyBullets", "saucers", "asteroids", "ship", "lifeItem", "stepOnGame:"],
+source: "stepSprites\x0a\x09self boss ifNotNil: [ self boss stepOnGame: self ].\x0a\x09(self bullets, self enemyBullets, self saucers, self asteroids, { self ship. self lifeItem })\x0a\x09\x09do: [ :eachSprite | eachSprite stepOnGame: self ]",
+messageSends: ["ifNotNil:", "boss", "stepOnGame:", "do:", ",", "bullets", "enemyBullets", "saucers", "asteroids", "ship", "lifeItem"],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -1404,7 +1570,7 @@ globals.OVPhase);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "saucerWasHit",
-protocol: 'control',
+protocol: 'game events',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -1496,6 +1662,35 @@ referencedClasses: []
 }),
 globals.OVPhase);
 
+smalltalk.addMethod(
+smalltalk.method({
+selector: "startOnGame:",
+protocol: 'control',
+fn: function (aGame){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$4,$3,$5;
+_st(aGame)._addAsteroid();
+$1=_st(aGame)._addSaucer();
+$2=_st(aGame)._starField();
+$ctx1.sendIdx["starField"]=1;
+$4=_st(_st(aGame)._starField())._speed();
+$ctx1.sendIdx["speed"]=1;
+$3=_st($4).__plus((1));
+$ctx1.sendIdx["+"]=1;
+_st($2)._speed_($3);
+$ctx1.sendIdx["speed:"]=1;
+$5=_st(aGame)._farBackground();
+$ctx1.sendIdx["farBackground"]=1;
+_st($5)._speed_(_st(_st(_st(aGame)._farBackground())._speed()).__plus((0.75)));
+return self}, function($ctx1) {$ctx1.fill(self,"startOnGame:",{aGame:aGame},globals.OVPhase)})},
+args: ["aGame"],
+source: "startOnGame: aGame\x0a\x09aGame\x0a\x09\x09addAsteroid;\x0a\x09\x09addSaucer.\x0a\x09aGame starField speed: aGame starField speed + 1.\x0a\x09aGame farBackground speed: aGame farBackground speed + 0.75.",
+messageSends: ["addAsteroid", "addSaucer", "speed:", "starField", "+", "speed", "farBackground"],
+referencedClasses: []
+}),
+globals.OVPhase);
+
 
 smalltalk.addMethod(
 smalltalk.method({
@@ -1519,21 +1714,142 @@ protocol: 'instance creation',
 fn: function (aNumber){
 var self=this;
 var instance;
+function $OVBossPhase(){return globals.OVBossPhase||(typeof OVBossPhase=="undefined"?nil:OVBossPhase)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3;
+var $2,$1,$3,$4,$5;
+$2=self._lastPhaseNumber();
+$ctx1.sendIdx["lastPhaseNumber"]=1;
+$1=_st(aNumber).__eq($2);
+if(smalltalk.assert($1)){
+instance=_st($OVBossPhase())._new();
+$ctx1.sendIdx["new"]=1;
+instance;
+} else {
 instance=self._new();
-$1=instance;
-_st($1)._number_(aNumber);
-$2=_st($1)._saucersToGo_(_st((20)._to_by_(_st(_st(self._lastPhaseNumber()).__star((5))).__plus((15)),(5)))._at_(aNumber));
+instance;
 $3=instance;
-return $3;
+_st($3)._number_(aNumber);
+$4=_st($3)._saucersToGo_(_st((20)._to_by_(_st(_st(self._lastPhaseNumber()).__star((5))).__plus((15)),(5)))._at_(aNumber));
+$4;
+};
+$5=instance;
+return $5;
 }, function($ctx1) {$ctx1.fill(self,"number:",{aNumber:aNumber,instance:instance},globals.OVPhase.klass)})},
 args: ["aNumber"],
-source: "number: aNumber\x0a\x09| instance |\x0a\x09instance := self new.\x0a\x09instance \x0a\x09\x09number: aNumber;\x0a\x09\x09saucersToGo: ((20 to: (self lastPhaseNumber * 5) + 15 by: 5) at: aNumber).\x0a\x09^ instance",
-messageSends: ["new", "number:", "saucersToGo:", "at:", "to:by:", "+", "*", "lastPhaseNumber"],
-referencedClasses: []
+source: "number: aNumber\x0a\x09| instance |\x0a\x09\x0a\x09aNumber = self lastPhaseNumber \x0a\x09\x09ifTrue: [ instance := OVBossPhase new ]\x0a\x09\x09ifFalse: [ \x0a\x09\x09\x09instance := self new.\x0a\x09\x09\x09instance \x0a\x09\x09\x09\x09number: aNumber;\x0a\x09\x09\x09\x09saucersToGo: ((20 to: (self lastPhaseNumber * 5) + 15 by: 5) at: aNumber) ].\x0a\x09\x09\x09\x09\x0a\x09^ instance",
+messageSends: ["ifTrue:ifFalse:", "=", "lastPhaseNumber", "new", "number:", "saucersToGo:", "at:", "to:by:", "+", "*"],
+referencedClasses: ["OVBossPhase"]
 }),
 globals.OVPhase.klass);
+
+
+smalltalk.addClass('OVBossPhase', globals.OVPhase, ['hitsToGo'], 'OVNI-Core');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "bossWasHit",
+protocol: 'game events',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$3;
+$2=self._hitsToGo();
+$ctx1.sendIdx["hitsToGo"]=1;
+$1=_st($2).__minus((1));
+self._hitsToGo_($1);
+$3=_st(self._hitsToGo()).__eq((0));
+if(smalltalk.assert($3)){
+self._shouldAdvance_(true);
+};
+return self}, function($ctx1) {$ctx1.fill(self,"bossWasHit",{},globals.OVBossPhase)})},
+args: [],
+source: "bossWasHit\x0a\x09self hitsToGo: self hitsToGo - 1.\x0a\x09self hitsToGo = 0 ifTrue: [ self shouldAdvance: true ]",
+messageSends: ["hitsToGo:", "-", "hitsToGo", "ifTrue:", "=", "shouldAdvance:"],
+referencedClasses: []
+}),
+globals.OVBossPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "hitsToGo",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@hitsToGo"];
+return $1;
+},
+args: [],
+source: "hitsToGo\x0a\x09^ hitsToGo",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVBossPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "hitsToGo:",
+protocol: 'accessing',
+fn: function (aNumber){
+var self=this;
+self["@hitsToGo"]=aNumber;
+return self},
+args: ["aNumber"],
+source: "hitsToGo: aNumber\x0a\x09hitsToGo := aNumber",
+messageSends: [],
+referencedClasses: []
+}),
+globals.OVBossPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "number",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._class())._lastPhaseNumber();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"number",{},globals.OVBossPhase)})},
+args: [],
+source: "number\x0a\x09^ self class lastPhaseNumber",
+messageSends: ["lastPhaseNumber", "class"],
+referencedClasses: []
+}),
+globals.OVBossPhase);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "startOnGame:",
+protocol: 'control',
+fn: function (aGame){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$4,$3,$5;
+self._hitsToGo_(_st(_st(aGame)._difficulty()).__star((5)));
+_st(aGame)._canShoot_(false);
+_st(aGame)._addAsteroid();
+$1=_st(aGame)._addBoss();
+_st(_st(aGame)._saucers())._removeAll();
+$2=_st(aGame)._starField();
+$ctx1.sendIdx["starField"]=1;
+$4=_st(_st(aGame)._starField())._speed();
+$ctx1.sendIdx["speed"]=1;
+$3=_st($4).__plus((1));
+$ctx1.sendIdx["+"]=1;
+_st($2)._speed_($3);
+$ctx1.sendIdx["speed:"]=1;
+$5=_st(aGame)._farBackground();
+$ctx1.sendIdx["farBackground"]=1;
+_st($5)._speed_(_st(_st(_st(aGame)._farBackground())._speed()).__plus((0.75)));
+return self}, function($ctx1) {$ctx1.fill(self,"startOnGame:",{aGame:aGame},globals.OVBossPhase)})},
+args: ["aGame"],
+source: "startOnGame: aGame\x0a\x09self hitsToGo: aGame difficulty * 5.\x0a\x09aGame\x0a\x09\x09canShoot: false;\x0a\x09\x09addAsteroid;\x0a\x09\x09addBoss.\x0a\x09aGame saucers removeAll.\x0a\x09aGame starField speed: aGame starField speed + 1.\x0a\x09aGame farBackground speed: aGame farBackground speed + 0.75.",
+messageSends: ["hitsToGo:", "*", "difficulty", "canShoot:", "addAsteroid", "addBoss", "removeAll", "saucers", "speed:", "starField", "+", "speed", "farBackground"],
+referencedClasses: []
+}),
+globals.OVBossPhase);
+
 
 
 smalltalk.addClass('OVPlayer', globals.Object, ['lives', 'score', 'highScore', 'gameStartTime'], 'OVNI-Core');
