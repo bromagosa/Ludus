@@ -83,12 +83,8 @@ OVEnemyBullet subclass: #OVBossBullet
 
 !OVBossBullet methodsFor: 'accessing'!
 
-targetPosition
-	^ targetPosition
-!
-
-targetPosition: anObject
-	targetPosition := anObject
+acceleration
+	^ acceleration ifNil: [ acceleration := 1 ]
 ! !
 
 !OVBossBullet methodsFor: 'initialization'!
@@ -96,8 +92,8 @@ targetPosition: anObject
 initialize
 	super initialize.
 	self 
-		color: 'rgba(0,30,200,0.8)';
-		outlineColor: 'rgba(0,30,230,1)';
+		color: 'rgba(200,200,0,0.8)';
+		outlineColor: 'rgba(200,200,0,1)';
 		outlineWidth: 1;
 		radius: 3
 ! !
@@ -106,7 +102,7 @@ initialize
 
 move
 	self 
-		moveCentreTowards: self targetPosition speed: self speed;
+		moveCentreBy: self direction speed: self speed;
 		accelerate
 ! !
 
@@ -261,7 +257,7 @@ isHit: aBoolean
 !
 
 newBullet
-	^ OVBossBullet new centre: (self centre - ((self width / 2) @ 0))
+	^ OVBossBullet new centre: (self centre - (40@26))
 ! !
 
 !OVBoss methodsFor: 'actions'!
@@ -272,8 +268,11 @@ die
 
 shootOnGame: aGame
 	aGame 
-		everyStepNumber: (10 / self toughness) rounded
-		do: [ aGame enemyShot: (self newBullet targetPosition: aGame ship centre) ]
+		everyStepNumber: (35 / self toughness) rounded
+		do: [
+			| bullet |
+			bullet := self newBullet.
+			aGame enemyShot: (bullet direction: aGame ship centre - bullet centre) ]
 ! !
 
 !OVBoss methodsFor: 'collisions'!

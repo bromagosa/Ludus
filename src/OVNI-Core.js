@@ -431,9 +431,9 @@ protocol: 'drawing',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $4,$3,$2,$1,$5,$receiver;
+var $4,$3,$2,$1;
 self._clearCanvas();
-$4=_st(_st([self._farBackground()]).__comma(self._saucers())).__comma(self._asteroids());
+$4=_st(_st([self._farBackground(),self._boss()]).__comma(self._saucers())).__comma(self._asteroids());
 $ctx1.sendIdx[","]=4;
 $3=_st($4).__comma(self._bullets());
 $ctx1.sendIdx[","]=3;
@@ -442,17 +442,32 @@ $ctx1.sendIdx[","]=2;
 $1=_st($2).__comma([self._ship(),self._lifeItem(),self._starField(),self._livesText(),self._scoreText(),self._highScoreText(),self._playTimeText(),self._phaseNumberText()]);
 $ctx1.sendIdx[","]=1;
 self._drawAll_($1);
-$5=self._boss();
-$ctx1.sendIdx["boss"]=1;
-if(($receiver = $5) == null || $receiver.isNil){
-$5;
-} else {
-self._draw_(self._boss());
-};
 return self}, function($ctx1) {$ctx1.fill(self,"draw",{},globals.OVGame)})},
 args: [],
-source: "draw\x0a\x09self\x0a\x09\x09clearCanvas.\x0a\x09\x0a\x09self \x0a\x09\x09drawAll:\x0a\x09\x09\x09{ self farBackground } , self saucers , self asteroids , self bullets , self enemyBullets\x0a\x09\x09\x09,  { self ship. self lifeItem. self starField. self livesText.\x0a\x09\x09\x09\x09self scoreText. self highScoreText. self playTimeText. self phaseNumberText }.\x0a\x09\x09\x09\x09\x0a\x09self boss ifNotNil: [ self draw: self boss ]",
-messageSends: ["clearCanvas", "drawAll:", ",", "farBackground", "saucers", "asteroids", "bullets", "enemyBullets", "ship", "lifeItem", "starField", "livesText", "scoreText", "highScoreText", "playTimeText", "phaseNumberText", "ifNotNil:", "boss", "draw:"],
+source: "draw\x0a\x09self\x0a\x09\x09clearCanvas.\x0a\x09\x0a\x09self \x0a\x09\x09drawAll:\x0a\x09\x09\x09{ self farBackground. self boss } , self saucers , self asteroids , self bullets\x0a\x09\x09\x09, self enemyBullets , { self ship. self lifeItem. self starField. self livesText.\x0a\x09\x09\x09self scoreText. self highScoreText. self playTimeText. self phaseNumberText }.",
+messageSends: ["clearCanvas", "drawAll:", ",", "farBackground", "boss", "saucers", "asteroids", "bullets", "enemyBullets", "ship", "lifeItem", "starField", "livesText", "scoreText", "highScoreText", "playTimeText", "phaseNumberText"],
+referencedClasses: []
+}),
+globals.OVGame);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "draw:",
+protocol: 'drawing',
+fn: function (somethingDrawable){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $receiver;
+if(($receiver = somethingDrawable) == null || $receiver.isNil){
+somethingDrawable;
+} else {
+($ctx1.supercall = true, globals.OVGame.superclass.fn.prototype._draw_.apply(_st(self), [somethingDrawable]));
+$ctx1.supercall = false;
+};
+return self}, function($ctx1) {$ctx1.fill(self,"draw:",{somethingDrawable:somethingDrawable},globals.OVGame)})},
+args: ["somethingDrawable"],
+source: "draw: somethingDrawable\x0a\x09\x22Overriden to accept nil sprites too\x22\x0a\x09somethingDrawable ifNotNil: [ super draw: somethingDrawable ]",
+messageSends: ["ifNotNil:", "draw:"],
 referencedClasses: []
 }),
 globals.OVGame);

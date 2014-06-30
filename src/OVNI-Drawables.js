@@ -227,6 +227,30 @@ globals.OVEnemyBullet);
 smalltalk.addClass('OVBossBullet', globals.OVEnemyBullet, ['targetPosition'], 'OVNI-Drawables');
 smalltalk.addMethod(
 smalltalk.method({
+selector: "acceleration",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@acceleration"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@acceleration"]=(1);
+$1=self["@acceleration"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"acceleration",{},globals.OVBossBullet)})},
+args: [],
+source: "acceleration\x0a\x09^ acceleration ifNil: [ acceleration := 1 ]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.OVBossBullet);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "initialize",
 protocol: 'initialization',
 fn: function (){
@@ -235,13 +259,13 @@ return smalltalk.withContext(function($ctx1) {
 var $1;
 ($ctx1.supercall = true, globals.OVBossBullet.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self._color_("rgba(0,30,200,0.8)");
-self._outlineColor_("rgba(0,30,230,1)");
+self._color_("rgba(200,200,0,0.8)");
+self._outlineColor_("rgba(200,200,0,1)");
 self._outlineWidth_((1));
 $1=self._radius_((3));
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.OVBossBullet)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09color: 'rgba(0,30,200,0.8)';\x0a\x09\x09outlineColor: 'rgba(0,30,230,1)';\x0a\x09\x09outlineWidth: 1;\x0a\x09\x09radius: 3",
+source: "initialize\x0a\x09super initialize.\x0a\x09self \x0a\x09\x09color: 'rgba(200,200,0,0.8)';\x0a\x09\x09outlineColor: 'rgba(200,200,0,1)';\x0a\x09\x09outlineWidth: 1;\x0a\x09\x09radius: 3",
 messageSends: ["initialize", "color:", "outlineColor:", "outlineWidth:", "radius:"],
 referencedClasses: []
 }),
@@ -255,44 +279,12 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-self._moveCentreTowards_speed_(self._targetPosition(),self._speed());
+self._moveCentreBy_speed_(self._direction(),self._speed());
 $1=self._accelerate();
 return self}, function($ctx1) {$ctx1.fill(self,"move",{},globals.OVBossBullet)})},
 args: [],
-source: "move\x0a\x09self \x0a\x09\x09moveCentreTowards: self targetPosition speed: self speed;\x0a\x09\x09accelerate",
-messageSends: ["moveCentreTowards:speed:", "targetPosition", "speed", "accelerate"],
-referencedClasses: []
-}),
-globals.OVBossBullet);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "targetPosition",
-protocol: 'accessing',
-fn: function (){
-var self=this;
-var $1;
-$1=self["@targetPosition"];
-return $1;
-},
-args: [],
-source: "targetPosition\x0a\x09^ targetPosition",
-messageSends: [],
-referencedClasses: []
-}),
-globals.OVBossBullet);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "targetPosition:",
-protocol: 'accessing',
-fn: function (anObject){
-var self=this;
-self["@targetPosition"]=anObject;
-return self},
-args: ["anObject"],
-source: "targetPosition: anObject\x0a\x09targetPosition := anObject",
-messageSends: [],
+source: "move\x0a\x09self \x0a\x09\x09moveCentreBy: self direction speed: self speed;\x0a\x09\x09accelerate",
+messageSends: ["moveCentreBy:speed:", "direction", "speed", "accelerate"],
 referencedClasses: []
 }),
 globals.OVBossBullet);
@@ -819,12 +811,12 @@ var self=this;
 function $OVBossBullet(){return globals.OVBossBullet||(typeof OVBossBullet=="undefined"?nil:OVBossBullet)}
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(_st($OVBossBullet())._new())._centre_(_st(self._centre()).__minus(_st(_st(self._width()).__slash((2))).__at((0))));
+$1=_st(_st($OVBossBullet())._new())._centre_(_st(self._centre()).__minus((40).__at((26))));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"newBullet",{},globals.OVBoss)})},
 args: [],
-source: "newBullet\x0a\x09^ OVBossBullet new centre: (self centre - ((self width / 2) @ 0))",
-messageSends: ["centre:", "new", "-", "centre", "@", "/", "width"],
+source: "newBullet\x0a\x09^ OVBossBullet new centre: (self centre - (40@26))",
+messageSends: ["centre:", "new", "-", "centre", "@"],
 referencedClasses: ["OVBossBullet"]
 }),
 globals.OVBoss);
@@ -836,14 +828,23 @@ protocol: 'actions',
 fn: function (aGame){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(aGame)._everyStepNumber_do_(_st((10).__slash(self._toughness()))._rounded(),(function(){
+var $2,$4,$3,$1;
+_st(aGame)._everyStepNumber_do_(_st((35).__slash(self._toughness()))._rounded(),(function(){
+var bullet;
 return smalltalk.withContext(function($ctx2) {
-return _st(aGame)._enemyShot_(_st(self._newBullet())._targetPosition_(_st(_st(aGame)._ship())._centre()));
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+bullet=self._newBullet();
+bullet;
+$2=bullet;
+$4=_st(_st(aGame)._ship())._centre();
+$ctx2.sendIdx["centre"]=1;
+$3=_st($4).__minus(_st(bullet)._centre());
+$1=_st($2)._direction_($3);
+return _st(aGame)._enemyShot_($1);
+}, function($ctx2) {$ctx2.fillBlock({bullet:bullet},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"shootOnGame:",{aGame:aGame},globals.OVBoss)})},
 args: ["aGame"],
-source: "shootOnGame: aGame\x0a\x09aGame \x0a\x09\x09everyStepNumber: (10 / self toughness) rounded\x0a\x09\x09do: [ aGame enemyShot: (self newBullet targetPosition: aGame ship centre) ]",
-messageSends: ["everyStepNumber:do:", "rounded", "/", "toughness", "enemyShot:", "targetPosition:", "newBullet", "centre", "ship"],
+source: "shootOnGame: aGame\x0a\x09aGame \x0a\x09\x09everyStepNumber: (35 / self toughness) rounded\x0a\x09\x09do: [\x0a\x09\x09\x09| bullet |\x0a\x09\x09\x09bullet := self newBullet.\x0a\x09\x09\x09aGame enemyShot: (bullet direction: aGame ship centre - bullet centre) ]",
+messageSends: ["everyStepNumber:do:", "rounded", "/", "toughness", "newBullet", "enemyShot:", "direction:", "-", "centre", "ship"],
 referencedClasses: []
 }),
 globals.OVBoss);

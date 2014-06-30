@@ -303,11 +303,14 @@ draw
 	
 	self 
 		drawAll:
-			{ self farBackground } , self saucers , self asteroids , self bullets , self enemyBullets
-			,  { self ship. self lifeItem. self starField. self livesText.
-				self scoreText. self highScoreText. self playTimeText. self phaseNumberText }.
-				
-	self boss ifNotNil: [ self draw: self boss ]
+			{ self farBackground. self boss } , self saucers , self asteroids , self bullets
+			, self enemyBullets , { self ship. self lifeItem. self starField. self livesText.
+			self scoreText. self highScoreText. self playTimeText. self phaseNumberText }.
+!
+
+draw: somethingDrawable
+	"Overriden to accept nil sprites too"
+	somethingDrawable ifNotNil: [ super draw: somethingDrawable ]
 ! !
 
 !OVGame methodsFor: 'game events'!
