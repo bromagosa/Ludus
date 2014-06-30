@@ -39,9 +39,7 @@ start
 
 stepOnGame: aGame
 	self context moveCentreBy: -2 @ (3 atRandom - 2).
-	self context x < 550 ifTrue: [
-		aGame canShoot: true.
-		self switchToState: OVBossCircularMovementState ]
+	self context x < 550 ifTrue: [ self switchToState: OVBossCircularMovementState ]
 ! !
 
 FSMState subclass: #OVBossCircularMovementState
@@ -98,7 +96,7 @@ FSMState subclass: #OVBossRandomWarpState
 
 stepOnGame: aGame
 	aGame everyStepNumber: 100 do: [ self warpOnGame: aGame ].
-	aGame everyStepNumber: 1000 do: [ self switchToState: OVBossRectangularMovementState ].
+	aGame everyStepNumber: 800 do: [ self switchToState: OVBossRectangularMovementState ].
 !
 
 warpOnGame: aGame
@@ -129,7 +127,7 @@ startPosition
 
 stepOnGame: aGame
 	self move.
-	aGame everyStepNumber: 2000 do: [ self switchToState: OVBossCircularMovementState ].
+	aGame everyStepNumber: 1000 do: [ self switchToState: OVBossCircularMovementState ].
 ! !
 
 !OVBossRectangularMovementState methodsFor: 'movement'!

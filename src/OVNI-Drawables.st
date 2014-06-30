@@ -445,7 +445,7 @@ explode
 !
 
 shootOnGame: aGame
-	aGame canShoot ifTrue: [ aGame playerShot: self newBullet ]
+	aGame playerShot: self newBullet
 ! !
 
 !OVSpaceShip methodsFor: 'control'!

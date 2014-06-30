@@ -144,13 +144,12 @@ $ctx1.sendIdx["context"]=1;
 _st($1)._moveCentreBy_((-2).__at(_st((3)._atRandom()).__minus((2))));
 $2=_st(_st(self._context())._x()).__lt((550));
 if(smalltalk.assert($2)){
-_st(aGame)._canShoot_(true);
 self._switchToState_($OVBossCircularMovementState());
 };
 return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVBossArrivingState)})},
 args: ["aGame"],
-source: "stepOnGame: aGame\x0a\x09self context moveCentreBy: -2 @ (3 atRandom - 2).\x0a\x09self context x < 550 ifTrue: [\x0a\x09\x09aGame canShoot: true.\x0a\x09\x09self switchToState: OVBossCircularMovementState ]",
-messageSends: ["moveCentreBy:", "context", "@", "-", "atRandom", "ifTrue:", "<", "x", "canShoot:", "switchToState:"],
+source: "stepOnGame: aGame\x0a\x09self context moveCentreBy: -2 @ (3 atRandom - 2).\x0a\x09self context x < 550 ifTrue: [ self switchToState: OVBossCircularMovementState ]",
+messageSends: ["moveCentreBy:", "context", "@", "-", "atRandom", "ifTrue:", "<", "x", "switchToState:"],
 referencedClasses: ["OVBossCircularMovementState"]
 }),
 globals.OVBossArrivingState);
@@ -326,13 +325,13 @@ return smalltalk.withContext(function($ctx2) {
 return self._warpOnGame_(aGame);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["everyStepNumber:do:"]=1;
-_st(aGame)._everyStepNumber_do_((1000),(function(){
+_st(aGame)._everyStepNumber_do_((800),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._switchToState_($OVBossRectangularMovementState());
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVBossRandomWarpState)})},
 args: ["aGame"],
-source: "stepOnGame: aGame\x0a\x09aGame everyStepNumber: 100 do: [ self warpOnGame: aGame ].\x0a\x09aGame everyStepNumber: 1000 do: [ self switchToState: OVBossRectangularMovementState ].",
+source: "stepOnGame: aGame\x0a\x09aGame everyStepNumber: 100 do: [ self warpOnGame: aGame ].\x0a\x09aGame everyStepNumber: 800 do: [ self switchToState: OVBossRectangularMovementState ].",
 messageSends: ["everyStepNumber:do:", "warpOnGame:", "switchToState:"],
 referencedClasses: ["OVBossRectangularMovementState"]
 }),
@@ -535,13 +534,13 @@ var self=this;
 function $OVBossCircularMovementState(){return globals.OVBossCircularMovementState||(typeof OVBossCircularMovementState=="undefined"?nil:OVBossCircularMovementState)}
 return smalltalk.withContext(function($ctx1) { 
 self._move();
-_st(aGame)._everyStepNumber_do_((2000),(function(){
+_st(aGame)._everyStepNumber_do_((1000),(function(){
 return smalltalk.withContext(function($ctx2) {
 return self._switchToState_($OVBossCircularMovementState());
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"stepOnGame:",{aGame:aGame},globals.OVBossRectangularMovementState)})},
 args: ["aGame"],
-source: "stepOnGame: aGame\x0a\x09self move.\x0a\x09aGame everyStepNumber: 2000 do: [ self switchToState: OVBossCircularMovementState ].",
+source: "stepOnGame: aGame\x0a\x09self move.\x0a\x09aGame everyStepNumber: 1000 do: [ self switchToState: OVBossCircularMovementState ].",
 messageSends: ["move", "everyStepNumber:do:", "switchToState:"],
 referencedClasses: ["OVBossCircularMovementState"]
 }),

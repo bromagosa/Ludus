@@ -2,7 +2,7 @@ define("HOS/OVNI-Core", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "
 smalltalk.addPackage('OVNI-Core');
 smalltalk.packages["OVNI-Core"].transport = {"type":"amd","amdNamespace":"HOS"};
 
-smalltalk.addClass('OVGame', globals.Game, ['player', 'canShoot', 'phase', 'difficulty', 'ship', 'lifeItem', 'saucers', 'bullets', 'enemyBullets', 'scoreText', 'highScoreText', 'playTimeText', 'livesText', 'phaseNumberText', 'farBackground', 'starField', 'soundIsMute', 'musicIsMute', 'asteroids', 'boss'], 'OVNI-Core');
+smalltalk.addClass('OVGame', globals.Game, ['player', 'phase', 'difficulty', 'ship', 'lifeItem', 'saucers', 'bullets', 'enemyBullets', 'scoreText', 'highScoreText', 'playTimeText', 'livesText', 'phaseNumberText', 'farBackground', 'starField', 'soundIsMute', 'musicIsMute', 'asteroids', 'boss'], 'OVNI-Core');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "addAsteroid",
@@ -290,45 +290,6 @@ return $1;
 args: [],
 source: "bullets\x0a\x09^ bullets ifNil: [ bullets := #() ]",
 messageSends: ["ifNil:"],
-referencedClasses: []
-}),
-globals.OVGame);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "canShoot",
-protocol: 'accessing',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$receiver;
-$2=self["@canShoot"];
-if(($receiver = $2) == null || $receiver.isNil){
-self["@canShoot"]=true;
-$1=self["@canShoot"];
-} else {
-$1=$2;
-};
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"canShoot",{},globals.OVGame)})},
-args: [],
-source: "canShoot\x0a\x09^ canShoot ifNil: [ canShoot := true ]",
-messageSends: ["ifNil:"],
-referencedClasses: []
-}),
-globals.OVGame);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "canShoot:",
-protocol: 'accessing',
-fn: function (aBoolean){
-var self=this;
-self["@canShoot"]=aBoolean;
-return self},
-args: ["aBoolean"],
-source: "canShoot: aBoolean\x0a\x09canShoot := aBoolean",
-messageSends: [],
 referencedClasses: []
 }),
 globals.OVGame);
@@ -1842,7 +1803,6 @@ var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$4,$3,$5;
 self._hitsToGo_(_st(_st(aGame)._difficulty()).__star((5)));
-_st(aGame)._canShoot_(false);
 _st(aGame)._addAsteroid();
 $1=_st(aGame)._addBoss();
 _st(_st(aGame)._saucers())._removeAll();
@@ -1859,8 +1819,8 @@ $ctx1.sendIdx["farBackground"]=1;
 _st($5)._speed_(_st(_st(_st(aGame)._farBackground())._speed()).__plus((0.75)));
 return self}, function($ctx1) {$ctx1.fill(self,"startOnGame:",{aGame:aGame},globals.OVBossPhase)})},
 args: ["aGame"],
-source: "startOnGame: aGame\x0a\x09self hitsToGo: aGame difficulty * 5.\x0a\x09aGame\x0a\x09\x09canShoot: false;\x0a\x09\x09addAsteroid;\x0a\x09\x09addBoss.\x0a\x09aGame saucers removeAll.\x0a\x09aGame starField speed: aGame starField speed + 1.\x0a\x09aGame farBackground speed: aGame farBackground speed + 0.75.",
-messageSends: ["hitsToGo:", "*", "difficulty", "canShoot:", "addAsteroid", "addBoss", "removeAll", "saucers", "speed:", "starField", "+", "speed", "farBackground"],
+source: "startOnGame: aGame\x0a\x09self hitsToGo: aGame difficulty * 5.\x0a\x09aGame\x0a\x09\x09addAsteroid;\x0a\x09\x09addBoss.\x0a\x09aGame saucers removeAll.\x0a\x09aGame starField speed: aGame starField speed + 1.\x0a\x09aGame farBackground speed: aGame farBackground speed + 0.75.",
+messageSends: ["hitsToGo:", "*", "difficulty", "addAsteroid", "addBoss", "removeAll", "saucers", "speed:", "starField", "+", "speed", "farBackground"],
 referencedClasses: []
 }),
 globals.OVBossPhase);

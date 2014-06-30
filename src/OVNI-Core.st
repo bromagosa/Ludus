@@ -1,17 +1,9 @@
 Smalltalk createPackage: 'OVNI-Core'!
 Game subclass: #OVGame
-	instanceVariableNames: 'player canShoot phase difficulty ship lifeItem saucers bullets enemyBullets scoreText highScoreText playTimeText livesText phaseNumberText farBackground starField soundIsMute musicIsMute asteroids boss'
+	instanceVariableNames: 'player phase difficulty ship lifeItem saucers bullets enemyBullets scoreText highScoreText playTimeText livesText phaseNumberText farBackground starField soundIsMute musicIsMute asteroids boss'
 	package: 'OVNI-Core'!
 
 !OVGame methodsFor: 'accessing'!
-
-canShoot
-	^ canShoot ifNil: [ canShoot := true ]
-!
-
-canShoot: aBoolean
-	canShoot := aBoolean
-!
 
 difficulty
 	^ difficulty ifNil: [ difficulty := 2 ]
@@ -529,7 +521,6 @@ number
 startOnGame: aGame
 	self hitsToGo: aGame difficulty * 5.
 	aGame
-		canShoot: false;
 		addAsteroid;
 		addBoss.
 	aGame saucers removeAll.

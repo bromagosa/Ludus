@@ -1,67 +1,43 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Ludus - An HTML5 game framework for Amber Smalltalk</title>
-	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
-	<link rel="stylesheet" type="text/css" href="./ludusdoc/style.css">
-	<meta name="author" content="Bernat Romagosa" />
-	<script type='text/javascript' src='bower_components/amber/support/requirejs/require.min.js'></script>
-	<script type='text/javascript' src='bower_components/amber/support/amber.js'></script>
-    </head>
-    <body> 
-        <script type='text/javascript'>
-	    require.config({ paths: {
-                'HOS': 'src' //mapping compiled .js files and smalltalk source files
-	    }});
-            require([
-                'amber/devel',
-                'HOS/AmberApplication',
-                'HOS/Ludus',
-                'HOS/Ludus-Examples',
-                'HOS/Ludus-Documentation',
-                'HOS/OVNI-Core',
-                'HOS/OVNI-Drawables',
-                'HOS/OVNI-Screens',
-                'HOS/OVNI-AI',
-                'HOS/AFI'
-            ], function (smalltalk) {
-                //used for all new packages in IDE
-                smalltalk.initialize({
-                    'transport.defaultAmdNamespace': "HOS"
-                });
-                require('amber/helpers').globals.LudusDoc._new()._appendToJQuery_($('#docs'));
-            });
-        </script>
 
-        <a id="github" href="https://github.com/bromagosa/Ludus" target="_blank"><img src="./ludusdoc/github.png"/></a>
-	<div id="wrapper">
-	    <div id="header">
-		<div id="logo">
-      	            <img src="ludusdoc/logo.png"/>
-		    <img src="ludusdoc/title.png"/>
-		</div>
-		<h2>Welcome to Ludus, the HTML5 game framework for Amber Smalltalk!</h2>
-		<h3>You may want to take a look at the documentation:</h3>
-		<div id="docs"></div>
-		<h3>Or try these examples:</h3>
-		<div id="examples">
-		    <script type="text/javascript">
-		    	function stopGames() {
-			    $('canvas').remove();
-			    $('audio').remove();
-			    require('amber/helpers').globals.Game._stop();
-		    	}
-		    </script>
-		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.OVGame._start()">OVNI</button>
-		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.Sokoban._start()">Sokoban</button>
-		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.SmallCave._start()">SmallCave</button>
-		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.Pong._start()">Pong</button>
-		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.MemoryGame._start()">Memory</button>
-<!--		    <button class="shadowed" onclick="stopGames(); require('amber/helpers').globals.SimplePacman._start()">Simple Pacman</button>-->
-		</div>
-            </div>
-	    <button style="position: fixed; left: 0px; top: 0px;" onclick="require('amber/helpers').globals.Browser._open()">Open IDE</button>
-        </div>
-    </body>
+  <head>
+    <title>OVNI</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Bernat Romagosa" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+    <script type='text/javascript' src='bower_components/amber/support/requirejs/require.min.js'></script>
+    <script type='text/javascript' src='bower_components/amber/support/amber.js'></script>
+  </head>
+
+  <body>
+    <script type='text/javascript'>
+      require.config({ paths: {
+          'HOS': 'src' //mapping compiled .js files and smalltalk source files
+      }});
+      require([
+          'HOS/AmberApplication',
+          'HOS/Ludus',
+          'HOS/Ludus-Examples',
+          'HOS/OVNI-Core',
+          'HOS/OVNI-Screens',
+          'HOS/OVNI-Drawables',
+          'HOS/OVNI-AI',
+          'HOS/AFI'
+      ], function (smalltalk) {
+          //used for all new packages in IDE
+          smalltalk.initialize({
+            'transport.defaultAmdNamespace': "HOS"
+          });
+	  smalltalk.globals.OVGame._start();
+      });
+    </script>
+    <div id="app">
+	<div id="main">
+	</div>
+	<div id="log">
+	</div>
+    </div>
+  </body>
+
 </html>

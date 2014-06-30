@@ -1369,15 +1369,11 @@ protocol: 'behaviour',
 fn: function (aGame){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(aGame)._canShoot();
-if(smalltalk.assert($1)){
 _st(aGame)._playerShot_(self._newBullet());
-};
 return self}, function($ctx1) {$ctx1.fill(self,"shootOnGame:",{aGame:aGame},globals.OVSpaceShip)})},
 args: ["aGame"],
-source: "shootOnGame: aGame\x0a\x09aGame canShoot ifTrue: [ aGame playerShot: self newBullet ]",
-messageSends: ["ifTrue:", "canShoot", "playerShot:", "newBullet"],
+source: "shootOnGame: aGame\x0a\x09aGame playerShot: self newBullet",
+messageSends: ["playerShot:", "newBullet"],
 referencedClasses: []
 }),
 globals.OVSpaceShip);
