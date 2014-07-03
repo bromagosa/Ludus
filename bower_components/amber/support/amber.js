@@ -77,15 +77,16 @@ require = function (require) {
     var config = {
         paths: {
             'amber': amber_home + '/support',
-            'amber_vm': amber_home + '/support',
-            'amber_css': amber_home + '/css',
+            'amber_vm': amber_home + '/support/deprecated-vm-files',
+            'amber_vm/_st': amber_home + '/support/deprecated-vm-files/as-receiver',
+            'amber_css': amber_home + '/support/resources', // deprecated
             'amber_lib': library_home,
             'amber_core': amber_home + '/src',
-            'helios': amber_home + '/src',
-            'helios/all': amber_home + '/support/helios/all',
-            'helios/resources': amber_home + '/support/helios',
+            'helios': amber_home + '/support/helios/src',
+            'helios/set': amber_home + '/support/helios/set',
+            'helios/resources': amber_home + '/support/helios/resources',
             'helios/index': amber_home + '/support/helios/index',
-            'jquery': library_home + '/jquery/jquery.min'
+            'jquery': [ library_home + '/jquery/dist/jquery.min', library_home + '/jquery/jquery.min' ]
         },
         map: {
             '*': {
@@ -111,16 +112,3 @@ require = function (require) {
         return config;
     }
 }(require);
-
-
-
-
-
-
-define("amber_vm/_st", ["./globals", "./nil"], function (globals, nil) {
-    return function (o) {
-        if (o == null) { return nil; }
-        if (o.klass) { return o; }
-        return globals.JSObjectProxy._on_(o);
-    };
-});

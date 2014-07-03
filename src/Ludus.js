@@ -1,4 +1,5 @@
-define("HOS/Ludus", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core/Web"], function(smalltalk,nil,_st, globals){
+define("HOS/Ludus", ["amber/boot", "amber_core/Kernel-Objects", "amber_core/Web"], function($boot){
+var smalltalk=$boot.vm,nil=$boot.nil,_st=$boot.asReceiver,globals=$boot.globals;
 smalltalk.addPackage('Ludus');
 smalltalk.packages["Ludus"].transport = {"type":"amd","amdNamespace":"HOS"};
 
@@ -740,14 +741,16 @@ smalltalk.addMethod(
 smalltalk.method({
 selector: "currentFrameGroup:",
 protocol: 'frames',
-fn: function (anIdentifier){
+fn: function (anIdentifierOrFrameGroup){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self["@currentFrameGroup"]=self._frameGroupNamed_(anIdentifier);
-return self}, function($ctx1) {$ctx1.fill(self,"currentFrameGroup:",{anIdentifier:anIdentifier},globals.Animation)})},
-args: ["anIdentifier"],
-source: "currentFrameGroup: anIdentifier\x0a\x09currentFrameGroup := self frameGroupNamed: anIdentifier.",
-messageSends: ["frameGroupNamed:"],
+self["@currentFrameGroup"]=self._frameGroupNamed_ifNone_(anIdentifierOrFrameGroup,(function(){
+return anIdentifierOrFrameGroup;
+}));
+return self}, function($ctx1) {$ctx1.fill(self,"currentFrameGroup:",{anIdentifierOrFrameGroup:anIdentifierOrFrameGroup},globals.Animation)})},
+args: ["anIdentifierOrFrameGroup"],
+source: "currentFrameGroup: anIdentifierOrFrameGroup\x0a\x09currentFrameGroup := self frameGroupNamed: anIdentifierOrFrameGroup ifNone: [ anIdentifierOrFrameGroup ].",
+messageSends: ["frameGroupNamed:ifNone:"],
 referencedClasses: []
 }),
 globals.Animation);
@@ -777,16 +780,42 @@ protocol: 'frames',
 fn: function (anIdentifier){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self._frameGroups())._detect_((function(each){
+var $2,$1;
+$2=self._frameGroups();
+$ctx1.sendIdx["frameGroups"]=1;
+$1=_st($2)._detect_ifNone_((function(each){
 return smalltalk.withContext(function($ctx2) {
 return _st(_st(each)._identifier()).__eq(anIdentifier);
-}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}));
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}),(function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(self._frameGroups())._first();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"frameGroupNamed:",{anIdentifier:anIdentifier},globals.Animation)})},
 args: ["anIdentifier"],
-source: "frameGroupNamed: anIdentifier\x0a\x09^ self frameGroups detect: [ :each | each identifier = anIdentifier ].",
-messageSends: ["detect:", "frameGroups", "=", "identifier"],
+source: "frameGroupNamed: anIdentifier\x0a\x09^ self frameGroups detect: [ :each | each identifier = anIdentifier ] ifNone: [ self frameGroups first ].",
+messageSends: ["detect:ifNone:", "frameGroups", "=", "identifier", "first"],
+referencedClasses: []
+}),
+globals.Animation);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "frameGroupNamed:ifNone:",
+protocol: 'frames',
+fn: function (anIdentifier,aBlock){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._frameGroups())._detect_ifNone_((function(each){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st(each)._identifier()).__eq(anIdentifier);
+}, function($ctx2) {$ctx2.fillBlock({each:each},$ctx1,1)})}),aBlock);
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"frameGroupNamed:ifNone:",{anIdentifier:anIdentifier,aBlock:aBlock},globals.Animation)})},
+args: ["anIdentifier", "aBlock"],
+source: "frameGroupNamed: anIdentifier ifNone: aBlock\x0a\x09^ self frameGroups detect: [ :each | each identifier = anIdentifier ] ifNone: aBlock.",
+messageSends: ["detect:ifNone:", "frameGroups", "=", "identifier"],
 referencedClasses: []
 }),
 globals.Animation);

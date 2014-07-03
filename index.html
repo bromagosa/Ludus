@@ -16,9 +16,11 @@
           'HOS': 'src' //mapping compiled .js files and smalltalk source files
       }});
       require([
+          'amber/devel',
           'HOS/AmberApplication',
           'HOS/Ludus',
           'HOS/Ludus-Examples',
+	  'HOS/Ludus-Site',
           'HOS/OVNI-Core',
           'HOS/OVNI-Screens',
           'HOS/OVNI-Drawables',
@@ -29,9 +31,10 @@
           smalltalk.initialize({
             'transport.defaultAmdNamespace': "HOS"
           });
-	  smalltalk.globals.OVGame._start();
       });
     </script>
+    <button onclick="require('amber/helpers').globals.Browser._open()">IDE</button>
+    <button onclick="require('amber/helpers').popupHelios()">Helios IDE</button> 
     <div id="app">
 	<div id="main">
 	</div>

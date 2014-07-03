@@ -237,12 +237,16 @@ currentFrameGroup
 	^ currentFrameGroup ifNil: [ self frameGroups first ]
 !
 
-currentFrameGroup: anIdentifier
-	currentFrameGroup := self frameGroupNamed: anIdentifier.
+currentFrameGroup: anIdentifierOrFrameGroup
+	currentFrameGroup := self frameGroupNamed: anIdentifierOrFrameGroup ifNone: [ anIdentifierOrFrameGroup ].
 !
 
 frameGroupNamed: anIdentifier
-	^ self frameGroups detect: [ :each | each identifier = anIdentifier ].
+	^ self frameGroups detect: [ :each | each identifier = anIdentifier ] ifNone: [ self frameGroups first ].
+!
+
+frameGroupNamed: anIdentifier ifNone: aBlock
+	^ self frameGroups detect: [ :each | each identifier = anIdentifier ] ifNone: aBlock.
 !
 
 frameGroups

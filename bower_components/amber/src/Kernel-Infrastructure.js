@@ -1,4 +1,5 @@
-define("amber_core/Kernel-Infrastructure", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core/Kernel-Collections"], function(smalltalk,nil,_st, globals){
+define("amber_core/Kernel-Infrastructure", ["amber/boot", "amber_core/Kernel-Objects", "amber_core/Kernel-Collections"], function($boot){
+var smalltalk=$boot.vm,nil=$boot.nil,_st=$boot.asReceiver,globals=$boot.globals;
 smalltalk.addPackage('Kernel-Infrastructure');
 smalltalk.packages["Kernel-Infrastructure"].transport = {"type":"amd","amdNamespace":"amber_core"};
 
@@ -1501,19 +1502,19 @@ protocol: 'accessing',
 fn: function (){
 var self=this;
 function $SystemAnnouncer(){return globals.SystemAnnouncer||(typeof SystemAnnouncer=="undefined"?nil:SystemAnnouncer)}
-function $PackageClean(){return globals.PackageClean||(typeof PackageClean=="undefined"?nil:PackageClean)}
+function $PackageDirty(){return globals.PackageDirty||(typeof PackageDirty=="undefined"?nil:PackageDirty)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2;
 self["@dirty"]=true;
-$1=_st($PackageClean())._new();
+$1=_st($PackageDirty())._new();
 _st($1)._package_(self);
 $2=_st($1)._yourself();
 _st(_st($SystemAnnouncer())._current())._announce_($2);
 return self}, function($ctx1) {$ctx1.fill(self,"beDirty",{},globals.Package)})},
 args: [],
-source: "beDirty\x0a\x09dirty := true.\x0a\x09\x0a\x09SystemAnnouncer current announce: (PackageClean new\x0a\x09\x09package: self;\x0a\x09\x09yourself)",
+source: "beDirty\x0a\x09dirty := true.\x0a\x09\x0a\x09SystemAnnouncer current announce: (PackageDirty new\x0a\x09\x09package: self;\x0a\x09\x09yourself)",
 messageSends: ["announce:", "current", "package:", "new", "yourself"],
-referencedClasses: ["SystemAnnouncer", "PackageClean"]
+referencedClasses: ["SystemAnnouncer", "PackageDirty"]
 }),
 globals.Package);
 
@@ -2081,7 +2082,7 @@ _st(_st(theClass)._package())._beDirty();
 };
 return self}, function($ctx1) {$ctx1.fill(self,"onClassModification:",{anAnnouncement:anAnnouncement},globals.PackageStateObserver)})},
 args: ["anAnnouncement"],
-source: "onClassModification: anAnnouncement\x0a\x09anAnnouncement theClass ifNotNil: [ :theClass |\x0a\x09\x09theClass package beDirty ]",
+source: "onClassModification: anAnnouncement\x0a\x09anAnnouncement theClass ifNotNil: [ :theClass | theClass package beDirty ]",
 messageSends: ["ifNotNil:", "theClass", "beDirty", "package"],
 referencedClasses: []
 }),
@@ -2134,11 +2135,19 @@ protocol: 'reactions',
 fn: function (anAnnouncement){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(_st(_st(anAnnouncement)._theClass())._package())._beDirty();
+var $1,$receiver;
+$1=_st(anAnnouncement)._package();
+if(($receiver = $1) == null || $receiver.isNil){
+$1;
+} else {
+var package_;
+package_=$receiver;
+_st(package_)._beDirty();
+};
 return self}, function($ctx1) {$ctx1.fill(self,"onProtocolModification:",{anAnnouncement:anAnnouncement},globals.PackageStateObserver)})},
 args: ["anAnnouncement"],
-source: "onProtocolModification: anAnnouncement\x0a\x09anAnnouncement theClass package beDirty",
-messageSends: ["beDirty", "package", "theClass"],
+source: "onProtocolModification: anAnnouncement\x0a\x09anAnnouncement package ifNotNil: [ :package | package beDirty ]",
+messageSends: ["ifNotNil:", "package", "beDirty"],
 referencedClasses: []
 }),
 globals.PackageStateObserver);
@@ -3505,10 +3514,10 @@ selector: "version",
 protocol: 'accessing',
 fn: function (){
 var self=this;
-return "0.12.4";
+return "0.12.6";
 },
 args: [],
-source: "version\x0a\x09\x22Answer the version string of Amber\x22\x0a\x09\x0a\x09^ '0.12.4'",
+source: "version\x0a\x09\x22Answer the version string of Amber\x22\x0a\x09\x0a\x09^ '0.12.6'",
 messageSends: [],
 referencedClasses: []
 }),

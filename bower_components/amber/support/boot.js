@@ -38,7 +38,7 @@
  ==================================================================== */
 
 
-define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (require) {
+define("amber/boot", [ 'require', './browser-compatibility' ], function (require) {
 
 	/* Reconfigurable micro composition system, https://github.com/amber-smalltalk/brikz */
 
@@ -129,7 +129,6 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 
 		this.__init__ = function () {
 			st.addPackage("Kernel-Objects");
-			st.addPackage("Kernel-Infrastructure");
 			st.wrapClassName("ProtoObject", "Kernel-Objects", SmalltalkProtoObject, undefined, false);
 			st.wrapClassName("Object", "Kernel-Objects", SmalltalkObject, globals.ProtoObject, false);
 			st.wrapClassName("UndefinedObject", "Kernel-Objects", SmalltalkNil, globals.Object, false);
@@ -154,6 +153,7 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 		inherits(SmalltalkClassOrganizer, SmalltalkOrganizer);
 
 		this.__init__ = function () {
+			st.addPackage("Kernel-Infrastructure");
 			st.wrapClassName("Organizer", "Kernel-Infrastructure", SmalltalkOrganizer, globals.Object, false);
 			st.wrapClassName("PackageOrganizer", "Kernel-Infrastructure", SmalltalkPackageOrganizer, globals.Organizer, false);
 			st.wrapClassName("ClassOrganizer", "Kernel-Infrastructure", SmalltalkClassOrganizer, globals.Organizer, false);
@@ -211,8 +211,7 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 
 		function createHandler(selector) {
 			return function() {
-				var args = Array.prototype.slice.call(arguments);
-				return brikz.messageSend.messageNotUnderstood(this, selector, args);
+				return brikz.messageSend.messageNotUnderstood(this, selector, arguments);
 			};
 		}
 
@@ -242,9 +241,6 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 		st.initClass = function(klass) {
 			if(klass.wrapped) {
 				copySuperclass(klass);
-			}
-
-			if(klass.wrapped) {
 				dnu.installHandlers(klass);
 			}
 		};
@@ -314,6 +310,7 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 
 		var org = brikz.ensure("organize");
 		var root = brikz.ensure("root");
+		brikz.ensure("classInit");
 		var nil = root.nil;
 		var rootAsClass = root.rootAsClass;
 		var SmalltalkObject = root.Object;
@@ -341,6 +338,7 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 			globals.ProtoObject.klass.superclass = rootAsClass.klass = globals.Class;
 			addSubclass(globals.ProtoObject.klass);
 
+			st.addPackage("Kernel-Infrastructure");
 			st.wrapClassName("Package", "Kernel-Infrastructure", SmalltalkPackage, globals.Object, false);
 		};
 
@@ -405,6 +403,13 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 			return 'Smalltalk ' + this.className;
 		};
 
+		function wireKlass(klass) {
+			Object.defineProperty(klass.fn.prototype, "klass", {
+				value: klass,
+				enumerable: false, configurable: true, writable: true
+			});
+		}
+
 		function setupClass(klass, spec) {
 			spec = spec || {};
 			klass.iVarNames = spec.iVarNames || [];
@@ -415,10 +420,7 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 				value: Object.create(null),
 				enumerable: false, configurable: true, writable: true
 			});
-			Object.defineProperty(klass.fn.prototype, "klass", {
-				value: klass,
-				enumerable: false, configurable: true, writable: true
-			});
+			wireKlass(klass);
 		}
 
 		/* Add a package to the smalltalk.packages object, creating a new one if needed.
@@ -444,11 +446,9 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 		 A Package is lazily created if it does not exist with given name. */
 
 		st.addClass = function(className, superclass, iVarNames, pkgName) {
-			if (superclass == nil) { superclass = null; }
-
 			// While subclassing nil is allowed, it might be an error, so
 			// warn about it.
-			if (superclass === null) {
+			if (typeof superclass == 'undefined' || superclass == nil) {
 				console.warn('Compiling ' + className + ' as a subclass of `nil`. A dependency might be missing.');
 			}
 			rawAddClass(pkgName, className, superclass, iVarNames, false, null);
@@ -461,6 +461,7 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 				throw new Error("Missing package "+pkgName);
 			}
 
+			if (!superclass || superclass == nil) { superclass = null; }
 			if(globals[className] && globals[className].superclass == superclass) {
 				//            globals[className].superclass = superclass;
 				globals[className].iVarNames = iVarNames || [];
@@ -528,10 +529,7 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 			klass.fn = constructor;
 
 			// The fn property changed. We need to add back the klass property to the prototype
-			Object.defineProperty(klass.fn.prototype, "klass", {
-				value: klass,
-				enumerable: false, configurable: true, writable: true
-			});
+			wireKlass(klass);
 
 			st.initClass(klass);
 		};
@@ -775,13 +773,10 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 
 		/* Converts a JavaScript object to valid Smalltalk Object */
 		st.readJSObject = function(js) {
-			var object = js;
-			var readObject = (js.constructor === Object);
-			var readArray = (js.constructor === Array);
+			var readObject = js.constructor === Object;
+			var readArray = js.constructor === Array;
+			var object = readObject ? globals.Dictionary._new() : readArray ? [] : js;
 
-			if(readObject) {
-				object = globals.Dictionary._new();
-			}
 			for(var i in js) {
 				if(readObject) {
 					object._at_put_(i, st.readJSObject(js[i]));
@@ -915,7 +910,7 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 			return result;
 		}
 
-		/* Wrap a JavaScript exception in a Smalltalk Exception. 
+		/* Wrap a JavaScript exception in a Smalltalk Exception.
 
 		 In case of a RangeError, stub the stack after 100 contexts to
 		 avoid another RangeError later when the stack is manipulated. */
@@ -1019,7 +1014,7 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 			return receiver._doesNotUnderstand_(
 				globals.Message._new()
 					._selector_(st.convertSelector(selector))
-					._arguments_(args)
+					._arguments_([].slice.call(args))
 			);
 		}
 
@@ -1038,11 +1033,11 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 
 		function callJavaScriptMethod(receiver, selector, args) {
 			var jsSelector = selector._asJavaScriptSelector();
-			var jsProperty = receiver[jsSelector];
-			if(typeof jsProperty === "function" && !/^[A-Z]/.test(jsSelector)) {
-				return jsProperty.apply(receiver, args);
-			} else if(jsProperty !== undefined) {
-				if(args[0]) {
+			if (jsSelector in receiver) {
+				var jsProperty = receiver[jsSelector];
+				if (typeof jsProperty === "function" && !/^[A-Z]/.test(jsSelector)) {
+					return jsProperty.apply(receiver, args);
+				} else if (args.length > 0) {
 					receiver[jsSelector] = args[0];
 					return nil;
 				} else {
@@ -1122,6 +1117,28 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 		};
 	}
 
+	/* Defines asReceiver to be present at load time */
+	/* (logically it belongs more to PrimitiveBrik) */
+	function AsReceiverBrik(brikz, st) {
+
+		var nil = brikz.ensure("root").nil;
+
+		/**
+		 * This function is used all over the compiled amber code.
+		 * It takes any value (JavaScript or Smalltalk)
+		 * and returns a proper Amber Smalltalk receiver.
+		 *
+		 * null or undefined -> nil,
+		 * plain JS object -> wrapped JS object,
+		 * otherwise unchanged
+		 */
+		this.asReceiver = function (o) {
+			if (o == null) { return nil; }
+			if (o.klass) { return o; }
+			return globals.JSObjectProxy._on_(o);
+		};
+	}
+
 
 	/* Making smalltalk that can load */
 
@@ -1136,6 +1153,7 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 	brikz.stInit = SmalltalkInitBrik;
 	brikz.augments = AugmentsBrik;
 	brikz.amdBrik = AMDBrik;
+	brikz.asReceiverBrik = AsReceiverBrik;
 
 	brikz.rebuild();
 
@@ -1149,5 +1167,5 @@ define("amber_vm/boot", [ 'require', './browser-compatibility' ], function (requ
 		brikz.rebuild();
 	};
 
-	return { vm: api, nil: brikz.root.nil, globals: globals };
+	return { vm: api, nil: brikz.root.nil, globals: globals, asReceiver: brikz.asReceiverBrik.asReceiver };
 });

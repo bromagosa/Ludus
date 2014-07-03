@@ -5,6 +5,17 @@ TestCase subclass: #AnnouncementSubscriptionTest
 
 !AnnouncementSubscriptionTest methodsFor: 'tests'!
 
+testAddExtensionMethod
+	| method dirty |
+	dirty := self class package isDirty.
+	self class package beClean.
+	method := self class compile: 'doNothing' protocol: '**not-a-package'.
+	self deny: self class package isDirty.
+	
+	self class removeCompiledMethod: method.
+	dirty ifTrue: [ self class package beDirty ]
+!
+
 testHandlesAnnouncement
 	| subscription announcementClass1 announcementClass2 classBuilder |
 	
@@ -1498,6 +1509,14 @@ testSubStrings
 testTrim
 	self assert: '       jackie' trimLeft equals: 'jackie'.
 	self assert: 'jackie               ' trimRight equals: 'jackie'.
+!
+
+testValue
+
+	self assert: (#asString value: 1) equals: '1'.
+
+	"Which (since String and BlockClosure are now polymorphic) enables the nice idiom..."
+	self assert: (#(1 2 3) collect: #asString) equals: #('1' '2' '3')
 ! !
 
 !StringTest class methodsFor: 'fixture'!
@@ -1661,8 +1680,16 @@ TestCase subclass: #JSObjectProxyTest
 
 !JSObjectProxyTest methodsFor: 'accessing'!
 
+jsNull
+	<return null>
+!
+
 jsObject
-	<return jsObject = {a: 1, b: function() {return 2;}, c: function(object) {return object;}, d: '', 'e': null, 'f': void 0}>
+	<return {a: 1, b: function() {return 2;}, c: function(object) {return object;}, d: '', 'e': null, 'f': void 0}>
+!
+
+jsUndefined
+	<return>
 ! !
 
 !JSObjectProxyTest methodsFor: 'tests'!
@@ -1747,6 +1774,23 @@ testPropertyThatReturnsUndefined
 	object := self jsObject.
 	self shouldnt: [ object e ] raise: MessageNotUnderstood.
 	self assert: object e isNil
+!
+
+testSetPropertyWithFalsyValue
+	| jsObject |
+	jsObject := self jsObject.
+	self assert: (jsObject a) equals: 1.
+
+	jsObject a: self jsNull.
+	self assert: (jsObject a) equals: nil.
+	jsObject a: 0.
+	self assert: (jsObject a) equals: 0.
+	jsObject a: self jsUndefined.
+	self assert: (jsObject a) equals: nil.
+	jsObject a: ''.
+	self assert: (jsObject a) equals: ''.
+	jsObject a: false.
+	self assert: (jsObject a) equals: false
 !
 
 testValue
