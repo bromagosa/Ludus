@@ -1,4 +1,4 @@
-CodeMirror.defineMode("gfm", function(config, modeConfig) {
+CodeMirror.defineMode("gfm", function(config) {
   var codeDepth = 0;
   function blankLine(state) {
     state.code = false;
@@ -75,7 +75,7 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {
           return "link";
         }
       }
-      if (stream.match(/^((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]|\([^\s()<>]*\))+(?:\([^\s()<>]*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/i) &&
+      if (stream.match(/^((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\([^\s()<>]*\))+(?:\([^\s()<>]*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/i) &&
          stream.string.slice(stream.start - 2, stream.start) != "](") {
         // URLs
         // Taken from http://daringfireball.net/2010/07/improved_regex_for_matching_urls
@@ -87,16 +87,11 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {
     },
     blankLine: blankLine
   };
-
-  var markdownConfig = {
+  CodeMirror.defineMIME("gfmBase", {
+    name: "markdown",
     underscoresBreakWords: false,
     taskLists: true,
     fencedCodeBlocks: true
-  };
-  for (var attr in modeConfig) {
-    markdownConfig[attr] = modeConfig[attr];
-  }
-  markdownConfig.name = "markdown";
-  CodeMirror.defineMIME("gfmBase", markdownConfig);
+  });
   return CodeMirror.overlayMode(CodeMirror.getMode(config, "gfmBase"), gfmOverlay);
 }, "markdown");

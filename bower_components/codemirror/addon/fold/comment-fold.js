@@ -1,6 +1,4 @@
-CodeMirror.registerGlobalHelper("fold", "comment", function(mode) {
-  return mode.blockCommentStart && mode.blockCommentEnd;
-}, function(cm, start) {
+CodeMirror.registerHelper("fold", "comment", function(cm, start) {
   var mode = cm.getModeAt(start), startToken = mode.blockCommentStart, endToken = mode.blockCommentEnd;
   if (!startToken || !endToken) return;
   var line = start.line, lineText = cm.getLine(line);

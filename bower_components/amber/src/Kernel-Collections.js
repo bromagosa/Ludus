@@ -1,5 +1,4 @@
-define("amber_core/Kernel-Collections", ["amber/boot", "amber_core/Kernel-Objects"], function($boot){
-var smalltalk=$boot.vm,nil=$boot.nil,_st=$boot.asReceiver,globals=$boot.globals;
+define("amber_core/Kernel-Collections", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects"], function(smalltalk,nil,_st, globals){
 smalltalk.addPackage('Kernel-Collections');
 smalltalk.packages["Kernel-Collections"].transport = {"type":"amd","amdNamespace":"amber_core"};
 
@@ -1412,7 +1411,7 @@ globals.IndexableCollection);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "with:do:",
-protocol: 'enumerating',
+protocol: 'enumarating',
 fn: function (anotherCollection,aBlock){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -1431,7 +1430,7 @@ globals.IndexableCollection);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "withIndexDo:",
-protocol: 'enumerating',
+protocol: 'enumarating',
 fn: function (aBlock){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -5233,24 +5232,6 @@ return self}, function($ctx1) {$ctx1.fill(self,"uriEncoded",{},globals.String)})
 args: [],
 source: "uriEncoded\x0a\x09<return encodeURI(self)>",
 messageSends: [],
-referencedClasses: []
-}),
-globals.String);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "value:",
-protocol: 'evaluating',
-fn: function (anObject){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(anObject)._perform_(self);
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"value:",{anObject:anObject},globals.String)})},
-args: ["anObject"],
-source: "value: anObject \x0a\x09^ anObject perform: self",
-messageSends: ["perform:"],
 referencedClasses: []
 }),
 globals.String);

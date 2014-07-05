@@ -37,12 +37,12 @@ jQuery.fn.extend({
 	},
 
 	has: function( target ) {
-		var targets = jQuery( target, this ),
-			l = targets.length;
+		var i,
+			targets = jQuery( target, this ),
+			len = targets.length;
 
 		return this.filter(function() {
-			var i = 0;
-			for ( ; i < l; i++ ) {
+			for ( i = 0; i < len; i++ ) {
 				if ( jQuery.contains( this, targets[i] ) ) {
 					return true;
 				}
@@ -75,8 +75,8 @@ jQuery.fn.extend({
 		var cur,
 			i = 0,
 			l = this.length,
-			matched = [],
-			pos = ( rneedsContext.test( selectors ) || typeof selectors !== "string" ) ?
+			ret = [],
+			pos = rneedsContext.test( selectors ) || typeof selectors !== "string" ?
 				jQuery( selectors, context || this.context ) :
 				0;
 
@@ -90,13 +90,13 @@ jQuery.fn.extend({
 					cur.nodeType === 1 &&
 						jQuery.find.matchesSelector(cur, selectors)) ) {
 
-					cur = matched.push( cur );
+					cur = ret.push( cur );
 					break;
 				}
 			}
 		}
 
-		return this.pushStack( matched.length > 1 ? jQuery.unique( matched ) : matched );
+		return this.pushStack( ret.length > 1 ? jQuery.unique( ret ) : ret );
 	},
 
 	// Determine the position of an element within
@@ -105,20 +105,18 @@ jQuery.fn.extend({
 
 		// No argument, return index in parent
 		if ( !elem ) {
-			return ( this[ 0 ] && this[ 0 ].parentNode ) ? this.first().prevAll().length : -1;
+			return ( this[0] && this[0].parentNode ) ? this.first().prevAll().length : -1;
 		}
 
 		// index in selector
 		if ( typeof elem === "string" ) {
-			return core_indexOf.call( jQuery( elem ), this[ 0 ] );
+			return jQuery.inArray( this[0], jQuery( elem ) );
 		}
 
 		// Locate the position of the desired element
-		return core_indexOf.call( this,
-
+		return jQuery.inArray(
 			// If it receives a jQuery object, the first element is used
-			elem.jquery ? elem[ 0 ] : elem
-		);
+			elem.jquery ? elem[0] : elem, this );
 	},
 
 	add: function( selector, context ) {
@@ -138,7 +136,9 @@ jQuery.fn.extend({
 });
 
 function sibling( cur, dir ) {
-	while ( (cur = cur[dir]) && cur.nodeType !== 1 ) {}
+	do {
+		cur = cur[ dir ];
+	} while ( cur && cur.nodeType !== 1 );
 
 	return cur;
 }
@@ -179,33 +179,35 @@ jQuery.each({
 		return jQuery.sibling( elem.firstChild );
 	},
 	contents: function( elem ) {
-		return elem.contentDocument || jQuery.merge( [], elem.childNodes );
+		return jQuery.nodeName( elem, "iframe" ) ?
+			elem.contentDocument || elem.contentWindow.document :
+			jQuery.merge( [], elem.childNodes );
 	}
 }, function( name, fn ) {
 	jQuery.fn[ name ] = function( until, selector ) {
-		var matched = jQuery.map( this, fn, until );
+		var ret = jQuery.map( this, fn, until );
 
 		if ( name.slice( -5 ) !== "Until" ) {
 			selector = until;
 		}
 
 		if ( selector && typeof selector === "string" ) {
-			matched = jQuery.filter( selector, matched );
+			ret = jQuery.filter( selector, ret );
 		}
 
 		if ( this.length > 1 ) {
 			// Remove duplicates
 			if ( !guaranteedUnique[ name ] ) {
-				jQuery.unique( matched );
+				ret = jQuery.unique( ret );
 			}
 
 			// Reverse order for parents* and prev-derivatives
 			if ( rparentsprev.test( name ) ) {
-				matched.reverse();
+				ret = ret.reverse();
 			}
 		}
 
-		return this.pushStack( matched );
+		return this.pushStack( ret );
 	};
 });
 
@@ -226,29 +228,27 @@ jQuery.extend({
 
 	dir: function( elem, dir, until ) {
 		var matched = [],
-			truncate = until !== undefined;
+			cur = elem[ dir ];
 
-		while ( (elem = elem[ dir ]) && elem.nodeType !== 9 ) {
-			if ( elem.nodeType === 1 ) {
-				if ( truncate && jQuery( elem ).is( until ) ) {
-					break;
-				}
-				matched.push( elem );
+		while ( cur && cur.nodeType !== 9 && (until === undefined || cur.nodeType !== 1 || !jQuery( cur ).is( until )) ) {
+			if ( cur.nodeType === 1 ) {
+				matched.push( cur );
 			}
+			cur = cur[dir];
 		}
 		return matched;
 	},
 
 	sibling: function( n, elem ) {
-		var matched = [];
+		var r = [];
 
 		for ( ; n; n = n.nextSibling ) {
 			if ( n.nodeType === 1 && n !== elem ) {
-				matched.push( n );
+				r.push( n );
 			}
 		}
 
-		return matched;
+		return r;
 	}
 });
 
@@ -278,6 +278,6 @@ function winnow( elements, qualifier, not ) {
 	}
 
 	return jQuery.grep( elements, function( elem ) {
-		return ( core_indexOf.call( qualifier, elem ) >= 0 ) !== not;
+		return ( jQuery.inArray( elem, qualifier ) >= 0 ) !== not;
 	});
 }

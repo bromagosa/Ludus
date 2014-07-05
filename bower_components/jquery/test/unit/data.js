@@ -6,62 +6,6 @@ test("expando", function(){
 	equal(jQuery.expando !== undefined, true, "jQuery is exposing the expando");
 });
 
-test( "jQuery.data & removeData, expected returns", function() {
-	expect(4);
-	var elem = document.body;
-
-	equal(
-		jQuery.data( elem, "hello", "world" ), "world",
-		"jQuery.data( elem, key, value ) returns value"
-	);
-	equal(
-		jQuery.data( elem, "hello" ), "world",
-		"jQuery.data( elem, key ) returns value"
-	);
-	deepEqual(
-		jQuery.data( elem, { goodnight: "moon" }), { goodnight: "moon" },
-		"jQuery.data( elem, obj ) returns obj"
-	);
-	equal(
-		jQuery.removeData( elem, "hello" ), undefined,
-		"jQuery.removeData( elem, key, value ) returns undefined"
-	);
-
-});
-
-test( "jQuery._data & _removeData, expected returns", function() {
-	expect(4);
-	var elem = document.body;
-
-	equal(
-		jQuery._data( elem, "hello", "world" ), "world",
-		"jQuery._data( elem, key, value ) returns value"
-	);
-	equal(
-		jQuery._data( elem, "hello" ), "world",
-		"jQuery._data( elem, key ) returns value"
-	);
-	deepEqual(
-		jQuery._data( elem, { goodnight: "moon" }), { goodnight: "moon" },
-		"jQuery._data( elem, obj ) returns obj"
-	);
-	equal(
-		jQuery._removeData( elem, "hello" ), undefined,
-		"jQuery._removeData( elem, key, value ) returns undefined"
-	);
-});
-
-test( "jQuery.hasData no side effects", function() {
-	expect(1);
-	var obj = {};
-
-	jQuery.hasData( obj );
-
-	equal( Object.getOwnPropertyNames( obj ).length, 0,
-		"No data expandos where added when calling jQuery.hasData(o)"
-	);
-});
-
 function dataTests (elem) {
 	var dataObj, internalDataObj;
 
@@ -155,19 +99,69 @@ test("jQuery.data(document)", 25, function() {
 	QUnit.expectJqData(document, "foo");
 });
 
-test("jQuery.data(<embed>)", 25, function() {
-	dataTests( document.createElement("embed") );
+test("Expando cleanup", 4, function() {
+	var expected, actual,
+		div = document.createElement("div");
+
+	function assertExpandoAbsent(message) {
+		if (jQuery.support.deleteExpando) {
+			expected = false;
+			actual = jQuery.expando in div;
+		} else {
+			expected = null;
+			actual = div[ jQuery.expando ];
+		}
+		equal( actual, expected, message );
+	}
+
+	assertExpandoAbsent("There is no expando on new elements");
+
+	jQuery.data(div, "foo", 100);
+	jQuery.data(div, "bar", 200);
+
+	ok(jQuery.expando in div, "There is an expando on the element after using $.data()");
+
+	jQuery.removeData(div, "foo");
+
+	ok(jQuery.expando in div, "There is still an expando on the element after removing (some) of the data");
+
+	jQuery.removeData(div, "bar");
+
+	assertExpandoAbsent("Removing the last item in the data store deletes the expando");
+
+	// Clean up unattached element
+	jQuery(div).remove();
 });
 
-test("jQuery.data(<applet>)", 25, function() {
-	dataTests( document.createElement("applet") );
+test("Data is not being set on comment and text nodes", function() {
+	expect(2);
+
+	ok( !jQuery.hasData( jQuery("<!-- comment -->").data("foo", 0) ) );
+	ok( !jQuery.hasData( jQuery("<span>text</span>").contents().data("foo", 0) ) );
+
 });
 
-test("jQuery.data(object/flash)", 25, function() {
-	var flash = document.createElement("object");
-	flash.setAttribute( "classid", "clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" );
+test("jQuery.acceptData", function() {
+	expect(9);
 
-	dataTests( flash );
+	var flash, applet;
+
+	ok( jQuery.acceptData( document ), "document" );
+	ok( jQuery.acceptData( document.documentElement ), "documentElement" );
+	ok( jQuery.acceptData( {} ), "object" );
+	ok( !jQuery.acceptData( document.createElement("embed") ), "embed" );
+	ok( !jQuery.acceptData( document.createElement("applet") ), "applet" );
+
+	flash = document.createElement("object");
+	flash.setAttribute("classid", "clsid:D27CDB6E-AE6D-11cf-96B8-444553540000");
+	ok( jQuery.acceptData( flash ), "flash" );
+
+	applet = document.createElement("object");
+	applet.setAttribute("classid", "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93");
+	ok( !jQuery.acceptData( applet ), "applet" );
+
+	ok( !jQuery.acceptData( document.createComment("") ), "comment" );
+	ok( !jQuery.acceptData( document.createTextNode("") ), "text" );
 });
 
 test(".data()", function() {
@@ -242,18 +236,6 @@ test("jQuery(plain Object).data(String, Object).data(String)", function() {
 	// Clean up
 	$obj.removeData();
 	deepEqual( $obj[0], { exists: true }, "removeData does not clear the object" );
-});
-
-test(".data(object) does not retain references. #13815", function() {
-	expect( 2 );
-
-	var $divs = jQuery("<div></div><div></div>").appendTo("#qunit-fixture");
-
-	$divs.data({ "type": "foo" });
-	$divs.eq( 0 ).data( "type", "bar" );
-
-	equal( $divs.eq( 0 ).data("type"), "bar", "Correct updated value" );
-	equal( $divs.eq( 1 ).data("type"), "foo", "Original value retained" );
 });
 
 test("data-* attributes", function() {
@@ -484,8 +466,8 @@ if (window.JSON && window.JSON.stringify) {
 	});
 }
 
-test(".data should follow html5 specification regarding camel casing", function() {
-	expect(12);
+test("jQuery.data should follow html5 specification regarding camel casing", function() {
+	expect(10);
 
 	var div = jQuery("<div id='myObject' data-w-t-f='ftw' data-big-a-little-a='bouncing-b' data-foo='a' data-foo-bar='b' data-foo-bar-baz='c'></div>")
 		.prependTo("body");
@@ -506,13 +488,10 @@ test(".data should follow html5 specification regarding camel casing", function(
 	equal( div.data("fooBar"), "d", "Verify updated data-* key" );
 	equal( div.data("foo-bar"), "d", "Verify updated data-* key" );
 
-	equal( div.data("fooBar"), "d", "Verify updated data-* key (fooBar)" );
-	equal( div.data("foo-bar"), "d", "Verify updated data-* key (foo-bar)" );
-
 	div.remove();
 });
 
-test(".data should not miss preset data-* w/ hyphenated property names", function() {
+test("jQuery.data should not miss data with preset hyphenated property names", function() {
 
 	expect(2);
 
@@ -529,39 +508,7 @@ test(".data should not miss preset data-* w/ hyphenated property names", functio
 	});
 });
 
-test("jQuery.data should not miss data-* w/ hyphenated property names #14047", function() {
-
-	expect(1);
-
-	var div = jQuery("<div/>");
-
-	div.data( "foo-bar", "baz" );
-
-	equal( jQuery.data(div[0], "foo-bar"), "baz", "data with property 'foo-bar' was correctly found");
-});
-
-test(".data should not miss attr() set data-* with hyphenated property names", function() {
-	expect(2);
-
-	var a, b;
-
-	a = jQuery("<div/>").appendTo("#qunit-fixture");
-
-	a.attr( "data-long-param", "test" );
-	a.data( "long-param", { a: 2 });
-
-	deepEqual( a.data("long-param"), { a: 2 }, "data with property long-param was found, 1" );
-
-	b = jQuery("<div/>").appendTo("#qunit-fixture");
-
-	b.attr( "data-long-param", "test" );
-	b.data( "long-param" );
-	b.data( "long-param", { a: 2 });
-
-	deepEqual( b.data("long-param"), { a: 2 }, "data with property long-param was found, 2" );
-});
-
-test(".data supports interoperable hyphenated/camelCase get/set of properties with arbitrary non-null|NaN|undefined values", function() {
+test("jQuery.data supports interoperable hyphenated/camelCase get/set of properties with arbitrary non-null|NaN|undefined values", function() {
 
 	var div = jQuery("<div/>", { id: "hyphened" }).appendTo("#qunit-fixture"),
 		datas = {
@@ -592,7 +539,7 @@ test(".data supports interoperable hyphenated/camelCase get/set of properties wi
 	});
 });
 
-test(".data supports interoperable removal of hyphenated/camelCase properties", function() {
+test("jQuery.data supports interoperable removal of hyphenated/camelCase properties", function() {
 	var div = jQuery("<div/>", { id: "hyphened" }).appendTo("#qunit-fixture"),
 		datas = {
 			"non-empty": "a string",
@@ -621,35 +568,6 @@ test(".data supports interoperable removal of hyphenated/camelCase properties", 
 
 		equal( div.data( key ), undefined, "get: " + key );
 
-	});
-});
-
-test(".data supports interoperable removal of properties SET TWICE #13850", function() {
-	var div = jQuery("<div>").appendTo("#qunit-fixture"),
-		datas = {
-			"non-empty": "a string",
-			"empty-string": "",
-			"one-value": 1,
-			"zero-value": 0,
-			"an-array": [],
-			"an-object": {},
-			"bool-true": true,
-			"bool-false": false,
-			// JSHint enforces double quotes,
-			// but JSON strings need double quotes to parse
-			// so we need escaped double quotes here
-			"some-json": "{ \"foo\": \"bar\" }"
-		};
-
-	expect( 9 );
-
-	jQuery.each( datas, function( key, val ) {
-		div.data( key, val );
-		div.data( key, val );
-
-		div.removeData( key );
-
-		equal( div.data( key ), undefined, "removal: " + key );
 	});
 });
 
@@ -686,7 +604,7 @@ test( ".removeData supports removal of hyphenated properties via array (#12786)"
 });
 
 // Test originally by Moschel
-test(".removeData should not throw exceptions. (#10080)", function() {
+test("Triggering the removeData should not throw exceptions. (#10080)", function() {
 	expect(1);
 	stop();
 	var frame = jQuery("#loadediframe");
@@ -698,7 +616,7 @@ test(".removeData should not throw exceptions. (#10080)", function() {
 	frame.attr("src", "data/iframe.html?param=true");
 });
 
-test( ".data only checks element attributes once. #8909", function() {
+test( "Only check element attributes once when calling .data() - #8909", function() {
 	expect( 2 );
 	var testing = {
 			"test": "testing",
@@ -718,41 +636,10 @@ test( ".data only checks element attributes once. #8909", function() {
 	element.remove();
 });
 
-test( "data-* with JSON value can have newlines", function() {
+test( "JSON data- attributes can have newlines", function() {
 	expect(1);
 
 	var x = jQuery("<div data-some='{\n\"foo\":\n\t\"bar\"\n}'></div>");
 	equal( x.data("some").foo, "bar", "got a JSON data- attribute with spaces" );
 	x.remove();
-});
-
-test(".data doesn't throw when calling selection is empty. #13551", function() {
-	expect(1);
-
-	try {
-		jQuery( null ).data( "prop" );
-		ok( true, "jQuery(null).data('prop') does not throw" );
-	} catch ( e ) {
-		ok( false, e.message );
-	}
-});
-
-test("jQuery.acceptData", 6, function() {
-	ok( jQuery.acceptData( document ), "document" );
-	ok( jQuery.acceptData( document.documentElement ), "documentElement" );
-	ok( jQuery.acceptData( {} ), "object" );
-
-	ok( !jQuery.acceptData( document.createComment("") ), "comment" );
-	ok( !jQuery.acceptData( document.createTextNode("") ), "text" );
-	ok( !jQuery.acceptData( document.createDocumentFragment() ), "documentFragment" );
-});
-
-test("Check proper data removal of non-element descendants nodes (#8335)", 1, function() {
-	var div = jQuery("<div>text</div>"),
-		text = div.contents();
-
-	text.data( "test", "test" ); // This should be a noop.
-	div.remove();
-
-	ok( !text.data("test"), "Be sure data is not stored in non-element" );
 });

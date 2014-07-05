@@ -87,7 +87,6 @@ For example, an app that only used JSONP for `$.ajax()` and did not need to calc
 - **event-alias**: All event attaching/triggering shorthands like `.click()` or `.mouseover()`.
 - **offset**: The `.offset()`, `.position()`, `.offsetParent()`, `.scrollLeft()`, and `.scrollTop()` methods.
 - **wrap**: The `.wrap()`, `.wrapAll()`, `.wrapInner()`, and `.unwrap()` methods.
-- **sizzle**: The Sizzle selector engine. When this module is excluded, it is replaced by a rudimentary selector engine based on the browser's `querySelectorAll` method that does not support jQuery selector extensions or enhanced semantics. See the selector-native.js file for details.
 
 The grunt build process is aware of dependencies across modules. If you explicitly remove a module, its dependent modules will be removed as well. For example, excluding the css module also excludes effects, since the effects module uses `.css()` to animate CSS properties. These dependencies are listed in Gruntfile.js and the build process shows a message for each dependent module it excludes.
 
@@ -117,13 +116,13 @@ Exclude **css**, **effects**, **offset**, **dimensions**, and **position**. Excl
 grunt custom:-css,-position
 ```
 
-Exclude **all** optional modules and use the `querySelectorAll`-based selector engine:
+Exclude **all** optional modules:
 
 ```bash
-grunt custom:-ajax,-css,-deprecated,-dimensions,-effects,-event-alias,-offset,-wrap,-sizzle
+grunt custom:-ajax,-css,-deprecated,-dimensions,-effects,-event-alias,-offset,-wrap
 ```
 
-For questions or requests regarding custom builds, please start a thread on the [Developing jQuery Core](https://forum.jquery.com/developing-jquery-core) section of the forum. Due to the combinatorics and custom nature of these builds, they are not regularly tested in jQuery's unit test process. The non-Sizzle selector engine currently does not pass unit tests because it is missing too much essential functionality.
+For questions or requests regarding custom builds, please start a thread on the [Developing jQuery Core](https://forum.jquery.com/developing-jquery-core) section of the forum. Due to the combinatorics and custom nature of these builds, they are not regularly tested in jQuery's unit test process.
 
 Running the Unit Tests
 --------------------------------------

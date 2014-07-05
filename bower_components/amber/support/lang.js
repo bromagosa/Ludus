@@ -1,7 +1,7 @@
 define([
 	'./helpers', // pre-fetch, dep of ./deploy
 	'./deploy',
-	'amber/parser',
+	'amber_vm/parser',
 	'amber_core/Kernel-ImportExport',
 	'amber_core/Compiler-Exceptions',
 	'amber_core/Compiler-Core',

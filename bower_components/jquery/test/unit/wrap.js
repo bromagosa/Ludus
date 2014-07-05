@@ -9,7 +9,7 @@ module( "wrap", {
 });
 
 // See test/unit/manipulation.js for explanation about these 2 functions
-function manipulationBareObj( value ) {
+function manipulationBareObj( value ) {
 	return value;
 }
 
@@ -170,8 +170,7 @@ function testWrapInner( val ) {
 
 	expect( 11 );
 
-	var num,
-		div = jQuery("<div/>");
+	var num, div;
 
 	num = jQuery("#first").children().length;
 	jQuery("#first").wrapInner( val("<div class='red'><div id='tmp'></div></div>") );
@@ -194,6 +193,7 @@ function testWrapInner( val ) {
 	ok( jQuery("#first").children().is("#empty"), "Verify Right Element" );
 	equal( jQuery("#first").children().children().length, num, "Verify Elements Intact" );
 
+	div = jQuery("<div/>");
 	div.wrapInner( val("<span></span>") );
 	equal( div.children().length, 1, "The contents were wrapped." );
 	equal( div.children()[ 0 ].nodeName.toLowerCase(), "span", "A span was inserted." );

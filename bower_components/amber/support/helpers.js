@@ -1,17 +1,10 @@
-define("amber/helpers", ["amber/boot", "require"], function (boot, require) {
-    var globals = boot.globals,
-        exports = Object.create(globals), // backward compatibility, use {} later
-        vm = boot.vm,
-        nil = boot.vm;
+define("amber/helpers", ["amber_vm/smalltalk", "amber_vm/globals", "require"], function (vm, globals, require) {
+    var exports = Object.create(globals);
 
     // API
 
     exports.popupHelios = function () {
-        require(['helios/index'], function (helios) {
-            helios.popup();
-        }, function (err) {
-            window.alert("Error loading helios.\nIf not present, you can install it with 'bower install helios --save-dev'.\nThe error follows:\n" + err);
-        });
+        window.open(require.toUrl('helios/index.html'), "Helios", "menubar=no, width=1000, height=600");
     };
     Object.defineProperty(exports, "vm", {
         value: vm,
@@ -19,10 +12,6 @@ define("amber/helpers", ["amber/boot", "require"], function (boot, require) {
     });
     Object.defineProperty(exports, "globals", {
         value: globals,
-        enumerable: true, configurable: true, writable: false
-    });
-    Object.defineProperty(exports, "nil", {
-        value: nil,
         enumerable: true, configurable: true, writable: false
     });
 
