@@ -20,6 +20,6 @@
     ],
     "private": false,
     "dependencies": {
-        "amber": "~>= 0.12.4"
+        "amber": "0.12.4"
     }
 }
