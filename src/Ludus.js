@@ -1,4 +1,4 @@
-define("HOS/Ludus", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core
+define("HOS/Ludus", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core/Web"], function(smalltalk,nil,_st, globals){
 smalltalk.addPackage('Ludus');
 smalltalk.packages["Ludus"].transport = {"type":"amd","amdNamespace":"HOS"};
 
