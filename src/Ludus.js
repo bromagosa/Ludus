@@ -3942,6 +3942,28 @@ globals.AbstractScreen);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "clearRectOrigin:size:",
+protocol: 'drawing',
+fn: function (aPoint,aSizePoint){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3;
+$1=self._context();
+$2=_st(aPoint)._x();
+$ctx1.sendIdx["x"]=1;
+$3=_st(aPoint)._y();
+$ctx1.sendIdx["y"]=1;
+_st($1)._clearRect_y_width_height_($2,$3,_st(aSizePoint)._x(),_st(aSizePoint)._y());
+return self}, function($ctx1) {$ctx1.fill(self,"clearRectOrigin:size:",{aPoint:aPoint,aSizePoint:aSizePoint},globals.AbstractScreen)})},
+args: ["aPoint", "aSizePoint"],
+source: "clearRectOrigin: aPoint size: aSizePoint\x0a\x09self context\x0a\x09\x09clearRect: aPoint x\x0a\x09\x09y: aPoint y\x0a\x09\x09width: aSizePoint x\x0a\x09\x09height: aSizePoint y.",
+messageSends: ["clearRect:y:width:height:", "context", "x", "y"],
+referencedClasses: []
+}),
+globals.AbstractScreen);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "context",
 protocol: 'accessing',
 fn: function (){
@@ -6045,22 +6067,35 @@ protocol: 'error handling',
 fn: function (aMessage){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $4,$3,$2,$1;
+var $4,$3,$2,$5,$8,$7,$6,$1;
 $4=_st(aMessage)._selector();
 $ctx1.sendIdx["selector"]=1;
 $3=_st($4)._size();
+$ctx1.sendIdx["size"]=1;
 $2=_st($3).__eq((1));
+$ctx1.sendIdx["="]=1;
 if(smalltalk.assert($2)){
-$1=self._keyCodeFor_(_st(aMessage)._selector());
+$5=_st(aMessage)._selector();
+$ctx1.sendIdx["selector"]=2;
+$1=self._keyCodeFor_($5);
+$ctx1.sendIdx["keyCodeFor:"]=1;
+} else {
+$8=_st(aMessage)._selector();
+$ctx1.sendIdx["selector"]=3;
+$7=_st($8)._size();
+$6=_st($7).__eq((2));
+if(smalltalk.assert($6)){
+$1=self._keyCodeFor_(_st(_st(aMessage)._selector())._last());
 } else {
 $1=($ctx1.supercall = true, globals.Key.klass.superclass.fn.prototype._doesNotUnderstand_.apply(_st(self), [aMessage]));
 $ctx1.supercall = false;
 };
+};
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"doesNotUnderstand:",{aMessage:aMessage},globals.Key.klass)})},
 args: ["aMessage"],
-source: "doesNotUnderstand: aMessage\x0a\x09^ aMessage selector size = 1\x0a\x09\x09ifTrue: [ self keyCodeFor: aMessage selector ]\x0a\x09\x09ifFalse: [ super doesNotUnderstand: aMessage ]",
-messageSends: ["ifTrue:ifFalse:", "=", "size", "selector", "keyCodeFor:", "doesNotUnderstand:"],
+source: "doesNotUnderstand: aMessage\x0a\x09^ aMessage selector size = 1\x0a\x09\x09ifTrue: [ self keyCodeFor: aMessage selector ]\x0a\x09\x09ifFalse: [ \x0a\x09\x09\x09aMessage selector size = 2 \x0a\x09\x09\x09\x09ifTrue: [ self keyCodeFor: aMessage selector last ]\x0a\x09\x09\x09\x09ifFalse: [ super doesNotUnderstand: aMessage ]]",
+messageSends: ["ifTrue:ifFalse:", "=", "size", "selector", "keyCodeFor:", "last", "doesNotUnderstand:"],
 referencedClasses: []
 }),
 globals.Key.klass);
@@ -6160,6 +6195,24 @@ return (37);
 args: [],
 source: "leftArrow\x0a\x09^ 37",
 messageSends: [],
+referencedClasses: []
+}),
+globals.Key.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "number:",
+protocol: 'key codes',
+fn: function (anInteger){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=self._keyCodeFor_(anInteger);
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"number:",{anInteger:anInteger},globals.Key.klass)})},
+args: ["anInteger"],
+source: "number: anInteger\x0a\x09^ self keyCodeFor: anInteger",
+messageSends: ["keyCodeFor:"],
 referencedClasses: []
 }),
 globals.Key.klass);

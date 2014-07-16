@@ -91,7 +91,7 @@ moveWithHandler: anInputHandler inCanvas: aCanvas
 ! !
 
 Game subclass: #LSite
-	instanceVariableNames: 'character tiles tileGenerator currentTileType'
+	instanceVariableNames: 'character tiles tileGenerator tileInterval currentTileType'
 	package: 'Ludus-Site'!
 
 !LSite methodsFor: 'accessing'!
@@ -100,8 +100,12 @@ character
 	^ character ifNil: [ character := LCharacter new ]
 !
 
+character: anObject
+	character := anObject
+!
+
 currentTileType
-	^ currentTileType ifNil: [ currentTileType := 'sand-centre' ]
+	^ currentTileType
 !
 
 currentTileType: aType
@@ -109,30 +113,50 @@ currentTileType: aType
 !
 
 newTileAt: aPoint type: aTileType
-	self tiles at: aPoint put: aTileType
+	((self tiles at: aPoint / 32) at: aPoint / 32) put: aTileType
 !
 
 tileGenerator
-	^ tileGenerator ifNil: [ tileGenerator := LTile new ]
+	^ tileGenerator ifNil: [ tileGenerator := LTileGenerator new ]
+!
+
+tileGenerator: anObject
+	tileGenerator := anObject
+!
+
+tileInterval
+	^ tileInterval ifNil: [ tileInterval := #(1 10) ]
+!
+
+tileInterval: anObject
+	tileInterval := anObject
 !
 
 tiles
-	^ tiles ifNil: [ tiles := Dictionary new ]
+	^ tiles ifNil: [ tiles := #(#()) ]
+!
+
+tiles: anObject
+	tiles := anObject
 ! !
 
 !LSite methodsFor: 'control'!
 
 step
 	self character stepOnGame: self.
-	self inputHandler 
+	
+	1 to: 9 do: [ :number | self inputHandler onKeyPressed: (Key number: number) do: [ self tileInterval: {number * 20. (number * 20) + 9} ] ].
+	
+	self inputHandler
 		onMouseClickDo: [
 			self inputHandler mousePosition < ((self tileGenerator frameGroups size * 32) @ 32) 
 				ifFalse: [
-					self 
-						newTileAt: 
-							((self inputHandler mousePosition x // 32) * 32) 
-								@ ((self inputHandler mousePosition y // 32) * 32)
-						type: self currentTileType ]
+					self currentTileType ifNotNil: [
+						self 
+							newTileAt: 
+								((self inputHandler mousePosition x // 32) * 32) 
+									@ ((self inputHandler mousePosition y // 32) * 32)
+							type: self currentTileType ]]
 				ifTrue: [
 					self currentTileType: (self tileGenerator frameGroups at: (self inputHandler mousePosition x // 32) + 1)
 		]
@@ -142,31 +166,43 @@ step
 !LSite methodsFor: 'drawing'!
 
 draw
-	self 
+	self
 		clearCanvas;
-		drawTiles;
 		drawTileSelector;
-		draw: self character.
+		drawTiles;
+		draw: self character
 !
 
 drawTileSelector
-	self tileGenerator frameGroups withIndexDo: [ :each :index | 
-		self tileGenerator 
-			currentFrameGroup: each;
-			position: ((index - 1) * 32) @ 0.
+	self drawTileSelectorFrom: self tileInterval first to: self tileInterval last
+!
+
+drawTileSelectorFrom: aNumber to: anotherNumber
+	(aNumber to: anotherNumber) withIndexDo: [ :tileIndex :positionIndex | 
+		self tileGenerator
+			currentFrameGroup: (self tileGenerator frameGroups at: tileIndex);
+			position: ((positionIndex - 1) * 32) @ 0.
 		self draw: self tileGenerator.
-	]
+		self tileGenerator drawBoundingBoxOnCanvas: self canvas
+	].
 !
 
 drawTiles
-	self tiles associationsDo: [ :eachAssoc | 
-		self tileGenerator 
-			position: eachAssoc key;
-			currentFrameGroup: eachAssoc value.
-		self draw: self tileGenerator ]
+	self tiles withIndexDo: [ :eachRow :x | 
+		eachRow do: [ :eachTile :y |
+			self tileGenerator 
+				position: (x*32)@(y*32);
+				currentFrameGroup: eachTile.
+			self draw: self tileGenerator ]]
 ! !
 
 !LSite methodsFor: 'initialization'!
+
+resize
+	self
+		width: window innerWidth; 
+		height: window innerHeight.
+!
 
 startGame
 	fps := 30.
@@ -175,35 +211,95 @@ startGame
 		width: window innerWidth; 
 		height: window innerHeight.
 	
+	window asJQuery resize: [ :event | self resize ].
+	
 	self
 		loadSound: 'sounds/site/main-theme.ogg';
 		loadSound: 'sounds/site/shop.ogg'.
 	
 	(self soundNamed: 'main-theme') loop.
 		
-	self canvas style: 'position: fixed; top: 0; left: 0'.
+	self canvas style: 'position: fixed; top: 0; left: 0; background-color: #82bb65;'.
 ! !
 
-Sprite subclass: #LTile
+Sprite subclass: #LTileGenerator
 	instanceVariableNames: ''
 	package: 'Ludus-Site'!
 
-!LTile methodsFor: 'initialization'!
+!LTileGenerator methodsFor: 'initialization'!
 
 initialize
 	super initialize.
 	self 
 		source: 'images/site/open_tileset.png';
-		addFrameGroupNamed: 'sand-centre' origin: 160@480 size: 32@32 frameCount: 1;
-		addFrameGroupNamed: 'sand-left' origin: 384@480 size: 32@32 frameCount: 1;
-		addFrameGroupNamed: 'sand-right' origin: 416@480 size: 32@32 frameCount: 1;
-		addFrameGroupNamed: 'sand-top' origin: 416@512 size: 32@32 frameCount: 1;
-		addFrameGroupNamed: 'sand-bottom' origin: 416@544 size: 32@32 frameCount: 1;
-		addFrameGroupNamed: 'sand-top-left' origin: 192@512 size: 32@32 frameCount: 1;
-		addFrameGroupNamed: 'sand-top-right' origin: 224@512 size: 32@32 frameCount: 1;
-		addFrameGroupNamed: 'sand-bottom-left' origin: 192@544 size: 32@32 frameCount: 1;
-		addFrameGroupNamed: 'sand-bottom-right' origin: 224@544 size: 32@32 frameCount: 1.
+		addAllTiles.
 	
 	self frameRate: 4.
+! !
+
+!LTileGenerator methodsFor: 'tiles'!
+
+addAllTiles
+1 to: 32 do: [:y | 
+	1 to: 32 do: [:x | 
+		self newTile: 'x' , x asString , 'y' , y asString position: x@y ]]
+!
+
+addFloorTiles
+	self 
+		newTile: 'floor-a' position: 1@0;
+		newTile: 'floor-b' position: 2@0;
+		newTile: 'floor-c' position: 3@0;
+		newTile: 'floor-d' position: 4@0;
+		newTile: 'floor-e' position: 5@0;
+		newTile: 'floor-f' position: 6@0;
+		newTile: 'floor-g' position: 7@0;
+		newTile: 'floor-h' position: 8@0;
+		newTile: 'floor-i' position: 9@0;
+		newTile: 'floor-j' position: 10@0;
+		newTile: 'floor-k' position: 11@0;
+		newTile: 'floor-l' position: 12@0;
+		newTile: 'floor-m' position: 13@0;
+		newTile: 'floor-n' position: 14@0.
+!
+
+addGrassTiles
+
+self
+	newTile: 'grass-centre' position: 5@17;
+	newTile: 'grass-left' position: 11@21;
+	newTile: 'grass-right' position: 13@21;
+	newTile: 'grass-top' position: 12@20;
+	newTile: 'grass-bottom' position: 12@22;
+	newTile: 'grass-top-left' position: 11@20;
+	newTile: 'grass-top-right' position: 13@20;
+	newTile: 'grass-bottom-left' position: 11@22;
+	newTile: 'grass-bottom-right' position: 13@22;
+		
+	newTile: 'grass-sprouts' position: 0@35;
+	newTile: 'grass-sprouts-stone' position: 1@35;
+	newTile: 'grass-tree' position: 2@35;
+	newTile: 'grass-stump' position: 3@35;
+	newTile: 'grass-dry-tree' position: 4@35;
+	newTile: 'grass-flowers' position: 6@18;
+	newTile: 'grass-flowers-0' position: 6@19.
+!
+
+addSandTiles
+
+self 
+	newTile: 'sand-centre' position: 5@15;
+	newTile: 'sand-left' position: 12@15;
+	newTile: 'sand-right' position: 13@15;
+	newTile: 'sand-top' position: 13@16;
+	newTile: 'sand-bottom' position: 13@17;
+	newTile: 'sand-top-left' position: 16@16;
+	newTile: 'sand-top-right' position: 17@16;
+	newTile: 'sand-bottom-left' position: 16@17;
+	newTile: 'sand-bottom-right' position: 17@17.
+!
+
+newTile: anIdentifier position: aPosition
+	self addFrameGroupNamed: anIdentifier origin: (aPosition x * 32)@(aPosition y * 32) size: 32@32 frameCount: 1
 ! !
 

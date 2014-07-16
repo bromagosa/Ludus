@@ -1168,6 +1168,14 @@ clearCanvas
 		height: self canvas element height.
 !
 
+clearRectOrigin: aPoint size: aSizePoint
+	self context
+		clearRect: aPoint x
+		y: aPoint y
+		width: aSizePoint x
+		height: aSizePoint y.
+!
+
 draw
 	self subclassResponsibility
 !
@@ -1737,7 +1745,10 @@ For the rest of the keys, my #doesNotUnderstand handles the conversion.!
 doesNotUnderstand: aMessage
 	^ aMessage selector size = 1
 		ifTrue: [ self keyCodeFor: aMessage selector ]
-		ifFalse: [ super doesNotUnderstand: aMessage ]
+		ifFalse: [ 
+			aMessage selector size = 2 
+				ifTrue: [ self keyCodeFor: aMessage selector last ]
+				ifFalse: [ super doesNotUnderstand: aMessage ]]
 ! !
 
 !Key class methodsFor: 'key codes'!
@@ -1766,6 +1777,10 @@ keyCodeFor: aValue
 
 leftArrow
 	^ 37
+!
+
+number: anInteger
+	^ self keyCodeFor: anInteger
 !
 
 rightArrow
