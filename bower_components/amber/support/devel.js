@@ -1,9 +1,6 @@
 require.config({
 	paths: {
-		'jquery-ui': [
-			require.toUrl('amber_lib/jquery-ui/jquery-ui.min'),
-			require.toUrl('amber_lib/jquery-ui/ui/minified/jquery-ui.min')
-		]
+		'jquery-ui': require.toUrl('amber_lib/jquery-ui/ui/minified/jquery-ui.min')
 	},
 	shim: {
 		'jquery-ui': {
@@ -21,5 +18,5 @@ define([
 	'./lang',
 	'./codemirror',
 	'./devel-inner',
-	'css!amber/resources/amber'
+	'css!amber_css/amber'
 ], function (smalltalk) { return smalltalk; });

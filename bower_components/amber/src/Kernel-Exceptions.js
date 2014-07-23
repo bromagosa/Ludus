@@ -1,5 +1,4 @@
-define("amber_core/Kernel-Exceptions", ["amber/boot", "amber_core/Kernel-Objects"], function($boot){
-var smalltalk=$boot.vm,nil=$boot.nil,_st=$boot.asReceiver,globals=$boot.globals;
+define("amber_core/Kernel-Exceptions", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects"], function(smalltalk,nil,_st, globals){
 smalltalk.addPackage('Kernel-Exceptions');
 smalltalk.packages["Kernel-Exceptions"].transport = {"type":"amd","amdNamespace":"amber_core"};
 

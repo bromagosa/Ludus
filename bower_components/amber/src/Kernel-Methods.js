@@ -1,5 +1,4 @@
-define("amber_core/Kernel-Methods", ["amber/boot", "amber_core/Kernel-Objects"], function($boot){
-var smalltalk=$boot.vm,nil=$boot.nil,_st=$boot.asReceiver,globals=$boot.globals;
+define("amber_core/Kernel-Methods", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects"], function(smalltalk,nil,_st, globals){
 smalltalk.addPackage('Kernel-Methods');
 smalltalk.packages["Kernel-Methods"].transport = {"type":"amd","amdNamespace":"amber_core"};
 
@@ -706,7 +705,7 @@ fn: function (){
 var self=this;
 function $Package(){return globals.Package||(typeof Package=="undefined"?nil:Package)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$3,$2,$4,$5,$receiver;
+var $1,$3,$2,$5,$4,$6,$receiver;
 $1=self._methodClass();
 $ctx1.sendIdx["methodClass"]=1;
 if(($receiver = $1) == null || $receiver.isNil){
@@ -718,16 +717,20 @@ $3=self._protocol();
 $ctx1.sendIdx["protocol"]=1;
 $2=_st($3)._beginsWith_("*");
 if(! smalltalk.assert($2)){
-$4=_st(self._methodClass())._package();
+$5=self._methodClass();
+$ctx1.sendIdx["methodClass"]=2;
+$4=_st($5)._package();
+$ctx1.sendIdx["package"]=1;
 return $4;
 };
-$5=_st($Package())._named_ifAbsent_(_st(self._protocol())._allButFirst(),(function(){
-return nil;
-}));
-return $5;
+$6=_st($Package())._named_ifAbsent_(_st(self._protocol())._allButFirst(),(function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(self._methodClass())._package();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
+return $6;
 }, function($ctx1) {$ctx1.fill(self,"package",{},globals.CompiledMethod)})},
 args: [],
-source: "package\x0a\x09\x22Answer the package the receiver belongs to:\x0a\x09- if it is an extension method, answer the corresponding package\x0a\x09- else answer the `methodClass` package\x22\x0a\x09\x0a\x09self methodClass ifNil: [ ^ nil ].\x0a\x09\x0a\x09(self protocol beginsWith: '*') ifFalse: [\x0a\x09\x09^ self methodClass package ].\x0a\x09\x09\x0a\x09^ Package \x0a\x09\x09named: self protocol allButFirst\x0a\x09\x09ifAbsent: [ nil ]",
+source: "package\x0a\x09\x22Answer the package the receiver belongs to:\x0a\x09- if it is an extension method, answer the corresponding package\x0a\x09- else answer the `methodClass` package\x22\x0a\x09\x0a\x09self methodClass ifNil: [ ^ nil ].\x0a\x09\x0a\x09(self protocol beginsWith: '*') ifFalse: [\x0a\x09\x09^ self methodClass package ].\x0a\x09\x09\x0a\x09^ Package \x0a\x09\x09named: self protocol allButFirst\x0a\x09\x09ifAbsent: [ self methodClass package ]",
 messageSends: ["ifNil:", "methodClass", "ifFalse:", "beginsWith:", "protocol", "package", "named:ifAbsent:", "allButFirst"],
 referencedClasses: ["Package"]
 }),

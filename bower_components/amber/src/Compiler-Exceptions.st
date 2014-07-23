@@ -104,6 +104,7 @@ basicSignal: anError
 !
 
 handleError: anError
+        super handleError: anError.
         self basicSignal: anError
 ! !
 

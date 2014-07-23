@@ -1,18 +1,3 @@
-0.12.5:
-
-+ String >>
-  + value:
-+ ProtocolAnnouncement >>
-  + package
-+ Behavior >>
-  + isTestClass
-+ Package >>
-  + isTestPackage
-+ amber/{devel,deploy,lang} exports
-  + nil
-+ amber/helpers exports
-  + nil
-
 0.12.4:
 
 * Package Canvas renamed to Web

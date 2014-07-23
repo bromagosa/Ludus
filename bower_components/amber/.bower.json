@@ -1,35 +1,32 @@
 {
   "name": "amber",
-  "version": "0.12.6",
+  "version": "0.12.4",
   "main": "support/amber.js",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
-    "/external",
-    "/internal",
-    "/test_runner.js",
     "test",
     "tests"
   ],
   "dependencies": {
-    "jquery": ">=1.7.0",
-    "jquery-ui": ">=1.9.2",
-    "bootstrap2.3.2": "~2.3.2",
+    "jquery": "~1.10.2",
+    "jquery-ui": "~1.10.3",
+    "bootstrap": "http://getbootstrap.com/2.3.2/assets/bootstrap.zip",
     "jquery-tabby": "git://github.com/alanhogan/Tabby",
-    "es5-shim": "~3.3.0",
-    "codemirror": "~3.24.0",
+    "es5-shim": "~2.1.0",
+    "codemirror": "~3.20.0",
     "showdown": "~0.3.1",
-    "require-css": "~0.1.2"
+    "require-css": "~0.0.8"
   },
   "homepage": "https://github.com/amber-smalltalk/amber",
-  "_release": "0.12.6",
+  "_release": "0.12.4",
   "_resolution": {
     "type": "version",
-    "tag": "0.12.6",
-    "commit": "950b9091e5d3812f345172245aa8882d29b65610"
+    "tag": "0.12.4",
+    "commit": "9fa5b816578b113cb33494d7cd112f9ed2b96c1d"
   },
   "_source": "git://github.com/amber-smalltalk/amber.git",
-  "_target": "~>= 0.12.4",
+  "_target": "0.12.4",
   "_originalSource": "amber"
 }

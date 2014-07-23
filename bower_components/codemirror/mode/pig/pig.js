@@ -168,6 +168,4 @@ CodeMirror.defineMode("pig", function(_config, parserConfig) {
     keywords: keywords(pKeywords),
     types: keywords(pTypes)
   });
-
-  CodeMirror.registerHelper("hintWords", "pig", (pBuiltins + pTypes + pKeywords).split(" "));
 }());

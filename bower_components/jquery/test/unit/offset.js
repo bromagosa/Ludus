@@ -18,7 +18,8 @@ var supportsScroll, supportsFixedPosition,
 		supportsScroll = document.documentElement.scrollTop || document.body.scrollTop;
 		forceScroll.detach();
 
-		supportsFixedPosition = checkFixed[0].offsetTop === 20;
+		// Safari subtracts parent border width here (which is 5px)
+		supportsFixedPosition = checkFixed[0].offsetTop === 20 || checkFixed[0].offsetTop === 15;
 		checkFixed.remove();
 	};
 

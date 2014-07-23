@@ -112,14 +112,6 @@ printString
 		self printOn: str ]
 ! !
 
-!ProtoObject methodsFor: 'testing'!
-
-isKindOf: aClass
-	^ (self isMemberOf: aClass)
-		ifTrue: [ true ]
-		ifFalse: [ self class inheritsFrom: aClass ]
-! !
-
 !ProtoObject class methodsFor: 'accessing'!
 
 heliosClass
@@ -369,6 +361,12 @@ isCompiledMethod
 
 isImmutable
 	^ false
+!
+
+isKindOf: aClass
+	^ (self isMemberOf: aClass)
+		ifTrue: [ true ]
+		ifFalse: [ self class inheritsFrom: aClass ]
 !
 
 isMemberOf: aClass

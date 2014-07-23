@@ -8,7 +8,7 @@ CodeMirror.defineMode("haskell", function(_config, modeConfig) {
   // These should all be Unicode extended, as per the Haskell 2010 report
   var smallRE = /[a-z_]/;
   var largeRE = /[A-Z]/;
-  var digitRE = /\d/;
+  var digitRE = /[0-9]/;
   var hexitRE = /[0-9A-Fa-f]/;
   var octitRE = /[0-7]/;
   var idRE = /[a-z_A-Z0-9']/;
@@ -76,8 +76,9 @@ CodeMirror.defineMode("haskell", function(_config, modeConfig) {
       }
       source.eatWhile(digitRE);
       var t = "number";
-      if (source.match(/^\.\d+/)) {
+      if (source.eat('.')) {
         t = "number";
+        source.eatWhile(digitRE); // should require at least 1
       }
       if (source.eat(/[eE]/)) {
         t = "number";
@@ -86,9 +87,6 @@ CodeMirror.defineMode("haskell", function(_config, modeConfig) {
       }
       return t;
     }
-
-    if (ch == "." && source.eat("."))
-      return "keyword";
 
     if (symbolRE.test(ch)) {
       if (ch == '-' && source.eat(/-/)) {

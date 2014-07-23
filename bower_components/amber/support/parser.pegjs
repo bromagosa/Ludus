@@ -13,13 +13,7 @@ string         = ['] val:(("''" {return "'";} / [^'])*) ['] {
                             ._source_(text())
                             ._value_(val.join("").replace(/\"/ig, '"'));
                  }
-character      = "$" char:. 
-                  {
-                      return globals.ValueNode._new()
-                             ._position_((line()).__at(column()))
-                             ._source_(text())
-                             ._value_(char);
-                  }
+
 symbol         = "#" rest:bareSymbol {return rest;}
 bareSymbol         = val:(selector / binarySelector / node:string {return node._value();})
                   {
@@ -68,7 +62,7 @@ pseudoVariable = val:(
                               ._source_(text())
                               ._value_(val);
                    }
-parseTimeLiteral        = pseudoVariable / number / literalArray / string / symbol / character
+parseTimeLiteral        = pseudoVariable / number / literalArray / string / symbol
 runtimeLiteral        = dynamicDictionary / dynamicArray / block
 literal        = runtimeLiteral / parseTimeLiteral
 

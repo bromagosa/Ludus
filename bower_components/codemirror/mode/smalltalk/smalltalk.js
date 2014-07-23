@@ -40,10 +40,8 @@ CodeMirror.defineMode('smalltalk', function(config) {
         stream.next();
         token = nextSymbol(stream, new Context(nextSymbol, context));
       } else {
-        if (stream.eatWhile(/[^ .{}\[\]()]/))
-          token.name = 'string-2';
-        else
-          token.name = 'meta';
+        stream.eatWhile(/[^ .\[\]()]/);
+        token.name = 'string-2';
       }
 
     } else if (aChar === '$') {

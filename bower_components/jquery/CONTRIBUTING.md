@@ -207,12 +207,10 @@ This will only run the "css" module tests. This will significantly speed up your
 **ALWAYS RUN THE FULL SUITE BEFORE COMMITTING AND PUSHING A PATCH!**
 
 
-### jQuery 2.x supports the following browsers:
+### jQuery supports the following browsers:
 
 * Chrome Current-1
 * Safari Current-1
 * Firefox Current-1
-* IE 9+
+* IE 6+
 * Opera Current-1
-
-jQuery 1.x additionally supports IE6+.

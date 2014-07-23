@@ -559,7 +559,7 @@ beClean
 beDirty
 	dirty := true.
 	
-	SystemAnnouncer current announce: (PackageDirty new
+	SystemAnnouncer current announce: (PackageClean new
 		package: self;
 		yourself)
 !
@@ -772,7 +772,8 @@ observeSystem
 !PackageStateObserver methodsFor: 'reactions'!
 
 onClassModification: anAnnouncement
-	anAnnouncement theClass ifNotNil: [ :theClass | theClass package beDirty ]
+	anAnnouncement theClass ifNotNil: [ :theClass |
+		theClass package beDirty ]
 !
 
 onMethodModification: anAnnouncement
@@ -784,7 +785,7 @@ onPackageAdded: anAnnouncement
 !
 
 onProtocolModification: anAnnouncement
-	anAnnouncement package ifNotNil: [ :package | package beDirty ]
+	anAnnouncement theClass package beDirty
 ! !
 
 PackageStateObserver class instanceVariableNames: 'current'!
@@ -1180,7 +1181,7 @@ settings
 version
 	"Answer the version string of Amber"
 	
-	^ '0.12.6'
+	^ '0.12.4'
 !
 
 vm
